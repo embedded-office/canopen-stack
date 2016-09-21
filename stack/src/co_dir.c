@@ -54,13 +54,13 @@
 * \retval          =0    Addressed object was not found
 */
 /*------------------------------------------------------------------------------------------------*/
-CO_OBJ *CODirFind(CO_DIR *cod, CPU_INT32U key)
+CO_OBJ *CODirFind(CO_DIR *cod, uint32_t key)
 {
     CO_OBJ     *result = 0;                           /* Local: function result                   */
     CO_OBJ     *obj    = 0;                           /* Local: ptr to object entry               */
-    CPU_INT32S  start  = 0;                           /* Local: start of searching                */
-    CPU_INT32S  end;                                  /* Local: end of searching                  */
-    CPU_INT32S  center;                               /* Local: center of searching               */
+    int32_t  start  = 0;                           /* Local: start of searching                */
+    int32_t  end;                                  /* Local: end of searching                  */
+    int32_t  center;                               /* Local: center of searching               */
                                                       /*------------------------------------------*/
     if (cod == 0) {                                   /* see, if the object directory ptr is bad  */
         cod->Node->Error = CO_ERR_BAD_ARG;            /* set error code information               */
@@ -110,10 +110,10 @@ CO_OBJ *CODirFind(CO_DIR *cod, CPU_INT32U key)
 * \retval         !=CO_ERR_NONE    An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CODirRdByte(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *value)
+int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *value)
 {
-    CPU_INT32U  sz;                                   /* Local: size of object entry              */
-    CPU_INT16S  result = CO_ERR_OBJ_NOT_FOUND;                          /* Local: function result                   */
+    uint32_t  sz;                                   /* Local: size of object entry              */
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;                          /* Local: function result                   */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
                                                       /*------------------------------------------*/
     if ((cod == 0) || (value == 0)) {                 /* see, if argument pointer is invalid      */
@@ -121,8 +121,8 @@ CPU_INT16S CODirRdByte(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *value)
     }                                                 /*------------------------------------------*/
     obj = CODirFind(cod, key);                        /* try to find key within object directory  */
     if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (CPU_INT32U)CO_BYTE);  /* get size of object entry                 */
-        if (sz != (CPU_INT32U)CO_BYTE) {              /* see, if object size matches byte         */
+        sz = COObjGetSize(obj, (uint32_t)CO_BYTE);  /* get size of object entry                 */
+        if (sz != (uint32_t)CO_BYTE) {              /* see, if object size matches byte         */
             cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
             result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
         } else {                                      /*------------------------------------------*/
@@ -157,10 +157,10 @@ CPU_INT16S CODirRdByte(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *value)
 * \retval         !=CO_ERR_NONE    An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CODirRdWord(CO_DIR *cod, CPU_INT32U key, CPU_INT16U *value)
+int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *value)
 {
-    CPU_INT32U  sz;                                   /* Local: size of object entry              */
-    CPU_INT16S  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
+    uint32_t  sz;                                   /* Local: size of object entry              */
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
                                                       /*------------------------------------------*/
     if ((cod == 0) || (value == 0)) {                 /* see, if argument pointer is invalid      */
@@ -168,8 +168,8 @@ CPU_INT16S CODirRdWord(CO_DIR *cod, CPU_INT32U key, CPU_INT16U *value)
     }                                                 /*------------------------------------------*/
     obj = CODirFind(cod, key);                        /* try to find key within object directory  */
     if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (CPU_INT32U)CO_WORD);  /* get size of object entry                 */
-        if (sz != (CPU_INT32U)CO_WORD) {              /* see, if object size matches word         */
+        sz = COObjGetSize(obj, (uint32_t)CO_WORD);  /* get size of object entry                 */
+        if (sz != (uint32_t)CO_WORD) {              /* see, if object size matches word         */
             cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
             result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
         } else {                                      /*------------------------------------------*/
@@ -204,10 +204,10 @@ CPU_INT16S CODirRdWord(CO_DIR *cod, CPU_INT32U key, CPU_INT16U *value)
 * \retval         !=CO_ERR_NONE    An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CODirRdLong(CO_DIR *cod, CPU_INT32U key, CPU_INT32U *value)
+int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *value)
 {
-    CPU_INT32U  sz;                                   /* Local: size of object entry              */
-    CPU_INT16S  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
+    uint32_t  sz;                                   /* Local: size of object entry              */
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
                                                       /*------------------------------------------*/
     if ((cod == 0) || (value == 0)) {                 /* see, if argument pointer is invalid      */
@@ -215,8 +215,8 @@ CPU_INT16S CODirRdLong(CO_DIR *cod, CPU_INT32U key, CPU_INT32U *value)
     }                                                 /*------------------------------------------*/
     obj = CODirFind(cod, key);                        /* try to find key within object directory  */
     if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (CPU_INT32U)CO_LONG);  /* get size of object entry                 */
-        if (sz != (CPU_INT32U)CO_LONG) {              /* see, if object size matches long         */
+        sz = COObjGetSize(obj, (uint32_t)CO_LONG);  /* get size of object entry                 */
+        if (sz != (uint32_t)CO_LONG) {              /* see, if object size matches long         */
             cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
             result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
         } else {                                      /*------------------------------------------*/
@@ -251,10 +251,10 @@ CPU_INT16S CODirRdLong(CO_DIR *cod, CPU_INT32U key, CPU_INT32U *value)
 * \retval         !=CO_ERR_NONE    An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CODirWrByte(CO_DIR *cod, CPU_INT32U key, CPU_INT08U value)
+int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t value)
 {
-    CPU_INT32U  sz;                                   /* Local: size of object entry              */
-    CPU_INT16S  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
+    uint32_t  sz;                                   /* Local: size of object entry              */
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
                                                       /*------------------------------------------*/
     if (cod == 0) {                                   /* see, if argument pointer is invalid      */
@@ -262,8 +262,8 @@ CPU_INT16S CODirWrByte(CO_DIR *cod, CPU_INT32U key, CPU_INT08U value)
     }                                                 /*------------------------------------------*/
     obj = CODirFind(cod, key);                        /* try to find key within object directory  */
     if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (CPU_INT32U)CO_BYTE);  /* get size of object entry                 */
-        if (sz != (CPU_INT32U)CO_BYTE) {              /* see, if object size matches byte         */
+        sz = COObjGetSize(obj, (uint32_t)CO_BYTE);  /* get size of object entry                 */
+        if (sz != (uint32_t)CO_BYTE) {              /* see, if object size matches byte         */
             cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
             result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
         } else {                                      /*------------------------------------------*/
@@ -298,10 +298,10 @@ CPU_INT16S CODirWrByte(CO_DIR *cod, CPU_INT32U key, CPU_INT08U value)
 * \retval         !=CO_ERR_NONE    An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CODirWrWord(CO_DIR *cod, CPU_INT32U key, CPU_INT16U value)
+int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t value)
 {
-    CPU_INT32U  sz;                                   /* Local: size of object entry              */
-    CPU_INT16S  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
+    uint32_t  sz;                                   /* Local: size of object entry              */
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
                                                       /*------------------------------------------*/
     if (cod == 0) {                                   /* see, if argument pointer is invalid      */
@@ -309,8 +309,8 @@ CPU_INT16S CODirWrWord(CO_DIR *cod, CPU_INT32U key, CPU_INT16U value)
     }                                                 /*------------------------------------------*/
     obj = CODirFind(cod, key);                        /* try to find key within object directory  */
     if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (CPU_INT32U)CO_WORD);  /* get size of object entry                 */
-        if (sz != (CPU_INT32U)CO_WORD) {              /* see, if object size matches word         */
+        sz = COObjGetSize(obj, (uint32_t)CO_WORD);  /* get size of object entry                 */
+        if (sz != (uint32_t)CO_WORD) {              /* see, if object size matches word         */
             cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
             result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
         } else {                                      /*------------------------------------------*/
@@ -345,10 +345,10 @@ CPU_INT16S CODirWrWord(CO_DIR *cod, CPU_INT32U key, CPU_INT16U value)
 * \retval         !=CO_ERR_NONE    An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CODirWrLong(CO_DIR *cod, CPU_INT32U key, CPU_INT32U value)
+int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t value)
 {
-    CPU_INT32U  sz;                                   /* Local: size of object entry              */
-    CPU_INT16S  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
+    uint32_t  sz;                                   /* Local: size of object entry              */
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
                                                       /*------------------------------------------*/
     if (cod == 0) {                                   /* see, if argument pointer is invalid      */
@@ -356,8 +356,8 @@ CPU_INT16S CODirWrLong(CO_DIR *cod, CPU_INT32U key, CPU_INT32U value)
     }                                                 /*------------------------------------------*/
     obj = CODirFind(cod, key);                        /* try to find key within object directory  */
     if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (CPU_INT32U)CO_LONG);  /* get size of object entry                 */
-        if (sz != (CPU_INT32U)CO_LONG) {              /* see, if object size matches long         */
+        sz = COObjGetSize(obj, (uint32_t)CO_LONG);  /* get size of object entry                 */
+        if (sz != (uint32_t)CO_LONG) {              /* see, if object size matches long         */
             cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
             result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
         } else {                                      /*------------------------------------------*/
@@ -394,9 +394,9 @@ CPU_INT16S CODirWrLong(CO_DIR *cod, CPU_INT32U key, CPU_INT32U value)
 * \retval         !=CO_ERR_NONE    An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CODirRdBuffer(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CPU_INT32U len)
+int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buffer, uint32_t len)
 {
-    CPU_INT16S  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
                                                       /*------------------------------------------*/
     if ((cod == 0) || (buffer == 0)) {                /* see, if argument pointer is invalid      */
@@ -406,7 +406,7 @@ CPU_INT16S CODirRdBuffer(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CPU_IN
     if (obj != 0) {                                   /* see, if object entry was found           */
         result = COObjRdBufStart(obj,                 /* read buffer from object directory        */
                                  (void *)buffer,
-                                 (CPU_INT08U)len);
+                                 (uint8_t)len);
         if (result != CO_ERR_NONE) {                  /* see, if an error was detected            */
             cod->Node->Error = CO_ERR_OBJ_READ;       /* set error code information               */
         }
@@ -435,9 +435,9 @@ CPU_INT16S CODirRdBuffer(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CPU_IN
 * \retval         !=CO_ERR_NONE    An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CODirWrBuffer(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CPU_INT32U len)
+int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buffer, uint32_t len)
 {
-    CPU_INT16S  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
                                                       /*------------------------------------------*/
     if ((cod == 0) || (buffer == 0)) {                /* see, if argument pointer is invalid      */
@@ -447,7 +447,7 @@ CPU_INT16S CODirWrBuffer(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CPU_IN
     if (obj != 0) {                                   /* see, if object entry was found           */
         result = COObjWrBufStart(obj,                 /* write buffer into object directory       */
                                  (void *)buffer,
-                                 (CPU_INT08U)len);
+                                 (uint8_t)len);
         if (result != CO_ERR_NONE) {                  /* see, if an error was detected            */
             cod->Node->Error = CO_ERR_OBJ_WRITE;      /* set error code information               */
         }
@@ -485,10 +485,10 @@ CPU_INT16S CODirWrBuffer(CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CPU_IN
 * \retval   <0   An argument error is detected.
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_DirInit(CO_DIR *cod, CO_NODE *node, CO_OBJ *root, CPU_INT16U max)
+int16_t CO_DirInit(CO_DIR *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
 {
     CO_OBJ     *obj;                                  /* Local: ptr to working object             */
-    CPU_INT16U  num = 0;                              /* Local: num of valid objects in directory */
+    uint16_t  num = 0;                              /* Local: num of valid objects in directory */
                                                       /*------------------------------------------*/
     if ((cod == 0) || (node == 0) || (root == 0)) {   /* see, if any ptr is invalid               */
         CO_NodeFatalError();                          /* inform user                              */
@@ -511,5 +511,5 @@ CPU_INT16S CO_DirInit(CO_DIR *cod, CO_NODE *node, CO_OBJ *root, CPU_INT16U max)
     cod->Max   = max;                                 /* set max. number of objects in directory  */
     cod->Node  = node;                                /* set link to parent CANopen node          */
                                                       /*------------------------------------------*/
-    return ((CPU_INT16S)num);                         /* return function result                   */
+    return ((int16_t)num);                         /* return function result                   */
 }

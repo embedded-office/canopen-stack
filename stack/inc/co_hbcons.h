@@ -76,10 +76,10 @@ typedef struct CO_HBCONS_T {
     struct CO_NODE_T   *Node;                         /*!< Link to parent node                    */
     struct CO_HBCONS_T *Next;                         /*!< Link to next consumer in active chain  */
     CO_MODE             State;                        /*!< Received Node-State                    */
-    CPU_INT16S          Tmr;                          /*!< Timer Identifier                       */
-    CPU_INT16U          Time;                         /*!< Time   (Bit00-15 when read object)     */
-    CPU_INT08U          NodeId;                       /*!< NodeId (Bit16-23 when read object)     */
-    CPU_INT08U          Event;                        /*!< Event Counter                          */
+    int16_t          Tmr;                          /*!< Timer Identifier                       */
+    uint16_t          Time;                         /*!< Time   (Bit00-15 when read object)     */
+    uint8_t          NodeId;                       /*!< NodeId (Bit16-23 when read object)     */
+    uint8_t          Event;                        /*!< Event Counter                          */
 
 } CO_HBCONS;
 
@@ -89,8 +89,8 @@ typedef struct CO_HBCONS_T {
 ****************************************************************************************************
 */
 
-CPU_INT16S CONmtGetHbEvents     (CO_NMT *nmt, CPU_INT08U nodeId);
-CO_MODE    CONmtLastHbState     (CO_NMT *nmt, CPU_INT08U nodeId);
+int16_t CONmtGetHbEvents     (CO_NMT *nmt, uint8_t nodeId);
+CO_MODE    CONmtLastHbState     (CO_NMT *nmt, uint8_t nodeId);
 
 /*
 ****************************************************************************************************
@@ -99,8 +99,8 @@ CO_MODE    CONmtLastHbState     (CO_NMT *nmt, CPU_INT08U nodeId);
 */
 
 void       CO_NmtHbConsInit     (CO_NMT *nmt);
-CO_ERR     CO_NmtHbConsActivate (CO_NMT *nmt, CO_HBCONS *hbc, CPU_INT16U time, CPU_INT08U nodeid);
-CPU_INT16S CO_NmtHbConsCheck    (CO_NMT *nmt, CO_IF_FRM *frm);
+CO_ERR     CO_NmtHbConsActivate (CO_NMT *nmt, CO_HBCONS *hbc, uint16_t time, uint8_t nodeid);
+int16_t CO_NmtHbConsCheck    (CO_NMT *nmt, CO_IF_FRM *frm);
 
 /*
 ****************************************************************************************************
@@ -108,8 +108,8 @@ CPU_INT16S CO_NmtHbConsCheck    (CO_NMT *nmt, CO_IF_FRM *frm);
 ****************************************************************************************************
 */
 
-void       CO_NmtHbConsEvent    (CO_NMT *nmt, CPU_INT08U nodeId);
-void       CO_NmtHbConsChange   (CO_NMT *nmt, CPU_INT08U nodeId, CO_MODE mode);
+void       CO_NmtHbConsEvent    (CO_NMT *nmt, uint8_t nodeId);
+void       CO_NmtHbConsChange   (CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
 
 #ifdef __cplusplus
 }

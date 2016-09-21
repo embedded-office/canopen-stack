@@ -40,8 +40,8 @@
 */
 
 #if CO_TPDO_N > 0
-static CPU_INT16S CO_TAsyncCtrl (CO_OBJ* obj, CPU_INT16U func, CPU_INT32U para);
-static CPU_INT16S CO_TEventWrite(CO_OBJ* obj, void *buf, CPU_INT32U size);
+static int16_t CO_TAsyncCtrl (CO_OBJ* obj, uint16_t func, uint32_t para);
+static int16_t CO_TEventWrite(CO_OBJ* obj, void *buf, uint32_t size);
 #endif
 
 /*
@@ -97,8 +97,8 @@ CO_OBJ_TYPE COTEvent = { 0, 0, 0, 0, 0, CO_TEventWrite };
 /*------------------------------------------------------------------------------------------------*/
 void COTPdoTrigObj (CO_TPDO *pdo, CO_OBJ *obj)
 {
-    CPU_INT32U n;                                     /* Local: loop counter through link map     */
-    CPU_INT16U num;                                   /* Local: number of TPDO                    */
+    uint32_t n;                                     /* Local: loop counter through link map     */
+    uint16_t num;                                   /* Local: number of TPDO                    */
                                                       /*------------------------------------------*/
     if (CO_IS_PDOMAP(obj->Key) != 0) {                /* see, if the object is PDO mappable       */
         for (n=0; n < CO_TPDO_MAP_N; n++) {           /* loop through mapping link map            */
@@ -126,7 +126,7 @@ void COTPdoTrigObj (CO_TPDO *pdo, CO_OBJ *obj)
 * \param[in]       num          Number of TPDO (0..511)
 */
 /*------------------------------------------------------------------------------------------------*/
-void COTPdoTrigPdo (CO_TPDO *pdo, CPU_INT16U num)
+void COTPdoTrigPdo (CO_TPDO *pdo, uint16_t num)
 {
     if (num < CO_TPDO_N) {                            /* see, if given TPDO number is valid       */
         CO_TPdoTx(&pdo[num]);                         /* transmit TPDO immediatelly               */
@@ -157,8 +157,8 @@ void COTPdoTrigPdo (CO_TPDO *pdo, CPU_INT16U num)
 /*------------------------------------------------------------------------------------------------*/
 void CO_TPdoClear (CO_TPDO *pdo, CO_NODE *node)
 {
-    CPU_INT16U num;                                  /* Local: number of PDO                     */
-    CPU_INT08U on;                                   /* Local: number of mapped objects in PDO   */
+    uint16_t num;                                  /* Local: number of PDO                     */
+    uint8_t on;                                   /* Local: number of mapped objects in PDO   */
                                                      /*------------------------------------------*/
    if ((pdo == 0) || (node == 0)) {                  /* see, if argument pointers are invalid    */
        CO_NodeFatalError();                          /* inform user                              */
@@ -194,10 +194,10 @@ void CO_TPdoClear (CO_TPDO *pdo, CO_NODE *node)
 /*------------------------------------------------------------------------------------------------*/
 void CO_TPdoInit(CO_TPDO *pdo, CO_NODE *node)
 {
-    CPU_INT16S err;                                   /* Local: error code                        */
-    CPU_INT16U num;                                   /* Local: number of PDO                     */
-    CPU_INT08U on;                                    /* Local: number of mapped objects in PDO   */
-    CPU_INT08U tnum;                                  /* LocaL: number of PDO Com Entries         */
+    int16_t err;                                   /* Local: error code                        */
+    uint16_t num;                                   /* Local: number of PDO                     */
+    uint8_t on;                                    /* Local: number of mapped objects in PDO   */
+    uint8_t tnum;                                  /* LocaL: number of PDO Com Entries         */
                                                       /*------------------------------------------*/
     if ((pdo == 0) || (node == 0)) {                  /* see, if argument pointers are invalid    */
         CO_NodeFatalError();                          /* inform user                              */
@@ -248,15 +248,15 @@ void CO_TPdoInit(CO_TPDO *pdo, CO_NODE *node)
 * \param[in]       num          Number of TPDO (0..511)
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_TPdoReset(CO_TPDO *pdo, CPU_INT16U num)
+void CO_TPdoReset(CO_TPDO *pdo, uint16_t num)
 {
     CO_TPDO    *wp;                                   /* Local: Pointer to working TPDO           */
     CO_DIR     *cod;                                  /* Local: Pointer to object directory       */
-    CPU_INT32U  id      = CO_TPDO_COBID_OFF;          /* Local: COBID from profile                */
-    CPU_INT16U  inhibit = 0;                          /* Local: inhibit time from profile [100us] */
-    CPU_INT16U  timer   = 0;                          /* Local: event timer from profile [1ms]    */
-    CPU_INT16S  err;                                  /* Local: function call error code          */
-    CPU_INT08U  type    = 0;                          /* Local: transmission type from profile    */
+    uint32_t  id      = CO_TPDO_COBID_OFF;          /* Local: COBID from profile                */
+    uint16_t  inhibit = 0;                          /* Local: inhibit time from profile [100us] */
+    uint16_t  timer   = 0;                          /* Local: event timer from profile [1ms]    */
+    int16_t  err;                                  /* Local: function call error code          */
+    uint8_t  type    = 0;                          /* Local: transmission type from profile    */
                                                       /*------------------------------------------*/
     wp        = &pdo[num];                            /* set pointer to working pdo               */
     cod       = &wp->Node->Dir;                       /* set pointer to object directory          */
@@ -290,7 +290,7 @@ void CO_TPdoReset(CO_TPDO *pdo, CPU_INT16U num)
                       CO_DEV(0x1800 + num, 3),
                       &inhibit);
     if (err != CO_ERR_NONE) {                         /* see, if an read error is detected        */
-        err = (CPU_INT16S)CO_ERR_NONE;                /* reset error: inhibit time is optional    */
+        err = (int16_t)CO_ERR_NONE;                /* reset error: inhibit time is optional    */
         pdo->Node->Error = CO_ERR_NONE;               /* reset error code                         */
     }
                                                       /*lint -e{644} : inhibit set in CODirRdWord */
@@ -311,7 +311,7 @@ void CO_TPdoReset(CO_TPDO *pdo, CPU_INT16U num)
                           CO_DEV(0x1800 + num, 5),
                           &timer);
         if (err != CO_ERR_NONE) {                     /* see, if an read error is detected        */
-            err = (CPU_INT16S)CO_ERR_NONE;            /* reset error: event time is optional      */
+            err = (int16_t)CO_ERR_NONE;            /* reset error: event time is optional      */
             pdo->Node->Error = CO_ERR_NONE;           /* reset error code                         */
         }
         if (timer > 0) {                              /* see, if event timer is enabled           */
@@ -399,16 +399,16 @@ void CO_TPdoReset(CO_TPDO *pdo, CPU_INT16U num)
 * \retval  <0      At least one error is detected within the mapping configuration
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_TPdoGetMap (CO_TPDO *pdo, CPU_INT16U num)
+int16_t CO_TPdoGetMap (CO_TPDO *pdo, uint16_t num)
 {
     CO_DIR      *cod;                                 /* Local: pointer to object directory       */
     CO_OBJ      *obj;                                 /* Local: pointer to object entry           */
-    CPU_INT32U   mapping;                             /* Local: PDO mapping information           */
-    CPU_INT16U   idx;                                 /* Local: object entry index                */
-    CPU_INT16U   on;                                  /* Local: Loop counter for mapped objects   */
-    CPU_INT16S   err;                                 /* Local: error of CANopen functions        */
-    CPU_INT08U   mapnum;                              /* Local: number of PDO mappings            */
-    CPU_INT08U   dlc;                                 /* Local: resulting data length code        */
+    uint32_t   mapping;                             /* Local: PDO mapping information           */
+    uint16_t   idx;                                 /* Local: object entry index                */
+    uint16_t   on;                                  /* Local: Loop counter for mapped objects   */
+    int16_t   err;                                 /* Local: error of CANopen functions        */
+    uint8_t   mapnum;                              /* Local: number of PDO mappings            */
+    uint8_t   dlc;                                 /* Local: resulting data length code        */
                                                       /*------------------------------------------*/
     cod = &pdo[num].Node->Dir;                        /* get pointer to object directory          */
     idx = 0x1A00 + num;                               /* set index to TPDO mapping profile        */
@@ -427,7 +427,7 @@ CPU_INT16S CO_TPdoGetMap (CO_TPDO *pdo, CPU_INT16U num)
             return (-1);                              /* abort with error indication              */
         }
                                                       /*lint -e{644} : mapping set in CODirRdLong */
-        dlc += (CPU_INT08U)(mapping & 0xFF) >> 3;     /* add number of bits, converted to bytes   */
+        dlc += (uint8_t)(mapping & 0xFF) >> 3;     /* add number of bits, converted to bytes   */
         if (dlc > 8){                                 /* more than 8 byte not possible in a PDO   */
             return (-1);                              /* abort with error indication              */
         }
@@ -508,9 +508,9 @@ void CO_TPdoEndInhibit (void *parg)
 void CO_TPdoTx (CO_TPDO *pdo)
 {
     CO_IF_FRM   frm;                                  /* Local: memory for one CAN frame          */
-    CPU_INT32U  sz;                                   /* Local: size of linked object             */
-    CPU_INT32U  data;                                 /* Local: data buffer for TPDO massage      */
-    CPU_INT08U  num;                                  /* Local: number of linked object           */
+    uint32_t  sz;                                   /* Local: size of linked object             */
+    uint32_t  data;                                 /* Local: data buffer for TPDO massage      */
+    uint8_t  num;                                  /* Local: number of linked object           */
                                                       /*------------------------------------------*/
     if ( (pdo->Node->Nmt.Allowed &                    /* see, if PDO communication is not allowed */
           CO_PDO_ALLOWED           ) == 0) {
@@ -552,7 +552,7 @@ void CO_TPdoTx (CO_TPDO *pdo)
     frm.DLC        = 0;                               /* clear DLC of TPDO message                */
     for (num = 0; num < pdo->ObjNum; num++) {         /* loop through all PDO objects             */
         sz = COObjGetSize(pdo->Map[num], 0L);         /* get size of PDO object                   */
-        if (sz <= (CPU_INT32U)(8 - frm.DLC)) {        /* see, if size is possible for TPDOs       */
+        if (sz <= (uint32_t)(8 - frm.DLC)) {        /* see, if size is possible for TPDOs       */
             (void)COObjRdValue(pdo->Map[num],         /* read object value                        */
                                &data,
                                CO_LONG,
@@ -566,7 +566,7 @@ void CO_TPdoTx (CO_TPDO *pdo)
             } else if (sz == CO_LONG) {               /* see, if object holds a long value        */
                 CO_SET_LONG(&frm, data, frm.DLC);     /* copy long value to can frame             */
             }                                         /*------------------------------------------*/
-            frm.DLC += (CPU_INT08U)sz;                /* add size to DLC of message               */
+            frm.DLC += (uint8_t)sz;                /* add size to DLC of message               */
         }
     }                                                 /*------------------------------------------*/
 #if CO_CB_TPDO_TRANSMIT_EN > 0
@@ -590,7 +590,7 @@ void CO_TPdoTx (CO_TPDO *pdo)
 /*------------------------------------------------------------------------------------------------*/
 void CO_TPdoMapClear(CO_TPDO_LINK *map)
 {
-    CPU_INT16U id;                                    /* Local: loop counter through link map     */
+    uint16_t id;                                    /* Local: loop counter through link map     */
                                                       /*------------------------------------------*/
     for (id = 0; id < CO_TPDO_MAP_N; id++) {          /* loop through all link map entries        */
         map[id].Obj  = 0;                             /* clear signal identifier                  */
@@ -614,9 +614,9 @@ void CO_TPdoMapClear(CO_TPDO_LINK *map)
 * \param[in]       num          Linked TPDO number
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_TPdoMapAdd(CO_TPDO_LINK *map, CO_OBJ *obj, CPU_INT16U num)
+void CO_TPdoMapAdd(CO_TPDO_LINK *map, CO_OBJ *obj, uint16_t num)
 {
-    CPU_INT16U id;                                    /* Local: loop counter through link map     */
+    uint16_t id;                                    /* Local: loop counter through link map     */
                                                       /*------------------------------------------*/
     for (id = 0; id < CO_TPDO_MAP_N; id++) {          /* loop through all link map entries        */
         if (map[id].Obj == 0) {                       /* see, if link map entry is unused         */
@@ -641,9 +641,9 @@ void CO_TPdoMapAdd(CO_TPDO_LINK *map, CO_OBJ *obj, CPU_INT16U num)
 * \param[in]       num          Linked TPDO number
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_TPdoMapDelNum(CO_TPDO_LINK *map, CPU_INT16U num)
+void CO_TPdoMapDelNum(CO_TPDO_LINK *map, uint16_t num)
 {
-    CPU_INT16U id;                                    /* Local: loop counter through link map     */
+    uint16_t id;                                    /* Local: loop counter through link map     */
                                                       /*------------------------------------------*/
     for (id = 0; id < CO_TPDO_MAP_N; id++) {          /* loop through all link map entries        */
         if (map[id].Num == num) {                     /* see, if TPDO number matches given value  */
@@ -669,7 +669,7 @@ void CO_TPdoMapDelNum(CO_TPDO_LINK *map, CPU_INT16U num)
 /*------------------------------------------------------------------------------------------------*/
 void CO_TPdoMapDelSig(CO_TPDO_LINK *map, CO_OBJ *obj)
 {
-    CPU_INT16U id;                                    /* Local: loop counter through link map     */
+    uint16_t id;                                    /* Local: loop counter through link map     */
                                                       /*------------------------------------------*/
     for (id = 0; id < CO_TPDO_MAP_N; id++) {          /* loop through all link map entries        */
         if (map[id].Obj == obj) {                     /* see, if signal id matches given value    */
@@ -705,10 +705,10 @@ void CO_TPdoMapDelSig(CO_TPDO_LINK *map, CO_OBJ *obj)
 * \retval  <0      Function aborted due to detected error
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TAsyncCtrl (CO_OBJ* obj, CPU_INT16U func, CPU_INT32U para)
+static int16_t CO_TAsyncCtrl (CO_OBJ* obj, uint16_t func, uint32_t para)
 {
     CO_NODE    *node;                                 /* Local: pointer to parent node            */
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
+    int16_t  result = -1;                          /* Local: function result                   */
                                                       /*------------------------------------------*/
     (void)para;                                       /* unused; prevent compiler warning         */
 
@@ -740,16 +740,16 @@ static CPU_INT16S CO_TAsyncCtrl (CO_OBJ* obj, CPU_INT16U func, CPU_INT32U para)
 * \retval  <0      error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TEventWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_TEventWrite(CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_DIR     *cod;                                  /* Local: pointer to object directory       */
     CO_NMT     *nmt;                                  /* Local: pointer to NMT management         */
     CO_TPDO    *pdo;                                  /* Local: pointer to TPDO data              */
-    CPU_INT32U  cobid  =  0;                          /* Local: CAN Identifier                    */
-    CPU_INT16U  cycTime;                              /* Local: new cycle timer                   */
-    CPU_INT16U  num;                                  /* Local: number of TPDO                    */
-    CPU_INT16S  err;                                  /* Local: function error codes              */
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
+    uint32_t  cobid  =  0;                          /* Local: CAN Identifier                    */
+    uint16_t  cycTime;                              /* Local: new cycle timer                   */
+    uint16_t  num;                                  /* Local: number of TPDO                    */
+    int16_t  err;                                  /* Local: function error codes              */
+    int16_t  result = -1;                          /* Local: function result                   */
                                                       /*------------------------------------------*/
     err = CO_ObjWrDirect(obj,                         /* write value to object data element       */
                  (void *)buf,
@@ -766,7 +766,7 @@ static CPU_INT16S CO_TEventWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
         return (err);                                 /* finish with success; no special handling */
     }
 
-    cycTime = (CPU_INT16U)(*(CPU_INT32U *)buf);       /* get new cycle time for event timer       */
+    cycTime = (uint16_t)(*(uint32_t *)buf);       /* get new cycle time for event timer       */
     if (cycTime > 0) {                                /* see, if event timer is enabled           */
         if (cycTime <= CO_TPDO_TMR_MIN) {             /* see, if timer cylce <= min possible      */
             cycTime = CO_TPDO_TMR_MIN;                /* set timer cycle to minimum possible      */

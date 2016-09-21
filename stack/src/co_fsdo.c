@@ -40,7 +40,7 @@
 */
 
 #if CO_SDO_DYN_ID_EN > 0
-static CPU_INT16S CO_TSdoIdWrite (CO_OBJ* obj, void *buf, CPU_INT32U size);
+static int16_t CO_TSdoIdWrite (CO_OBJ* obj, void *buf, uint32_t size);
 #endif
 
 /*
@@ -96,10 +96,10 @@ CO_OBJ_TYPE COTSdoId = { 0, 0, 0, 0, 0, CO_TSdoIdWrite };
 * \ds301    9.2.2.2.5
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoInitUploadSegmented (CO_SDO *srv, CPU_INT32U size)
+int16_t CO_SdoInitUploadSegmented (CO_SDO *srv, uint32_t size)
 {
-    CPU_INT16S result;                                /* Local: function result                   */
-    CPU_INT08U cmd;                                   /* Local: SDO command byte                  */
+    int16_t result;                                /* Local: function result                   */
+    uint8_t cmd;                                   /* Local: SDO command byte                  */
                                                       /*------------------------------------------*/
     cmd = 0x41;                                       /* response info: scs=2, n=0, e=0 and s=1   */
     CO_SET_BYTE(srv->Frm,  cmd, 0);                   /* response: command byte                   */
@@ -146,12 +146,12 @@ CPU_INT16S CO_SdoInitUploadSegmented (CO_SDO *srv, CPU_INT32U size)
 * \ds301    9.2.2.2.2
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoInitDownloadSegmented (CO_SDO *srv)
+int16_t CO_SdoInitDownloadSegmented (CO_SDO *srv)
 {
-    CPU_INT32U size;                                  /* Local: size of object entry in bytes     */
-    CPU_INT32U width  =  0;                           /* Local: data width in byte                */
-    CPU_INT16S result = -1;                           /* Local: function result                   */
-    CPU_INT08U cmd;                                   /* Local: SDO command byte                  */
+    uint32_t size;                                  /* Local: size of object entry in bytes     */
+    uint32_t width  =  0;                           /* Local: data width in byte                */
+    int16_t result = -1;                           /* Local: function result                   */
+    uint8_t cmd;                                   /* Local: SDO command byte                  */
                                                       /*------------------------------------------*/
     cmd = CO_GET_BYTE(srv->Frm, 0);                   /* get command specifier                    */
     if ((cmd & 0x01) == 1) {                          /* see, if data size is indicated (s=1/0)   */
@@ -206,13 +206,13 @@ CPU_INT16S CO_SdoInitDownloadSegmented (CO_SDO *srv)
 * \ds301    9.2.2.2.3
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoDownloadSegmented (CO_SDO *srv)
+int16_t CO_SdoDownloadSegmented (CO_SDO *srv)
 {
-    CPU_INT32U num;                                   /* Local: number of bytes for transfer      */
-    CPU_INT16S result = 0;                            /* Local: function result                   */
-    CPU_INT08U n;                                     /* Local: bitfield 'n' from command byte    */
-    CPU_INT08U cmd;                                   /* Local: SDO command byte                  */
-    CPU_INT08U bid;                                   /* Local: byte id (loop counter)            */
+    uint32_t num;                                   /* Local: number of bytes for transfer      */
+    int16_t result = 0;                            /* Local: function result                   */
+    uint8_t n;                                     /* Local: bitfield 'n' from command byte    */
+    uint8_t cmd;                                   /* Local: SDO command byte                  */
+    uint8_t bid;                                   /* Local: byte id (loop counter)            */
                                                       /*------------------------------------------*/
     cmd = CO_GET_BYTE(srv->Frm, 0);                   /* extract SDO command byte                 */
     if ((cmd >> 4) != srv->Seg.TBit) {                /* check for bad toggle bit                 */
@@ -264,7 +264,7 @@ CPU_INT16S CO_SdoDownloadSegmented (CO_SDO *srv)
         srv->Buf.Num  = 0;                            /* clear number of bytes in buffer          */
     }
                                                       /*------------------------------------------*/
-    cmd = (CPU_INT08U)((1 << 5) |
+    cmd = (uint8_t)((1 << 5) |
                        (srv->Seg.TBit << 4));
     if (result == 0) {                                /* see, if no error is detected             */
         CO_SET_BYTE(srv->Frm, cmd, 0);                /* set response, scs=1, t=toggle bit        */
@@ -304,13 +304,13 @@ CPU_INT16S CO_SdoDownloadSegmented (CO_SDO *srv)
 * \ds301    9.2.2.2.6
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoUploadSegmented (CO_SDO *srv)
+int16_t CO_SdoUploadSegmented (CO_SDO *srv)
 {
-    CPU_INT32U  width;                                /* Local: object width in byte              */
-    CPU_INT16S  result = 0;                           /* Local: function result                   */
-    CPU_INT08U  cmd;                                  /* Local: SDO command byte                  */
-    CPU_INT08U  c_bit  =  0;                          /* Local: indicator if last segment         */
-    CPU_INT08U  i;                                    /* Local: counter variable                  */
+    uint32_t  width;                                /* Local: object width in byte              */
+    int16_t  result = 0;                           /* Local: function result                   */
+    uint8_t  cmd;                                  /* Local: SDO command byte                  */
+    uint8_t  c_bit  =  0;                          /* Local: indicator if last segment         */
+    uint8_t  i;                                    /* Local: counter variable                  */
                                                       /*------------------------------------------*/
     if (srv->Obj == 0) {                              /* if segmented transfer not started        */
         CO_SdoAbort(srv, CO_SDO_ERR_CMD);             /* Abort message: command error             */
@@ -345,18 +345,18 @@ CPU_INT16S CO_SdoUploadSegmented (CO_SDO *srv)
     }
 
     srv->Buf.Cur = srv->Buf.Start;
-    for (i = 0; i < (CPU_INT08U)width; i++) {
+    for (i = 0; i < (uint8_t)width; i++) {
         CO_SET_BYTE(srv->Frm, *(srv->Buf.Cur), 1+i);
         srv->Buf.Cur++;
     }
-    for (i = (CPU_INT08U)(width + 1); i <= 7; i++) {  /* clear rest of can frame                  */
+    for (i = (uint8_t)(width + 1); i <= 7; i++) {  /* clear rest of can frame                  */
         CO_SET_BYTE(srv->Frm, 0, 1+i);
     }                                                 /*------------------------------------------*/
 
-    cmd = (CPU_INT08U)0x00 |                          /* response info: scs = 0,                  */
-          (CPU_INT08U)(srv->Seg.TBit << 4) |          /* t = togglebit,                           */
-          (CPU_INT08U)(((7 - width) << 1) & 0x0E) |   /* n = 7 - width                            */
-          (CPU_INT08U)c_bit;                          /* and c = c-bit                            */
+    cmd = (uint8_t)0x00 |                          /* response info: scs = 0,                  */
+          (uint8_t)(srv->Seg.TBit << 4) |          /* t = togglebit,                           */
+          (uint8_t)(((7 - width) << 1) & 0x0E) |   /* n = 7 - width                            */
+          (uint8_t)c_bit;                          /* and c = c-bit                            */
     CO_SET_BYTE(srv->Frm, cmd, 0);
 
     if (c_bit == 1) {                                 /* if last segment                          */
@@ -397,12 +397,12 @@ CPU_INT16S CO_SdoUploadSegmented (CO_SDO *srv)
 * \ds301    9.2.2.2.9
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoInitDownloadBlock (CO_SDO *srv)
+int16_t CO_SdoInitDownloadBlock (CO_SDO *srv)
 {
-    CPU_INT32U size;                                  /* Local: Size object entry                 */
-    CPU_INT32U width  =  0;                           /* Local: data width in byte                */
-    CPU_INT16S result = -1;                           /* Local: function result                   */
-    CPU_INT08U cmd;                                   /* Local: SDO command byte                  */
+    uint32_t size;                                  /* Local: Size object entry                 */
+    uint32_t width  =  0;                           /* Local: data width in byte                */
+    int16_t result = -1;                           /* Local: function result                   */
+    uint8_t cmd;                                   /* Local: SDO command byte                  */
                                                       /*------------------------------------------*/
     cmd = CO_GET_BYTE(srv->Frm, 0);                   /* get command specifier                    */
     if ((cmd & 0x02) != 0) {                          /* if s = 1, size indicated                 */
@@ -429,7 +429,7 @@ CPU_INT16S CO_SdoInitDownloadBlock (CO_SDO *srv)
         CO_SET_BYTE(srv->Frm, 0xA0, 0);               /* scs=5,sc=0,ss=0: initiate download       */
                                                       /* response, no checksum supported          */
         CO_SET_LONG(srv->Frm,                         /* set max. number of segments per block    */
-                    (CPU_INT32U)CO_SDO_BUF_SEG,
+                    (uint32_t)CO_SDO_BUF_SEG,
                     4);
     } else {                                          /* otherwise: size is invalid               */
         CO_SdoAbort(srv, CO_SDO_ERR_LEN_HIGH);        /* Abort 'datatype length too high'         */
@@ -463,18 +463,18 @@ CPU_INT16S CO_SdoInitDownloadBlock (CO_SDO *srv)
 * \ds301    9.2.2.2.11
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoEndDownloadBlock (CO_SDO *srv)
+int16_t CO_SdoEndDownloadBlock (CO_SDO *srv)
 {
-    CPU_INT16S result = -1;                           /* Local: function result                   */
-    CPU_INT08U cmd;                                   /* Local: SDO command byte                  */
-    CPU_INT08U n;                                     /* Local: bit field 'n' in command byte     */
+    int16_t result = -1;                           /* Local: function result                   */
+    uint8_t cmd;                                   /* Local: SDO command byte                  */
+    uint8_t n;                                     /* Local: bit field 'n' in command byte     */
                                                       /*------------------------------------------*/
     cmd = CO_GET_BYTE(srv->Frm, 0);                   /* get command byte                         */
     if ((cmd & 0x01) != 0) {                          /* if cs=1, end block download              */
         n      = (cmd & 0x1C) >> 2;                   /* get n out of command byte                */
         result = COObjWrBufCont(srv->Obj,             /* last write to object entry               */
                                 srv->Buf.Start,
-                                ((CPU_INT32U)srv->Buf.Num - n));
+                                ((uint32_t)srv->Buf.Num - n));
         if (result != CO_ERR_NONE) {                  /* see, if an error is detected             */
             srv->Node->Error = CO_ERR_SDO_WRITE;      /* yes: indicate error in node              */
             result = -1;                              /* set result for sdo response              */
@@ -519,12 +519,12 @@ CPU_INT16S CO_SdoEndDownloadBlock (CO_SDO *srv)
 * \ds301    9.2.2.2.10
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoDownloadBlock (CO_SDO *srv)
+int16_t CO_SdoDownloadBlock (CO_SDO *srv)
 {
-    CPU_INT16S result = -2;                           /* Local: function result                   */
-    CPU_INT16S err;                                   /* Local: error code                        */
-    CPU_INT08U cmd;                                   /* Local: sequence number                   */
-    CPU_INT08U i;                                     /* Local: counter                           */
+    int16_t result = -2;                           /* Local: function result                   */
+    int16_t err;                                   /* Local: error code                        */
+    uint8_t cmd;                                   /* Local: sequence number                   */
+    uint8_t i;                                     /* Local: counter                           */
                                                       /*------------------------------------------*/
     cmd = CO_GET_BYTE(srv->Frm, 0);                   /* get sequence counter                     */
     if ((cmd & 0x7F) == (srv->Blk.SegCnt + 1)) {      /* if segment counter fits segment number   */
@@ -552,7 +552,7 @@ CPU_INT16S CO_SdoDownloadBlock (CO_SDO *srv)
             if ((cmd & 0x80) == 0) {                  /* yes, if not last segment of last block   */
                 err = COObjWrBufCont(srv->Obj,        /* write transfer buffer to domain          */
                                      srv->Buf.Start,
-                                     (CPU_INT32U)srv->Buf.Num);
+                                     (uint32_t)srv->Buf.Num);
                 if (err != CO_ERR_NONE) {             /* see, if an error is detected             */
                     srv->Node->Error =                /* yes: indicate error in node              */
                         CO_ERR_SDO_WRITE;
@@ -614,12 +614,12 @@ CPU_INT16S CO_SdoDownloadBlock (CO_SDO *srv)
 *           number of segments is below the given threshold.
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoInitUploadBlock (CO_SDO *srv)
+int16_t CO_SdoInitUploadBlock (CO_SDO *srv)
 {
-    CPU_INT32U size;                                  /* Local: size of object entry              */
-    CPU_INT16S result = 0;                            /* Local: function result                   */
-    CPU_INT16S err;                                   /* Local: error variable                    */
-    CPU_INT08U cmd;                                   /* Local: SDO command byte                  */
+    uint32_t size;                                  /* Local: size of object entry              */
+    int16_t result = 0;                            /* Local: function result                   */
+    int16_t err;                                   /* Local: error variable                    */
+    uint8_t cmd;                                   /* Local: SDO command byte                  */
                                                       /*------------------------------------------*/
     err = CO_SdoGetObject(srv, CO_SDO_RD);            /* get addressed object entry               */
     if (err < 0) {                                    /* see, if object entry is not existing     */
@@ -687,15 +687,15 @@ CPU_INT16S CO_SdoInitUploadBlock (CO_SDO *srv)
 * \ds301    9.2.2.2.13
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoUploadBlock (CO_SDO *srv)
+int16_t CO_SdoUploadBlock (CO_SDO *srv)
 {
-    CPU_INT32U size;                                  /* Local: remaining object entry size       */
-    CPU_INT16S result   = -2;                         /* Local: function result                   */
-    CPU_INT16S err;                                   /* Local: error variable                    */
-    CPU_INT08U finished =  0;                         /* Local: end of object indication          */
-    CPU_INT08U seg;                                   /* Local: segment counter                   */
-    CPU_INT08U len;                                   /* Local: used bytes in frame               */
-    CPU_INT08U   i;                                   /* Local: loop counter                      */
+    uint32_t size;                                  /* Local: remaining object entry size       */
+    int16_t result   = -2;                         /* Local: function result                   */
+    int16_t err;                                   /* Local: error variable                    */
+    uint8_t finished =  0;                         /* Local: end of object indication          */
+    uint8_t seg;                                   /* Local: segment counter                   */
+    uint8_t len;                                   /* Local: used bytes in frame               */
+    uint8_t   i;                                   /* Local: loop counter                      */
                                                       /*------------------------------------------*/
     srv->Buf.Cur = srv->Buf.Start;                    /* clr reading location in transfer buffer  */
     srv->Buf.Num = 7 * srv->Blk.SegNum;               /* calculate number of bytes in buffer      */
@@ -705,7 +705,7 @@ CPU_INT16S CO_SdoUploadBlock (CO_SDO *srv)
         if (srv->Blk.Size > srv->Buf.Num) {           /* see, if domain > transfer buffer         */
             err = COObjRdBufCont(srv->Obj,            /* fill transfer buffer for reading         */
                                  srv->Buf.Start,
-                                 (CPU_INT32U)srv->Buf.Num);
+                                 (uint32_t)srv->Buf.Num);
             if (err != CO_ERR_NONE) {                 /* see, if an error is detected             */
                 srv->Node->Error = CO_ERR_SDO_READ;   /* set error code                           */
             }
@@ -714,7 +714,7 @@ CPU_INT16S CO_SdoUploadBlock (CO_SDO *srv)
             srv->Buf.Num   = srv->Blk.Size;           /* set reading to object entry size         */
             err = COObjRdBufCont(srv->Obj,            /* fill transfer buffer for reading         */
                                  srv->Buf.Start,
-                                 (CPU_INT32U)srv->Buf.Num);
+                                 (uint32_t)srv->Buf.Num);
             if (err != CO_ERR_NONE) {                 /* see, if an error is detected             */
                 srv->Node->Error = CO_ERR_SDO_READ;   /* set error code                           */
             }
@@ -736,7 +736,7 @@ CPU_INT16S CO_SdoUploadBlock (CO_SDO *srv)
                 finished = 1;                         /* indicate last segment in block           */
             }
         } else {                                      /* otherwise: last segment of last block    */
-            len          = (CPU_INT08U)size;          /* set length                               */
+            len          = (uint8_t)size;          /* set length                               */
             srv->Blk.Len = 0;
             finished     = 1;                         /* end on next loop                         */
         }
@@ -754,7 +754,7 @@ CPU_INT16S CO_SdoUploadBlock (CO_SDO *srv)
             srv->Buf.Cur++;                           /* update working read pointer in buffer    */
             srv->Buf.Num--;                           /* decrement remaining bytes in buffer      */
         }
-        for (i = (CPU_INT08U)len; i < 7; i++) {       /* clear rest of can frame                  */
+        for (i = (uint8_t)len; i < 7; i++) {       /* clear rest of can frame                  */
             CO_SET_BYTE(srv->Frm, 0, 1+i);
         }
         (void)COIfSend(&srv->Node->If, srv->Frm);     /* send SDO response at once                */
@@ -789,13 +789,13 @@ CPU_INT16S CO_SdoUploadBlock (CO_SDO *srv)
 * \ds301    9.2.2.2.14
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoAckUploadBlock (CO_SDO *srv)
+int16_t CO_SdoAckUploadBlock (CO_SDO *srv)
 {
-    CPU_INT16S result = -2;                           /* Local: function result                   */
-    CPU_INT08U cmd;                                   /* Local: SDO command byte                  */
-    CPU_INT08U seq;                                   /* Local: sequence counter                  */
-    CPU_INT08U val;                                   /* Local: last valid segment                */
-    CPU_INT08U   i;                                   /* Local: sequence counter                  */
+    int16_t result = -2;                           /* Local: function result                   */
+    uint8_t cmd;                                   /* Local: SDO command byte                  */
+    uint8_t seq;                                   /* Local: sequence counter                  */
+    uint8_t val;                                   /* Local: last valid segment                */
+    uint8_t   i;                                   /* Local: sequence counter                  */
 
     seq = CO_GET_BYTE(srv->Frm, 1);
     if (seq > 0x7F) {                                 /* if sequence number out of range          */
@@ -808,10 +808,10 @@ CPU_INT16S CO_SdoAckUploadBlock (CO_SDO *srv)
         result          = CO_SdoUploadBlock(srv);     /* re-send this block                       */
     } else if (srv->Blk.Len == 0) {                   /* if last segment of last block            */
         if (srv->Blk.LastValid <= 7) {                /* if last valid bytes are valid            */
-            val = (CPU_INT08U)srv->Blk.LastValid;     /* get last valid received segments         */
-            cmd = (CPU_INT08U)0xC0 |                  /* scs=6, ss=1, n=number of unused bytes    */
-                  (CPU_INT08U)((7u - val) << 2) |
-                  (CPU_INT08U)0x01;
+            val = (uint8_t)srv->Blk.LastValid;     /* get last valid received segments         */
+            cmd = (uint8_t)0xC0 |                  /* scs=6, ss=1, n=number of unused bytes    */
+                  (uint8_t)((7u - val) << 2) |
+                  (uint8_t)0x01;
             CO_SET_BYTE(srv->Frm, cmd, 0);
             for (i = 1; i <= 7; i++) {                /* clear remaining bytes                    */
                 CO_SET_BYTE(srv->Frm, 0, i);
@@ -863,9 +863,9 @@ CPU_INT16S CO_SdoAckUploadBlock (CO_SDO *srv)
 * \ds301    9.2.2.2.15
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoEndUploadBlock (CO_SDO *srv)
+int16_t CO_SdoEndUploadBlock (CO_SDO *srv)
 {
-    CPU_INT16S result = -2;                           /* Local: function result                   */
+    int16_t result = -2;                           /* Local: function result                   */
                                                       /*------------------------------------------*/
     srv->Blk.State = BLK_IDLE;                        /* set block transfer to idle               */
     srv->Obj       = 0;                               /* clear object entry reference             */
@@ -931,19 +931,19 @@ void CO_SdoAbortReq (CO_SDO *srv)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_TSdoIdWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
+int16_t CO_TSdoIdWrite(CO_OBJ* obj, void *buf, uint32_t size)
 {
-    CPU_INT32U  newval;                               /* Local: write value                       */
-    CPU_INT32U  curval;                               /* Local: current CAN identifier value      */
+    uint32_t  newval;                               /* Local: write value                       */
+    uint32_t  curval;                               /* Local: current CAN identifier value      */
     CO_NODE    *node;                                 /* Local: pointer to parent node            */
-    CPU_INT16S  err = CO_ERR_NONE;                    /* Local: error code                        */
-    CPU_INT08U  num;                                  /* Local: number of SDO server              */
+    int16_t  err = CO_ERR_NONE;                    /* Local: error code                        */
+    uint8_t  num;                                  /* Local: number of SDO server              */
                                                       /*------------------------------------------*/
     if ((obj == 0) ||                                 /* see, if one of the arguments is invalid  */
         (buf == 0) || (size != CO_LONG)) {
         return (CO_ERR_BAD_ARG);                      /* yes: abort with error indication         */
     }
-    newval = *(CPU_INT32U *)buf;                      /* get write value                          */
+    newval = *(uint32_t *)buf;                      /* get write value                          */
     (void)CO_ObjRdDirect(obj, &curval, CO_LONG);      /* get current value (existance is checked) */
     num    = CO_GET_IDX(obj->Key) & 0x7F;             /* get number of SDO server                 */
     node   = obj->Type->Dir->Node;                    /* get pointer to parent node               */

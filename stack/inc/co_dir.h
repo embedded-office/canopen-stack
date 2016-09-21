@@ -38,8 +38,8 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "co_obj.h"                                   /* object entry functions                   */
-#include "co_err.h"                                   /* CANopen error code definitions           */
+#include "co_obj.h"
+#include "co_err.h"
 #if CO_OBJ_STRING_EN > 0 || CO_OBJ_DOMAIN_EN > 0
 #include "co_fobj.h"
 #endif
@@ -61,8 +61,8 @@ extern "C" {
 typedef struct CO_DIR_T {
     struct CO_NODE_T *Node;                           /*!< Ptr to parent CANopen node info        */
     struct CO_OBJ_T  *Root;                           /*!< Ptr to root object of directory        */
-    CPU_INT16U        Num;                            /*!< Current number of objects in directory */
-    CPU_INT16U        Max;                            /*!< Maximal number of objects in directory */
+    uint16_t        Num;                            /*!< Current number of objects in directory */
+    uint16_t        Max;                            /*!< Maximal number of objects in directory */
 
 } CO_DIR;
 
@@ -72,15 +72,15 @@ typedef struct CO_DIR_T {
 ****************************************************************************************************
 */
 
-CO_OBJ     *CODirFind       (CO_DIR *cod, CPU_INT32U key);
-CPU_INT16S  CODirRdByte     (CO_DIR *cod, CPU_INT32U key, CPU_INT08U *value);
-CPU_INT16S  CODirRdWord     (CO_DIR *cod, CPU_INT32U key, CPU_INT16U *value);
-CPU_INT16S  CODirRdLong     (CO_DIR *cod, CPU_INT32U key, CPU_INT32U *value);
-CPU_INT16S  CODirWrByte     (CO_DIR *cod, CPU_INT32U key, CPU_INT08U value);
-CPU_INT16S  CODirWrWord     (CO_DIR *cod, CPU_INT32U key, CPU_INT16U value);
-CPU_INT16S  CODirWrLong     (CO_DIR *cod, CPU_INT32U key, CPU_INT32U value);
-CPU_INT16S  CODirRdBuffer   (CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CPU_INT32U len);
-CPU_INT16S  CODirWrBuffer   (CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CPU_INT32U len);
+CO_OBJ     *CODirFind       (CO_DIR *cod, uint32_t key);
+int16_t  CODirRdByte     (CO_DIR *cod, uint32_t key, uint8_t *value);
+int16_t  CODirRdWord     (CO_DIR *cod, uint32_t key, uint16_t *value);
+int16_t  CODirRdLong     (CO_DIR *cod, uint32_t key, uint32_t *value);
+int16_t  CODirWrByte     (CO_DIR *cod, uint32_t key, uint8_t value);
+int16_t  CODirWrWord     (CO_DIR *cod, uint32_t key, uint16_t value);
+int16_t  CODirWrLong     (CO_DIR *cod, uint32_t key, uint32_t value);
+int16_t  CODirRdBuffer   (CO_DIR *cod, uint32_t key, uint8_t *buffer, uint32_t len);
+int16_t  CODirWrBuffer   (CO_DIR *cod, uint32_t key, uint8_t *buffer, uint32_t len);
 
 /*
 ****************************************************************************************************
@@ -88,7 +88,7 @@ CPU_INT16S  CODirWrBuffer   (CO_DIR *cod, CPU_INT32U key, CPU_INT08U *buffer, CP
 ****************************************************************************************************
 */
 
-CPU_INT16S  CO_DirInit      (CO_DIR *cod, struct CO_NODE_T *node, CO_OBJ *root, CPU_INT16U max);
+int16_t  CO_DirInit      (CO_DIR *cod, struct CO_NODE_T *node, CO_OBJ *root, uint16_t max);
 
 #ifdef __cplusplus
 }

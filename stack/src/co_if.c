@@ -55,16 +55,12 @@
 * \retval   <0     the internal CanBus error code
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COIfRead (CO_IF *cif, CO_IF_FRM *frm)
+int16_t COIfRead (CO_IF *cif, CO_IF_FRM *frm)
 {
-    CPU_INT16S busId;                                 /* Local: active bus identifier             */
-    CPU_INT16S err;                                   /* Local: function error code               */
+    int16_t err = -1;                                 /* Local: function error code               */
                                                       /*------------------------------------------*/
-    busId = (CPU_INT16S)cif->Drv->BusNodeName;        /* get active busnode                       */
-    err   = CanBusRead(busId,                         /* wait for a CAN frame on bus              */
-                       (void*)frm,
-                       sizeof(CO_IF_FRM)); 
-                                                      /*------------------------------------------*/
+    /* insert your code here */
+
     return (err);                                     /* return function result                   */
 }
 
@@ -83,15 +79,12 @@ CPU_INT16S COIfRead (CO_IF *cif, CO_IF_FRM *frm)
 * \retval   <0     the internal CanBus error code
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COIfSend  (CO_IF *cif, CO_IF_FRM *frm)
+int16_t COIfSend  (CO_IF *cif, CO_IF_FRM *frm)
 {
-    CPU_INT16S busId;                                 /* Local: active bus identifier             */
-    CPU_INT16S err;                                   /* Local: function error code               */
+    int16_t err = -1;                                 /* Local: function error code               */
                                                       /*------------------------------------------*/
-    busId = (CPU_INT16S)cif->Drv->BusNodeName;        /* get active busnode                       */
-    err   = CanBusWrite(busId,                        /* send a CAN frame at once                 */
-                        (void*)frm,
-                        sizeof(CO_IF_FRM)); 
+    /* insert your code here */
+
     if (err < 0) {                                    /* see, if an error is detected             */
         cif->Node->Error = CO_ERR_IF_SEND;            /* set bus write error                      */
     }
@@ -111,25 +104,10 @@ CPU_INT16S COIfSend  (CO_IF *cif, CO_IF_FRM *frm)
 /*------------------------------------------------------------------------------------------------*/
 void COIfReset(CO_IF *cif)
 {
-    CPU_INT16S busId;                                 /* Local: active bus identifier             */
-    CPU_INT16S err;                                   /* Local: function error code               */
+    int16_t err = -1;                                 /* Local: function error code               */
                                                       /*------------------------------------------*/
-    busId = (CPU_INT16S)cif->Drv->BusNodeName;        /* get active busnode                       */
-    err = CanBusIoCtl(busId,                          /* clear tx queue                           */
-                      (CPU_INT16U)CANBUS_FLUSH_TX,
-                      (void*)0);
-    if (err < 0) {                                    /* see, if an error is detected             */
-        cif->Node->Error = CO_ERR_IF_FLUSH_TX;        /* set error code                           */
-    }
-    err = CanBusIoCtl(busId,                          /* clear rx queue                           */
-                      (CPU_INT16U)CANBUS_FLUSH_RX,
-                      (void*)0);
-    if (err < 0) {                                    /* see, if an error is detected             */
-        cif->Node->Error = CO_ERR_IF_FLUSH_RX;        /* set bus ioctl error                      */
-    }
-    err = CanBusIoCtl(busId,                          /* set error code                           */
-                      (CPU_INT16U)CANBUS_RESET,
-                      (void*)0);
+    /* insert your code here */
+    
     if (err < 0) {                                    /* see, if an error is detected             */
         cif->Node->Error = CO_ERR_IF_RESET;           /* set error code                           */
     }
@@ -147,24 +125,10 @@ void COIfReset(CO_IF *cif)
 /*------------------------------------------------------------------------------------------------*/
 void COIfClose(CO_IF *cif)
 {
-    CPU_INT16S busId;                                 /* Local: active bus identifier             */
-    CPU_INT16S err;                                   /* Local: function error code               */
+    int16_t err = -1;                                 /* Local: function error code               */
                                                       /*------------------------------------------*/
-    busId = (CPU_INT16S)cif->Drv->BusNodeName;        /* get active busnode                       */
-    err = CanBusIoCtl(busId,                          /* clear tx queue                           */
-        (CPU_INT16U)CANBUS_FLUSH_TX,
-        (void*)0);
-    if (err < 0) {                                    /* see, if an error is detected             */
-        cif->Node->Error = CO_ERR_IF_FLUSH_TX;        /* set error code                           */
-    }
-    err = CanBusIoCtl(busId,                          /* clear rx queue                           */
-        (CPU_INT16U)CANBUS_FLUSH_RX,
-        (void*)0);
-    if (err < 0) {                                    /* see, if an error is detected             */
-        cif->Node->Error = CO_ERR_IF_FLUSH_RX;        /* set bus ioctl error                      */
-    }
-    busId = (CPU_INT16S)cif->Drv->BusNodeName;        /* get active busnode                       */
-    err   = CanBusDisable(busId);                     /* disable CAN interface                    */
+    /* insert your code here */
+    
     if (err < 0) {                                    /* see, if an error is detected             */
         cif->Node->Error = CO_ERR_IF_CLOSE;           /* set error code                           */
     }
@@ -190,21 +154,10 @@ void COIfClose(CO_IF *cif)
 /*------------------------------------------------------------------------------------------------*/
 void CO_IfInit (CO_IF *cif, struct CO_NODE_T *node)
 {
-    CPU_INT16S err;                                   /* Local: function error code               */
-    CO_IF_DRV  drv;
+    int16_t err = -1;                                 /* Local: function error code               */
                                                       /*------------------------------------------*/
-    if (node == 0) {                                  /* see, if node ptr is invalid              */
-        CO_NodeFatalError();                          /* inform user                              */
-        return;                                       /* abort initialization of interface        */
-    }
-    cif->Node = node;                                 /* store pointer to parent node             */
-    err       = CanBusInit((CPU_INT32U)0);            /* Initialise CAN bus interface             */
-    if (err < 0) {                                    /* see, if an error is detected             */
-        node->Error = CO_ERR_IF_INIT;                 /* yes: set error code                      */
-    }
-    drv = cif->Drv;                                   /* get can bus configuration                */
-    drv->Baudrate = 0;                                /* ensure, that baudrate is disabled        */
-    err = CanBusEnable(drv);                          /* enable used to link config to can bus    */
+    /* insert your code here */
+    
     if (err < 0) {                                    /* see, if an error is detected             */
         node->Error = CO_ERR_IF_INIT;                 /* yes: set error code                      */
     }
@@ -222,19 +175,17 @@ void CO_IfInit (CO_IF *cif, struct CO_NODE_T *node)
 * \param[in,out]   node          pointer to the parent node
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_IfEnable (CO_IF *cif, CPU_INT32U baudrate)
+void CO_IfEnable (CO_IF *cif, uint32_t baudrate)
 {
-    CPU_INT16S err;                                   /* Local: function error code               */
+    int16_t err = -1;                                 /* Local: function error code               */
     CO_IF_DRV  drv;
                                                       /*------------------------------------------*/
     if (baudrate == 0) {                              /* see, if no baudrate is given             */
     	baudrate = cif->Node->Baudrate;               /* get default baudrate from node           */
     }
-    drv = cif->Drv;                                   /* get driver structure                     */
-    drv->Baudrate = baudrate;                         /* set given baudrate in configuration      */
-    err = CanBusIoCtl((CPU_INT16S)drv->BusNodeName,   /* Reset and enable CAN bus                 */
-                      (CPU_INT16U)CANBUS_RESET,
-                      (void*)0);
+
+    /* insert your code here */
+
     if (err < 0) {                                    /* see, if an error is detected             */
         cif->Node->Error = CO_ERR_IF_ENABLE;          /* yes: set error code                      */
     } else {

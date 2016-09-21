@@ -39,7 +39,7 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "co_obj.h"                                   /* object entry functions                   */
+#include "co_obj.h"
 
 /*
 ****************************************************************************************************
@@ -69,9 +69,9 @@ extern CO_OBJ_TYPE COTEmcy;                           /* Link to EMCY Object Typ
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_EMCY_HIST_T {
-    CPU_INT08U Max;                                   /*!< Total length of EMCY history           */
-    CPU_INT08U Num;                                   /*!< Number of EMCY in history              */
-    CPU_INT08U Off;                                   /*!< Subindex-Offset to newest EMCY entry   */
+    uint8_t Max;                                   /*!< Total length of EMCY history           */
+    uint8_t Num;                                   /*!< Number of EMCY in history              */
+    uint8_t Off;                                   /*!< Subindex-Offset to newest EMCY entry   */
 
 } CO_EMCY_HIST;
 
@@ -96,7 +96,7 @@ void       COEmcyHistReset   (struct CO_EMCY_T *emcy);
 
 #if CO_EMCY_HIST_EN > 0
 void       CO_EmcyHistInit   (struct CO_EMCY_T *emcy);
-void       CO_EmcyHistAdd    (struct CO_EMCY_T *emcy, CPU_INT08U err, struct CO_EMCY_USR_T *usr);
+void       CO_EmcyHistAdd    (struct CO_EMCY_T *emcy, uint8_t err, struct CO_EMCY_USR_T *usr);
 #endif
 
 #ifdef __cplusplus

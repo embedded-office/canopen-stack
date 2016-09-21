@@ -91,9 +91,9 @@ extern CO_OBJ_TYPE COTSdoId;                          /* Link to SDO-Id Object T
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_SDO_BUF_T {
-    CPU_INT32U  Num;                                  /*!< Number of bytes in transfer buffer     */
-    CPU_INT08U *Start;                                /*!< Pointer to start of transfer buffer    */
-    CPU_INT08U *Cur;                                  /*!< Pointer to next free buffer location   */
+    uint32_t  Num;                                  /*!< Number of bytes in transfer buffer     */
+    uint8_t *Start;                                /*!< Pointer to start of transfer buffer    */
+    uint8_t *Cur;                                  /*!< Pointer to next free buffer location   */
 
 } CO_SDO_BUF;
 #endif
@@ -108,9 +108,9 @@ typedef struct CO_SDO_BUF_T {
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_SDO_SEG_T {
-    CPU_INT32U  Size;                                 /*!< Size of object entry                   */
-    CPU_INT32U  Num;                                  /*!< Number of transfered bytes             */
-    CPU_INT08U  TBit;                                 /*!< Segment toggle bit                     */
+    uint32_t  Size;                                 /*!< Size of object entry                   */
+    uint32_t  Num;                                  /*!< Number of transfered bytes             */
+    uint8_t  TBit;                                 /*!< Segment toggle bit                     */
 
 } CO_SDO_SEG;
 #endif
@@ -145,11 +145,11 @@ typedef enum  CO_SDO_BLK_STATE_T {
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_SDO_BLK_T {
     enum CO_SDO_BLK_STATE_T State;                    /*!< block transfer state                   */
-    CPU_INT32U              Size;                     /*!< Size of object entry                   */
-    CPU_INT32U              Len;                      /*!< remaining block length in byte         */
-    CPU_INT08U              SegNum;                   /*!< number of segments in block            */
-    CPU_INT08U              SegCnt;                   /*!< current segment number                 */
-    CPU_INT08U              LastValid;                /*!< number of valid bytes in last segment  */
+    uint32_t              Size;                     /*!< Size of object entry                   */
+    uint32_t              Len;                      /*!< remaining block length in byte         */
+    uint8_t              SegNum;                   /*!< number of segments in block            */
+    uint8_t              SegCnt;                   /*!< current segment number                 */
+    uint8_t              LastValid;                /*!< number of valid bytes in last segment  */
 
 } CO_SDO_BLK;
 #endif
@@ -163,20 +163,20 @@ typedef struct CO_SDO_BLK_T {
 struct CO_SDO_T;                                      /* Declaration of SDO server object         */
 
 #if CO_SDO_SEG_EN > 0
-CPU_INT16S CO_SdoInitUploadSegmented     (struct CO_SDO_T *srv, CPU_INT32U width);
-CPU_INT16S CO_SdoUploadSegmented         (struct CO_SDO_T *srv);
-CPU_INT16S CO_SdoInitDownloadSegmented   (struct CO_SDO_T *srv);
-CPU_INT16S CO_SdoDownloadSegmented       (struct CO_SDO_T *srv);
+int16_t CO_SdoInitUploadSegmented     (struct CO_SDO_T *srv, uint32_t width);
+int16_t CO_SdoUploadSegmented         (struct CO_SDO_T *srv);
+int16_t CO_SdoInitDownloadSegmented   (struct CO_SDO_T *srv);
+int16_t CO_SdoDownloadSegmented       (struct CO_SDO_T *srv);
 #endif
 
 #if CO_SDO_BLK_EN > 0
-CPU_INT16S CO_SdoInitDownloadBlock       (struct CO_SDO_T *srv);
-CPU_INT16S CO_SdoDownloadBlock           (struct CO_SDO_T *srv);
-CPU_INT16S CO_SdoEndDownloadBlock        (struct CO_SDO_T *srv);
-CPU_INT16S CO_SdoInitUploadBlock         (struct CO_SDO_T *srv);
-CPU_INT16S CO_SdoUploadBlock             (struct CO_SDO_T *srv);
-CPU_INT16S CO_SdoAckUploadBlock          (struct CO_SDO_T *srv);
-CPU_INT16S CO_SdoEndUploadBlock          (struct CO_SDO_T *srv);
+int16_t CO_SdoInitDownloadBlock       (struct CO_SDO_T *srv);
+int16_t CO_SdoDownloadBlock           (struct CO_SDO_T *srv);
+int16_t CO_SdoEndDownloadBlock        (struct CO_SDO_T *srv);
+int16_t CO_SdoInitUploadBlock         (struct CO_SDO_T *srv);
+int16_t CO_SdoUploadBlock             (struct CO_SDO_T *srv);
+int16_t CO_SdoAckUploadBlock          (struct CO_SDO_T *srv);
+int16_t CO_SdoEndUploadBlock          (struct CO_SDO_T *srv);
 #endif
 
 #ifdef __cplusplus

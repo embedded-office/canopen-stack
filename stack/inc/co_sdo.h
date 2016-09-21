@@ -39,8 +39,8 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "cpu.h"                                      /* CPU configuration                        */
-#include "co_cfg.h"                                   /* CANopen configuration                    */
+#include "co_types.h"
+#include "co_cfg.h"
 #include "co_if.h"
 #if CO_SDO_BLK_EN > 0 || CO_SDO_SEG_EN > 0 || CO_SDO_DYN_ID_EN > 0
 #include "co_fsdo.h"
@@ -76,7 +76,7 @@ extern "C" {
 #define CO_SDO_RD                     1               /*!< Object read access                     */
 #define CO_SDO_WR                     2               /*!< Object write access                    */
 
-#define CO_SDO_COBID_OFF   ((CPU_INT32U)1<<31)        /*!< Disabled SDO server / COBID            */
+#define CO_SDO_COBID_OFF   ((uint32_t)1<<31)        /*!< Disabled SDO server / COBID            */
 
 /*
 ****************************************************************************************************
@@ -96,10 +96,10 @@ typedef struct CO_SDO_T {
     struct CO_NODE_T    *Node;                        /*!< Link to node info structure            */
     struct CO_OBJ_T     *Obj;                         /*!< Addressed Object Entry Reference       */
     CO_IF_FRM           *Frm;                         /*!< SDO request/response CAN frame         */
-    CPU_INT32U           RxId;                        /*!< SDO request CAN identifier             */
-    CPU_INT32U           TxId;                        /*!< SDO response CAN identifier            */
-    CPU_INT16U           Idx;                         /*!< Extracted Multiplexer Index            */
-    CPU_INT08U           Sub;                         /*!< Extracted Multiplexer Subindex         */
+    uint32_t           RxId;                        /*!< SDO request CAN identifier             */
+    uint32_t           TxId;                        /*!< SDO response CAN identifier            */
+    uint16_t           Idx;                         /*!< Extracted Multiplexer Index            */
+    uint8_t           Sub;                         /*!< Extracted Multiplexer Subindex         */
 #if CO_SDO_SEG_EN > 0 || CO_SDO_BLK_EN > 0
     struct CO_SDO_BUF_T  Buf;                         /*!< Transfer buffer management structure   */
 #endif
@@ -119,16 +119,16 @@ typedef struct CO_SDO_T {
 */
 
 void       CO_SdoInit              (CO_SDO *srv, struct CO_NODE_T *node);
-void       CO_SdoReset             (CO_SDO *srv, CPU_INT08U num, struct CO_NODE_T *node);
-void       CO_SdoEnable            (CO_SDO *srv, CPU_INT08U num);
+void       CO_SdoReset             (CO_SDO *srv, uint8_t num, struct CO_NODE_T *node);
+void       CO_SdoEnable            (CO_SDO *srv, uint8_t num);
 CO_SDO    *CO_SdoCheck             (CO_SDO *srv, CO_IF_FRM *frm);
-CPU_INT16S CO_SdoResponse          (CO_SDO *srv);
+int16_t CO_SdoResponse          (CO_SDO *srv);
 void       CO_SdoAbortReq          (CO_SDO *srv);
-void       CO_SdoAbort             (CO_SDO *srv, CPU_INT32U err);
-CPU_INT16S CO_SdoGetObject         (CO_SDO *srv, CPU_INT16U mode);
-CPU_INT32U CO_SdoGetSize           (CO_SDO *srv, CPU_INT32U width);
-CPU_INT16S CO_SdoDownloadExpedited (CO_SDO *srv);
-CPU_INT16S CO_SdoUploadExpedited   (CO_SDO *srv);
+void       CO_SdoAbort             (CO_SDO *srv, uint32_t err);
+int16_t CO_SdoGetObject         (CO_SDO *srv, uint16_t mode);
+uint32_t CO_SdoGetSize           (CO_SDO *srv, uint32_t width);
+int16_t CO_SdoDownloadExpedited (CO_SDO *srv);
+int16_t CO_SdoUploadExpedited   (CO_SDO *srv);
 
 #ifdef __cplusplus
 }

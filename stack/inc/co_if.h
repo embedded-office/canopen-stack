@@ -38,8 +38,8 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "drv_can.h"                                  /* CAN device driver definitions            */
-#include "can_bus.h"                                  /* CAN bus management                       */
+//#include "drv_can.h"                                  /* CAN device driver definitions            */
+//#include "can_bus.h"                                  /* CAN bus management                       */
 
 /*
 ****************************************************************************************************
@@ -47,41 +47,41 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#define CO_GET_COBID(f)   ((CPU_INT32U)(f)->Identifier)
+#define CO_GET_COBID(f)   ((uint32_t)(f)->Identifier)
 
-#define CO_SET_COBID(f,n) ((f)->Identifier=(CPU_INT32U)(n))
+#define CO_SET_COBID(f,n) ((f)->Identifier=(uint32_t)(n))
 
-#define CO_GET_DLC(f)     ((CPU_INT08U)(f)->DLC)
+#define CO_GET_DLC(f)     ((uint8_t)(f)->DLC)
 
-#define CO_SET_DLC(f,n)   ((f)->DLC=(CPU_INT08U)(n))
+#define CO_SET_DLC(f,n)   ((f)->DLC=(uint8_t)(n))
 
-#define CO_GET_BYTE(f,p)  (CPU_INT08U)(                  \
-                            (CPU_INT08U)(f)->Data[(p)&0x7] \
+#define CO_GET_BYTE(f,p)  (uint8_t)(                  \
+                            (uint8_t)(f)->Data[(p)&0x7] \
                           )
 
-#define CO_GET_WORD(f,p)  (CPU_INT16U)(                                     \
-                            ( ( (CPU_INT16U)((f)->Data[((p)+1)&0x7]) ) << 8 ) | \
-                            ( ( (CPU_INT16U)((f)->Data[((p)  )&0x7]) )      )   \
+#define CO_GET_WORD(f,p)  (uint16_t)(                                     \
+                            ( ( (uint16_t)((f)->Data[((p)+1)&0x7]) ) << 8 ) | \
+                            ( ( (uint16_t)((f)->Data[((p)  )&0x7]) )      )   \
                           )
 
-#define CO_GET_LONG(f,p)  (CPU_INT32U)(                                      \
-                            ( ( (CPU_INT32U)((f)->Data[((p)+3)&0x7]) ) << 24 ) | \
-                            ( ( (CPU_INT32U)((f)->Data[((p)+2)&0x7]) ) << 16 ) | \
-                            ( ( (CPU_INT32U)((f)->Data[((p)+1)&0x7]) ) <<  8 ) | \
-                            ( ( (CPU_INT32U)((f)->Data[((p)  )&0x7]) )       )   \
+#define CO_GET_LONG(f,p)  (uint32_t)(                                      \
+                            ( ( (uint32_t)((f)->Data[((p)+3)&0x7]) ) << 24 ) | \
+                            ( ( (uint32_t)((f)->Data[((p)+2)&0x7]) ) << 16 ) | \
+                            ( ( (uint32_t)((f)->Data[((p)+1)&0x7]) ) <<  8 ) | \
+                            ( ( (uint32_t)((f)->Data[((p)  )&0x7]) )       )   \
                           )
 
-#define CO_SET_BYTE(f,n,p) {(f)->Data[(p)&0x7]=(CPU_INT08U)(n);}
+#define CO_SET_BYTE(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)(n);}
 
 /*lint -emacro( {572,778}, CO_SET_WORD ) : shifting values to 0 is ok */
-#define CO_SET_WORD(f,n,p) {(f)->Data[(p)&0x7]=(CPU_INT08U)((CPU_INT16U)(n));\
-                            (f)->Data[((p)+1)&0x7]=(CPU_INT08U)(((CPU_INT16U)(n))>>8);}
+#define CO_SET_WORD(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)((uint16_t)(n));\
+                            (f)->Data[((p)+1)&0x7]=(uint8_t)(((uint16_t)(n))>>8);}
 
 /*lint -emacro( {572,778}, CO_SET_LONG ) : shifting values to 0 is ok */
-#define CO_SET_LONG(f,n,p) {(f)->Data[(p)&0x7]=(CPU_INT08U)((CPU_INT32U)(n));\
-                            (f)->Data[((p)+1)&0x7]=(CPU_INT08U)(((CPU_INT32U)(n))>>8);\
-                            (f)->Data[((p)+2)&0x7]=(CPU_INT08U)(((CPU_INT32U)(n))>>16);\
-                            (f)->Data[((p)+3)&0x7]=(CPU_INT08U)(((CPU_INT32U)(n))>>24);}
+#define CO_SET_LONG(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)((uint32_t)(n));\
+                            (f)->Data[((p)+1)&0x7]=(uint8_t)(((uint32_t)(n))>>8);\
+                            (f)->Data[((p)+2)&0x7]=(uint8_t)(((uint32_t)(n))>>16);\
+                            (f)->Data[((p)+3)&0x7]=(uint8_t)(((uint32_t)(n))>>24);}
 
 /*
 ****************************************************************************************************
@@ -89,14 +89,14 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#define CO_IF_DRV     CANBUS_PARA*                    /*!< driver specific bus identifier type    */
+#define CO_IF_DRV     int //CANBUS_PARA*                    /*!< driver specific bus identifier type    */
 
 struct CO_NODE_T;                                     /* Declaration of node structure            */
 
 typedef struct CO_IF_FRM_T {                          /*!< Type, which represents a CAN frame     */
-    CPU_INT32U        Identifier;                     /*!< CAN message identifier                 */
-    CPU_INT08U        Data[8];                        /*!< CAN message Data (payload)             */
-    CPU_INT08U        DLC;                            /*!< CAN message data length code (DLC)     */
+    uint32_t        Identifier;                     /*!< CAN message identifier                 */
+    uint8_t        Data[8];                        /*!< CAN message Data (payload)             */
+    uint8_t        DLC;                            /*!< CAN message data length code (DLC)     */
 
 } CO_IF_FRM;
 
@@ -112,8 +112,8 @@ typedef struct CO_IF_T {                              /*!< Driver interface stru
 ****************************************************************************************************
 */
 
-CPU_INT16S COIfRead     (CO_IF *cif, CO_IF_FRM *frm);
-CPU_INT16S COIfSend     (CO_IF *cif, CO_IF_FRM *frm);
+int16_t COIfRead     (CO_IF *cif, CO_IF_FRM *frm);
+int16_t COIfSend     (CO_IF *cif, CO_IF_FRM *frm);
 void       COIfReset    (CO_IF *cif);
 void       COIfClose    (CO_IF *cif);
 
@@ -124,7 +124,7 @@ void       COIfClose    (CO_IF *cif);
 */
 
 void       CO_IfInit    (CO_IF *cif, struct CO_NODE_T *node);
-void       CO_IfEnable  (CO_IF *cif, CPU_INT32U baudrate);
+void       CO_IfEnable  (CO_IF *cif, uint32_t baudrate);
 
 /*
 ****************************************************************************************************

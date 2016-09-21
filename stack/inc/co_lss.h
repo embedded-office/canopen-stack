@@ -100,20 +100,20 @@ struct CO_NODE_T;
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_LSS_T {
     struct CO_NODE_T *Node;                           /* link to parent CANopen node              */
-    CPU_INT32U        CfgBaudrate;                    /* buffered baudrate config for storage     */
-    CPU_INT16S        Tmr;                            /* timer identifier for baudrate activation */
-    CPU_INT08U        CfgNodeId;                      /* buffered node ID config for storage      */
-    CPU_INT08U        Mode;                           /* mode of layer setting service slave      */
-    CPU_INT08U        Step;                           /* LSS address selection step               */
-    CPU_INT08U        Flags;                          /* event flags                              */
+    uint32_t        CfgBaudrate;                    /* buffered baudrate config for storage     */
+    int16_t        Tmr;                            /* timer identifier for baudrate activation */
+    uint8_t        CfgNodeId;                      /* buffered node ID config for storage      */
+    uint8_t        Mode;                           /* mode of layer setting service slave      */
+    uint8_t        Step;                           /* LSS address selection step               */
+    uint8_t        Flags;                          /* event flags                              */
 
 } CO_LSS;
 
-typedef CPU_INT16S(*CO_LSS_SERVICE)(CO_LSS *, CO_IF_FRM *);
+typedef int16_t(*CO_LSS_SERVICE)(CO_LSS *, CO_IF_FRM *);
 
 typedef struct CO_LSS_MAP_T {
-    CPU_INT08U        Request;                        /* received LSS command specifier           */
-    CPU_INT08U        Allowed;                        /* allowed service in bitmasked LSS modes   */
+    uint8_t        Request;                        /* received LSS command specifier           */
+    uint8_t        Allowed;                        /* allowed service in bitmasked LSS modes   */
     CO_LSS_SERVICE    Service;                        /* service function                         */
 
 } CO_LSS_MAP;
@@ -127,7 +127,7 @@ typedef struct CO_LSS_MAP_T {
 
 #if CO_LSS_EN > 0
 void       CO_LssInit     (CO_LSS *lss, struct CO_NODE_T *node);
-CPU_INT16S CO_LssCheck    (CO_LSS *lss, CO_IF_FRM *frm);
+int16_t CO_LssCheck    (CO_LSS *lss, CO_IF_FRM *frm);
 #endif
 
 /*
@@ -137,8 +137,8 @@ CPU_INT16S CO_LssCheck    (CO_LSS *lss, CO_IF_FRM *frm);
 */
 
 #if CO_LSS_EN > 0
-CPU_INT16S CO_LssStore    (CPU_INT32U  baudrate, CPU_INT08U  nodeId);
-CPU_INT16S CO_LssLoad     (CPU_INT32U *baudrate, CPU_INT08U *nodeId);
+int16_t CO_LssStore    (uint32_t  baudrate, uint8_t  nodeId);
+int16_t CO_LssLoad     (uint32_t *baudrate, uint8_t *nodeId);
 #endif
 
 #ifdef __cplusplus

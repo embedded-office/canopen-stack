@@ -40,27 +40,27 @@
 */
 
 #if CO_LSS_EN > 0
-static CPU_INT16S CO_LssSwitchStateGlobal             (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssSwitchStateSelective_Vendor   (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssSwitchStateSelective_Product  (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssSwitchStateSelective_Revision (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssSwitchStateSelective_Serial   (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssActivateBitTiming             (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssConfigureBitTiming            (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssConfigureNodeId               (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssStoreConfiguration            (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssInquireAddress_Vendor         (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssInquireAddress_Product        (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssInquireAddress_Revision       (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssInquireAddress_Serial         (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssInquireNodeId                 (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssIdentifyRemoteSlave_Vendor    (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssIdentifyRemoteSlave_Product   (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssIdentifyRemoteSlave_RevMin    (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssIdentifyRemoteSlave_RevMax    (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssIdentifyRemoteSlave_SerMin    (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssIdentifyRemoteSlave_SerMax    (CO_LSS *lss, CO_IF_FRM *frm);
-static CPU_INT16S CO_LssNonConfiguredRemoteSlave      (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssSwitchStateGlobal             (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssSwitchStateSelective_Vendor   (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssSwitchStateSelective_Product  (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssSwitchStateSelective_Revision (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssSwitchStateSelective_Serial   (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssActivateBitTiming             (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssConfigureBitTiming            (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssConfigureNodeId               (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssStoreConfiguration            (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssInquireAddress_Vendor         (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssInquireAddress_Product        (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssInquireAddress_Revision       (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssInquireAddress_Serial         (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssInquireNodeId                 (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssIdentifyRemoteSlave_Vendor    (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssIdentifyRemoteSlave_Product   (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssIdentifyRemoteSlave_RevMin    (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssIdentifyRemoteSlave_RevMax    (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssIdentifyRemoteSlave_SerMin    (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssIdentifyRemoteSlave_SerMax    (CO_LSS *lss, CO_IF_FRM *frm);
+static int16_t CO_LssNonConfiguredRemoteSlave      (CO_LSS *lss, CO_IF_FRM *frm);
 #endif
 
 /*
@@ -94,7 +94,7 @@ const CO_LSS_MAP COLssServices[CO_LSS_MAX_SID] = {
     {  76 , CO_LSS_WAIT | CO_LSS_CONF, CO_LssNonConfiguredRemoteSlave }
 };
 
-const CPU_INT32U CO_LssBaudTbl[CO_LSS_MAX_BAUD] = {
+const uint32_t CO_LssBaudTbl[CO_LSS_MAX_BAUD] = {
     CO_STD_BAUD_1M,                                   /* 1MBit                                    */
     CO_STD_BAUD_800K,                                 /* 800kBit                                  */
     CO_STD_BAUD_500K,                                 /* 500kBit                                  */
@@ -126,8 +126,8 @@ const CPU_INT32U CO_LssBaudTbl[CO_LSS_MAX_BAUD] = {
 void CO_LssInit (CO_LSS *lss, CO_NODE *node)
 {
     CO_OBJ     *obj;
-    CPU_INT32U  size;
-    CPU_INT08U  subidx;
+    uint32_t  size;
+    uint8_t  subidx;
 
     if ((lss == 0) || (node == 0)) {                  /* see, if argument pointers are invalid    */
         CO_NodeFatalError();                          /* inform user                              */
@@ -177,12 +177,12 @@ void CO_LssInit (CO_LSS *lss, CO_NODE *node)
 * \retval  >0:      successful processed LSS request
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_LssCheck (CO_LSS *lss, CO_IF_FRM *frm)
+int16_t CO_LssCheck (CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT16S  result = 0;                           /* Local: function result: 'no LSS request' */
+    int16_t  result = 0;                           /* Local: function result: 'no LSS request' */
     const CO_LSS_MAP *map;                            /* Local: LSS service map                   */
-    CPU_INT08U  sid;                                  /* Local: loop variable (service index)     */
-    CPU_INT08U  cmd;                                  /* Local: LSS request command specifier     */
+    uint8_t  sid;                                  /* Local: loop variable (service index)     */
+    uint8_t  cmd;                                  /* Local: LSS request command specifier     */
                                                       /*------------------------------------------*/
     if (CO_GET_COBID(frm) == CO_LSS_RX_ID) {          /* see if frame is a LSS request            */
         result = -1;                                  /* set return to 'ignore' LSS request       */
@@ -208,9 +208,9 @@ CPU_INT16S CO_LssCheck (CO_LSS *lss, CO_IF_FRM *frm)
 */
 
 #if CO_LSS_EN > 0
-static CPU_INT16S CO_LssSwitchStateGlobal(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssSwitchStateGlobal(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT08U mode;                                  /* Local: commanded mode                    */
+    uint8_t mode;                                  /* Local: commanded mode                    */
 
     mode = CO_GET_BYTE(frm, 1);                       /* extract switching mode                   */
     if (mode == CO_LSS_CMD_CONF) {                    /* see, if switching mode is 'configuration'*/
@@ -222,11 +222,11 @@ static CPU_INT16S CO_LssSwitchStateGlobal(CO_LSS *lss, CO_IF_FRM *frm)
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssSwitchStateSelective_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssSwitchStateSelective_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
 
     lss->Step = CO_LSS_SEL_VENDOR;                    /* this service always restarts selection   */
 
@@ -240,11 +240,11 @@ static CPU_INT16S CO_LssSwitchStateSelective_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssSwitchStateSelective_Product(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssSwitchStateSelective_Product(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
 
     if (lss->Step != CO_LSS_SEL_PRODUCT) {            /* see, if order of selection is not correct*/
         lss->Step = CO_LSS_SEL_VENDOR;                /* restarts selection                       */
@@ -260,11 +260,11 @@ static CPU_INT16S CO_LssSwitchStateSelective_Product(CO_LSS *lss, CO_IF_FRM *frm
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssSwitchStateSelective_Revision(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssSwitchStateSelective_Revision(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
 
     if (lss->Step != CO_LSS_SEL_REVISION) {           /* see, if order of selection is not correct*/
         lss->Step = CO_LSS_SEL_VENDOR;                /* restarts selection                       */
@@ -280,12 +280,12 @@ static CPU_INT16S CO_LssSwitchStateSelective_Revision(CO_LSS *lss, CO_IF_FRM *fr
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssSwitchStateSelective_Serial(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssSwitchStateSelective_Serial(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S result = -1;                           /* Local: indicate: no LSS response         */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t result = -1;                           /* Local: indicate: no LSS response         */
+    int16_t err;                                   /* Local: error code                        */
 
     if (lss->Step != CO_LSS_SEL_SERIAL) {             /* see, if order of selection is not correct*/
         lss->Step = CO_LSS_SEL_VENDOR;                /* restarts selection                       */
@@ -324,9 +324,9 @@ void CO_LssActivateBitTiming_SwitchDelay (void *arg)
     }
 }
 
-static CPU_INT16S CO_LssActivateBitTiming(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssActivateBitTiming(CO_LSS *lss, CO_IF_FRM *frm)
 {
-	CPU_INT16U delay;
+	uint16_t delay;
 
     delay = CO_GET_WORD(frm, 1);                      /* extract switch delay from LSS request    */
 
@@ -342,11 +342,11 @@ static CPU_INT16S CO_LssActivateBitTiming(CO_LSS *lss, CO_IF_FRM *frm)
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssConfigureBitTiming(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssConfigureBitTiming(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT16S result = 1;                            /* Local: indicate: LSS response            */
-    CPU_INT08U table;                                 /* Local: baudrate table selector           */
-    CPU_INT08U baudId;                                /* Local: selected baudrate index           */
+    int16_t result = 1;                            /* Local: indicate: LSS response            */
+    uint8_t table;                                 /* Local: baudrate table selector           */
+    uint8_t baudId;                                /* Local: selected baudrate index           */
 
     table  = CO_GET_BYTE(frm, 1);                     /* extract table selector from LSS request  */
     baudId = CO_GET_BYTE(frm, 2);                     /* extract baudrate index from LSS request  */
@@ -370,10 +370,10 @@ static CPU_INT16S CO_LssConfigureBitTiming(CO_LSS *lss, CO_IF_FRM *frm)
     return result;
 }
 
-static CPU_INT16S CO_LssConfigureNodeId(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssConfigureNodeId(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT16S result = 1;                            /* Local: indicate: LSS response            */
-    CPU_INT08U nodeId;
+    int16_t result = 1;                            /* Local: indicate: LSS response            */
+    uint8_t nodeId;
 
     nodeId = CO_GET_BYTE(frm, 1);                     /* extract node-ID from LSS request         */
     if ( ((nodeId >= 1) && (nodeId <= 127)) ||        /* see, if node-Id is in valid range        */
@@ -388,10 +388,10 @@ static CPU_INT16S CO_LssConfigureNodeId(CO_LSS *lss, CO_IF_FRM *frm)
     return result;
 }
 
-static CPU_INT16S CO_LssStoreConfiguration(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssStoreConfiguration(CO_LSS *lss, CO_IF_FRM *frm)
 {
 #if CO_CB_LSS_STORE_EN > 0
-    CPU_INT16S err;                                   /* Local: error code                        */
+    int16_t err;                                   /* Local: error code                        */
 
     err = CO_LssStore(lss->CfgBaudrate,               /* store configured values                  */
                       lss->CfgNodeId);
@@ -409,9 +409,9 @@ static CPU_INT16S CO_LssStoreConfiguration(CO_LSS *lss, CO_IF_FRM *frm)
     return 1;                                         /* indicate: LSS response                   */
 }
 
-static CPU_INT16S CO_LssInquireAddress_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssInquireAddress_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U ident = 0;                             /* Local: read identity value out of object */
+    uint32_t ident = 0;                             /* Local: read identity value out of object */
 
     (void)CODirRdLong(&lss->Node->Dir,                /* read value from identity object          */
         CO_DEV(0x1018, 1), &ident);
@@ -421,9 +421,9 @@ static CPU_INT16S CO_LssInquireAddress_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
     return 1;                                         /* indicate: LSS response                   */
 }
 
-static CPU_INT16S CO_LssInquireAddress_Product(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssInquireAddress_Product(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U ident = 0;                             /* Local: read identity value out of object */
+    uint32_t ident = 0;                             /* Local: read identity value out of object */
 
     (void)CODirRdLong(&lss->Node->Dir,                /* read value from identity object          */
         CO_DEV(0x1018, 2), &ident);
@@ -433,9 +433,9 @@ static CPU_INT16S CO_LssInquireAddress_Product(CO_LSS *lss, CO_IF_FRM *frm)
     return 1;                                         /* indicate: LSS response                   */
 }
 
-static CPU_INT16S CO_LssInquireAddress_Revision(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssInquireAddress_Revision(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U ident = 0;                             /* Local: read identity value out of object */
+    uint32_t ident = 0;                             /* Local: read identity value out of object */
 
     (void)CODirRdLong(&lss->Node->Dir,                /* read value from identity object          */
         CO_DEV(0x1018, 3), &ident);
@@ -445,9 +445,9 @@ static CPU_INT16S CO_LssInquireAddress_Revision(CO_LSS *lss, CO_IF_FRM *frm)
     return 1;                                         /* indicate: LSS response                   */
 }
 
-static CPU_INT16S CO_LssInquireAddress_Serial(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssInquireAddress_Serial(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U ident = 0;                             /* Local: read identity value out of object */
+    uint32_t ident = 0;                             /* Local: read identity value out of object */
 
     (void)CODirRdLong(&lss->Node->Dir,                /* read value from identity object          */
         CO_DEV(0x1018, 4), &ident);
@@ -457,9 +457,9 @@ static CPU_INT16S CO_LssInquireAddress_Serial(CO_LSS *lss, CO_IF_FRM *frm)
     return 1;                                         /* indicate: LSS response                   */
 }
 
-static CPU_INT16S CO_LssInquireNodeId(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssInquireNodeId(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U nodeId;                                /* Local: read node ID of device            */
+    uint32_t nodeId;                                /* Local: read node ID of device            */
 
     nodeId = CONmtGetNodeId(&lss->Node->Nmt);         /* get current node-ID                      */
     CO_SET_BYTE (frm, nodeId, 1);                     /* set node-ID value in response            */
@@ -468,11 +468,11 @@ static CPU_INT16S CO_LssInquireNodeId(CO_LSS *lss, CO_IF_FRM *frm)
     return 1;                                         /* indicate: LSS response                   */
 }
 
-static CPU_INT16S CO_LssIdentifyRemoteSlave_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssIdentifyRemoteSlave_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
 
     lss->Step = CO_LSS_REM_VENDOR;                    /* this service always restarts identify    */
 
@@ -486,11 +486,11 @@ static CPU_INT16S CO_LssIdentifyRemoteSlave_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssIdentifyRemoteSlave_Product(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssIdentifyRemoteSlave_Product(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
 
     if (lss->Step != CO_LSS_REM_PRODUCT) {            /* see, if order of selection is not correct*/
         lss->Step = CO_LSS_REM_VENDOR;                /* restarts selection                       */
@@ -506,11 +506,11 @@ static CPU_INT16S CO_LssIdentifyRemoteSlave_Product(CO_LSS *lss, CO_IF_FRM *frm)
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssIdentifyRemoteSlave_RevMin(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssIdentifyRemoteSlave_RevMin(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
 
     if (lss->Step != CO_LSS_REM_REVISION_MIN) {       /* see, if order of selection is not correct*/
         lss->Step = CO_LSS_REM_VENDOR;                /* restarts selection                       */
@@ -526,11 +526,11 @@ static CPU_INT16S CO_LssIdentifyRemoteSlave_RevMin(CO_LSS *lss, CO_IF_FRM *frm)
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssIdentifyRemoteSlave_RevMax(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssIdentifyRemoteSlave_RevMax(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
 
     if (lss->Step != CO_LSS_REM_REVISION_MAX) {       /* see, if order of selection is not correct*/
         lss->Step = CO_LSS_REM_VENDOR;                /* restarts selection                       */
@@ -546,11 +546,11 @@ static CPU_INT16S CO_LssIdentifyRemoteSlave_RevMax(CO_LSS *lss, CO_IF_FRM *frm)
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssIdentifyRemoteSlave_SerMin(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssIdentifyRemoteSlave_SerMin(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
 
     if (lss->Step != CO_LSS_REM_SERIAL_MIN) {         /* see, if order of selection is not correct*/
         lss->Step = CO_LSS_REM_VENDOR;                /* restarts selection                       */
@@ -566,12 +566,12 @@ static CPU_INT16S CO_LssIdentifyRemoteSlave_SerMin(CO_LSS *lss, CO_IF_FRM *frm)
     return -1;                                        /* indicate: no response                    */
 }
 
-static CPU_INT16S CO_LssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    CPU_INT32U select;                                /* Local: received selection value          */
-    CPU_INT32U ident;                                 /* Local: value from device identity object */
-    CPU_INT16S err;                                   /* Local: error code                        */
-    CPU_INT16S result = -1;                           /* Local: indicate no response              */
+    uint32_t select;                                /* Local: received selection value          */
+    uint32_t ident;                                 /* Local: value from device identity object */
+    int16_t err;                                   /* Local: error code                        */
+    int16_t result = -1;                           /* Local: indicate no response              */
 
     if (lss->Step != CO_LSS_REM_SERIAL_MAX) {         /* see, if order of selection is not correct*/
         lss->Step = CO_LSS_REM_VENDOR;                /* restarts selection                       */
@@ -591,13 +591,13 @@ static CPU_INT16S CO_LssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm)
     return result;
 }
 
-static CPU_INT16S CO_LssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm)
+static int16_t CO_LssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm)
 {
     CO_NODE    *node;
-    CPU_INT16S  result = -1;                          /* Local: indicate no response              */
+    int16_t  result = -1;                          /* Local: indicate no response              */
 
     node = lss->Node;
-    if ( (node->NodeId == (CPU_INT08U)0xff) &&        /* see, if nodeID is invalid and            */
+    if ( (node->NodeId == (uint8_t)0xff) &&        /* see, if nodeID is invalid and            */
          ((lss->Flags & CO_LSS_STORED) != 0) ) {      /* no configured nodeID is stored           */
         CO_SET_LONG(frm, 0L, 0);                      /* clear data in frame                      */
         CO_SET_LONG(frm, 0L, 4);
@@ -611,8 +611,8 @@ static CPU_INT16S CO_LssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm)
 
 #if CO_LSS_EN > 0
 #if CO_CB_LSS_STORE_EN == 0
-CPU_INT32U RamStorage_Baudrate = 0xFFFFFFFF;
-CPU_INT08U RamStorage_NodeId   = 0xFF;
+uint32_t RamStorage_Baudrate = 0xFFFFFFFF;
+uint8_t RamStorage_NodeId   = 0xFF;
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief LSS CONFIGURATION STORE CALLBACK
@@ -635,7 +635,7 @@ CPU_INT08U RamStorage_NodeId   = 0xFF;
 * \param[in]       frm               The received CAN frame
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_LssStore(CPU_INT32U baudrate, CPU_INT08U nodeId)
+int16_t CO_LssStore(uint32_t baudrate, uint8_t nodeId)
 {
 	if (baudrate != 0) {
         RamStorage_Baudrate = baudrate;
@@ -667,7 +667,7 @@ CPU_INT16S CO_LssStore(CPU_INT32U baudrate, CPU_INT08U nodeId)
 * \param[in]       frm               The received CAN frame
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_LssLoad(CPU_INT32U *baudrate, CPU_INT08U *nodeId)
+int16_t CO_LssLoad(uint32_t *baudrate, uint8_t *nodeId)
 {
     if (RamStorage_Baudrate != 0xFFFFFFFFL) {
         *baudrate = RamStorage_Baudrate;

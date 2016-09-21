@@ -55,7 +55,7 @@
 /*------------------------------------------------------------------------------------------------*/
 void CO_SdoInit(CO_SDO *srv, CO_NODE *node)
 {
-    CPU_INT08U n;                                     /* Local: Loop counter for SDO Lists        */
+    uint8_t n;                                     /* Local: Loop counter for SDO Lists        */
                                                       /*------------------------------------------*/
     for (n=0; n < CO_SDO_N; n++) {                    /* Loop through all SDO servers             */
         CO_SdoReset (srv, n, node);                   /* reset SDO server internal data fields    */
@@ -77,11 +77,11 @@ void CO_SdoInit(CO_SDO *srv, CO_NODE *node)
 * \param[in]       node       Ptr to parent CANopen node
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_SdoReset(CO_SDO *srv, CPU_INT08U num, CO_NODE *node)
+void CO_SdoReset(CO_SDO *srv, uint8_t num, CO_NODE *node)
 {
     CO_SDO     *srvnum;                               /* Local: pointer to SDO server #num        */
 #if CO_SDO_SEG_EN > 0 || CO_SDO_BLK_EN > 0
-    CPU_INT32U  offset;                               /* Local: Offset within SDO buffer memory   */
+    uint32_t  offset;                               /* Local: Offset within SDO buffer memory   */
 #endif
                                                       /*------------------------------------------*/
     if (srv == 0) {                                   /* see, if ptr is invalid                   */
@@ -127,13 +127,13 @@ void CO_SdoReset(CO_SDO *srv, CPU_INT08U num, CO_NODE *node)
 * \param[in]       num        Number of SDO server
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_SdoEnable(CO_SDO *srv, CPU_INT08U num)
+void CO_SdoEnable(CO_SDO *srv, uint8_t num)
 {
-    CPU_INT32U  rxId;                                 /* Local: CAN identifier for SDO requests   */
-    CPU_INT32U  txId;                                 /* Local: CAN identifier for SDO response   */
+    uint32_t  rxId;                                 /* Local: CAN identifier for SDO requests   */
+    uint32_t  txId;                                 /* Local: CAN identifier for SDO response   */
     CO_NODE    *node;                                 /* Local: pointer to parent node            */
     CO_SDO     *srvnum;                               /* Local: pointer to SDO server #num        */
-    CPU_INT16S  err;                                  /* Local: error variable                    */
+    int16_t  err;                                  /* Local: error variable                    */
                                                       /*------------------------------------------*/
     if (num >= CO_SDO_N) {                            /* see, if number is out of range           */
         return;                                       /* yes: ignore function call                */
@@ -183,7 +183,7 @@ void CO_SdoEnable(CO_SDO *srv, CPU_INT08U num)
 CO_SDO *CO_SdoCheck(CO_SDO *srv, CO_IF_FRM *frm)
 {                                                     /*------------------------------------------*/
     CO_SDO     *result = 0;                           /* Local: function result                   */
-    CPU_INT08U  n;                                    /* Local: SDO counter                       */
+    uint8_t  n;                                    /* Local: SDO counter                       */
                                                       /*------------------------------------------*/
     if (frm != 0) {                                   /* see, if CAN frame is a valid pointer     */
         n = 0;                                        /* reset SDO counter                        */
@@ -217,10 +217,10 @@ CO_SDO *CO_SdoCheck(CO_SDO *srv, CO_IF_FRM *frm)
 * \retval   <0     an error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoResponse(CO_SDO *srv)
+int16_t CO_SdoResponse(CO_SDO *srv)
 {
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
-    CPU_INT08U  cmd;                                  /* Local: command byte                      */
+    int16_t  result = -1;                          /* Local: function result                   */
+    uint8_t  cmd;                                  /* Local: command byte                      */
                                                       /*------------------------------------------*/
     cmd = CO_GET_BYTE(srv->Frm, 0);                   /* request: get command byte                */
                                                       /*------------------------------------------*/
@@ -342,11 +342,11 @@ CPU_INT16S CO_SdoResponse(CO_SDO *srv)
 * \retval   <0     abort
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoGetObject(CO_SDO *srv, CPU_INT16U mode)
+int16_t CO_SdoGetObject(CO_SDO *srv, uint16_t mode)
 {
     CO_OBJ     *obj;                                  /* Local: reference to object entry         */
-    CPU_INT32U  key;                                  /* Local: object entry key                  */
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
+    uint32_t  key;                                  /* Local: object entry key                  */
+    int16_t  result = -1;                          /* Local: function result                   */
                                                       /*------------------------------------------*/
     key = CO_DEV(srv->Idx, srv->Sub);                 /* construct key of object entry            */
     obj = CODirFind(&srv->Node->Dir, key);            /* search addressed object entry            */
@@ -399,10 +399,10 @@ CPU_INT16S CO_SdoGetObject(CO_SDO *srv, CPU_INT16U mode)
 * \retval   >0     Size of Object
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT32U CO_SdoGetSize(CO_SDO *srv, CPU_INT32U width)
+uint32_t CO_SdoGetSize(CO_SDO *srv, uint32_t width)
 {
-    CPU_INT32U result = 0;                            /* Local: function result                   */
-    CPU_INT32U size;                                  /* Local: object size in byte               */
+    uint32_t result = 0;                            /* Local: function result                   */
+    uint32_t size;                                  /* Local: object size in byte               */
                                                       /*------------------------------------------*/
     size = COObjGetSize(srv->Obj, width);             /* Get size of object in byte               */
     if (size == 0) {                                  /* object access failed (bad config)        */
@@ -442,13 +442,13 @@ CPU_INT32U CO_SdoGetSize(CO_SDO *srv, CPU_INT32U width)
 * \retval   <0     abort
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoUploadExpedited(CO_SDO *srv)
+int16_t CO_SdoUploadExpedited(CO_SDO *srv)
 {
-    CPU_INT32U  size;                                 /* Local: object size in byte               */
-    CPU_INT32U  data   = 0;                           /* Local: object entry value                */
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
-    CPU_INT16S  num;                                  /* Local: number of read bytes              */
-    CPU_INT08U  cmd;                                  /* Local: SDO command byte                  */
+    uint32_t  size;                                 /* Local: object size in byte               */
+    uint32_t  data   = 0;                           /* Local: object entry value                */
+    int16_t  result = -1;                          /* Local: function result                   */
+    int16_t  num;                                  /* Local: number of read bytes              */
+    uint8_t  cmd;                                  /* Local: SDO command byte                  */
                                                       /*------------------------------------------*/
     size = CO_SdoGetSize(srv, 0);                     /* check data width acc. object             */
     if (size == 0) {                                  /* see, if an error is detected             */
@@ -499,14 +499,14 @@ CPU_INT16S CO_SdoUploadExpedited(CO_SDO *srv)
 * \retval   <0     abort
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SdoDownloadExpedited(CO_SDO *srv)
+int16_t CO_SdoDownloadExpedited(CO_SDO *srv)
 {
-    CPU_INT32U  size;                                 /* Local: object entry size in byte         */
-    CPU_INT32U  data;                                 /* Local: object entry value                */
-    CPU_INT32U  width  =  0;                          /* Local: number of data bytes              */
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
-    CPU_INT16S  num;                                  /* Local: number of written bytes           */
-    CPU_INT08U  cmd;                                  /* Local: SDO command byte                  */
+    uint32_t  size;                                 /* Local: object entry size in byte         */
+    uint32_t  data;                                 /* Local: object entry value                */
+    uint32_t  width  =  0;                          /* Local: number of data bytes              */
+    int16_t  result = -1;                          /* Local: function result                   */
+    int16_t  num;                                  /* Local: number of written bytes           */
+    uint8_t  cmd;                                  /* Local: SDO command byte                  */
                                                       /*------------------------------------------*/
     cmd = CO_GET_BYTE(srv->Frm, 0);                   /* extract request command byte             */
     if ((cmd & 0x01) == 1) {                          /* see, if size is indicated (s=1/0)        */
@@ -569,7 +569,7 @@ CPU_INT16S CO_SdoDownloadExpedited(CO_SDO *srv)
 * \param[in]       err               The error code to be inserted in the data bytes #4..#7
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_SdoAbort(CO_SDO *srv, CPU_INT32U err)
+void CO_SdoAbort(CO_SDO *srv, uint32_t err)
 {
     CO_SET_BYTE(srv->Frm,     0x80, 0);               /* set response: cs=4 (Abort SDO Transfer)  */
     CO_SET_WORD(srv->Frm, srv->Idx, 1);               /* set index                                */

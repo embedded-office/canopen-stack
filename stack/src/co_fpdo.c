@@ -41,13 +41,13 @@
 */
 
 #if CO_RPDO_DYN_MAP_EN > 0 || CO_TPDO_DYN_MAP_EN > 0
-static CPU_INT16S CO_TPdoMapNumWrite  (CO_OBJ* obj, void *buf, CPU_INT32U size);
-static CPU_INT16S CO_TPdoMapWrite     (CO_OBJ* obj, void *buf, CPU_INT32U size);
+static int16_t CO_TPdoMapNumWrite  (CO_OBJ* obj, void *buf, uint32_t size);
+static int16_t CO_TPdoMapWrite     (CO_OBJ* obj, void *buf, uint32_t size);
 #endif
 
 #if CO_RPDO_DYN_COM_EN > 0 || CO_TPDO_DYN_COM_EN > 0
-static CPU_INT16S CO_TPdoComIdWrite   (CO_OBJ* obj, void *buf, CPU_INT32U size);
-static CPU_INT16S CO_TPdoComTypeWrite (CO_OBJ* obj, void *buf, CPU_INT32U size);
+static int16_t CO_TPdoComIdWrite   (CO_OBJ* obj, void *buf, uint32_t size);
+static int16_t CO_TPdoComTypeWrite (CO_OBJ* obj, void *buf, uint32_t size);
 #endif
 
 /*
@@ -137,17 +137,17 @@ CO_OBJ_TYPE COTPdoType = { 0, 0, 0, 0, 0, CO_TPdoComTypeWrite };
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TPdoMapNumWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_TPdoMapNumWrite(CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_DIR      *cod;                                 /* Local: pointer to object directory       */
-    CPU_INT32U   id;                                  /* Local: current identifier                */
-    CPU_INT32U   mapentry;                            /* Local: mapping entry                     */
-    CPU_INT16S   result = CO_ERR_NONE;                /* Local: function result                   */
-    CPU_INT16U   pmapidx;                             /* Local: object mapping entry index        */
-    CPU_INT16U   pcomidx;                             /* Local: object communication entry index  */
-    CPU_INT08U   mapbytes;                            /* Local: number of mapped bytes            */
-    CPU_INT08U   mapnum;                              /* Local: new number of maps to be written  */
-    CPU_INT08U   i;                                   /* Local: counter                           */
+    uint32_t   id;                                  /* Local: current identifier                */
+    uint32_t   mapentry;                            /* Local: mapping entry                     */
+    int16_t   result = CO_ERR_NONE;                /* Local: function result                   */
+    uint16_t   pmapidx;                             /* Local: object mapping entry index        */
+    uint16_t   pcomidx;                             /* Local: object communication entry index  */
+    uint8_t   mapbytes;                            /* Local: number of mapped bytes            */
+    uint8_t   mapnum;                              /* Local: new number of maps to be written  */
+    uint8_t   i;                                   /* Local: counter                           */
                                                       /*------------------------------------------*/
     if ((obj == 0) ||                                 /* see, if any parameter pointer is invalid */
         (buf == 0) || (size != CO_LONG)) {
@@ -156,7 +156,7 @@ static CPU_INT16S CO_TPdoMapNumWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
     if (CO_GET_SUB(obj->Key) != 0) {                  /* see, if subidx is not number of mapping  */
         return (CO_ERR_TPDO_MAP_OBJ);                 /* indicate error to caller                 */
     }                                                 /*------------------------------------------*/
-    mapnum  = (CPU_INT08U)(*(CPU_INT32U *)buf);       /* get new number of mapping                */
+    mapnum  = (uint8_t)(*(uint32_t *)buf);       /* get new number of mapping                */
     if (mapnum > 8) {                                 /* see, if number is out of range           */
         return (CO_ERR_OBJ_MAP_LEN);                  /* indicate error to caller                 */
     }
@@ -225,17 +225,17 @@ static CPU_INT16S CO_TPdoMapNumWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TPdoMapWrite(CO_OBJ *obj, void *buf, CPU_INT32U size)
+static int16_t CO_TPdoMapWrite(CO_OBJ *obj, void *buf, uint32_t size)
 {
     CO_DIR      *cod;                                 /* Local: pointer to object directory       */
     CO_OBJ      *objm;                                /* Local: ptr to map object entry           */
-    CPU_INT32U   map;                                 /* Local: new type to be written            */
-    CPU_INT32U   id;                                  /* Local: current identifier                */
-    CPU_INT32U   maps;                                /* Local: buffer for supported features     */
-    CPU_INT16S   result = CO_ERR_NONE;                /* Local: function result                   */
-    CPU_INT16U   pmapidx;                             /* Local: object mapping entry index        */
-    CPU_INT16U   pcomidx;                             /* Local: object communication entry index  */
-    CPU_INT08U   mapn;                                /* Local: number of mapping entries         */
+    uint32_t   map;                                 /* Local: new type to be written            */
+    uint32_t   id;                                  /* Local: current identifier                */
+    uint32_t   maps;                                /* Local: buffer for supported features     */
+    int16_t   result = CO_ERR_NONE;                /* Local: function result                   */
+    uint16_t   pmapidx;                             /* Local: object mapping entry index        */
+    uint16_t   pcomidx;                             /* Local: object communication entry index  */
+    uint8_t   mapn;                                /* Local: number of mapping entries         */
                                                       /*------------------------------------------*/
     (void)size;                                       /* prevent compiler warning                 */
                                                       /*------------------------------------------*/
@@ -259,7 +259,7 @@ static CPU_INT16S CO_TPdoMapWrite(CO_OBJ *obj, void *buf, CPU_INT32U size)
     }
 
     pcomidx = pmapidx - 0x200;                        /* calculate corresponding PDO com. profile */
-    map     = *(CPU_INT32U*)buf;                      /* get new mapping                          */
+    map     = *(uint32_t*)buf;                      /* get new mapping                          */
     (void)CODirRdLong(cod, CO_DEV(pcomidx,1), &id);   /* get current identifier value             */
     if ((id & CO_TPDO_COBID_OFF) == 0) {              /* see, if current id indicates PDO valid   */
         result = CO_ERR_OBJ_ACC;                      /* indicate error; access not allowed       */
@@ -326,7 +326,7 @@ static CPU_INT16S CO_TPdoMapWrite(CO_OBJ *obj, void *buf, CPU_INT32U size)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TPdoComIdWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_TPdoComIdWrite(CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_DIR      *cod;                                 /* Local: pointer to object directory       */
     CO_NMT      *nmt;                                 /* Local: pointer to NMT management         */
@@ -336,11 +336,11 @@ static CPU_INT16S CO_TPdoComIdWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
 #if CO_RPDO_N > 0
     CO_RPDO     *rpdo = 0;                            /* Local: pointer to receive PDO object     */
 #endif
-    CPU_INT32U   nid;                                 /* Local: new identifier to be written      */
-    CPU_INT32U   oid;                                 /* Local: old identifier to be over-written */
-    CPU_INT16S   result = CO_ERR_NONE;                /* Local: function result                   */
-    CPU_INT16U   pcomidx;                             /* Local: object entry index                */
-    CPU_INT16U   num;                                 /* Local: PDO number                        */
+    uint32_t   nid;                                 /* Local: new identifier to be written      */
+    uint32_t   oid;                                 /* Local: old identifier to be over-written */
+    int16_t   result = CO_ERR_NONE;                /* Local: function result                   */
+    uint16_t   pcomidx;                             /* Local: object entry index                */
+    uint16_t   num;                                 /* Local: PDO number                        */
                                                       /*------------------------------------------*/
     (void)size;                                       /* prevent compiler warning                 */
                                                       /*------------------------------------------*/
@@ -351,7 +351,7 @@ static CPU_INT16S CO_TPdoComIdWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
         return (CO_ERR_TPDO_COM_OBJ);                 /* indicate error to caller                 */
     }                                                 /*------------------------------------------*/
 
-    nid = *(CPU_INT32U*)buf;                          /* get new identifier                       */
+    nid = *(uint32_t*)buf;                          /* get new identifier                       */
     if ((nid & CO_TPDO_COBID_EXT) != 0) {             /* see, if new identifier is extended ID    */
         return (CO_ERR_OBJ_RANGE);                    /* yes: abort write access (not supported)  */
     }
@@ -447,13 +447,13 @@ static CPU_INT16S CO_TPdoComIdWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TPdoComTypeWrite (CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_TPdoComTypeWrite (CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_DIR      *cod;                                 /* Local: pointer to object directory       */
-    CPU_INT08U   type;                                /* Local: new type to be written            */
-    CPU_INT32U   id;                                  /* Local: current identifier                */
-    CPU_INT16S   result = CO_ERR_NONE;                /* Local: function result                   */
-    CPU_INT16U   pcomidx;                             /* Local: object entry index                */
+    uint8_t   type;                                /* Local: new type to be written            */
+    uint32_t   id;                                  /* Local: current identifier                */
+    int16_t   result = CO_ERR_NONE;                /* Local: function result                   */
+    uint16_t   pcomidx;                             /* Local: object entry index                */
                                                       /*------------------------------------------*/
     if ((obj == 0) ||                                 /* see, if any parameter pointer is invalid */
         (buf == 0) || (size != CO_LONG)) {
@@ -463,7 +463,7 @@ static CPU_INT16S CO_TPdoComTypeWrite (CO_OBJ* obj, void *buf, CPU_INT32U size)
         return (CO_ERR_PARA_IDX);                     /* indicate error to caller                 */
     }                                                 /*------------------------------------------*/
 
-    type = *(CPU_INT08U*)buf;                         /* get new type                             */
+    type = *(uint8_t*)buf;                         /* get new type                             */
 #if CO_SYNC_EN == 0
     if (type < 254) {                                 /* see, if new type is invalid              */
         return (CO_ERR_OBJ_ACC);                      /* yes: abort write access (not supported)  */

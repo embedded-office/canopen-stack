@@ -54,8 +54,8 @@
 /*------------------------------------------------------------------------------------------------*/
 void CO_SyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
 {
-    CPU_INT16S err;                                   /* Local: error code                        */
-    CPU_INT08U   i;                                   /* Local: loop counter                      */
+    int16_t err;                                   /* Local: error code                        */
+    uint8_t   i;                                   /* Local: loop counter                      */
                                                       /*------------------------------------------*/
     if ((sync == 0) || (node == 0)) {                 /* see, if one of the parameters are bad    */
         CO_NodeFatalError();                          /* yes: inform user                         */
@@ -98,7 +98,7 @@ void CO_SyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
 /*------------------------------------------------------------------------------------------------*/
 void CO_SyncHandler (CO_SYNC *sync)
 {
-    CPU_INT08U  i;                                    /* Local: loop counter                      */
+    uint8_t  i;                                    /* Local: loop counter                      */
                                                       /*------------------------------------------*/
 #if CO_TPDO_N > 0
     for (i = 0; i < CO_TPDO_N; i++) {                 /* loop through transmit PDO table          */
@@ -143,7 +143,7 @@ void CO_SyncHandler (CO_SYNC *sync)
 * \param[in]       txtype       PDO transmission type
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_SyncAdd (CO_SYNC *sync, CPU_INT16U num, CPU_INT08U msgType, CPU_INT08U txtype)
+void CO_SyncAdd (CO_SYNC *sync, uint16_t num, uint8_t msgType, uint8_t txtype)
 {
 #if CO_TPDO_N > 0                                     /*------------------------------------------*/
     if (msgType == CO_SYNC_FLG_TX) {                  /*     S Y N C H R O N O U S   T P D O      */
@@ -182,7 +182,7 @@ void CO_SyncAdd (CO_SYNC *sync, CPU_INT16U num, CPU_INT08U msgType, CPU_INT08U t
 * \param[in]       msgType      CAN message type
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_SyncRemove (CO_SYNC *sync, CPU_INT16U num, CPU_INT08U msgType)
+void CO_SyncRemove (CO_SYNC *sync, uint16_t num, uint8_t msgType)
 {
 #if CO_TPDO_N > 0                                     /*------------------------------------------*/
     if (msgType == CO_SYNC_FLG_TX) {                  /*     S Y N C H R O N O U S   T P D O      */
@@ -217,8 +217,8 @@ void CO_SyncRemove (CO_SYNC *sync, CPU_INT16U num, CPU_INT08U msgType)
 /*------------------------------------------------------------------------------------------------*/
 void CO_SyncRx (CO_SYNC *sync, CO_IF_FRM *frm)
 {
-    CPU_INT16S i;                                     /* Local: counter variable                  */
-    CPU_INT16S n;                                     /* Local: counter variable                  */
+    int16_t i;                                     /* Local: counter variable                  */
+    int16_t n;                                     /* Local: counter variable                  */
                                                       /*------------------------------------------*/
     for (i = 0; i < CO_RPDO_N; i++) {                 /* loop through the RPDO table              */
         if (sync->RPdo[i]->Identifier ==              /* see, if message matches RPDO             */
@@ -249,10 +249,10 @@ void CO_SyncRx (CO_SYNC *sync, CO_IF_FRM *frm)
 * \retval  <0      the given CAN message is no SYNC message
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_SyncUpdate (CO_SYNC *sync, CO_IF_FRM *frm)
+int16_t CO_SyncUpdate (CO_SYNC *sync, CO_IF_FRM *frm)
 {
-    CPU_INT16S result = -1;                           /* Local: function result                   */
-    CPU_INT08U i;                                     /* Local: loop counter                      */
+    int16_t result = -1;                           /* Local: function result                   */
+    uint8_t i;                                     /* Local: loop counter                      */
                                                       /*------------------------------------------*/
     if (frm->Identifier == sync->CobId) {             /* see, if SYNC message is received         */
         for (i = 0; i < CO_TPDO_N; i++) {             /* loop through synchronous transmit PDOs   */
@@ -280,7 +280,7 @@ CPU_INT16S CO_SyncUpdate (CO_SYNC *sync, CO_IF_FRM *frm)
 /*------------------------------------------------------------------------------------------------*/
 void CO_SyncRestart (CO_SYNC *sync)
 {
-    CPU_INT08U i;                                     /* Local: loop counter                      */
+    uint8_t i;                                     /* Local: loop counter                      */
                                                       /*------------------------------------------*/
     for (i = 0; i < CO_TPDO_N; i++) {                 /* loop through TPDO table                  */
         if (sync->TPdo[i] != 0) {                     /* see, if TPDO is a synchronous PDO        */

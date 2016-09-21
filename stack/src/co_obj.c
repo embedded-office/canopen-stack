@@ -54,9 +54,9 @@
 * \retval         =0             An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT32U COObjGetSize(CO_OBJ *obj, CPU_INT32U width)
+uint32_t COObjGetSize(CO_OBJ *obj, uint32_t width)
 {
-    CPU_INT32U   result = 0;                          /* Local: function result                   */
+    uint32_t   result = 0;                          /* Local: function result                   */
     CO_OBJ_TYPE *type;                                /* Local: ptr to type structure             */
                                                       /*------------------------------------------*/
     if (obj == 0) {                                   /* see, if object ptr is invalid            */
@@ -96,11 +96,11 @@ CPU_INT32U COObjGetSize(CO_OBJ *obj, CPU_INT32U width)
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COObjRdValue(CO_OBJ *obj, void *value, CPU_INT08U width, CPU_INT08U nodeid)
+int16_t COObjRdValue(CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid)
 {
     CO_OBJ_TYPE *type;                                /* Local: ptr to object type                */
-    CPU_INT16S   err      = 0;                        /* Local: type read function error code     */
-    CPU_INT32U   val      = 0;                        /* Local: 8-Bit value                       */
+    int16_t   err      = 0;                        /* Local: type read function error code     */
+    uint32_t   val      = 0;                        /* Local: 8-Bit value                       */
                                                       /*------------------------------------------*/
     if ((obj == 0) || (value == 0)) {                 /* see, if argument ptr is invalid          */
         return (CO_ERR_BAD_ARG);                      /* yes: return error indication             */
@@ -126,11 +126,11 @@ CPU_INT16S COObjRdValue(CO_OBJ *obj, void *value, CPU_INT08U width, CPU_INT08U n
         val = (val + nodeid);                         /* set value to object value + node id      */
     }                                                 /*------------------------------------------*/
     if (width == 1) {
-        *((CPU_INT08U *)value) = (CPU_INT08U)val;     /* set value assuming via byte pointer      */
+        *((uint8_t *)value) = (uint8_t)val;     /* set value assuming via byte pointer      */
     } else if (width == 2) {
-        *((CPU_INT16U *)value) = (CPU_INT16U)val;     /* set value assuming via word pointer      */
+        *((uint16_t *)value) = (uint16_t)val;     /* set value assuming via word pointer      */
     } else if (width == 4) {
-        *((CPU_INT32U *)value) = (CPU_INT32U)val;     /* set value assuming via long pointer      */
+        *((uint32_t *)value) = (uint32_t)val;     /* set value assuming via long pointer      */
     }
     return(CO_ERR_NONE);                              /* return function result                   */
 }
@@ -155,24 +155,24 @@ CPU_INT16S COObjRdValue(CO_OBJ *obj, void *value, CPU_INT08U width, CPU_INT08U n
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COObjWrValue(CO_OBJ *obj, void *value, CPU_INT08U width, CPU_INT08U nodeid)
+int16_t COObjWrValue(CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid)
 {
     CO_OBJ_TYPE *type;                                /* Local: ptr to object type                */
-    CPU_INT32U   val      = 0;                        /* Local: 32-Bit value                      */
-    CPU_INT16S   result   = CO_ERR_NONE;              /* Local: function result                   */
+    uint32_t   val      = 0;                        /* Local: 32-Bit value                      */
+    int16_t   result   = CO_ERR_NONE;              /* Local: function result                   */
 #if CO_TPDO_N > 0
-    CPU_INT16S   status   = 0;                        /* Local: compare status                    */
+    int16_t   status   = 0;                        /* Local: compare status                    */
 #endif
                                                       /*------------------------------------------*/
     if ((obj == 0) || (value == 0)) {                 /* see, if argument ptr is invalid          */
         return (CO_ERR_BAD_ARG);                      /* yes: return error indication             */
     }                                                 /*------------------------------------------*/
     if (width == 1) {                                 /* see, if given pointer ref. to a byte     */
-        val = *((CPU_INT08U *)value) & 0xFF;          /* cast referenced value to a byte          */
+        val = *((uint8_t *)value) & 0xFF;          /* cast referenced value to a byte          */
     } else if (width == 2) {                          /* otherwise: see, if ref. to a word        */
-        val = *((CPU_INT16U *)value) & 0xFFFF;        /* cast referenced value to a word          */
+        val = *((uint16_t *)value) & 0xFFFF;        /* cast referenced value to a word          */
     } else if (width == 4) {                          /* otherwise: see, if ref. to a long        */
-        val = *((CPU_INT32U *)value);                 /* cast referenced value to a long          */
+        val = *((uint32_t *)value);                 /* cast referenced value to a long          */
     } else {                                          /* otherwise: invalid width                 */
         return (CO_ERR_BAD_ARG);                      /* return error indication                  */
     }                                                 /*------------------------------------------*/
@@ -227,10 +227,10 @@ CPU_INT16S COObjWrValue(CO_OBJ *obj, void *value, CPU_INT08U width, CPU_INT08U n
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COObjRdBufStart(CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len)
+int16_t COObjRdBufStart(CO_OBJ *obj, uint8_t *buffer, uint32_t len)
 {
     CO_OBJ_TYPE *type;                                /* Local: ptr to object type                */
-    CPU_INT16S   result   = CO_ERR_OBJ_ACC;           /* Local: function result                   */
+    int16_t   result   = CO_ERR_OBJ_ACC;           /* Local: function result                   */
                                                       /*------------------------------------------*/
     if ((obj == 0) || (buffer == 0)) {                /* see, if argument ptr is invalid          */
         return (CO_ERR_BAD_ARG);                      /* yes: return error indication             */
@@ -262,10 +262,10 @@ CPU_INT16S COObjRdBufStart(CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len)
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COObjRdBufCont(CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len)
+int16_t COObjRdBufCont(CO_OBJ *obj, uint8_t *buffer, uint32_t len)
 {
     CO_OBJ_TYPE *type;                                /* Local: ptr to object type                */
-    CPU_INT16S   result   = CO_ERR_OBJ_ACC;           /* Local: function result                   */
+    int16_t   result   = CO_ERR_OBJ_ACC;           /* Local: function result                   */
                                                       /*------------------------------------------*/
     if ((obj == 0) || (buffer == 0)) {                /* see, if argument ptr is invalid          */
         return (CO_ERR_BAD_ARG);                      /* yes: return error indication             */
@@ -297,10 +297,10 @@ CPU_INT16S COObjRdBufCont(CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len)
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COObjWrBufStart(CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len)
+int16_t COObjWrBufStart(CO_OBJ *obj, uint8_t *buffer, uint32_t len)
 {
     CO_OBJ_TYPE *type;                                /* Local: ptr to object type                */
-    CPU_INT16S   result   = CO_ERR_OBJ_ACC;           /* Local: function result                   */
+    int16_t   result   = CO_ERR_OBJ_ACC;           /* Local: function result                   */
                                                       /*------------------------------------------*/
     if ((obj == 0) || (buffer == 0)) {                /* see, if argument ptr is invalid          */
         return (CO_ERR_BAD_ARG);                      /* yes: return error indication             */
@@ -332,10 +332,10 @@ CPU_INT16S COObjWrBufStart(CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len)
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COObjWrBufCont(CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len)
+int16_t COObjWrBufCont(CO_OBJ *obj, uint8_t *buffer, uint32_t len)
 {
     CO_OBJ_TYPE *type;                                /* Local: ptr to object type                */
-    CPU_INT16S   result   = CO_ERR_OBJ_ACC;           /* Local: function result                   */
+    int16_t   result   = CO_ERR_OBJ_ACC;           /* Local: function result                   */
                                                       /*------------------------------------------*/
     if ((obj == 0) || (buffer == 0)) {                /* see, if argument ptr is invalid          */
         return (CO_ERR_BAD_ARG);                      /* yes: return error indication             */
@@ -394,10 +394,10 @@ void CO_ObjInit (CO_OBJ *obj)
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_ObjRdDirect(CO_OBJ *obj, void *val, CPU_INT32U len)
+int16_t CO_ObjRdDirect(CO_OBJ *obj, void *val, uint32_t len)
 {
-    CPU_INT08U sz;                                    /* Local: object entry size                 */
-    CPU_INT16S result = CO_ERR_NONE;                  /* Local: function result                   */
+    uint8_t sz;                                    /* Local: object entry size                 */
+    int16_t result = CO_ERR_NONE;                  /* Local: function result                   */
 
     if ((obj == 0) || (val == 0)) {                   /* see, if argument ptr is invalid          */
         return (CO_ERR_BAD_ARG);                      /* yes: return error indication             */
@@ -405,14 +405,14 @@ CPU_INT16S CO_ObjRdDirect(CO_OBJ *obj, void *val, CPU_INT32U len)
 
     if (CO_IS_DIRECT(obj->Key) != 0) {                /* see, if direct access is required        */
         if (len == CO_BYTE) {                         /* see, if target reference is a byte       */
-            *((CPU_INT08U *)val) =                    /* get value directly from member Data      */
-                (CPU_INT08U)((obj->Data)&0xff);
+            *((uint8_t *)val) =                    /* get value directly from member Data      */
+                (uint8_t)((obj->Data)&0xff);
         } else if (len == CO_WORD) {                  /* see, if target reference is a word       */
-            *((CPU_INT16U *)val) =                    /* get value directly from member Data      */
-                (CPU_INT16U)((obj->Data)&0xffff);
+            *((uint16_t *)val) =                    /* get value directly from member Data      */
+                (uint16_t)((obj->Data)&0xffff);
         } else if (len == CO_LONG) {                  /* see, if target reference is a long       */
-            *((CPU_INT32U *)val) =                    /* get value directly from member Data      */
-                (CPU_INT32U)(obj->Data);
+            *((uint32_t *)val) =                    /* get value directly from member Data      */
+                (uint32_t)(obj->Data);
         } else {                                      /* otherwise: invalid data size             */
             result = CO_ERR_BAD_ARG;                  /* yes: return error indication             */
         }
@@ -422,40 +422,40 @@ CPU_INT16S CO_ObjRdDirect(CO_OBJ *obj, void *val, CPU_INT32U len)
             result = CO_ERR_OBJ_ACC;
         } else if (len == CO_BYTE) {                  /* see, if target reference is a byte       */
             if (sz == CO_BYTE) {                      /* see, if object reference is a byte       */
-                *((CPU_INT08U *)val) = (CPU_INT08U)(  /* get value referenced by member Data      */
-                    *((CPU_INT08U*)(obj->Data))&0xff);
+                *((uint8_t *)val) = (uint8_t)(  /* get value referenced by member Data      */
+                    *((uint8_t*)(obj->Data))&0xff);
             } else if (sz == CO_WORD) {               /* see, if object reference is a word       */
-                *((CPU_INT08U *)val) = (CPU_INT08U)(  /* get value referenced by member Data      */
-                    *((CPU_INT16U*)(obj->Data))&0xff);
+                *((uint8_t *)val) = (uint8_t)(  /* get value referenced by member Data      */
+                    *((uint16_t*)(obj->Data))&0xff);
             } else if (sz == CO_LONG) {               /* see, if object reference is a long       */
-                *((CPU_INT08U *)val) = (CPU_INT08U)(  /* get value referenced by member Data      */
-                    *((CPU_INT32U*)(obj->Data))&0xff);
+                *((uint8_t *)val) = (uint8_t)(  /* get value referenced by member Data      */
+                    *((uint32_t*)(obj->Data))&0xff);
             } else {                                  /* otherwise: invalid data size             */
                 result = CO_ERR_BAD_ARG;              /* yes: return error indication             */
             }
         } else if (len == CO_WORD) {                  /* see, if target reference is a word       */
             if (sz == CO_BYTE) {                      /* see, if object reference is a byte       */
-                *((CPU_INT16U *)val) = (CPU_INT16U)(  /* get value referenced by member Data      */
-                    *((CPU_INT08U*)(obj->Data))&0xffff);
+                *((uint16_t *)val) = (uint16_t)(  /* get value referenced by member Data      */
+                    *((uint8_t*)(obj->Data))&0xffff);
             } else if (sz == CO_WORD) {               /* see, if object reference is a word       */
-                *((CPU_INT16U *)val) = (CPU_INT16U)(  /* get value referenced by member Data      */
-                    *((CPU_INT16U*)(obj->Data))&0xffff);
+                *((uint16_t *)val) = (uint16_t)(  /* get value referenced by member Data      */
+                    *((uint16_t*)(obj->Data))&0xffff);
             } else if (sz == CO_LONG) {               /* see, if object reference is a long       */
-                *((CPU_INT16U *)val) = (CPU_INT16U)(  /* get value referenced by member Data      */
-                    *((CPU_INT32U*)(obj->Data))&0xffff);
+                *((uint16_t *)val) = (uint16_t)(  /* get value referenced by member Data      */
+                    *((uint32_t*)(obj->Data))&0xffff);
             } else {                                  /* otherwise: invalid data size             */
                 result = CO_ERR_BAD_ARG;              /* yes: return error indication             */
             }
         } else if (len == CO_LONG) {                  /* see, if target reference is a long       */
             if (sz == CO_BYTE) {                      /* see, if object reference is a byte       */
-                *((CPU_INT32U *)val) = (CPU_INT32U)(  /* get value referenced by member Data      */
-                    *((CPU_INT08U*)(obj->Data)));
+                *((uint32_t *)val) = (uint32_t)(  /* get value referenced by member Data      */
+                    *((uint8_t*)(obj->Data)));
             } else if (sz == CO_WORD) {               /* see, if object reference is a word       */
-                *((CPU_INT32U *)val) = (CPU_INT32U)(  /* get value referenced by member Data      */
-                    *((CPU_INT16U*)(obj->Data)));
+                *((uint32_t *)val) = (uint32_t)(  /* get value referenced by member Data      */
+                    *((uint16_t*)(obj->Data)));
             } else if (sz == CO_LONG) {               /* see, if object reference is a long       */
-                *((CPU_INT32U *)val) = (CPU_INT32U)(  /* get value referenced by member Data      */
-                    *((CPU_INT32U*)(obj->Data)));
+                *((uint32_t *)val) = (uint32_t)(  /* get value referenced by member Data      */
+                    *((uint32_t*)(obj->Data)));
             } else {                                  /* otherwise: invalid data size             */
                 result = CO_ERR_BAD_ARG;              /* yes: return error indication             */
             }
@@ -481,14 +481,14 @@ CPU_INT16S CO_ObjRdDirect(CO_OBJ *obj, void *val, CPU_INT32U len)
 * \retval   <0     an error is detected within this function
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_ObjCmp(CO_OBJ *obj, void *val)
+int16_t CO_ObjCmp(CO_OBJ *obj, void *val)
 {
-    CPU_INT32U newval = 0;                            /* Local: new value from parameter          */
-    CPU_INT32U oldval = 0;                            /* Local: current value in object           */
-    CPU_INT16S result = 0;                            /* Local: result of comparison              */
-    CPU_INT16S err;                                   /* Local: error code                        */
+    uint32_t newval = 0;                            /* Local: new value from parameter          */
+    uint32_t oldval = 0;                            /* Local: current value in object           */
+    int16_t result = 0;                            /* Local: result of comparison              */
+    int16_t err;                                   /* Local: error code                        */
                                                       /*------------------------------------------*/
-    newval = *((CPU_INT32U *)val);                    /* get value for comparison                 */
+    newval = *((uint32_t *)val);                    /* get value for comparison                 */
     err    = CO_ObjRdDirect(obj, &oldval, CO_LONG);   /* get current value from object entry      */
     if (err != CO_ERR_NONE) {                         /* see, if an error is detected             */
         return (err);                                 /* indicate error                           */
@@ -521,10 +521,10 @@ CPU_INT16S CO_ObjCmp(CO_OBJ *obj, void *val)
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_ObjRdType(CO_OBJ *obj, void *dst, CPU_INT32U len, CPU_INT32U off)
+int16_t CO_ObjRdType(CO_OBJ *obj, void *dst, uint32_t len, uint32_t off)
 {
     CO_OBJ_TYPE *type;                                /* Local: ptr to object type                */
-    CPU_INT16S   result = CO_ERR_OBJ_ACC;             /* Local: function result                   */
+    int16_t   result = CO_ERR_OBJ_ACC;             /* Local: function result                   */
                                                       /*------------------------------------------*/
     type = obj->Type;                                 /* get type structure reference             */
     if (type != 0) {                                  /* see, if type is valid                    */
@@ -565,10 +565,10 @@ CPU_INT16S CO_ObjRdType(CO_OBJ *obj, void *dst, CPU_INT32U len, CPU_INT32U off)
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_ObjWrDirect(CO_OBJ *obj, void *val, CPU_INT32U len)
+int16_t CO_ObjWrDirect(CO_OBJ *obj, void *val, uint32_t len)
 {
-    CPU_INT08U sz;                                    /* Local: object entry size                 */
-    CPU_INT16S result = CO_ERR_NONE;                  /* Local: function result                   */
+    uint8_t sz;                                    /* Local: object entry size                 */
+    int16_t result = CO_ERR_NONE;                  /* Local: function result                   */
                                                       /*------------------------------------------*/
     if ((obj == 0) || (val == 0)) {                   /* see, if argument ptr is invalid          */
         return (CO_ERR_BAD_ARG);                      /* yes: return error indication             */
@@ -576,14 +576,14 @@ CPU_INT16S CO_ObjWrDirect(CO_OBJ *obj, void *val, CPU_INT32U len)
 
     if (CO_IS_DIRECT(obj->Key) != 0) {                /* see, if direct access is required        */
         if (len == CO_BYTE) {                         /* see, if referenced value is byte         */
-            obj->Data = (CPU_INT32U)(                 /* set referenced value directly to Data    */
-                *((CPU_INT08U*)val)&0xff);
+            obj->Data = (uint32_t)(                 /* set referenced value directly to Data    */
+                *((uint8_t*)val)&0xff);
         } else if (len == CO_WORD) {                  /* see, if referenced value is word         */
-            obj->Data = (CPU_INT32U)(                 /* set referenced value directly to Data    */
-                *((CPU_INT16U*)val)&0xffff);          /* set value directly to member Data        */
+            obj->Data = (uint32_t)(                 /* set referenced value directly to Data    */
+                *((uint16_t*)val)&0xffff);          /* set value directly to member Data        */
         } else if (len == CO_LONG) {                  /* see, if referenced value is long         */
-            obj->Data = (CPU_INT32U)(                 /* set referenced value directly to Data    */
-                *((CPU_INT32U *)val));
+            obj->Data = (uint32_t)(                 /* set referenced value directly to Data    */
+                *((uint32_t *)val));
         } else {                                      /* otherwise: invalid data size             */
             result = CO_ERR_BAD_ARG;                  /* yes: return error indication             */
         }
@@ -593,40 +593,40 @@ CPU_INT16S CO_ObjWrDirect(CO_OBJ *obj, void *val, CPU_INT32U len)
             result = CO_ERR_OBJ_ACC;
         } else if (sz == CO_BYTE) {                   /* see, if target reference is a byte       */
             if (len == CO_BYTE) {                     /* see, if object reference is a byte       */
-                *((CPU_INT08U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT08U)(*((CPU_INT08U*)(val))&0xff);
+                *((uint8_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint8_t)(*((uint8_t*)(val))&0xff);
             } else if (len == CO_WORD) {              /* see, if object reference is a word       */
-                *((CPU_INT08U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT08U)(*((CPU_INT16U*)(val))&0xff);
+                *((uint8_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint8_t)(*((uint16_t*)(val))&0xff);
             } else if (len == CO_LONG) {              /* see, if object reference is a long       */
-                *((CPU_INT08U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT08U)(*((CPU_INT32U*)(val))&0xff);
+                *((uint8_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint8_t)(*((uint32_t*)(val))&0xff);
             } else {                                  /* otherwise: invalid data size             */
                 result = CO_ERR_BAD_ARG;              /* yes: return error indication             */
             }
         } else if (sz == CO_WORD) {                   /* see, if target reference is a word       */
             if (len == CO_BYTE) {                     /* see, if object reference is a byte       */
-                *((CPU_INT16U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT16U)(*((CPU_INT08U*)(val))&0xffff);
+                *((uint16_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint16_t)(*((uint8_t*)(val))&0xffff);
             } else if (len == CO_WORD) {              /* see, if object reference is a word       */
-                *((CPU_INT16U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT16U)(*((CPU_INT16U*)(val))&0xffff);
+                *((uint16_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint16_t)(*((uint16_t*)(val))&0xffff);
             } else if (len == CO_LONG) {              /* see, if object reference is a long       */
-                *((CPU_INT16U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT16U)(*((CPU_INT32U*)(val))&0xffff);
+                *((uint16_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint16_t)(*((uint32_t*)(val))&0xffff);
             } else {                                  /* otherwise: invalid data size             */
                 result = CO_ERR_BAD_ARG;              /* yes: return error indication             */
             }
         } else if (sz == CO_LONG) {                   /* see, if target reference is a long       */
             if (len == CO_BYTE) {                     /* see, if object reference is a byte       */
-                *((CPU_INT32U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT32U)(*((CPU_INT08U*)(val)));
+                *((uint32_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint32_t)(*((uint8_t*)(val)));
             } else if (len == CO_WORD) {              /* see, if object reference is a word       */
-                *((CPU_INT32U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT32U)(*((CPU_INT16U*)(val)));
+                *((uint32_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint32_t)(*((uint16_t*)(val)));
             } else if (len == CO_LONG) {              /* see, if object reference is a long       */
-                *((CPU_INT32U *)(obj->Data)) =        /* set referenced value to data reference   */
-                    (CPU_INT32U)(*((CPU_INT32U*)(val)));
+                *((uint32_t *)(obj->Data)) =        /* set referenced value to data reference   */
+                    (uint32_t)(*((uint32_t*)(val)));
             } else {                                  /* otherwise: invalid data size             */
                 result = CO_ERR_BAD_ARG;              /* yes: return error indication             */
             }
@@ -654,10 +654,10 @@ CPU_INT16S CO_ObjWrDirect(CO_OBJ *obj, void *val, CPU_INT32U len)
 * \retval        !=CO_ERR_NONE   An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_ObjWrType(CO_OBJ *obj, void *src, CPU_INT32U len, CPU_INT32U off)
+int16_t CO_ObjWrType(CO_OBJ *obj, void *src, uint32_t len, uint32_t off)
 {
     CO_OBJ_TYPE *type;                                /* Local: ptr to object type                */
-    CPU_INT16S   result = CO_ERR_OBJ_ACC;             /* Local: function result                   */
+    int16_t   result = CO_ERR_OBJ_ACC;             /* Local: function result                   */
                                                       /*------------------------------------------*/
     type = obj->Type;                                 /* get type structure reference             */
     if (type != 0) {                                  /* see, if type is valid                    */

@@ -57,7 +57,7 @@
 ****************************************************************************************************
 */
 
-static CO_TMR_TIME *CO_TmrInsert(CO_TMR *tmr, CPU_INT32U dTnew, CO_TMR_ACTION *action);
+static CO_TMR_TIME *CO_TmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action);
 static void         CO_TmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx);
 
 /*
@@ -88,11 +88,11 @@ static void         CO_TmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx);
 * \retval   <0     an error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COTmrCreate(CO_TMR *tmr, CPU_INT32U startTime, CPU_INT32U cycleTime, CO_TMR_FUNC func, void *para)
+int16_t COTmrCreate(CO_TMR *tmr, uint32_t startTime, uint32_t cycleTime, CO_TMR_FUNC func, void *para)
 {
     CO_TMR_ACTION *act;                               /* Local: pointer to an action              */
     CO_TMR_TIME   *tn;                                /* Local: pointer to timer info             */
-    CPU_INT16S     result;                            /* Local: function result                   */
+    int16_t     result;                            /* Local: function result                   */
                                                       /*------------------------------------------*/
     CPU_SR_ALLOC();                                   /* allocate space for status                */
 
@@ -138,7 +138,7 @@ CPU_INT16S COTmrCreate(CO_TMR *tmr, CPU_INT32U startTime, CPU_INT32U cycleTime, 
         tmr->Node->Error = CO_ERR_TMR_INSERT;         /* set timer error                          */
         result           = -1;                        /* indicate function error to caller        */
     } else {                                          /* otherwise: no error detected             */
-        result = (CPU_INT16S)(act->Id);               /* return action identifier                 */
+        result = (int16_t)(act->Id);               /* return action identifier                 */
     }
     CPU_CRITICAL_EXIT();                              /* unlock shared timer resources            */
                                                       /*------------------------------------------*/
@@ -161,17 +161,17 @@ CPU_INT16S COTmrCreate(CO_TMR *tmr, CPU_INT32U startTime, CPU_INT32U cycleTime, 
 * \retval  <0      an error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COTmrDelete(CO_TMR *tmr, CPU_INT16S actId)
+int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
 {
     CO_TMR_TIME   *tx;                                /* Local: pointer to timer event            */
     CO_TMR_ACTION *act;                               /* Local: pointer to action info            */
     CO_TMR_ACTION *prev;                              /* Local: pointer to previous action info   */
     CO_TMR_ACTION *del    = 0;                        /* Local: pointer to action info            */
-    CPU_INT16S     result = -1;                       /* Local: function result                   */
+    int16_t     result = -1;                       /* Local: function result                   */
                                                       /*------------------------------------------*/
     CPU_SR_ALLOC();                                   /* allocate space for status                */
     if ( (actId < 0) ||                               /* see, if actId is not in range            */
-         (actId >= (CPU_INT16S)(tmr->Max)) ) {
+         (actId >= (int16_t)(tmr->Max)) ) {
         return -1;                                    /* error                                    */
     }
     CPU_CRITICAL_ENTER();                             /* lock shared timer resources              */
@@ -179,14 +179,14 @@ CPU_INT16S COTmrDelete(CO_TMR *tmr, CPU_INT16S actId)
     tx    = tmr->Use;                                 /* set timer pointer to root of timer list  */
     while ((tx != 0) && (del == 0)) {                 /* loop through timer list until act found  */
         act = tx->Action;                             /* get root of action list of timer event   */
-        if (act->Id == (CPU_INT16U)actId) {           /*--- FIRST ACTION IN ACTION LIST ---       */
+        if (act->Id == (uint16_t)actId) {           /*--- FIRST ACTION IN ACTION LIST ---       */
             del        = act;                         /* remember action info for deletion        */
             tx->Action = act->Next;                   /* remove action from action list           */
         } else {                                      /* otherwise: first action does not match   */
             prev       = act;                         /* set previous action info                 */
             act        = act->Next;                   /* set next action info                     */
             while ((act != 0) && (del == 0)) {        /* until end of list OR del action found    */
-                if (act->Id == (CPU_INT16U)actId) {   /* see, if action id matches given id       */
+                if (act->Id == (uint16_t)actId) {   /* see, if action id matches given id       */
                     del        = act;                 /*  remember action info for deletion       */
                     prev->Next = act->Next;           /* remove action from list                  */
                     if (act->Next == 0) {             /*--- LAST ACTION IN ACTION LIST ---        */
@@ -205,14 +205,14 @@ CPU_INT16S COTmrDelete(CO_TMR *tmr, CPU_INT16S actId)
         tx = tmr->Elapsed;                            /* set timer pointer to root of elapsed list*/
         while ((tx != 0) && (del == 0)) {             /* loop through timer list until act found  */
             act = tx->Action;                         /* get root of action list of timer event   */
-            if (act->Id == (CPU_INT16U)actId) {       /*--- FIRST ACTION IN ACTION LIST ----------*/
+            if (act->Id == (uint16_t)actId) {       /*--- FIRST ACTION IN ACTION LIST ----------*/
                 del        = act;                     /* remember action info for deletion        */
                 tx->Action = act->Next;               /* remove action from action list           */
             } else {                                  /* otherwise: first action does not match   */
                 prev       = act;                     /* set previous action info                 */
                 act        = act->Next;               /* set next action info                     */
                 while ((act != 0) && (del == 0)) {    /* until end of list OR del action found    */
-                    if (act->Id == (CPU_INT16U)actId) { /* see, if action id matches given id     */
+                    if (act->Id == (uint16_t)actId) { /* see, if action id matches given id     */
                         del        = act;             /*  remember action info for deletion       */
                         prev->Next = act->Next;       /* remove action from list                  */
                         if (act->Next == 0) {         /*--- LAST ACTION IN ACTION LIST -----------*/
@@ -266,10 +266,10 @@ CPU_INT16S COTmrDelete(CO_TMR *tmr, CPU_INT16S actId)
 * \retval  <0      an error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COTmrService(CO_TMR *tmr)
+int16_t COTmrService(CO_TMR *tmr)
 {
     CO_TMR_TIME *tn;                                  /* Local: pointer to elapsed timer event    */
-    CPU_INT16S   result = 0;                          /* Local: function result                   */
+    int16_t   result = 0;                          /* Local: function result                   */
     CPU_SR_ALLOC();                                   /* allocate space for status                */
                                                       /*------------------------------------------*/
     if (tmr == 0) {                                   /* see, if obj ptr parameters is invalid    */
@@ -392,7 +392,7 @@ void COTmrProcess(CO_TMR *tmr)
 * \param[in]       num        Length of memory block array
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_TmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, CPU_INT16U num)
+void CO_TmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, uint16_t num)
 {
     tmr->Node  = node;                                /* store parent node information            */
     tmr->Max   = num;                                 /* set number of elements in act/tmr-lists  */
@@ -418,8 +418,8 @@ void CO_TmrReset(CO_TMR *tmr)
     CO_TMR_MEM    *mem = (CO_TMR_MEM *)tmr->APool;    /* Local: pointer to memory block           */
     CO_TMR_ACTION *ap  = tmr->APool;                  /* Local: pointer to action array           */
     CO_TMR_TIME   *tp  = tmr->TPool;                  /* Local: pointer to timer array            */
-    CPU_INT16U     id  = 0;                           /* Local: action identifier                 */
-    CPU_INT16U     blk;                               /* Local: loop counter through memory block */
+    uint16_t     id  = 0;                           /* Local: action identifier                 */
+    uint16_t     blk;                               /* Local: loop counter through memory block */
                                                       /*------------------------------------------*/
     CPU_SR_ALLOC();                                   /* allocate space for status                */
                                                       /*------------------------------------------*/
@@ -468,7 +468,7 @@ void CO_TmrClear(CO_TMR *tmr)
     CO_NODE    *node;                                 /* Local: ptr to parent node                */
 #if CO_TPDO_N > 0
     CO_TPDO    *pdo;                                  /* Local: ptr to transmit PDO list          */
-    CPU_INT16U  num;                                  /* Local: number of PDO                     */
+    uint16_t  num;                                  /* Local: number of PDO                     */
 #endif
                                                       /*------------------------------------------*/
     CPU_SR_ALLOC();                                   /* allocate space for status                */
@@ -530,9 +530,9 @@ void CO_TmrClear(CO_TMR *tmr)
 * \return  returns the pointer to the event timer, which contains the new action.
 */
 /*------------------------------------------------------------------------------------------------*/
-static CO_TMR_TIME *CO_TmrInsert(CO_TMR *tmr, CPU_INT32U dTnew, CO_TMR_ACTION *action)
+static CO_TMR_TIME *CO_TmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
 {
-    CPU_INT32U   dTx;                                 /* Local: delta time to next event timer    */
+    uint32_t   dTx;                                 /* Local: delta time to next event timer    */
     CO_TMR_TIME *tx;                                  /* Local: pointer to timer info             */
     CO_TMR_TIME *tn = 0;                              /* Local: pointer to resulting timer info   */
                                                       /*------------------------------------------*/

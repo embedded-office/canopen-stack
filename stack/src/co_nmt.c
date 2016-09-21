@@ -48,7 +48,7 @@
 *          NMT state machine mode.
 */
 /*------------------------------------------------------------------------------------------------*/
-static const CPU_INT08U CONmtModeObj[CO_MODE_NUM] = {
+static const uint8_t CONmtModeObj[CO_MODE_NUM] = {
     ( 0 ),                                            /*!< objects in invalid mode                */
 
     ( CO_BOOT_ALLOWED ),                              /*!< objects in initialization mode         */
@@ -79,7 +79,7 @@ static const CPU_INT08U CONmtModeObj[CO_MODE_NUM] = {
 *          acc. the standard.
 */
 /*------------------------------------------------------------------------------------------------*/
-static const CPU_INT08U CONmtModeCode[CO_MODE_NUM] = {
+static const uint8_t CONmtModeCode[CO_MODE_NUM] = {
     255,                                              /*!< encoding for invalid mode              */
     0,                                                /*!< encoding for initialization mode       */
     127,                                              /*!< encoding for pre-operational mode      */
@@ -107,9 +107,9 @@ static const CPU_INT08U CONmtModeCode[CO_MODE_NUM] = {
 /*------------------------------------------------------------------------------------------------*/
 void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 {
-    CPU_INT08U nobootup = 1;                          /* Local: suppress transmission of bootup   */
+    uint8_t nobootup = 1;                          /* Local: suppress transmission of bootup   */
 #if CO_LSS_EN > 0
-    CPU_INT16S err;                                   /* Local: error code                        */
+    int16_t err;                                   /* Local: error code                        */
 #endif
                                                       /*------------------------------------------*/
     if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
@@ -233,7 +233,7 @@ CO_MODE CONmtGetMode(CO_NMT *nmt)
 * \param[in]       nodeId          the requested NMT node ID
 */
 /*------------------------------------------------------------------------------------------------*/
-void CONmtSetNodeId(CO_NMT *nmt, CPU_INT08U nodeId)
+void CONmtSetNodeId(CO_NMT *nmt, uint8_t nodeId)
 {
     CO_MODE mode;                                     /* Local: current active NMT mode           */
                                                       /*------------------------------------------*/
@@ -269,9 +269,9 @@ void CONmtSetNodeId(CO_NMT *nmt, CPU_INT08U nodeId)
 * \retval   >0     The current NMT node ID
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT08U CONmtGetNodeId(CO_NMT *nmt)
+uint8_t CONmtGetNodeId(CO_NMT *nmt)
 {
-    CPU_INT08U result = 0;                            /* Local: function result                   */
+    uint8_t result = 0;                            /* Local: function result                   */
                                                       /*------------------------------------------*/
     if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
         CO_NodeFatalError();                          /* inform user                              */
@@ -297,10 +297,10 @@ CPU_INT08U CONmtGetNodeId(CO_NMT *nmt)
 * \retval   >0            The corresponding NMT heartbeat state
 */
 /*------------------------------------------------------------------------------------------------*/
-CO_MODE CONmtModeDecode(CPU_INT08U code)
+CO_MODE CONmtModeDecode(uint8_t code)
 {
     CO_MODE    result = CO_INVALID;
-    CPU_INT08U id;
+    uint8_t id;
 
     for (id = 0; id < CO_MODE_NUM; id++) {
         if (CONmtModeCode[id] == code) {
@@ -322,9 +322,9 @@ CO_MODE CONmtModeDecode(CPU_INT08U code)
 * \return   The corresponding NMT heartbeat state code.
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT08U CONmtModeEncode(CO_MODE mode)
+uint8_t CONmtModeEncode(CO_MODE mode)
 {
-    CPU_INT08U result = CONmtModeCode[CO_INVALID];
+    uint8_t result = CONmtModeCode[CO_INVALID];
 
     if (mode < CO_MODE_NUM) {
         result = CONmtModeCode[mode];
@@ -407,9 +407,9 @@ void CO_NmtBootup(CO_NMT *nmt)
 * \retval   <0     mesage is not an NMT message
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_NmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
+int16_t CO_NmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 {
-    CPU_INT16S result = -1;                           /* Local: function result                   */
+    int16_t result = -1;                           /* Local: function result                   */
                                                       /*------------------------------------------*/
     if (frm->Identifier == 0) {                       /* check for nmt message                    */
         result = 0;                                   /* success, regardless if we are addressed  */

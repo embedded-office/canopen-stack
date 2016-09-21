@@ -39,8 +39,8 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "cpu.h"                                      /* CPU configuration                        */
-#include "co_cfg.h"                                   /* CANopen configuration                    */
+#include "co_types.h"
+#include "co_cfg.h"
 #if CO_EMCY_HIST_EN > 0
 #include "co_femcy.h"
 #endif
@@ -144,13 +144,13 @@ extern "C" {
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_EMCY_USR_T {
 #if CO_EMCY_HIST_MAN_EN > 0
-    CPU_INT16U            Hist;                       /*!< manufacturer specific field in History */
+    uint16_t            Hist;                       /*!< manufacturer specific field in History */
 #endif
 #if CO_EMCY_EMCY_MAN_EN > 0
-    CPU_INT08U            Emcy[5];                    /*!< manufacturer specific field in EMCY    */
+    uint8_t            Emcy[5];                    /*!< manufacturer specific field in EMCY    */
 #endif
 #if CO_EMCY_HIST_MAN_EN == 0 && CO_EMCY_EMCY_MAN_EN == 0
-    CPU_INT08U            Dummy;                      /*!< manufacturer specific field is unused  */
+    uint8_t            Dummy;                      /*!< manufacturer specific field is unused  */
 #endif
 
 } CO_EMCY_USR;
@@ -164,8 +164,8 @@ typedef struct CO_EMCY_USR_T {
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_EMCY_TBL_T {
-    CPU_INT08U Reg;                                   /*!< bit number (0..7) in error register    */
-    CPU_INT16U Code;                                  /*!< error code (category see CO_EMCY_CODE) */
+    uint8_t Reg;                                   /*!< bit number (0..7) in error register    */
+    uint16_t Code;                                  /*!< error code (category see CO_EMCY_CODE) */
 
 } CO_EMCY_TBL;
 
@@ -184,8 +184,8 @@ typedef struct CO_EMCY_T {
 #if CO_EMCY_HIST_EN > 0
     struct CO_EMCY_HIST_T  Hist;                      /*!< EMCY history informations              */
 #endif
-    CPU_INT08U             Cnt[CO_EMCY_REG_NUM];      /*!< Count occurance of register bits       */
-    CPU_INT08U             Err[CO_EMCY_STORAGE];      /*!< individual error code status storage   */
+    uint8_t             Cnt[CO_EMCY_REG_NUM];      /*!< Count occurance of register bits       */
+    uint8_t             Err[CO_EMCY_STORAGE];      /*!< individual error code status storage   */
 
 } CO_EMCY;
 
@@ -196,11 +196,11 @@ typedef struct CO_EMCY_T {
 */
 
 #if CO_EMCY_N > 0
-void       COEmcySet         (CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr);
-void       COEmcyClr         (CO_EMCY *emcy, CPU_INT08U err);
-CPU_INT16S COEmcyGet         (CO_EMCY *emcy, CPU_INT08U err);
-CPU_INT16S COEmcyCnt         (CO_EMCY *emcy);
-void       COEmcyReset       (CO_EMCY *emcy, CPU_INT08U silent);
+void       COEmcySet         (CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
+void       COEmcyClr         (CO_EMCY *emcy, uint8_t err);
+int16_t COEmcyGet         (CO_EMCY *emcy, uint8_t err);
+int16_t COEmcyCnt         (CO_EMCY *emcy);
+void       COEmcyReset       (CO_EMCY *emcy, uint8_t silent);
 #endif
 
 /*
@@ -211,11 +211,11 @@ void       COEmcyReset       (CO_EMCY *emcy, CPU_INT08U silent);
 
 #if CO_EMCY_N > 0
 void       CO_EmcyInit       (CO_EMCY *emcy, struct CO_NODE_T *node, CO_EMCY_TBL *root);
-CPU_INT16S CO_EmcyCheck      (CO_EMCY *emcy);
-CPU_INT16S CO_EmcyGetErr     (CO_EMCY *emcy, CPU_INT08U err);
-CPU_INT16S CO_EmcySetErr     (CO_EMCY *emcy, CPU_INT08U err, CPU_INT08U state);
-void       CO_EmcySend       (CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr, CPU_INT08U state);
-void       CO_EmcyUpdate     (CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr, CPU_INT08U state);
+int16_t CO_EmcyCheck      (CO_EMCY *emcy);
+int16_t CO_EmcyGetErr     (CO_EMCY *emcy, uint8_t err);
+int16_t CO_EmcySetErr     (CO_EMCY *emcy, uint8_t err, uint8_t state);
+void       CO_EmcySend       (CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state);
+void       CO_EmcyUpdate     (CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state);
 #endif
 
 #ifdef __cplusplus

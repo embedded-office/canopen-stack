@@ -39,7 +39,7 @@
 ****************************************************************************************************
 */
 
-static CPU_INT16S CO_TNmtHbProdWrite  (CO_OBJ *obj, void *buf, CPU_INT32U size);
+static int16_t CO_TNmtHbProdWrite  (CO_OBJ *obj, void *buf, uint32_t size);
 
 /*
 ****************************************************************************************************
@@ -85,8 +85,8 @@ CO_OBJ_TYPE COTNmtHbProd = { 0, 0, 0, 0, 0, CO_TNmtHbProdWrite };
 void CO_NmtHbProdInit (CO_NMT *nmt)
 {
     CO_NODE    *node;
-    CPU_INT16S  err;                                  /* Local: error variable                    */
-    CPU_INT16U  cycTime;                              /* Local: heartbeat producer cycle time     */
+    int16_t  err;                                  /* Local: error variable                    */
+    uint16_t  cycTime;                              /* Local: heartbeat producer cycle time     */
                                                       /*------------------------------------------*/
     if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
         CO_NodeFatalError();                          /* inform user                              */
@@ -137,7 +137,7 @@ void CO_NmtHbProdSend(void *parg)
 {
     CO_IF_FRM    frm;                                 /* Local: heartbeat CAN frame               */
     CO_NMT      *nmt;                                 /* LocaL: reference to NMT strucutre        */
-    CPU_INT08U   state;                               /* Local: NMT mode in heartbeat encoding    */
+    uint8_t   state;                               /* Local: NMT mode in heartbeat encoding    */
                                                       /*------------------------------------------*/
     nmt = (CO_NMT *)parg;                             /* get reference to the NMT structure       */
     if ((nmt->Allowed & CO_NMT_ALLOWED) == 0) {       /* see, if NMT messages are not allowed     */
@@ -178,11 +178,11 @@ void CO_NmtHbProdSend(void *parg)
 * \retval   <=0    an error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TNmtHbProdWrite (CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_TNmtHbProdWrite (CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_NODE    *node;                                 /* Local: pointer to parent node            */
-    CPU_INT16U  cycTime;                              /* Local: cycle time                        */
-    CPU_INT16S  result = CO_ERR_OBJ_ACC;              /* Local: function result                   */
+    uint16_t  cycTime;                              /* Local: cycle time                        */
+    int16_t  result = CO_ERR_OBJ_ACC;              /* Local: function result                   */
                                                       /*------------------------------------------*/
     if (size != CO_LONG) {                            /* see, if size is incorrect                */
         return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
@@ -190,7 +190,7 @@ static CPU_INT16S CO_TNmtHbProdWrite (CO_OBJ* obj, void *buf, CPU_INT32U size)
     if (CO_GET_IDX(obj->Key) != 0x1017) {             /* see, if wrong object entry is accessed   */
         return (CO_ERR_CFG_1017_0);                   /* abort function with error indication     */
     }
-    cycTime = (CPU_INT16U)(*(CPU_INT32U *)buf);       /* get cycle time from written value        */
+    cycTime = (uint16_t)(*(uint32_t *)buf);       /* get cycle time from written value        */
     node    = obj->Type->Dir->Node;                   /* get parent node                          */
                                                       /*------------------------------------------*/
     if (node->Nmt.Tmr >= 0) {                         /* if timer active                          */

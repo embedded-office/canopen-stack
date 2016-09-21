@@ -40,8 +40,8 @@
 */
 
 #if CO_EMCY_HIST_EN > 0
-static CPU_INT16S CO_TEmcyRead (CO_OBJ *obj, void *buf, CPU_INT32U len);
-static CPU_INT16S CO_TEmcyWrite(CO_OBJ *obj, void *buf, CPU_INT32U len);
+static int16_t CO_TEmcyRead (CO_OBJ *obj, void *buf, uint32_t len);
+static int16_t CO_TEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len);
 #endif
 
 /*
@@ -84,10 +84,10 @@ void COEmcyHistReset(CO_EMCY *emcy)
     CO_NODE    *node;                                 /* Local: ptr to parent node                */
     CO_DIR     *cod;                                  /* Local: ptr to object directory           */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-    CPU_INT32U  val32;                                /* Local: value for EMCY entry              */
-    CPU_INT16S  chk;                                  /* Local: result of parameter check         */
-    CPU_INT08U  sub;                                  /* Local: loop cntr through subidx          */
-    CPU_INT08U  val08;                                /* Local: value for EMCY number             */
+    uint32_t  val32;                                /* Local: value for EMCY entry              */
+    int16_t  chk;                                  /* Local: result of parameter check         */
+    uint8_t  sub;                                  /* Local: loop cntr through subidx          */
+    uint8_t  val08;                                /* Local: value for EMCY number             */
                                                       /*------------------------------------------*/
     chk = CO_EmcyCheck(emcy);                         /* check given parameter emcy               */
     if (chk < 0) {                                    /* see, if an error is detected             */
@@ -141,7 +141,7 @@ void CO_EmcyHistInit(CO_EMCY *emcy)
     CO_NODE    *node;                                 /* Local: ptr to parent node                */
     CO_DIR     *cod;                                  /* Local: ptr to object directory           */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-    CPU_INT08U  sub;                                  /* Local: loop cntr through subidx          */
+    uint8_t  sub;                                  /* Local: loop cntr through subidx          */
                                                       /*------------------------------------------*/
     emcy->Hist.Max = 0;                               /* indicate no EMCY entry available         */
     emcy->Hist.Num = 0;                               /* indicate no EMCY entry in History        */
@@ -197,13 +197,13 @@ void CO_EmcyHistInit(CO_EMCY *emcy)
 *                                (only used, when \ref CO_EMCY_HIST_MAN_EN is set to 1)
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_EmcyHistAdd(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr)
+void CO_EmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 {
     CO_NODE    *node;                                 /* Local: ptr to parent node                */
     CO_DIR     *cod;                                  /* Local: ptr to object directory           */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-    CPU_INT32U  val = 0;                              /* Local: EMCY history value                */
-    CPU_INT08U  sub;                                  /* Local: loop cntr through subidx          */
+    uint32_t  val = 0;                              /* Local: EMCY history value                */
+    uint8_t  sub;                                  /* Local: loop cntr through subidx          */
                                                       /*------------------------------------------*/
 #if CO_EMCY_HIST_MAN_EN == 0
     (void)usr;                                        /* unused; prevent compiler warning         */
@@ -218,10 +218,10 @@ void CO_EmcyHistAdd(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr)
         emcy->Hist.Off = 1;                           /* switch back to first entry               */
     }                                                 /*------------------------------------------*/
     sub = emcy->Hist.Off;                             /* get next write subidx                    */
-    val = (CPU_INT32U)emcy->Root[err].Code;           /* set emcy code                            */
+    val = (uint32_t)emcy->Root[err].Code;           /* set emcy code                            */
 #if CO_EMCY_HIST_MAN_EN > 0
     if (usr != 0) {                                   /* see, if user infos are given             */
-        val |= (((CPU_INT32U)usr->Hist) << 16);       /* set manufacturer specific info field     */
+        val |= (((uint32_t)usr->Hist) << 16);       /* set manufacturer specific info field     */
     }
 #endif
     obj = CODirFind(cod, CO_DEV(0x1003,sub));         /* get object of ringbuffer EMCY entry      */
@@ -265,14 +265,14 @@ void CO_EmcyHistAdd(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr)
 * \retval   !=CO_ERR_NONE       an error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TEmcyRead (CO_OBJ *obj, void *buf, CPU_INT32U len)
+static int16_t CO_TEmcyRead (CO_OBJ *obj, void *buf, uint32_t len)
 {
     CO_NODE    *node;                                 /* Local: ptr to parent node                */
     CO_DIR     *cod;                                  /* Local: ptr to object directory           */
     CO_EMCY    *emcy;                                 /* Local: ptr to EMCY structure             */
-    CPU_INT16S  result = CO_ERR_NONE;                 /* Local: function result                   */
-    CPU_INT08U  sub;                                  /* Local: addressed subidx                  */
-    CPU_INT08U  map;                                  /* Local: mapped subidx                     */
+    int16_t  result = CO_ERR_NONE;                 /* Local: function result                   */
+    uint8_t  sub;                                  /* Local: addressed subidx                  */
+    uint8_t  map;                                  /* Local: mapped subidx                     */
                                                       /*------------------------------------------*/
     cod  = obj->Type->Dir;                            /* get ptr to object directory              */
     node = cod->Node;                                 /* get ptr to parent node                   */
@@ -317,14 +317,14 @@ static CPU_INT16S CO_TEmcyRead (CO_OBJ *obj, void *buf, CPU_INT32U len)
 * \retval   CO_ERR_TYPE_WR      an error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TEmcyWrite(CO_OBJ *obj, void *buf, CPU_INT32U len)
+static int16_t CO_TEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len)
 {
     CO_NODE    *node;                                 /* Local: ptr to parent node                */
     CO_DIR     *cod;                                  /* Local: ptr to object directory           */
     CO_EMCY    *emcy;                                 /* Local: ptr to EMCY structure             */
-    CPU_INT16S  result = CO_ERR_TYPE_WR;              /* Local: function result                   */
-    CPU_INT08U  val    = 0;                           /* Local: EMCY history value                */
-    CPU_INT08U  sub;                                  /* Local: addressed subidx                  */
+    int16_t  result = CO_ERR_TYPE_WR;              /* Local: function result                   */
+    uint8_t  val    = 0;                           /* Local: EMCY history value                */
+    uint8_t  sub;                                  /* Local: addressed subidx                  */
                                                       /*------------------------------------------*/
     (void)len;                                        /* unused; prevent compiler warning         */
     cod  = obj->Type->Dir;                            /* get ptr to object directory              */
@@ -333,7 +333,7 @@ static CPU_INT16S CO_TEmcyWrite(CO_OBJ *obj, void *buf, CPU_INT32U len)
     sub  = CO_GET_SUB(obj->Key);                      /* get addressed subindex                   */
                                                       /*------------------------------------------*/
     if (sub == 0) {                                   /* see, if special case: subidx 0           */
-        val = (CPU_INT08U)(*(CPU_INT32U*)buf);        /* get write value                          */
+        val = (uint8_t)(*(uint32_t*)buf);        /* get write value                          */
         if (val == 0) {                               /* see, if write value is 0                 */
             COEmcyHistReset(emcy);                    /* reset complete EMCY history              */
             result = CO_ERR_NONE;                     /* indicate successful write operation      */

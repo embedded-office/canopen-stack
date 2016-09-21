@@ -104,7 +104,7 @@ typedef struct CO_NODE_T {
     struct CO_TMR_T        Tmr;                       /*!< The Highspeed timer manager            */
     struct CO_SDO_T        Sdo[CO_SDO_N];             /*!< The SDO Server Array                   */
 #if CO_SDO_SEG_EN > 0 || CO_SDO_BLK_EN > 0
-    CPU_INT08U            *SdoBuf;                    /*!< Pointer to SDO Transfer Buffer Start   */
+    uint8_t            *SdoBuf;                    /*!< Pointer to SDO Transfer Buffer Start   */
 #endif
 #if CO_RPDO_N > 0
     struct CO_RPDO_T       RPdo[CO_RPDO_N];           /*!< The Receive PDO Array                  */
@@ -120,8 +120,8 @@ typedef struct CO_NODE_T {
     struct CO_LSS_T        Lss;                       /*!< The LSS slave handling                 */
 #endif
     enum   CO_ERR_T        Error;                     /*!< The internal detected error code       */
-    CPU_INT32U             Baudrate;                  /*!< The default CAN Baudrate               */
-    CPU_INT08U             NodeId;                    /*!< The default CANopen Node-ID            */
+    uint32_t             Baudrate;                  /*!< The default CAN Baudrate               */
+    uint8_t             NodeId;                    /*!< The default CANopen Node-ID            */
 
 } CO_NODE;
 
@@ -134,15 +134,15 @@ typedef struct CO_NODE_T {
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_NODE_SPEC_T {
-    CPU_INT08U              NodeId;                   /*!< specify default Node-Id                */
-    CPU_INT32U              Baudrate;                 /*!< specify default Baudrate               */
+    uint8_t              NodeId;                   /*!< specify default Node-Id                */
+    uint32_t              Baudrate;                 /*!< specify default Baudrate               */
     struct CO_OBJ_T        *Dir;                      /*!< specify object directory               */
-    CPU_INT16U              DirLen;                   /*!< specify object directory (max) length  */
+    uint16_t              DirLen;                   /*!< specify object directory (max) length  */
     struct CO_EMCY_TBL_T   *EmcyCode;                 /*!< specify application EMCY info fields   */
     struct CO_TMR_MEM_T    *TmrMem;                   /*!< specify timer memory blocks            */
-    CPU_INT16U              TmrNum;                   /*!< specify number of timer memory blocks  */
+    uint16_t              TmrNum;                   /*!< specify number of timer memory blocks  */
     CO_IF_DRV               CanDrv;                   /*!< specify linked CAN bus driver          */
-    CPU_INT08U             *SdoBuf;                   /*!< SDO Transfer Buffer Memory Start       */
+    uint8_t             *SdoBuf;                   /*!< SDO Transfer Buffer Memory Start       */
 
 } CO_NODE_SPEC;
 
@@ -159,7 +159,7 @@ CO_ERR     CONodeGetErr      (CO_NODE *node);
 void       CONodeProcess     (CO_NODE *node);
 
 #if CO_OBJ_PARA_EN > 0
-CPU_INT16S CONodeParaLoad    (CO_NODE *node, CO_NMT_RESET type);
+int16_t CONodeParaLoad    (CO_NODE *node, CO_NMT_RESET type);
 #endif
 
 /*

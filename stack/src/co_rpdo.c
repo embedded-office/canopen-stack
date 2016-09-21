@@ -54,7 +54,7 @@
 /*------------------------------------------------------------------------------------------------*/
 void CO_RPdoClear(CO_RPDO *pdo, CO_NODE *node)
 {
-    CPU_INT16S num;                                   /* Local: loop through RPDO number          */
+    int16_t num;                                   /* Local: loop through RPDO number          */
                                                       /*------------------------------------------*/
     if ((pdo == 0) || (node == 0)) {                  /* see, if argument pointers are invalid    */
         CO_NodeFatalError();                          /* inform user                              */
@@ -84,9 +84,9 @@ void CO_RPdoClear(CO_RPDO *pdo, CO_NODE *node)
 /*------------------------------------------------------------------------------------------------*/
 void CO_RPdoInit(CO_RPDO *pdo, CO_NODE *node)
 {
-    CPU_INT16S err;                                   /* Local: error code                        */
-    CPU_INT08U rnum;                                  /* LocaL: number of PDO Com Entries         */
-    CPU_INT16S num;                                   /* Local: loop through RPDO number          */
+    int16_t err;                                   /* Local: error code                        */
+    uint8_t rnum;                                  /* LocaL: number of PDO Com Entries         */
+    int16_t num;                                   /* Local: loop through RPDO number          */
                                                       /*------------------------------------------*/
     if ((pdo == 0) || (node == 0)) {                  /* see, if argument pointers are invalid    */
         CO_NodeFatalError();                          /* inform user                              */
@@ -132,14 +132,14 @@ void CO_RPdoInit(CO_RPDO *pdo, CO_NODE *node)
 * \retval  <0      At least one communication profile entry is invalid, further checks aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_RPdoReset(CO_RPDO *pdo, CPU_INT16S num)
+int16_t CO_RPdoReset(CO_RPDO *pdo, int16_t num)
 {
     CO_RPDO    *wp;                                   /* Local: Pointer to working RPDO           */
     CO_DIR     *cod;                                  /* Local: Pointer to object directory       */
-    CPU_INT32U  id      = CO_RPDO_COBID_OFF;          /* Local: COBID from profile                */
-    CPU_INT16S  err;                                  /* Local: function call error code          */
-    CPU_INT08U  on;                                   /* Local: loop through object map           */
-    CPU_INT08U  type    = 0;                          /* Local: transmission type from profile    */
+    uint32_t  id      = CO_RPDO_COBID_OFF;          /* Local: COBID from profile                */
+    int16_t  err;                                  /* Local: function call error code          */
+    uint8_t  on;                                   /* Local: loop through object map           */
+    uint8_t  type    = 0;                          /* Local: transmission type from profile    */
                                                       /*------------------------------------------*/
     wp             = &pdo[num];                       /* set pointer to working pdo               */
     cod            = &wp->Node->Dir;                  /* set pointer to object directory          */
@@ -240,18 +240,18 @@ CPU_INT16S CO_RPdoReset(CO_RPDO *pdo, CPU_INT16S num)
 * \retval  <0      At least one error is detected within the mapping configuration
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_RPdoGetMap (CO_RPDO *pdo, CPU_INT16U num)
+int16_t CO_RPdoGetMap (CO_RPDO *pdo, uint16_t num)
 {
     CO_DIR      *cod;                                 /* Local: pointer to object directory       */
     CO_OBJ      *obj;                                 /* Local: pointer to object entry           */
-    CPU_INT32U   mapping;                             /* Local: PDO mapping information           */
-    CPU_INT16U   idx;                                 /* Local: object entry index                */
-    CPU_INT16U   link;                                /* Local: object entry index                */
-    CPU_INT16S   err;                                 /* Local: error of CANopen functions        */
-    CPU_INT08U   on;                                  /* Local: Loop counter for mapped objects   */
-    CPU_INT08U   mapnum;                              /* Local: number of PDO mappings            */
-    CPU_INT08U   dlc;                                 /* Local: resulting data length code        */
-    CPU_INT08U   dummy = 0;                           /* Local: number of dummy bytes             */
+    uint32_t   mapping;                             /* Local: PDO mapping information           */
+    uint16_t   idx;                                 /* Local: object entry index                */
+    uint16_t   link;                                /* Local: object entry index                */
+    int16_t   err;                                 /* Local: error of CANopen functions        */
+    uint8_t   on;                                  /* Local: Loop counter for mapped objects   */
+    uint8_t   mapnum;                              /* Local: number of PDO mappings            */
+    uint8_t   dlc;                                 /* Local: resulting data length code        */
+    uint8_t   dummy = 0;                           /* Local: number of dummy bytes             */
                                                       /*------------------------------------------*/
     cod = &pdo[num].Node->Dir;                        /* get pointer to object directory          */
     idx = 0x1600 + num;                               /* set index to TPDO mapping profile        */
@@ -269,7 +269,7 @@ CPU_INT16S CO_RPdoGetMap (CO_RPDO *pdo, CPU_INT16U num)
             return (-1);                              /* abort with error indication              */
         }
                                                       /*lint -e{644} : mapping set in CODirRdLong */
-        dlc += (CPU_INT08U)(mapping & 0xFF) >> 3;     /* add number of bits, converted to bytes   */
+        dlc += (uint8_t)(mapping & 0xFF) >> 3;     /* add number of bits, converted to bytes   */
         if (dlc > 8){                                 /* more than 8 byte not possible in a PDO   */
             return (-1);                              /* abort with error indication              */
         }
@@ -325,9 +325,9 @@ CPU_INT16S CO_RPdoGetMap (CO_RPDO *pdo, CPU_INT16U num)
 * \param[in]       frm          Pointer to received CAN frame
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_RPdoRx (CO_RPDO *pdo, CPU_INT16U num, CO_IF_FRM *frm)
+void CO_RPdoRx (CO_RPDO *pdo, uint16_t num, CO_IF_FRM *frm)
 {
-    CPU_INT16S  err = 0;                              /* Local: error code                        */
+    int16_t  err = 0;                              /* Local: error code                        */
                                                       /*------------------------------------------*/
     if ((pdo[num].Flag & CO_RPDO_FLG_S_) == 0) {      /* if not a synchronized PDO                */
 #if CO_CB_RPDO_RECEIVE_EN > 0
@@ -360,10 +360,10 @@ void CO_RPdoRx (CO_RPDO *pdo, CPU_INT16U num, CO_IF_FRM *frm)
 * \retval  <0      Not a valid RPDO CAN message
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_RPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm)
+int16_t CO_RPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm)
 {
-    CPU_INT16S result = -1;                           /* Local: function result                   */
-    CPU_INT16U n;                                     /* Local: PDO counter                       */
+    int16_t result = -1;                           /* Local: function result                   */
+    uint16_t n;                                     /* Local: PDO counter                       */
                                                       /*------------------------------------------*/
     n = 0;                                            /* reset PDO counter                        */
     while (n < CO_RPDO_N) {                           /* Loop through whole PDO table             */
@@ -396,17 +396,17 @@ CPU_INT16S CO_RPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm)
 void CO_RPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
 {
     CO_OBJ     *obj;                                  /* Local: pointer to linked object          */
-    CPU_INT32U  val32;                                /* Local: received long value               */
-    CPU_INT16U  val16;                                /* Local: received word value               */
-    CPU_INT08U  val08;                                /* Local: received byte value               */
-    CPU_INT08U  on;                                   /* Local: loop through linked objects       */
-    CPU_INT08U  sz;                                   /* Local: size of object entry              */
-    CPU_INT08U  dlc = 0;                              /* Local: data length code                  */
+    uint32_t  val32;                                /* Local: received long value               */
+    uint16_t  val16;                                /* Local: received word value               */
+    uint8_t  val08;                                /* Local: received byte value               */
+    uint8_t  on;                                   /* Local: loop through linked objects       */
+    uint8_t  sz;                                   /* Local: size of object entry              */
+    uint8_t  dlc = 0;                              /* Local: data length code                  */
                                                       /*------------------------------------------*/
     for (on = 0; on < pdo->ObjNum; on++) {            /* loop through RPDO object map             */
         obj = pdo->Map[on];                           /* get next object pointer                  */
         if (obj != 0) {                               /* see, if not a dummy byte                 */
-            sz = (CPU_INT08U)COObjGetSize(obj, 0L);   /* get size of object                       */
+            sz = (uint8_t)COObjGetSize(obj, 0L);   /* get size of object                       */
             if (sz == CO_BYTE) {                      /* see, if object is a byte                 */
                 val08 = CO_GET_BYTE(frm, dlc);        /* get byte from payload                    */
                 dlc++;                                /* increment dlc position                   */
@@ -463,7 +463,7 @@ void CO_RPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
 * \retval   >0     CAN message frame is consumed
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_RPdoReceive (CO_IF_FRM *frm)
+int16_t CO_RPdoReceive (CO_IF_FRM *frm)
 {
     (void)frm;                                        /* unused, prevent compiler warning         */
     return (0);

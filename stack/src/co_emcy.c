@@ -57,10 +57,10 @@
 * \param[in]       usr           manufacturer specific fields in EMCY history and/or EMCY message
 */
 /*------------------------------------------------------------------------------------------------*/
-void COEmcySet(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr)
+void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 {
-    CPU_INT16S chk;                                   /* Local: result of parameter check         */
-    CPU_INT16S change;                                /* Local: current error change indication   */
+    int16_t chk;                                   /* Local: result of parameter check         */
+    int16_t change;                                /* Local: current error change indication   */
                                                       /*------------------------------------------*/
     chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
     if (chk < 0) {                                    /* see, if parameter emcy is bad            */
@@ -88,10 +88,10 @@ void COEmcySet(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr)
 * \param[in]       err           EMCY error identifier in User EMCY table
 */
 /*------------------------------------------------------------------------------------------------*/
-void COEmcyClr(CO_EMCY *emcy, CPU_INT08U err)
+void COEmcyClr(CO_EMCY *emcy, uint8_t err)
 {
-    CPU_INT16S chk;                                   /* Local: result of parameter check         */
-    CPU_INT16S change;                                /* Local: current error change indication   */
+    int16_t chk;                                   /* Local: result of parameter check         */
+    int16_t change;                                /* Local: current error change indication   */
                                                       /*------------------------------------------*/
     chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
     if (chk < 0) {                                    /* see, if parameter emcy is bad            */
@@ -122,10 +122,10 @@ void COEmcyClr(CO_EMCY *emcy, CPU_INT08U err)
 * \retval   <0     an error is detected inside of this function
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COEmcyGet(CO_EMCY *emcy, CPU_INT08U err)
+int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err)
 {
-    CPU_INT16S chk;                                   /* Local: result of parameter check         */
-    CPU_INT16S cur;                                   /* Local: current error detection marker    */
+    int16_t chk;                                   /* Local: result of parameter check         */
+    int16_t cur;                                   /* Local: current error detection marker    */
                                                       /*------------------------------------------*/
     chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
     if (chk < 0) {                                    /* see, if parameter emcy is bad            */
@@ -151,11 +151,11 @@ CPU_INT16S COEmcyGet(CO_EMCY *emcy, CPU_INT08U err)
 * \retval   <0     an error is detected inside of this function
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S COEmcyCnt(CO_EMCY *emcy)
+int16_t COEmcyCnt(CO_EMCY *emcy)
 {
-    CPU_INT16S chk;                                   /* Local: result of parameter check         */
-    CPU_INT16S result = -1;                           /* Local: function result                   */
-    CPU_INT08U n;                                     /* Local: loop through error classes        */
+    int16_t chk;                                   /* Local: result of parameter check         */
+    int16_t result = -1;                           /* Local: function result                   */
+    uint8_t n;                                     /* Local: loop through error classes        */
                                                       /*------------------------------------------*/
     chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
     if (chk < 0) {                                    /* see, if parameter emcy is bad            */
@@ -184,11 +184,11 @@ CPU_INT16S COEmcyCnt(CO_EMCY *emcy)
 *                                made by this function
 */
 /*------------------------------------------------------------------------------------------------*/
-void COEmcyReset(CO_EMCY *emcy, CPU_INT08U silent)
+void COEmcyReset(CO_EMCY *emcy, uint8_t silent)
 {
-    CPU_INT16S change;                                /* Local: current error change indication   */
-    CPU_INT16S chk;                                   /* Local: result of parameter check         */
-    CPU_INT08U n;                                     /* Local: loop counter                      */
+    int16_t change;                                /* Local: current error change indication   */
+    int16_t chk;                                   /* Local: result of parameter check         */
+    uint8_t n;                                     /* Local: loop counter                      */
                                                       /*------------------------------------------*/
     chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
     if (chk < 0) {                                    /* see, if parameter emcy is bad            */
@@ -232,8 +232,8 @@ void COEmcyReset(CO_EMCY *emcy, CPU_INT08U silent)
 void CO_EmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
 {
     CO_OBJ     *obj;                                  /* Local: pointer to object entry           */
-    CPU_INT16U  n;                                    /* Local: loop counter                      */
-    CPU_INT32U  size;
+    uint16_t  n;                                    /* Local: loop counter                      */
+    uint32_t  size;
                                                       /*------------------------------------------*/
     if ((root == 0) || (node == 0) || (emcy == 0)) {  /* see, if any parameter pointer is invalid */
         CO_NodeFatalError();                          /* inform user                              */
@@ -287,10 +287,10 @@ void CO_EmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
 * \retval   <0     an error is detected in parameter emcy
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_EmcyCheck(CO_EMCY *emcy)
+int16_t CO_EmcyCheck(CO_EMCY *emcy)
 {
     CO_NODE    *node;                                 /* Local: ptr to parent node                */
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
+    int16_t  result = -1;                          /* Local: function result                   */
                                                       /*------------------------------------------*/
     if (emcy == 0) {                                  /* see, if parameter pointer is invalid     */
         CO_NodeFatalError();                          /* inform user                              */
@@ -329,17 +329,17 @@ CPU_INT16S CO_EmcyCheck(CO_EMCY *emcy)
 * \retval   =1     the error is already detected
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_EmcyGetErr(CO_EMCY *emcy, CPU_INT08U err)
+int16_t CO_EmcyGetErr(CO_EMCY *emcy, uint8_t err)
 {
-    CPU_INT08U result;                                /* Local: function result                   */
-    CPU_INT08U byte;                                  /* Local: calculated byte in error memory   */
-    CPU_INT08U mask;                                  /* Local: calculated bit mask in the byte   */
+    uint8_t result;                                /* Local: function result                   */
+    uint8_t byte;                                  /* Local: calculated byte in error memory   */
+    uint8_t mask;                                  /* Local: calculated bit mask in the byte   */
                                                       /*------------------------------------------*/
     if (err >= CO_EMCY_N) {                           /* see, if error identifier is invalid      */
         err = CO_EMCY_N - 1;                          /* limit to last entry in user table        */
     }                                                 /*------------------------------------------*/
     byte = err >> 3;                                  /* calculate byte, holding the given error  */
-    mask = (CPU_INT08U)1 << (err & 0x7);              /* calculate mask, representing the error   */
+    mask = (uint8_t)1 << (err & 0x7);              /* calculate mask, representing the error   */
     if ((emcy->Err[byte] & mask) == 0) {              /* see, if this error is currently not set  */
         result = 0;                                   /* set result to 'error not detected'       */
     } else {                                          /* otherwise, this error is currently set   */
@@ -370,17 +370,17 @@ CPU_INT16S CO_EmcyGetErr(CO_EMCY *emcy, CPU_INT08U err)
 * \retval   =1     the error state has changed
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_EmcySetErr(CO_EMCY *emcy, CPU_INT08U err, CPU_INT08U state)
+int16_t CO_EmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state)
 {
-    CPU_INT08U result;                                /* Local: function result                   */
-    CPU_INT08U byte;                                  /* Local: calculated byte in error memory   */
-    CPU_INT08U mask;                                  /* Local: calculated bit mask in the byte   */
+    uint8_t result;                                /* Local: function result                   */
+    uint8_t byte;                                  /* Local: calculated byte in error memory   */
+    uint8_t mask;                                  /* Local: calculated bit mask in the byte   */
                                                       /*------------------------------------------*/
     if (err >= CO_EMCY_N) {                           /* see, if error identifier is invalid      */
         err = CO_EMCY_N - 1;                          /* limit to last entry in user table        */
     }                                                 /*------------------------------------------*/
     byte = err >> 3;                                  /* calculate byte, holding the given error  */
-    mask = (CPU_INT08U)1 << (err & 0x7);              /* calculate mask, representing the error   */
+    mask = (uint8_t)1 << (err & 0x7);              /* calculate mask, representing the error   */
     if ((emcy->Err[byte] & mask) == 0) {              /* see, if this error is currently not set  */
         if (state != 0) {                             /* yes: see, if new error state is set      */
             emcy->Err[byte] |= mask;                  /* yes: mark error detected in memory       */
@@ -420,13 +420,13 @@ CPU_INT16S CO_EmcySetErr(CO_EMCY *emcy, CPU_INT08U err, CPU_INT08U state)
 * \param[in]       state         error state (=0: no error, !=0: error)
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_EmcySend(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr, CPU_INT08U state)
+void CO_EmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
 {
     CO_IF_FRM    frm;                                 /* Local: CAN frame for transmission        */
     CO_NODE     *node;                                /* Local: pointer to node informations      */
     CO_DIR      *dir;                                 /* Local: pointer to object directory       */
     CO_EMCY_TBL *data;                                /* Local: pointer to user error field table */
-    CPU_INT08U   n;                                   /* Local: loop through user error field     */
+    uint8_t   n;                                   /* Local: loop through user error field     */
                                                       /*------------------------------------------*/
 #if CO_EMCY_EMCY_MAN_EN == 0
     (void)usr;                                        /* unused, prevent compiler warning         */
@@ -446,11 +446,11 @@ void CO_EmcySend(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr, CPU_INT08U sta
                       &frm.Identifier);
     frm.DLC = 8;                                      /* fixed DLC (8 bytes)                      */
     if (state == 1) {                                 /* see, if new error is detected            */
-        frm.Data[0] = (CPU_INT08U)(data->Code);       /* set pre-defined error code in message    */
-        frm.Data[1] = (CPU_INT08U)(data->Code >> 8);
+        frm.Data[0] = (uint8_t)(data->Code);       /* set pre-defined error code in message    */
+        frm.Data[1] = (uint8_t)(data->Code >> 8);
     } else {
-        frm.Data[0] = (CPU_INT08U)0;                  /* set error code 'no error' in message     */
-        frm.Data[1] = (CPU_INT08U)0;
+        frm.Data[0] = (uint8_t)0;                  /* set error code 'no error' in message     */
+        frm.Data[1] = (uint8_t)0;
     }
     (void)CODirRdByte(dir, CO_DEV(0x1001,0),          /* set error register (existance checked)   */
                       &frm.Data[2]);
@@ -490,12 +490,12 @@ void CO_EmcySend(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr, CPU_INT08U sta
 * \param[in]       state         error state (=0: no error, !=0: error)
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_EmcyUpdate(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr, CPU_INT08U state)
+void CO_EmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
 {
     CO_DIR     *dir;                                  /* Local: pointer to object directory       */
-    CPU_INT08U  regbit;                               /* Local: bit in error register             */
-    CPU_INT08U  regmask;                              /* Local: bit mask for error register       */
-    CPU_INT08U  reg;                                  /* Local: error register value              */
+    uint8_t  regbit;                               /* Local: bit in error register             */
+    uint8_t  regmask;                              /* Local: bit mask for error register       */
+    uint8_t  reg;                                  /* Local: error register value              */
                                                       /*------------------------------------------*/
 #if CO_EMCY_HIST_EN == 0
     (void)usr;                                        /* unused, prevent compiler warning         */
@@ -506,7 +506,7 @@ void CO_EmcyUpdate(CO_EMCY *emcy, CPU_INT08U err, CO_EMCY_USR *usr, CPU_INT08U s
     }                                                 /*------------------------------------------*/
     dir     = &emcy->Node->Dir;                       /* get link to object directory             */
     regbit  =  emcy->Root[err].Reg;                   /* get corresponding bit in error register  */
-    regmask =  (CPU_INT08U)(1u << regbit);            /* calculate register mask                  */
+    regmask =  (uint8_t)(1u << regbit);            /* calculate register mask                  */
                                                       /*------------------------------------------*/
     (void)CODirRdByte(dir, CO_DEV(0x1001,0), &reg);   /* get error register (existance checked)   */
                                                       /*------------------------------------------*/

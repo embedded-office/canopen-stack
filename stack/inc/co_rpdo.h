@@ -38,8 +38,8 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "co_obj.h"                                   /* Object entry handling                    */
-#include "co_if.h"                                    /* Interface management                     */
+#include "co_obj.h"
+#include "co_if.h"
 
 /*
 ****************************************************************************************************
@@ -47,9 +47,9 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#define CO_RPDO_COBID_OFF    ((CPU_INT32U)1 << 31)    /*!< CAN identifier, marked as unused       */
-#define CO_RPDO_COBID_REMOTE ((CPU_INT32U)1 << 30)    /*!< CAN identifier, RTR is not allowed     */
-#define CO_RPDO_COBID_EXT    ((CPU_INT32U)1 << 29)    /*!< CAN identifier, extended format        */
+#define CO_RPDO_COBID_OFF    ((uint32_t)1 << 31)    /*!< CAN identifier, marked as unused       */
+#define CO_RPDO_COBID_REMOTE ((uint32_t)1 << 30)    /*!< CAN identifier, RTR is not allowed     */
+#define CO_RPDO_COBID_EXT    ((uint32_t)1 << 29)    /*!< CAN identifier, extended format        */
 
 #define CO_RPDO_ASYNC        1                        /*!< Ctrl function code: asynchronous RPDO  */
 
@@ -73,10 +73,10 @@ extern "C" {
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_RPDO_T {
     struct CO_NODE_T *Node;                           /*!< link to parent CANopen node            */
-    CPU_INT32U        Identifier;                     /*!< message identifier                     */
+    uint32_t        Identifier;                     /*!< message identifier                     */
     struct CO_OBJ_T  *Map[8];                         /*!< pointer list with mapped objects       */
-    CPU_INT08U        ObjNum;                         /*!< Number of linked objects               */
-    CPU_INT08U        Flag;                           /*!< Flags attributed of PDO                */
+    uint8_t        ObjNum;                         /*!< Number of linked objects               */
+    uint8_t        Flag;                           /*!< Flags attributed of PDO                */
 
 } CO_RPDO;
 #endif
@@ -90,10 +90,10 @@ typedef struct CO_RPDO_T {
 #if CO_RPDO_N > 0
 void       CO_RPdoClear       (CO_RPDO *pdo, struct CO_NODE_T *node);
 void       CO_RPdoInit        (CO_RPDO *pdo, struct CO_NODE_T *node);
-CPU_INT16S CO_RPdoReset       (CO_RPDO *pdo, CPU_INT16S num);
-CPU_INT16S CO_RPdoGetMap      (CO_RPDO *pdo, CPU_INT16U num);
-CPU_INT16S CO_RPdoCheck       (CO_RPDO *pdo, CO_IF_FRM *frm);
-void       CO_RPdoRx          (CO_RPDO *pdo, CPU_INT16U num, CO_IF_FRM *frm);
+int16_t CO_RPdoReset       (CO_RPDO *pdo, int16_t num);
+int16_t CO_RPdoGetMap      (CO_RPDO *pdo, uint16_t num);
+int16_t CO_RPdoCheck       (CO_RPDO *pdo, CO_IF_FRM *frm);
+void       CO_RPdoRx          (CO_RPDO *pdo, uint16_t num, CO_IF_FRM *frm);
 void       CO_RPdoWrite       (CO_RPDO *pdo, CO_IF_FRM *frm);
 #endif
 
@@ -103,7 +103,7 @@ void       CO_RPdoWrite       (CO_RPDO *pdo, CO_IF_FRM *frm);
 ****************************************************************************************************
 */
 
-CPU_INT16S CO_RPdoReceive     (CO_IF_FRM *frm);
+int16_t CO_RPdoReceive     (CO_IF_FRM *frm);
 
 #ifdef __cplusplus
 }

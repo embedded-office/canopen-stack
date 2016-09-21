@@ -38,8 +38,8 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "co_obj.h"                                   /* object entry functions                   */
-#include "co_err.h"                                   /* CANopen error code definitions           */
+#include "co_obj.h"
+#include "co_err.h"
 
 /*
 ****************************************************************************************************
@@ -70,12 +70,12 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_PARA_T {
-    CPU_INT32U             Size;                      /*!< Size of parameter memory block         */
-    CPU_INT08U            *Start;                     /*!< Start of parameter memory block        */
-    CPU_INT08U            *Default;                   /*!< Start of default memory block          */
+    uint32_t             Size;                      /*!< Size of parameter memory block         */
+    uint8_t            *Start;                     /*!< Start of parameter memory block        */
+    uint8_t            *Default;                   /*!< Start of default memory block          */
     enum CO_NMT_RESET_T    Type;                      /*!< Parameter reset type                   */
     void                  *Ident;                     /*!< Ptr to User Ident-Code for this group  */
-    CPU_INT32U             Value;                     /*!< value when reading parameter object    */
+    uint32_t             Value;                     /*!< value when reading parameter object    */
 
 } CO_PARA;
 
@@ -109,9 +109,9 @@ void       COParaRestore     (CO_PARA *pg, struct CO_NODE_T *node);
 */
 
 #if CO_OBJ_PARA_EN > 0
-CPU_INT16S CO_ParaLoad       (CO_PARA *pg);
-CPU_INT16S CO_ParaSave       (CO_PARA *pg);
-CPU_INT16S CO_ParaDefault    (CO_PARA *pg);
+int16_t CO_ParaLoad       (CO_PARA *pg);
+int16_t CO_ParaSave       (CO_PARA *pg);
+int16_t CO_ParaDefault    (CO_PARA *pg);
 #endif
 
 #ifdef __cplusplus

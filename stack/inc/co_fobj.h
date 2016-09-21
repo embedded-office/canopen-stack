@@ -68,8 +68,8 @@ extern CO_OBJ_TYPE COTDomain;                         /* Link to String Object T
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_DOM_T {
-    CPU_INT32U  Size;                                 /*!< Domain size information                */
-    CPU_INT08U *Start;                                /*!< Domain start address                   */
+    uint32_t  Size;                                 /*!< Domain size information                */
+    uint8_t *Start;                                /*!< Domain start address                   */
 
 } CO_DOM;
 #endif

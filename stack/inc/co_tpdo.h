@@ -38,8 +38,8 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "co_obj.h"                                   /* Object entry handling                    */
-#include "co_if.h"                                    /* Interface management                     */
+#include "co_obj.h"
+#include "co_if.h"
 
 /*
 ****************************************************************************************************
@@ -47,9 +47,9 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#define CO_TPDO_COBID_OFF    ((CPU_INT32U)1 << 31)    /*!< CAN identifier, marked as unused       */
-#define CO_TPDO_COBID_REMOTE ((CPU_INT32U)1 << 30)    /*!< CAN identifier, RTR is not allowed     */
-#define CO_TPDO_COBID_EXT    ((CPU_INT32U)1 << 29)    /*!< CAN identifier, extended format        */
+#define CO_TPDO_COBID_OFF    ((uint32_t)1 << 31)    /*!< CAN identifier, marked as unused       */
+#define CO_TPDO_COBID_REMOTE ((uint32_t)1 << 30)    /*!< CAN identifier, RTR is not allowed     */
+#define CO_TPDO_COBID_EXT    ((uint32_t)1 << 29)    /*!< CAN identifier, extended format        */
 
 #define CO_TPDO_FLG___E       0x01                    /*!< PDO event occured                      */
 #define CO_TPDO_FLG__I_       0x02                    /*!< PDO TX inhibited                       */
@@ -67,7 +67,7 @@ extern "C" {
 #define CO_TPDO_ROUND(x,d)  (((x)/(d))*(d))
 
 /*lint -emacro( {734}, CO_TPDO_MS ) : Loss of precision (assignment) is ok */
-#define CO_TPDO_MS(x)       ((((CPU_INT32U)(x))*CO_TMR_TICKS_PER_SEC)/1000)
+#define CO_TPDO_MS(x)       ((((uint32_t)(x))*CO_TMR_TICKS_PER_SEC)/1000)
 
 /*
 ****************************************************************************************************
@@ -87,7 +87,7 @@ extern "C" {
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_TPDO_LINK_T {
     struct CO_OBJ_T *Obj;                             /*!< pointer to object                      */
-    CPU_INT16U       Num;                             /*!< currently mapped to TPDO-num (0..511)  */
+    uint16_t       Num;                             /*!< currently mapped to TPDO-num (0..511)  */
 
 } CO_TPDO_LINK;
 #endif
@@ -103,14 +103,14 @@ typedef struct CO_TPDO_LINK_T {
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_TPDO_T {
     struct CO_NODE_T *Node;                           /*!< link to parent CANopen node            */
-    CPU_INT32U        Identifier;                     /*!< message identifier                     */
+    uint32_t        Identifier;                     /*!< message identifier                     */
     struct CO_OBJ_T  *Map[8];                         /*!< pointer list with mapped objects       */
-    CPU_INT16S        EvTmr;                          /*!< event timer id                         */
-    CPU_INT16U        Event;                          /*!< event time in timer ticks              */
-    CPU_INT16S        InTmr;                          /*!< inhibit timer id                       */
-    CPU_INT16U        Inhibit;                        /*!< inhibit time in timer ticks            */
-    CPU_INT08U        Flags;                          /*!< info flags                             */
-    CPU_INT08U        ObjNum;                         /*!< Number of linked objects               */
+    int16_t        EvTmr;                          /*!< event timer id                         */
+    uint16_t        Event;                          /*!< event time in timer ticks              */
+    int16_t        InTmr;                          /*!< inhibit timer id                       */
+    uint16_t        Inhibit;                        /*!< inhibit time in timer ticks            */
+    uint8_t        Flags;                          /*!< info flags                             */
+    uint8_t        ObjNum;                         /*!< Number of linked objects               */
 
 } CO_TPDO;
 #endif
@@ -137,7 +137,7 @@ extern CO_OBJ_TYPE COTEvent;                          /* Link to Parameter Objec
 
 #if CO_TPDO_N > 0
 void       COTPdoTrigObj      (CO_TPDO *tpdo, struct CO_OBJ_T *obj);
-void       COTPdoTrigPdo      (CO_TPDO *tpdo, CPU_INT16U num);
+void       COTPdoTrigPdo      (CO_TPDO *tpdo, uint16_t num);
 #endif
 
 /*
@@ -149,15 +149,15 @@ void       COTPdoTrigPdo      (CO_TPDO *tpdo, CPU_INT16U num);
 #if CO_TPDO_N > 0
 void       CO_TPdoClear       (CO_TPDO *pdo, struct CO_NODE_T *node);
 void       CO_TPdoInit        (CO_TPDO *pdo, struct CO_NODE_T *node);
-void       CO_TPdoReset       (CO_TPDO *pdo, CPU_INT16U num);
-CPU_INT16S CO_TPdoGetMap      (CO_TPDO *pdo, CPU_INT16U num);
+void       CO_TPdoReset       (CO_TPDO *pdo, uint16_t num);
+int16_t CO_TPdoGetMap      (CO_TPDO *pdo, uint16_t num);
 void       CO_TPdoTmrEvent    (void *parg);
 void       CO_TPdoEndInhibit  (void *parg);
 void       CO_TPdoTx          (CO_TPDO *pdo);
 
 void       CO_TPdoMapClear    (CO_TPDO_LINK *map);
-void       CO_TPdoMapAdd      (CO_TPDO_LINK *map, struct CO_OBJ_T *obj, CPU_INT16U num);
-void       CO_TPdoMapDelNum   (CO_TPDO_LINK *map, CPU_INT16U num);
+void       CO_TPdoMapAdd      (CO_TPDO_LINK *map, struct CO_OBJ_T *obj, uint16_t num);
+void       CO_TPdoMapDelNum   (CO_TPDO_LINK *map, uint16_t num);
 void       CO_TPdoMapDelSig   (CO_TPDO_LINK *map, struct CO_OBJ_T *obj);
 #endif
 

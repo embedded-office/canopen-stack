@@ -107,8 +107,8 @@ typedef struct CO_NMT_T {
     struct CO_NODE_T   *Node;                         /*!< ptr to parent CANopen node info        */
     struct CO_HBCONS_T *HbCons;                       /*!< The used heartbeat consumer chain      */
     enum CO_MODE_T      Mode;                         /*!< NMT mode of this node                  */
-    CPU_INT16S          Tmr;                          /*!< heartbeat producer timer identifier    */
-    CPU_INT08U          Allowed;                      /*!< encoding of allowed CAN objects        */
+    int16_t          Tmr;                          /*!< heartbeat producer timer identifier    */
+    uint8_t          Allowed;                      /*!< encoding of allowed CAN objects        */
 
 } CO_NMT;
 
@@ -121,11 +121,11 @@ typedef struct CO_NMT_T {
 void       CONmtReset       (CO_NMT *nmt, CO_NMT_RESET type);
 void       CONmtSetMode     (CO_NMT *nmt, CO_MODE mode);
 CO_MODE    CONmtGetMode     (CO_NMT *nmt);
-void       CONmtSetNodeId   (CO_NMT *nmt, CPU_INT08U nodeId);
-CPU_INT08U CONmtGetNodeId   (CO_NMT *nmt);
+void       CONmtSetNodeId   (CO_NMT *nmt, uint8_t nodeId);
+uint8_t CONmtGetNodeId   (CO_NMT *nmt);
 
-CO_MODE    CONmtModeDecode  (CPU_INT08U code);
-CPU_INT08U CONmtModeEncode  (CO_MODE mode);
+CO_MODE    CONmtModeDecode  (uint8_t code);
+uint8_t CONmtModeEncode  (CO_MODE mode);
 
 /*
 ****************************************************************************************************
@@ -135,7 +135,7 @@ CPU_INT08U CONmtModeEncode  (CO_MODE mode);
 
 void       CO_NmtInit       (CO_NMT *nmt, struct CO_NODE_T *node);
 void       CO_NmtBootup     (CO_NMT *nmt);
-CPU_INT16S CO_NmtCheck      (CO_NMT *nmt, CO_IF_FRM *frm);
+int16_t CO_NmtCheck      (CO_NMT *nmt, CO_IF_FRM *frm);
 
 /*
 ****************************************************************************************************

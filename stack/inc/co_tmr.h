@@ -39,7 +39,7 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "cpu.h"
+#include "co_types.h"
 #include "co_cfg.h"
 
 /*
@@ -152,11 +152,11 @@ typedef void (*CO_TMR_FUNC)(void *arg_p);             /*!< Timer Callback functi
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_TMR_ACTION_T {
-    CPU_INT16U              Id;                       /*!< unique action identifier               */
+    uint16_t              Id;                       /*!< unique action identifier               */
     struct CO_TMR_ACTION_T *Next;                     /*!< link to next action                    */
     CO_TMR_FUNC             Func;                     /*!< pointer to callback function           */
     void                   *Para;                     /*!< callback function parameter            */
-    CPU_INT32U              CycleTime;                /*!< action cycle time in ticks             */
+    uint32_t              CycleTime;                /*!< action cycle time in ticks             */
 
 } CO_TMR_ACTION;
 
@@ -172,7 +172,7 @@ typedef struct CO_TMR_TIME_T {
     struct CO_TMR_TIME_T   *Next;                     /*!< link to next timer                     */
     struct CO_TMR_ACTION_T *Action;                   /*!< root of linked action list             */
     struct CO_TMR_ACTION_T *ActionEnd;                /*!< last element in linked action list     */
-    CPU_INT32U              Delta;                    /*!< delta ticks from previous timer event  */
+    uint32_t              Delta;                    /*!< delta ticks from previous timer event  */
 
 } CO_TMR_TIME;
 
@@ -204,15 +204,15 @@ typedef struct CO_TMR_MEM_T {                         /*!< This structure is use
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_TMR_T {
     struct CO_NODE_T       *Node;                     /*!< Link to parent node                    */
-    CPU_INT32U              Max;                      /*!< Num. of elements in action/event pool  */
+    uint32_t              Max;                      /*!< Num. of elements in action/event pool  */
     struct CO_TMR_ACTION_T *APool;                    /*!< Timer action pool                      */
     struct CO_TMR_TIME_T   *TPool;                    /*!< Timer event pool                       */
     struct CO_TMR_ACTION_T *Acts;                     /*!< Timer action free linked list          */
     struct CO_TMR_TIME_T   *Free;                     /*!< Timer event free linked list           */
     struct CO_TMR_TIME_T   *Use;                      /*!< Timer event used linked list           */
     struct CO_TMR_TIME_T   *Elapsed;                  /*!< Timer event elapsed linked list        */
-    CPU_INT32U              Time;                     /*!< Time ticks of next event since create  */
-    CPU_INT32U              Delay;                    /*!< Time ticks of next event from now      */
+    uint32_t              Time;                     /*!< Time ticks of next event since create  */
+    uint32_t              Delay;                    /*!< Time ticks of next event from now      */
 
 } CO_TMR;
 
@@ -222,9 +222,9 @@ typedef struct CO_TMR_T {
 ****************************************************************************************************
 */
 
-CPU_INT16S COTmrCreate   (CO_TMR *tmr, CPU_INT32U start, CPU_INT32U cycle, CO_TMR_FUNC func, void *para);
-CPU_INT16S COTmrDelete   (CO_TMR *tmr, CPU_INT16S actId);
-CPU_INT16S COTmrService  (CO_TMR *tmr);
+int16_t COTmrCreate   (CO_TMR *tmr, uint32_t start, uint32_t cycle, CO_TMR_FUNC func, void *para);
+int16_t COTmrDelete   (CO_TMR *tmr, int16_t actId);
+int16_t COTmrService  (CO_TMR *tmr);
 void       COTmrProcess  (CO_TMR *tmr);
 
 /*
@@ -233,7 +233,7 @@ void       COTmrProcess  (CO_TMR *tmr);
 ****************************************************************************************************
 */
 
-void       CO_TmrInit    (CO_TMR *tmr, struct CO_NODE_T *node, CO_TMR_MEM *mem, CPU_INT16U num);
+void       CO_TmrInit    (CO_TMR *tmr, struct CO_NODE_T *node, CO_TMR_MEM *mem, uint16_t num);
 void       CO_TmrReset   (CO_TMR *tmr);
 void       CO_TmrClear   (CO_TMR *tmr);
 

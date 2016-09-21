@@ -41,8 +41,8 @@
 
 static void       CO_NmtHbConsMonitor (void *parg);
 
-static CPU_INT16S CO_TNmtHbConsWrite  (CO_OBJ *obj, void *buf, CPU_INT32U size);
-static CPU_INT16S CO_TNmtHbConsRead   (CO_OBJ *obj, void *buf, CPU_INT32U len);
+static int16_t CO_TNmtHbConsWrite  (CO_OBJ *obj, void *buf, uint32_t size);
+static int16_t CO_TNmtHbConsRead   (CO_OBJ *obj, void *buf, uint32_t len);
 
 /*
 ****************************************************************************************************
@@ -83,9 +83,9 @@ CO_OBJ_TYPE COTNmtHbCons = { 0, 0, 0, 0, CO_TNmtHbConsRead, CO_TNmtHbConsWrite }
 * \retval           <0             error detected (e.g. node ID is not monitored)
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CONmtGetHbEvents (CO_NMT *nmt, CPU_INT08U nodeId)
+int16_t CONmtGetHbEvents (CO_NMT *nmt, uint8_t nodeId)
 {
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
+    int16_t  result = -1;                          /* Local: function result                   */
     CO_HBCONS  *hbc;                                  /* Local: heartbeat consumer                */
                                                       /*------------------------------------------*/
     if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
@@ -96,7 +96,7 @@ CPU_INT16S CONmtGetHbEvents (CO_NMT *nmt, CPU_INT08U nodeId)
     hbc = nmt->HbCons;                                /* get first element in heartbeat chain     */
     while (hbc != 0) {                                /* loop through active heartbeat chain      */
         if (nodeId == hbc->NodeId) {                  /* see, if nodeId matches consumer          */
-            result     = (CPU_INT16S)hbc->Event;      /* yes: add event of given nodeId           */
+            result     = (int16_t)hbc->Event;      /* yes: add event of given nodeId           */
             hbc->Event = 0;                           /* clear event counter                      */
         }
         hbc = hbc->Next;                              /* switch to next heartbeat consumer        */
@@ -120,7 +120,7 @@ CPU_INT16S CONmtGetHbEvents (CO_NMT *nmt, CPU_INT08U nodeId)
 * \retval       =CO_INVALID        error detected (e.g. node ID is not monitored)
 */
 /*------------------------------------------------------------------------------------------------*/
-CO_MODE CONmtLastHbState (CO_NMT *nmt, CPU_INT08U nodeId)
+CO_MODE CONmtLastHbState (CO_NMT *nmt, uint8_t nodeId)
 {
     CO_MODE     result = CO_INVALID;                  /* Local: function result                   */
     CO_HBCONS  *hbc;                                  /* Local: heartbeat consumer                */
@@ -161,8 +161,8 @@ CO_MODE CONmtLastHbState (CO_NMT *nmt, CPU_INT08U nodeId)
 /*------------------------------------------------------------------------------------------------*/
 void CO_NmtHbConsInit (CO_NMT *nmt)
 {
-    CPU_INT08U  num;                                  /* Local: number of heartbeat consumer      */
-    CPU_INT16S  err;                                  /* Local: error variable                    */
+    uint8_t  num;                                  /* Local: number of heartbeat consumer      */
+    int16_t  err;                                  /* Local: error variable                    */
     CO_OBJ     *obj;
     CO_HBCONS  *hbc;
     CO_NODE    *node;
@@ -223,10 +223,10 @@ void CO_NmtHbConsInit (CO_NMT *nmt)
 * \retval   !=CO_ERR_NONE          error detected (double activation, timer delete problem)
 */
 /*------------------------------------------------------------------------------------------------*/
-CO_ERR CO_NmtHbConsActivate (CO_NMT *nmt, CO_HBCONS *hbc, CPU_INT16U time, CPU_INT08U nodeid)
+CO_ERR CO_NmtHbConsActivate (CO_NMT *nmt, CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
 {
     CO_ERR      result  = CO_ERR_NONE;
-    CPU_INT16S  err;                                  /* Local: error variable                    */
+    int16_t  err;                                  /* Local: error variable                    */
     CO_HBCONS  *act;
     CO_HBCONS  *prev;
     CO_HBCONS  *found = 0;
@@ -306,11 +306,11 @@ CO_ERR CO_NmtHbConsActivate (CO_NMT *nmt, CO_HBCONS *hbc, CPU_INT16U time, CPU_I
 *                  is equal to the consumer node-ID
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_NmtHbConsCheck (CO_NMT *nmt, CO_IF_FRM *frm)
+int16_t CO_NmtHbConsCheck (CO_NMT *nmt, CO_IF_FRM *frm)
 {
-    CPU_INT16S  result = -1;                          /* Local: function result                   */
-    CPU_INT32U  cobid;                                /* Local: CAN identifier                    */
-    CPU_INT08U  nodeid;                               /* Local: heartbeat producer node-ID        */
+    int16_t  result = -1;                          /* Local: function result                   */
+    uint32_t  cobid;                                /* Local: CAN identifier                    */
+    uint8_t  nodeid;                               /* Local: heartbeat producer node-ID        */
     CO_MODE     state;                                /* Local: received state                    */
     CO_HBCONS  *hbc;                                  /* Local: active heartbeat consumer chain   */
                                                       /*------------------------------------------*/
@@ -321,7 +321,7 @@ CPU_INT16S CO_NmtHbConsCheck (CO_NMT *nmt, CO_IF_FRM *frm)
     }
     if ((cobid >= 1792      ) &&                      /* see, if CAN frame is a heartbeat frame   */
         (cobid <= 1792 + 127)) {
-        nodeid = (CPU_INT08U)(cobid - 1792);          /* yes: calculate node-ID out of COBID      */
+        nodeid = (uint8_t)(cobid - 1792);          /* yes: calculate node-ID out of COBID      */
     } else {                                          /* otherwise: no heartbeat message          */
         return (result);                              /* finished.                                */
     }
@@ -347,7 +347,7 @@ CPU_INT16S CO_NmtHbConsCheck (CO_NMT *nmt, CO_IF_FRM *frm)
             }
 #endif
             hbc->State = state;                       /* set received state                       */
-            result     = (CPU_INT16S)hbc->NodeId;     /* 'consume' given CAN frame                */
+            result     = (int16_t)hbc->NodeId;     /* 'consume' given CAN frame                */
             break;
         }
     }
@@ -413,15 +413,15 @@ static void CO_NmtHbConsMonitor (void *parg)
 * \retval   CO_ERR_TYPE_WR      an error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TNmtHbConsWrite (CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_TNmtHbConsWrite (CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_NODE    *node;                                 /* Local: ptr to parent node                */
     CO_DIR     *cod;                                  /* Local: ptr to object directory           */
     CO_HBCONS  *hbc;                                  /* Local: ptr to the HB consumer structure  */
-    CPU_INT16S  result = CO_ERR_TYPE_WR;              /* Local: function result                   */
-    CPU_INT32U  value  = 0;                           /* Local: encoded heartbeat consumer value  */
-    CPU_INT16U  time;                                 /* Local: time to write                     */
-    CPU_INT08U  nodeid;                               /* Local: nodeid to monitor                 */
+    int16_t  result = CO_ERR_TYPE_WR;              /* Local: function result                   */
+    uint32_t  value  = 0;                           /* Local: encoded heartbeat consumer value  */
+    uint16_t  time;                                 /* Local: time to write                     */
+    uint8_t  nodeid;                               /* Local: nodeid to monitor                 */
                                                       /*------------------------------------------*/
     cod  = obj->Type->Dir;                            /* get ptr to object directory              */
     node = cod->Node;                                 /* get ptr to parent node                   */
@@ -434,9 +434,9 @@ static CPU_INT16S CO_TNmtHbConsWrite (CO_OBJ* obj, void *buf, CPU_INT32U size)
         node->Error = CO_ERR_CFG_1016;                /* if entry exists, the value must be valid */
         return (result);
     }
-    value  = *((CPU_INT32U *)buf);
-    time   = (CPU_INT16U)value;
-    nodeid = (CPU_INT08U)(value >> 16);
+    value  = *((uint32_t *)buf);
+    time   = (uint16_t)value;
+    nodeid = (uint8_t)(value >> 16);
 
     result = CO_NmtHbConsActivate(&node->Nmt,         /* try to activate heartbeat consumer       */
                                    hbc,
@@ -464,21 +464,21 @@ static CPU_INT16S CO_TNmtHbConsWrite (CO_OBJ* obj, void *buf, CPU_INT32U size)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TNmtHbConsRead (CO_OBJ *obj, void *buf, CPU_INT32U len)
+static int16_t CO_TNmtHbConsRead (CO_OBJ *obj, void *buf, uint32_t len)
 {
     CO_HBCONS  *hbc;                                  /* Local: ptr to the HB consumer structure  */
-    CPU_INT16S  result = CO_ERR_NONE;                 /* Local: function result                   */
-    CPU_INT32U  value;                                /* Local: encoded value for this entry      */
-    CPU_INT08U *src;                                  /* Local: pointer within RAM domain         */
-    CPU_INT08U *dst;                                  /* Local: pointer to buffer                 */
-    CPU_INT32U  num;                                  /* Local: remaining bytes in domain         */
+    int16_t  result = CO_ERR_NONE;                 /* Local: function result                   */
+    uint32_t  value;                                /* Local: encoded value for this entry      */
+    uint8_t *src;                                  /* Local: pointer within RAM domain         */
+    uint8_t *dst;                                  /* Local: pointer to buffer                 */
+    uint32_t  num;                                  /* Local: remaining bytes in domain         */
                                                       /*------------------------------------------*/
     hbc    = (CO_HBCONS *)(obj->Data);                /* get HB consumer structure                */
-    value  = (CPU_INT32U)(hbc->Time);                 /* set HB consumer time in value            */
-    value |= ((CPU_INT32U)(hbc->NodeId)) << 16;       /* add HB consumer node                     */
+    value  = (uint32_t)(hbc->Time);                 /* set HB consumer time in value            */
+    value |= ((uint32_t)(hbc->NodeId)) << 16;       /* add HB consumer node                     */
     num    = CO_LONG;                                 /* set size of object entry                 */
-    src    = (CPU_INT08U *)&value;                    /* set encoded value as source              */
-    dst    = (CPU_INT08U *)buf;                       /* get buffer pointer                       */
+    src    = (uint8_t *)&value;                    /* set encoded value as source              */
+    dst    = (uint8_t *)buf;                       /* get buffer pointer                       */
     while ((len > 0) && (num > 0)) {                  /* loop through remaining domain            */
         *dst = *src;                                  /* copy domain into buffer location         */
         src++;                                        /* switch to next domain byte               */
@@ -521,7 +521,7 @@ static CPU_INT16S CO_TNmtHbConsRead (CO_OBJ *obj, void *buf, CPU_INT32U len)
 * \param[in]       nodeId             The nodeId of the missed heartbeat message
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_NmtHbConsEvent (CO_NMT *nmt, CPU_INT08U nodeId)
+void CO_NmtHbConsEvent (CO_NMT *nmt, uint8_t nodeId)
 {
     (void)nmt;
     (void)nodeId;
@@ -555,7 +555,7 @@ void CO_NmtHbConsEvent (CO_NMT *nmt, CPU_INT08U nodeId)
 * \param[in]       mode               The new received node state of the monitored node
 */
 /*------------------------------------------------------------------------------------------------*/
-void CO_NmtHbConsChange(CO_NMT *nmt, CPU_INT08U nodeId, CO_MODE mode)
+void CO_NmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
 {
     (void)nmt;
     (void)nodeId;

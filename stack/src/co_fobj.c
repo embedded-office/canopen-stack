@@ -41,16 +41,16 @@
 */
 
 #if CO_OBJ_STRING_EN > 0
-static CPU_INT32U CO_TStringSize (CO_OBJ *obj, CPU_INT32U width);
-static CPU_INT16S CO_TStringCtrl (CO_OBJ *obj, CPU_INT16U func, CPU_INT32U para);
-static CPU_INT16S CO_TStringRead (CO_OBJ *obj, void *buf, CPU_INT32U len);
+static uint32_t CO_TStringSize (CO_OBJ *obj, uint32_t width);
+static int16_t CO_TStringCtrl (CO_OBJ *obj, uint16_t func, uint32_t para);
+static int16_t CO_TStringRead (CO_OBJ *obj, void *buf, uint32_t len);
 #endif
 
 #if CO_OBJ_DOMAIN_EN > 0
-static CPU_INT32U CO_TDomainSize (CO_OBJ *obj, CPU_INT32U width);
-static CPU_INT16S CO_TDomainCtrl (CO_OBJ *obj, CPU_INT16U func, CPU_INT32U para);
-static CPU_INT16S CO_TDomainRead (CO_OBJ *obj, void *buf, CPU_INT32U len);
-static CPU_INT16S CO_TDomainWrite(CO_OBJ *obj, void *buf, CPU_INT32U len);
+static uint32_t CO_TDomainSize (CO_OBJ *obj, uint32_t width);
+static int16_t CO_TDomainCtrl (CO_OBJ *obj, uint16_t func, uint32_t para);
+static int16_t CO_TDomainRead (CO_OBJ *obj, void *buf, uint32_t len);
+static int16_t CO_TDomainWrite(CO_OBJ *obj, void *buf, uint32_t len);
 #endif
 
 /*
@@ -120,13 +120,13 @@ CO_OBJ_TYPE COTDomain = { 0, 0, CO_TDomainSize, CO_TDomainCtrl, CO_TDomainRead, 
 * \return  Number of character in the string, counting without the end of string mark.
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT32U CO_TStringSize(CO_OBJ *obj, CPU_INT32U width)
+static uint32_t CO_TStringSize(CO_OBJ *obj, uint32_t width)
 {
-    CPU_INT32U  strlen = 0;                           /* LocaL: the resulting string length       */
-    CPU_INT08U *str;                                  /* Local: string character pointer          */
+    uint32_t  strlen = 0;                           /* LocaL: the resulting string length       */
+    uint8_t *str;                                  /* Local: string character pointer          */
                                                       /*------------------------------------------*/
     (void)width;                                      /* unused, prevent compiler warning         */
-    str = (CPU_INT08U *)(obj->Data);                  /* set start of string to member 'Data'     */
+    str = (uint8_t *)(obj->Data);                  /* set start of string to member 'Data'     */
     while (*str != '\0') {                            /* loop through string until EOS            */
         strlen++;                                     /* increment string length                  */
         str++;                                        /* step to next character in string         */
@@ -157,9 +157,9 @@ static CPU_INT32U CO_TStringSize(CO_OBJ *obj, CPU_INT32U width)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TStringCtrl(CO_OBJ *obj, CPU_INT16U func, CPU_INT32U para)
+static int16_t CO_TStringCtrl(CO_OBJ *obj, uint16_t func, uint32_t para)
 {
-    CPU_INT16S result = CO_ERR_TYPE_CTRL;             /* Local: function result                   */
+    int16_t result = CO_ERR_TYPE_CTRL;             /* Local: function result                   */
                                                       /*------------------------------------------*/
     if (func == CO_CTRL_SET_OFF) {                    /* see, if function code is correct         */
         obj->Type->Offset = para;                     /* yes: set offset for further operations   */
@@ -188,16 +188,16 @@ static CPU_INT16S CO_TStringCtrl(CO_OBJ *obj, CPU_INT16U func, CPU_INT32U para)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TStringRead(CO_OBJ *obj, void *buf, CPU_INT32U len)
+static int16_t CO_TStringRead(CO_OBJ *obj, void *buf, uint32_t len)
 {
-    CPU_INT32U  offset;                               /* Local: working offset within string      */
-    CPU_INT16S  result = CO_ERR_NONE;                 /* Local: function result                   */
-    CPU_INT08U *str;                                  /* Local: pointer to string                 */
-    CPU_INT08U *dst;                                  /* Local: pointer to destination            */
+    uint32_t  offset;                               /* Local: working offset within string      */
+    int16_t  result = CO_ERR_NONE;                 /* Local: function result                   */
+    uint8_t *str;                                  /* Local: pointer to string                 */
+    uint8_t *dst;                                  /* Local: pointer to destination            */
                                                       /*------------------------------------------*/
     offset = obj->Type->Offset;                       /* get current working offset               */
-    str    = (CPU_INT08U *)(obj->Data) + offset;      /* set string pointer to that location      */
-    dst    = (CPU_INT08U *)buf;                       /* set dest. pointer to start of buffer     */
+    str    = (uint8_t *)(obj->Data) + offset;      /* set string pointer to that location      */
+    dst    = (uint8_t *)buf;                       /* set dest. pointer to start of buffer     */
     while ( (*str != 0) &&                            /* loop through string until end of string  */
             ( len  > 0) ) {                           /*   or buffer is full                      */
         *dst = *str;                                  /* copy string character to buffer          */
@@ -227,10 +227,10 @@ static CPU_INT16S CO_TStringRead(CO_OBJ *obj, void *buf, CPU_INT32U len)
 * \return  Size in bytes of the domain.
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT32U CO_TDomainSize(CO_OBJ *obj, CPU_INT32U width)
+static uint32_t CO_TDomainSize(CO_OBJ *obj, uint32_t width)
 {
     CO_DOM     *dom;                                  /* Local: ptr to the domain info structure  */
-    CPU_INT32U  result = 0;                           /* Local: function result                   */
+    uint32_t  result = 0;                           /* Local: function result                   */
                                                       /*------------------------------------------*/
     if (obj->Data == 0) {                             /* see, if parameter is correct             */
         return (result);                              /* if not, indicate error                   */
@@ -268,9 +268,9 @@ static CPU_INT32U CO_TDomainSize(CO_OBJ *obj, CPU_INT32U width)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TDomainCtrl(CO_OBJ *obj, CPU_INT16U func, CPU_INT32U para)
+static int16_t CO_TDomainCtrl(CO_OBJ *obj, uint16_t func, uint32_t para)
 {
-    CPU_INT16S result = CO_ERR_TYPE_CTRL;             /* Local: function result                   */
+    int16_t result = CO_ERR_TYPE_CTRL;             /* Local: function result                   */
                                                       /*------------------------------------------*/
     if (func == CO_CTRL_SET_OFF) {                    /* see, if function code is correct         */
         obj->Type->Offset = para;                     /* yes: set offset for further operations   */
@@ -299,19 +299,19 @@ static CPU_INT16S CO_TDomainCtrl(CO_OBJ *obj, CPU_INT16U func, CPU_INT32U para)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TDomainRead(CO_OBJ *obj, void *buf, CPU_INT32U len)
+static int16_t CO_TDomainRead(CO_OBJ *obj, void *buf, uint32_t len)
 {
     CO_DOM     *dom;                                  /* Local: ptr to the domain info structure  */
-    CPU_INT16S  result = CO_ERR_NONE;                 /* Local: function result                   */
-    CPU_INT08U *src;                                  /* Local: pointer within RAM domain         */
-    CPU_INT08U *dst;                                  /* Local: pointer to buffer                 */
-    CPU_INT32U  num;                                  /* Local: remaining bytes in domain         */
+    int16_t  result = CO_ERR_NONE;                 /* Local: function result                   */
+    uint8_t *src;                                  /* Local: pointer within RAM domain         */
+    uint8_t *dst;                                  /* Local: pointer to buffer                 */
+    uint32_t  num;                                  /* Local: remaining bytes in domain         */
                                                       /*------------------------------------------*/
     dom = (CO_DOM *)(obj->Data);                      /* get domain info structure                */
-    src = (CPU_INT08U *)(dom->Start +                 /* set pointer to working domain address    */
+    src = (uint8_t *)(dom->Start +                 /* set pointer to working domain address    */
                          obj->Type->Offset);
     num = dom->Size - obj->Type->Offset;              /* calculate remaining bytes in domain      */
-    dst = (CPU_INT08U *)buf;                          /* get buffer pointer                       */
+    dst = (uint8_t *)buf;                          /* get buffer pointer                       */
     while ((len > 0) && (num > 0)) {                  /* loop through remaining domain            */
         *dst = *src;                                  /* copy domain into buffer location         */
         src++;                                        /* switch to next domain byte               */
@@ -344,19 +344,19 @@ static CPU_INT16S CO_TDomainRead(CO_OBJ *obj, void *buf, CPU_INT32U len)
 * \retval        !=CO_ERR_NONE  An error is detected
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TDomainWrite(CO_OBJ *obj, void *buf, CPU_INT32U len)
+static int16_t CO_TDomainWrite(CO_OBJ *obj, void *buf, uint32_t len)
 {
     CO_DOM     *dom;                                  /* Local: ptr to the domain info structure  */
-    CPU_INT16S  result = CO_ERR_NONE;                 /* Local: function result                   */
-    CPU_INT08U *src;                                  /* Local: pointer within RAM domain         */
-    CPU_INT08U *dst;                                  /* Local: pointer to buffer                 */
-    CPU_INT32U  num;                                  /* Local: remaining bytes in domain         */
+    int16_t  result = CO_ERR_NONE;                 /* Local: function result                   */
+    uint8_t *src;                                  /* Local: pointer within RAM domain         */
+    uint8_t *dst;                                  /* Local: pointer to buffer                 */
+    uint32_t  num;                                  /* Local: remaining bytes in domain         */
                                                       /*------------------------------------------*/
     dom = (CO_DOM *)(obj->Data);                      /* get domain info structure                */
-    dst = (CPU_INT08U *)(dom->Start +                 /* set pointer to working domain address    */
+    dst = (uint8_t *)(dom->Start +                 /* set pointer to working domain address    */
                          obj->Type->Offset);
     num = dom->Size - obj->Type->Offset;              /* calculate remaining bytes in domain      */
-    src = (CPU_INT08U *)buf;                          /* get buffer pointer                       */
+    src = (uint8_t *)buf;                          /* get buffer pointer                       */
     while ((len > 0) && (num > 0)) {                  /* loop through remaining domain            */
         *dst = *src;                                  /* copy buffer location into domain         */
         src++;                                        /* switch to next domain byte               */

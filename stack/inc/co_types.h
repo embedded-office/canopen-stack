@@ -26,45 +26,49 @@
 */
 /*----------------------------------------END OF HEADER-------------------------------------------*/
 
-#ifndef CO_VER_H_
-#define CO_VER_H_
+#ifndef CO_TYPES_H_
+#define CO_TYPES_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/***************************************************************************************************
+ *                                     ANSI-C STANDARD TYPES
+ **************************************************************************************************/
 
-#include "co_types.h"
+#if defined(__STDC__) && (__STDC_VERSION__ >= 199901L)           /* ANSI C99 */
 
-/*
-****************************************************************************************************
-*                                             DEFINES
-****************************************************************************************************
-*/
+#include <stddef.h>
+#include <stdbool.h>
+#include <stdint.h>
 
-#define CO_VER_MAJOR          3
-#define CO_VER_MINOR          3
-#define CO_VER_BUILD          0
+#else                                                            /* ANSI C90 */
 
-/*
-****************************************************************************************************
-*                                        FUNCTION PROTOTYPE
-****************************************************************************************************
-*/
+/*-- stddef.h --*/
+#define NULL             0u
 
-uint8_t  COVerMajor   (void);
-uint8_t  COVerMinor   (void);
-uint8_t  COVerBuild   (void);
-uint32_t COVerChange  (void);
-uint32_t COVersion    (void);
+/*-- stdbool.h --*/
+typedef int              bool;
+#define false            0u
+#define true             1u
+
+/*-- stdint.h --*/
+typedef unsigned char    uint8_t;
+typedef unsigned char    int8_t;
+typedef unsigned short   uint16_t;
+typedef unsigned short   int16_t;
+typedef unsigned long    uint32_t;
+typedef unsigned long    int32_t;
+
+/*-- crtdefs.h --*/
+typedef unsigned long    intptr_t;
+
+#endif
+
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* ifndef CO_VER_H_ */
+#endif /* ifndef CO_TYPES_H_ */

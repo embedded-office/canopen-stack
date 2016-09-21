@@ -57,7 +57,7 @@
 /*------------------------------------------------------------------------------------------------*/
 void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 {
-    CPU_INT16S   err;                                 /* Local: error code                        */
+    int16_t   err;                                 /* Local: error code                        */
                                                       /*------------------------------------------*/
                                                       /*              NODE VARIABLES              */
                                                       /*------------------------------------------*/
@@ -214,15 +214,15 @@ CO_ERR CONodeGetErr(CO_NODE *node)
 * \retval          <0          an error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
+int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
 {
     CO_DIR     *cod;                                  /* Local: ptr to object directory           */
     CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
     CO_PARA    *pg;                                   /* Local: ptr to parameter group info       */
-    CPU_INT16S  err;                                  /* Local: function error indication         */
-    CPU_INT16S  result = 0;                           /* Local: function result                   */
-    CPU_INT08U  num    = 0;                           /* Local: highest subindex in index 1010h   */
-    CPU_INT08U  sub;                                  /* Local: current working subindex in loop  */
+    int16_t  err;                                  /* Local: function error indication         */
+    int16_t  result = 0;                           /* Local: function result                   */
+    uint8_t  num    = 0;                           /* Local: highest subindex in index 1010h   */
+    uint8_t  sub;                                  /* Local: current working subindex in loop  */
                                                       /*------------------------------------------*/
     cod = &node->Dir;                                 /* get ptr to object directory              */
     err = CODirRdByte(cod, CO_DEV(0x1010,0), &num);   /* get highest subindex entry               */
@@ -264,10 +264,10 @@ void CONodeProcess(CO_NODE *node)
 {
     CO_IF_FRM    frm;                                 /* Local: memory for one CAN frame          */
     CO_SDO      *srv;                                 /* Local: SDO server                        */
-    CPU_INT16S   err;                                 /* Local: error variable                    */
-    CPU_INT08U   allowed;                             /* Local: allowed communication objects     */
+    int16_t   err;                                 /* Local: error variable                    */
+    uint8_t   allowed;                             /* Local: allowed communication objects     */
 #if CO_RPDO_N > 0
-    CPU_INT16S   num;                                 /* Local: number of RPDO                    */
+    int16_t   num;                                 /* Local: number of RPDO                    */
 #endif
                                                       /*------------------------------------------*/
     err = COIfRead(&node->If, &frm);                  /* check for a CAN frame on bus             */

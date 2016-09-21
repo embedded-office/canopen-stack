@@ -51,9 +51,9 @@
 */
 
 #if CO_OBJ_PARA_EN > 0
-static CPU_INT16S CO_ParaCheck  (CO_OBJ* obj, void *buf, CPU_INT32U size);
-static CPU_INT16S CO_TParaRead  (CO_OBJ* obj, void *buf, CPU_INT32U size);
-static CPU_INT16S CO_TParaWrite (CO_OBJ* obj, void *buf, CPU_INT32U size);
+static int16_t CO_ParaCheck  (CO_OBJ* obj, void *buf, uint32_t size);
+static int16_t CO_TParaRead  (CO_OBJ* obj, void *buf, uint32_t size);
+static int16_t CO_TParaWrite (CO_OBJ* obj, void *buf, uint32_t size);
 #endif
 
 /*
@@ -99,7 +99,7 @@ CO_OBJ_TYPE COTPara = { 0, 0, 0, 0, CO_TParaRead, CO_TParaWrite };
 /*------------------------------------------------------------------------------------------------*/
 void COParaStore(CO_PARA *pg, CO_NODE *node)
 {
-    CPU_INT16S err;                                   /* Local: error code                        */
+    int16_t err;                                   /* Local: error code                        */
                                                       /*------------------------------------------*/
     if ((pg == 0) || (node == 0)) {                   /* see, if one of the argument ptr is bad   */
         return;                                       /* abort function                           */
@@ -130,7 +130,7 @@ void COParaStore(CO_PARA *pg, CO_NODE *node)
 /*------------------------------------------------------------------------------------------------*/
 void COParaRestore(CO_PARA *pg, CO_NODE *node)
 {
-    CPU_INT16S err;                                   /* Local: error code                        */
+    int16_t err;                                   /* Local: error code                        */
                                                       /*------------------------------------------*/
     if ((pg == 0) || (node == 0)) {                   /* see, if one of the argument ptr is bad   */
         return;                                       /* abort function                           */
@@ -172,14 +172,14 @@ void COParaRestore(CO_PARA *pg, CO_NODE *node)
 * \retval  <0      error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_ParaCheck(CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_ParaCheck(CO_OBJ* obj, void *buf, uint32_t size)
 {
-    CPU_INT32U  signature;                            /* Local: written signature to the entry    */
-    CPU_INT16S  result = CO_ERR_PARA_IDX;             /* Local: function result                   */
+    uint32_t  signature;                            /* Local: written signature to the entry    */
+    int16_t  result = CO_ERR_PARA_IDX;             /* Local: function result                   */
     CO_DIR     *cod;                                  /* Local: cached ptr to object directory    */
-    CPU_INT16S  err;                                  /* Local: error code                        */
-    CPU_INT08U  num;                                  /* Local: number of entries in storage idx  */
-    CPU_INT08U  sub;                                  /* Local: addressed subindex                */
+    int16_t  err;                                  /* Local: error code                        */
+    uint8_t  num;                                  /* Local: number of entries in storage idx  */
+    uint8_t  sub;                                  /* Local: addressed subindex                */
                                                       /*------------------------------------------*/
     if ((obj == 0) || (buf == 0) || (size != 4)) {    /* see, if one of the arguments is invalid  */
         return (CO_ERR_BAD_ARG);                      /* yes: abort with error indication         */
@@ -204,7 +204,7 @@ static CPU_INT16S CO_ParaCheck(CO_OBJ* obj, void *buf, CPU_INT32U size)
         if ((sub < 1) || (sub > num)) {               /* see, if addressed subidx is invalid      */
             return (CO_ERR_BAD_ARG);                  /* abort with error indication              */
         }
-        signature = *((CPU_INT32U *)buf);             /* get signature value                      */
+        signature = *((uint32_t *)buf);             /* get signature value                      */
         if (signature != CO_PARA_STORE_SIGNATURE) {   /* see, if signature is wrong               */
             return (CO_ERR_OBJ_ACC);                  /* abort with error indication              */
         }
@@ -227,7 +227,7 @@ static CPU_INT16S CO_ParaCheck(CO_OBJ* obj, void *buf, CPU_INT32U size)
         if ((sub < 1) || (sub > num)) {               /* see, if addressed subidx is invalid      */
             return (CO_ERR_BAD_ARG);                  /* abort with error indication              */
         }
-        signature = *((CPU_INT32U *)buf);             /* get signature value                      */
+        signature = *((uint32_t *)buf);             /* get signature value                      */
         if (signature != CO_PARA_RESTORE_SIGNATURE) { /* see, if signature is wrong               */
             return (CO_ERR_OBJ_ACC);                  /* abort with error indication              */
         }
@@ -262,7 +262,7 @@ static CPU_INT16S CO_ParaCheck(CO_OBJ* obj, void *buf, CPU_INT32U size)
 * \retval  <=0     error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TParaRead(CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_TParaRead(CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_PARA *pg;                                      /* Local: ptr to parameter group info       */
                                                       /*------------------------------------------*/
@@ -276,7 +276,7 @@ static CPU_INT16S CO_TParaRead(CO_OBJ* obj, void *buf, CPU_INT32U size)
     if (pg == 0) {                                    /* see, if configuration is invalid         */
         return (CO_ERR_OBJ_READ);                     /* yes: abort with error indication         */
     }
-    *(CPU_INT32U *)buf = pg->Value;                   /* set result value                         */
+    *(uint32_t *)buf = pg->Value;                   /* set result value                         */
                                                       /*------------------------------------------*/
     return (CO_ERR_NONE);                             /* return function result                   */
 }
@@ -301,15 +301,15 @@ static CPU_INT16S CO_TParaRead(CO_OBJ* obj, void *buf, CPU_INT32U size)
 * \retval  <0      error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-static CPU_INT16S CO_TParaWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
+static int16_t CO_TParaWrite(CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_DIR     *cod;                                  /* Local: cached ptr to object directory    */
     CO_OBJ     *pwo;                                  /* Local: working ptr to object             */
     CO_PARA    *pg;                                   /* Local: ptr to parameter group info       */
-    CPU_INT16S  select;                               /* Local: select store (1) or restore (0)   */
-    CPU_INT16U  idx;                                  /* Local: current working index             */
-    CPU_INT08U  num;                                  /* Local: number of entries in storage idx  */
-    CPU_INT08U  sub;                                  /* Local: current working subindex          */
+    int16_t  select;                               /* Local: select store (1) or restore (0)   */
+    uint16_t  idx;                                  /* Local: current working index             */
+    uint8_t  num;                                  /* Local: number of entries in storage idx  */
+    uint8_t  sub;                                  /* Local: current working subindex          */
                                                       /*------------------------------------------*/
     select = CO_ParaCheck(obj, buf, size);            /* check parameter and object config        */
     if (select != CO_ERR_NONE) {                      /* see, if an error is detected             */
@@ -374,11 +374,11 @@ static CPU_INT16S CO_TParaWrite(CO_OBJ* obj, void *buf, CPU_INT32U size)
 * \retval  <0      error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_ParaLoad(CO_PARA *pg)
+int16_t CO_ParaLoad(CO_PARA *pg)
 {
-    CPU_INT08U *ptr;                                  /* Local: ptr within parameter memory block */
-    CPU_INT08U *src;                                  /* Local: ptr within default memory block   */
-    CPU_INT32U  num;                                  /* Local: loop counter                      */
+    uint8_t *ptr;                                  /* Local: ptr within parameter memory block */
+    uint8_t *src;                                  /* Local: ptr within default memory block   */
+    uint32_t  num;                                  /* Local: loop counter                      */
                                                       /*------------------------------------------*/
     ptr   = pg->Start;                                /* set ptr to parameter memory block start  */
     src   = pg->Default;                              /* set src to default memory block start    */
@@ -412,7 +412,7 @@ CPU_INT16S CO_ParaLoad(CO_PARA *pg)
 * \retval  <0      error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_ParaSave(CO_PARA *pg)
+int16_t CO_ParaSave(CO_PARA *pg)
 {
     (void)pg;                                         /* unused; prevent compiler warnging        */
 
@@ -443,11 +443,11 @@ CPU_INT16S CO_ParaSave(CO_PARA *pg)
 * \retval  <0      error is detected and function aborted
 */
 /*------------------------------------------------------------------------------------------------*/
-CPU_INT16S CO_ParaDefault(CO_PARA *pg)
+int16_t CO_ParaDefault(CO_PARA *pg)
 {
-    CPU_INT08U *ptr;                                  /* Local: ptr within parameter memory block */
-    CPU_INT08U *src;                                  /* Local: ptr within default memory block   */
-    CPU_INT32U  num;                                  /* Local: loop counter                      */
+    uint8_t *ptr;                                  /* Local: ptr within parameter memory block */
+    uint8_t *src;                                  /* Local: ptr within default memory block   */
+    uint32_t  num;                                  /* Local: loop counter                      */
                                                       /*------------------------------------------*/
     ptr   = pg->Start;                                /* set ptr to parameter memory block start  */
     src   = pg->Default;                              /* set src to default memory block start    */

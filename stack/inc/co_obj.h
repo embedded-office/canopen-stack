@@ -38,8 +38,8 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "cpu.h"                                      /* CPU definitions                          */
-#include "co_cfg.h"                                   /* CANopen configuration                    */
+#include "co_types.h"
+#include "co_cfg.h"
 
 /*
 ****************************************************************************************************
@@ -106,7 +106,7 @@ extern "C" {
 *          object entry.
 */
 /*------------------------------------------------------------------------------------------------*/
-#define CO_OBJ_DIR_ENDMARK   { (CPU_INT32U)0, (CO_OBJ_TYPE *)0, (CPU_INT32U)0 }
+#define CO_OBJ_DIR_ENDMARK   { (uint32_t)0, (CO_OBJ_TYPE *)0, (uint32_t)0 }
 
 /*
 ****************************************************************************************************
@@ -132,9 +132,9 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_KEY(idx,sub,flags)              \
-    ( (CPU_INT32U)((  idx) & 0xFFFF)<<16 | \
-      (CPU_INT32U)((  sub) &   0xFF)<< 8 | \
-      (CPU_INT32U)((flags) &   0xFF)     )
+    ( (uint32_t)((  idx) & 0xFFFF)<<16 | \
+      (uint32_t)((  sub) &   0xFF)<< 8 | \
+      (uint32_t)((flags) &   0xFF)     )
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief OBJECT DEVICE
@@ -150,8 +150,8 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_DEV(idx,sub)                  \
-    ( (CPU_INT32U)((idx) & 0xFFFF)<<16 | \
-      (CPU_INT32U)((sub) &   0xFF)<<8  )
+    ( (uint32_t)((idx) & 0xFFFF)<<16 | \
+      (uint32_t)((sub) &   0xFF)<<8  )
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief OBJECT MAPPING LINK
@@ -169,9 +169,9 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_LINK(idx,sub,bit)             \
-    ( (CPU_INT32U)((idx) & 0xFFFF)<<16 | \
-      (CPU_INT32U)((sub) &   0xFF)<<8  | \
-      (CPU_INT32U)((bit) &   0xFF)     )
+    ( (uint32_t)((idx) & 0xFFFF)<<16 | \
+      (uint32_t)((sub) &   0xFF)<<8  | \
+      (uint32_t)((bit) &   0xFF)     )
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief EXTRACT DEVICE
@@ -185,7 +185,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_GET_DEV(key)              \
-    (CPU_INT32U)(((key) & 0xFFFFFF00))
+    (uint32_t)(((key) & 0xFFFFFF00))
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief EXTRACT SUBINDEX
@@ -198,7 +198,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_GET_SUB(key)                   \
-    (CPU_INT08U)(((key) & 0x0000FF00) >> 8)
+    (uint8_t)(((key) & 0x0000FF00) >> 8)
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief EXTRACT INDEX
@@ -211,7 +211,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_GET_IDX(key)                   \
-    (CPU_INT16U)((key) >> 16)
+    (uint16_t)((key) >> 16)
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief EXTRACT SIZE
@@ -226,7 +226,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_GET_SIZE(key)                             \
-    (CPU_INT32U)(1L << (((key) & CO_OBJ_SZ_MSK) >> 4))
+    (uint32_t)(1L << (((key) & CO_OBJ_SZ_MSK) >> 4))
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief CHECK IF OBJECT IS PDO MAPPABLE
@@ -240,7 +240,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_IS_PDOMAP(key)                 \
-    (CPU_INT32U)(key & CO_OBJ___P__)
+    (uint32_t)(key & CO_OBJ___P__)
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief CHECK IF OBJECT DEPENDS ON NODE-ID
@@ -254,7 +254,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_IS_NODEID(key)                 \
-    (CPU_INT32U)(key & CO_OBJ__N___)
+    (uint32_t)(key & CO_OBJ__N___)
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief CHECK IF OBJECT IS A DIRECT
@@ -268,7 +268,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_IS_DIRECT(key)                 \
-    (CPU_INT32U)(key & CO_OBJ_D____)
+    (uint32_t)(key & CO_OBJ_D____)
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief CHECK IF OBJECT IS READABLE
@@ -282,7 +282,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_IS_READ(key)                 \
-    (CPU_INT32U)(key & CO_OBJ____R_)
+    (uint32_t)(key & CO_OBJ____R_)
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief CHECK IF OBJECT IS WRITEABLE
@@ -296,7 +296,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define CO_IS_WRITE(key)                 \
-    (CPU_INT32U)(key & CO_OBJ_____W)
+    (uint32_t)(key & CO_OBJ_____W)
 
 
 /*
@@ -317,7 +317,7 @@ struct CO_DIR_T;                                      /* Declaration of object d
 */
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_OBJ_T {
-    CPU_INT32U            Key;                        /*!< 16Bit Index, 8Bit Subindex, 8Bit Flags */
+    uint32_t            Key;                        /*!< 16Bit Index, 8Bit Subindex, 8Bit Flags */
                                                       /*   - 0: 1=rd access allowed               */
                                                       /*   - 1: 1=wr access allowed               */
                                                       /*   - 2: 1=pdo mappable                    */
@@ -328,21 +328,21 @@ typedef struct CO_OBJ_T {
                                                       /*   - 7: 1=direct (ptr is value if Type=0) */
     struct CO_OBJ_TYPE_T *Type;                       /*!< ==0: value access via Data-Ptr,        */
                                                       /*   !=0: access via type structure         */
-    CPU_INT32U            Data;                       /*!< Address of value or data structure     */
+    uint32_t            Data;                       /*!< Address of value or data structure     */
                                                       /*   or data value for direct access        */
 } CO_OBJ;
 
-typedef CPU_INT32U (*CO_OBJ_SIZE_FUNC)(CO_OBJ *,      /*!< Size type function prototype           */
-                                       CPU_INT32U);
-typedef CPU_INT16S (*CO_OBJ_CTRL_FUNC)(CO_OBJ *,
-                                       CPU_INT16U,
-                                       CPU_INT32U);   /*!< Control type function prototype        */
-typedef CPU_INT16S (*CO_OBJ_READ_FUNC)(CO_OBJ *,   
+typedef uint32_t (*CO_OBJ_SIZE_FUNC)(CO_OBJ *,      /*!< Size type function prototype           */
+                                       uint32_t);
+typedef int16_t (*CO_OBJ_CTRL_FUNC)(CO_OBJ *,
+                                       uint16_t,
+                                       uint32_t);   /*!< Control type function prototype        */
+typedef int16_t (*CO_OBJ_READ_FUNC)(CO_OBJ *,   
                                        void*,
-                                       CPU_INT32U);   /*!< Read type function prototype           */
-typedef CPU_INT16S (*CO_OBJ_WRITE_FUNC)(CO_OBJ *,  
+                                       uint32_t);   /*!< Read type function prototype           */
+typedef int16_t (*CO_OBJ_WRITE_FUNC)(CO_OBJ *,  
                                        void*,
-                                       CPU_INT32U);   /*!< Write type function prototype          */
+                                       uint32_t);   /*!< Write type function prototype          */
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief OBJECT TYPE
@@ -354,7 +354,7 @@ typedef CPU_INT16S (*CO_OBJ_WRITE_FUNC)(CO_OBJ *,
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_OBJ_TYPE_T {
     struct CO_DIR_T   *Dir;                           /*!< Link to parent object directory        */
-    CPU_INT32U         Offset;                        /*!< Offset within the data memory          */
+    uint32_t         Offset;                        /*!< Offset within the data memory          */
     CO_OBJ_SIZE_FUNC   Size;                          /*!< Get size of type function              */
     CO_OBJ_CTRL_FUNC   Ctrl;                          /*!< Special type control function          */
     CO_OBJ_READ_FUNC   Read;                          /*!< Read function                          */
@@ -368,20 +368,20 @@ typedef struct CO_OBJ_TYPE_T {
 ****************************************************************************************************
 */
 
-CPU_INT32U  COObjGetSize    (CO_OBJ *obj, CPU_INT32U width);
-CPU_INT16S  COObjRdValue    (CO_OBJ *obj, void *value, CPU_INT08U width, CPU_INT08U nodeid);
-CPU_INT16S  COObjWrValue    (CO_OBJ *obj, void *value, CPU_INT08U width, CPU_INT08U nodeid);
-CPU_INT16S  COObjRdBufStart (CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len);
-CPU_INT16S  COObjRdBufCont  (CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len);
-CPU_INT16S  COObjWrBufStart (CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len);
-CPU_INT16S  COObjWrBufCont  (CO_OBJ *obj, CPU_INT08U *buffer, CPU_INT32U len);
+uint32_t  COObjGetSize    (CO_OBJ *obj, uint32_t width);
+int16_t  COObjRdValue    (CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid);
+int16_t  COObjWrValue    (CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid);
+int16_t  COObjRdBufStart (CO_OBJ *obj, uint8_t *buffer, uint32_t len);
+int16_t  COObjRdBufCont  (CO_OBJ *obj, uint8_t *buffer, uint32_t len);
+int16_t  COObjWrBufStart (CO_OBJ *obj, uint8_t *buffer, uint32_t len);
+int16_t  COObjWrBufCont  (CO_OBJ *obj, uint8_t *buffer, uint32_t len);
 
 void        CO_ObjInit      (CO_OBJ *obj);
-CPU_INT16S  CO_ObjCmp       (CO_OBJ *obj, void *val);
-CPU_INT16S  CO_ObjRdDirect  (CO_OBJ *obj, void *val, CPU_INT32U len);
-CPU_INT16S  CO_ObjWrDirect  (CO_OBJ *obj, void *val, CPU_INT32U len);
-CPU_INT16S  CO_ObjRdType    (CO_OBJ *obj, void *dst, CPU_INT32U len, CPU_INT32U off);
-CPU_INT16S  CO_ObjWrType    (CO_OBJ *obj, void *dst, CPU_INT32U len, CPU_INT32U off);
+int16_t  CO_ObjCmp       (CO_OBJ *obj, void *val);
+int16_t  CO_ObjRdDirect  (CO_OBJ *obj, void *val, uint32_t len);
+int16_t  CO_ObjWrDirect  (CO_OBJ *obj, void *val, uint32_t len);
+int16_t  CO_ObjRdType    (CO_OBJ *obj, void *dst, uint32_t len, uint32_t off);
+int16_t  CO_ObjWrType    (CO_OBJ *obj, void *dst, uint32_t len, uint32_t off);
 
 #ifdef __cplusplus
 }

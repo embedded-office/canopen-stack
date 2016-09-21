@@ -39,7 +39,7 @@ extern "C" {
 ****************************************************************************************************
 */
 
-#include "cpu.h"
+#include "co_types.h"
 #include "co_cfg.h"
 #include "co_if.h"
 
@@ -69,16 +69,16 @@ extern "C" {
 /*------------------------------------------------------------------------------------------------*/
 typedef struct CO_SYNC_T {
     struct CO_NODE_T *Node;                           /*!< link to parent node                    */
-    CPU_INT32U        CobId;                          /*!< SYNC message identifier                */
-    CPU_INT32U        Time;                           /*!< SYNC time (num of received SYNC)       */
+    uint32_t        CobId;                          /*!< SYNC message identifier                */
+    uint32_t        Time;                           /*!< SYNC time (num of received SYNC)       */
 #if CO_RPDO_N > 0
     CO_IF_FRM         RFrm[CO_RPDO_N];                /*!< synchronous RPDO CAN message frame     */
     struct CO_RPDO_T *RPdo[CO_RPDO_N];                /*!< Pointer to synchronous RPDO            */
 #endif
 #if CO_TPDO_N > 0
     struct CO_TPDO_T *TPdo[CO_TPDO_N];                /*!< Pointer to synchronous TPDO            */
-    CPU_INT08U        TNum[CO_TPDO_N];                /*!< Number of SYNC until PDO shall be sent */
-    CPU_INT08U        TSync[CO_TPDO_N];               /*!< SYNC time when transmission must occur */
+    uint8_t        TNum[CO_TPDO_N];                /*!< Number of SYNC until PDO shall be sent */
+    uint8_t        TSync[CO_TPDO_N];               /*!< SYNC time when transmission must occur */
 #endif
 
 } CO_SYNC;
@@ -92,10 +92,10 @@ typedef struct CO_SYNC_T {
 
 #if CO_SYNC_EN > 0
 void       CO_SyncInit    (CO_SYNC *sync, struct CO_NODE_T *node);
-CPU_INT16S CO_SyncUpdate  (CO_SYNC *sync, CO_IF_FRM *frm);
+int16_t CO_SyncUpdate  (CO_SYNC *sync, CO_IF_FRM *frm);
 void       CO_SyncHandler (CO_SYNC *sync);
-void       CO_SyncAdd     (CO_SYNC *sync, CPU_INT16U num, CPU_INT08U msgType, CPU_INT08U txtype);
-void       CO_SyncRemove  (CO_SYNC *sync, CPU_INT16U num, CPU_INT08U msgType);
+void       CO_SyncAdd     (CO_SYNC *sync, uint16_t num, uint8_t msgType, uint8_t txtype);
+void       CO_SyncRemove  (CO_SYNC *sync, uint16_t num, uint8_t msgType);
 #endif
 
 #if CO_SYNC_EN > 0 && CO_RPDO_N > 0
