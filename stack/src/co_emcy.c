@@ -1,543 +1,538 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_emcy.c
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    EMCY PRODUCER
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_emcy.c#3 $
-*
-*           This source file implements the EMCY producer.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/******************************************************************************
+* INCLUDES
+******************************************************************************/
 
 #include "co_core.h"
+#include "co_emcy.h"
+
+/******************************************************************************
+* PRIVATE DEFINES
+******************************************************************************/
+
+/******************************************************************************
+* GLOBAL CONSTANTS
+******************************************************************************/
+
+/*! \brief OBJECT TYPE EMCY HISTORY
+*
+*    This type is responsible for the access to the EMCY history.
+*/
+const CO_OBJ_TYPE COTEmcy = { 0, 0, 0, 0, COTEmcyRead, COTEmcyWrite };
+
+/******************************************************************************
+* FUNCTIONS
+******************************************************************************/
 
 /*
-****************************************************************************************************
-*                                            FUNCTIONS
-****************************************************************************************************
+* see function definition
 */
-
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  SET EMCY ERROR
-*
-* \ingroup  API
-*
-*           This function checks the current error state and updates the object directory.
-*           The EMCY message is transmitted, if the error is detected for the first time.
-*           The given manufacturer specific fields are optional, e.g. the ptr may be 0 to
-*           set all manufacturer specific values to 0.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \param[in]       err           EMCY error identifier in User EMCY table
-*
-* \param[in]       usr           manufacturer specific fields in EMCY history and/or EMCY message
-*/
-/*------------------------------------------------------------------------------------------------*/
 void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 {
-    int16_t chk;                                   /* Local: result of parameter check         */
-    int16_t change;                                /* Local: current error change indication   */
-                                                      /*------------------------------------------*/
-    chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
-    if (chk < 0) {                                    /* see, if parameter emcy is bad            */
-        return;                                       /* error is registered (if possible)        */
-    }
-    change = CO_EmcySetErr(emcy, err, 1);             /* set error detection marker               */
-    if (change > 0) {                                 /* see, if a error change is detected       */
-        CO_EmcyUpdate(emcy, err, usr, 1);             /* update object directory entries          */
-        CO_EmcySend  (emcy, err, usr, 1);             /* send EMCY message                        */
-    }
-}
-#endif
+    int16_t chk;
+    int16_t change;
 
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  CLEAR EMCY ERROR
-*
-* \ingroup  API
-*
-*           This function checks the current error state and updates the object directory.
-*           The EMCY message is transmitted, if the error was previously detected.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \param[in]       err           EMCY error identifier in User EMCY table
-*/
-/*------------------------------------------------------------------------------------------------*/
-void COEmcyClr(CO_EMCY *emcy, uint8_t err)
-{
-    int16_t chk;                                   /* Local: result of parameter check         */
-    int16_t change;                                /* Local: current error change indication   */
-                                                      /*------------------------------------------*/
-    chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
-    if (chk < 0) {                                    /* see, if parameter emcy is bad            */
-        return;                                       /* error is registered (if possible)        */
+    chk = COEmcyCheck(emcy);
+    if (chk < 0) {
+        return;
     }
-    change = CO_EmcySetErr(emcy, err, 0);             /* clear error detection marker             */
-    if (change > 0) {                                 /* see, if a error change is detected       */
-        CO_EmcyUpdate(emcy, err, 0, 0);               /* update object directory entries          */
-        CO_EmcySend  (emcy, err, 0, 0);               /* send EMCY message                        */
-    }
-}
-#endif
 
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  GET EMCY ERROR STATUS
-*
-* \ingroup  API
-*
-*           This function returns the current EMCY error status.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \param[in]       err           EMCY error identifier in User EMCY table
-*
-* \retval   =0     the error is not detected
-* \retval   =1     the error was detected before
-* \retval   <0     an error is detected inside of this function
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err)
-{
-    int16_t chk;                                   /* Local: result of parameter check         */
-    int16_t cur;                                   /* Local: current error detection marker    */
-                                                      /*------------------------------------------*/
-    chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
-    if (chk < 0) {                                    /* see, if parameter emcy is bad            */
-        return (-1);                                  /* error is registered (if possible)        */
-    }
-    cur = CO_EmcyGetErr(emcy, err);                   /* get current error detection marker       */
-                                                      /*------------------------------------------*/
-    return (cur);                                     /* return function result                   */
-}
-#endif
-
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  COUNT DETECTED EMCY ERRORS
-*
-* \ingroup  API
-*
-*           This function returns the number of currently detected EMCY errors.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \retval   >=0    the number of detected EMCY errors
-* \retval   <0     an error is detected inside of this function
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t COEmcyCnt(CO_EMCY *emcy)
-{
-    int16_t chk;                                   /* Local: result of parameter check         */
-    int16_t result = -1;                           /* Local: function result                   */
-    uint8_t n;                                     /* Local: loop through error classes        */
-                                                      /*------------------------------------------*/
-    chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
-    if (chk < 0) {                                    /* see, if parameter emcy is bad            */
-        return (result);                              /* error is registered (if possible)        */
-    }
-    result = 0;                                       /* reset error counter                      */
-    for (n=0; n < CO_EMCY_REG_NUM; n++) {             /* loop through all error classes           */
-        result += emcy->Cnt[n];                       /* add number of pending errors             */
-    }                                                 /*------------------------------------------*/
-    return (result);                                  /* return sum of pending errors             */
-}
-#endif
-
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  RESET ALL EMCY ERRORS
-*
-* \ingroup  API
-*
-*           This function clears all EMCY errors. The EMCY message transmission can be
-*           suppressed by setting the parameter silent to 1.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \param[in]       silent        Disables the EMCY message transmission for the state changes,
-*                                made by this function
-*/
-/*------------------------------------------------------------------------------------------------*/
-void COEmcyReset(CO_EMCY *emcy, uint8_t silent)
-{
-    int16_t change;                                /* Local: current error change indication   */
-    int16_t chk;                                   /* Local: result of parameter check         */
-    uint8_t n;                                     /* Local: loop counter                      */
-                                                      /*------------------------------------------*/
-    chk = CO_EmcyCheck(emcy);                         /* check parameter emcy to be valid         */
-    if (chk < 0) {                                    /* see, if parameter emcy is bad            */
-        return;                                       /* error is registered (if possible)        */
-    }
-    for (n=0; n < CO_EMCY_N; n++) {                   /* loop through all EMCY errors             */
-        if (silent == 0) {                            /* see, if not silent operation requested   */
-            COEmcyClr(emcy, n);                       /* clear EMCY errors                        */
-        } else {                                      /* otherwise: clear without sending changes */
-            change = CO_EmcySetErr(emcy, n, 0);       /* clear error detection marker             */
-            if (change > 0) {                         /* see, if a error change is detected       */
-                CO_EmcyUpdate(emcy, n, 0, 0);         /* update object directory entries          */
-            }
-        }
+    change = COEmcySetErr(emcy, err, 1);
+    if (change > 0) {
+        COEmcyUpdate(emcy, err, usr, 1);
+        COEmcySend  (emcy, err, usr, 1);
     }
 }
-#endif
 
 /*
-****************************************************************************************************
-*                                        INTERNAL FUNCTIONS
-****************************************************************************************************
+* see function definition
 */
-
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  INIT EMCY MANAGEMENT
-*
-* \ingroup  INTERNAL
-*
-*           This function initializes the EMCY object and the internal error storage memory.
-*           Additionally, the links to the given user EMCY error codes to the given node are set.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \param[in,out]   node          pointer to the CANopen device node information structure
-*
-* \param[in]       root          pointer to the start of the User EMCY table
-*/
-/*------------------------------------------------------------------------------------------------*/
-void CO_EmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
+void COEmcyClr(CO_EMCY *emcy, uint8_t err)
 {
-    CO_OBJ     *obj;                                  /* Local: pointer to object entry           */
-    uint16_t  n;                                    /* Local: loop counter                      */
-    uint32_t  size;
-                                                      /*------------------------------------------*/
-    if ((root == 0) || (node == 0) || (emcy == 0)) {  /* see, if any parameter pointer is invalid */
-        CO_NodeFatalError();                          /* inform user                              */
-        return;                                       /* abort EMCY initialization                */
-    }                                                 /*------------------------------------------*/
-    emcy->Root = root;                                /* store appl. EMCY code table reference    */
-    emcy->Node = node;                                /* link parent node to EMCY structure       */
+    int16_t chk;
+    int16_t change;
 
-    for (n=0; n < CO_EMCY_STORAGE; n++) {             /* clear detailed error storage memory      */
+    chk = COEmcyCheck(emcy);
+    if (chk < 0) {
+        return;
+    }
+
+    change = COEmcySetErr(emcy, err, 0);
+    if (change > 0) {
+        COEmcyUpdate(emcy, err, 0, 0);
+        COEmcySend  (emcy, err, 0, 0);
+    }
+}
+
+/*
+* see function definition
+*/
+int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err)
+{
+    int16_t chk;
+    int16_t cur;
+
+    chk = COEmcyCheck(emcy);
+    if (chk < 0) {
+        return (-1);
+    }
+
+    cur = COEmcyGetErr(emcy, err);
+
+    return (cur);
+}
+
+/*
+* see function definition
+*/
+int16_t COEmcyCnt(CO_EMCY *emcy)
+{
+    int16_t chk;
+    int16_t result = -1;
+    uint8_t n;
+
+    chk = COEmcyCheck(emcy);
+    if (chk < 0) {
+        return (result);
+    }
+
+    result = 0;
+    for (n=0; n < CO_EMCY_REG_NUM; n++) {
+        result += emcy->Cnt[n];
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+void COEmcyReset(CO_EMCY *emcy, uint8_t silent)
+{
+    int16_t change;
+    int16_t chk;
+    uint8_t n;
+
+    chk = COEmcyCheck(emcy);
+    if (chk < 0) {
+        return;
+    }
+
+    for (n=0; n < CO_EMCY_N; n++) {
+        if (silent == 0) {
+            COEmcyClr(emcy, n);
+        } else {
+            change = COEmcySetErr(emcy, n, 0);
+            if (change > 0) {
+                COEmcyUpdate(emcy, n, 0, 0);
+            }
+        }
+    }
+}
+
+/*
+* see function definition
+*/
+void COEmcyHistReset(CO_EMCY *emcy)
+{
+    CO_NODE    *node;
+    CO_DIR     *cod;
+    CO_OBJ     *obj;
+    uint32_t    val32;
+    int16_t     chk;
+    uint8_t     sub;
+    uint8_t     val08;
+
+    chk = COEmcyCheck(emcy);
+    if (chk < 0) {
+        return;
+    }
+    node = emcy->Node;
+    cod  = &node->Dir;
+
+    val08 = 0;
+    obj = CODirFind(cod, CO_DEV(0x1003, 0));
+    if (obj == 0) {
+        node->Error = CO_ERR_NONE;
+        return;
+    }
+    (void)COObjWrDirect(obj, &val08, 1);
+
+    val32 = 0;
+    for (sub = 1; sub <= emcy->Hist.Max; sub++) {
+        obj = CODirFind(cod, CO_DEV(0x1003, sub));
+        (void)COObjWrDirect(obj, &val32, 4);
+    }
+
+    emcy->Hist.Max = sub - 1;
+    emcy->Hist.Off = 0;
+    emcy->Hist.Num = 0;
+}
+
+/*
+* see function definition
+*/
+void COEmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
+{
+    CO_OBJ   *obj;
+    uint16_t  n;
+    uint32_t  size;
+
+    if ((root == 0) || (node == 0) || (emcy == 0)) {
+        CONodeFatalError();
+        return;
+    }
+    emcy->Root = root;
+    emcy->Node = node;
+
+    for (n=0; n < CO_EMCY_STORAGE; n++) {
         emcy->Err[n] = 0;
     }
-    for (n=0; n < CO_EMCY_REG_NUM; n++) {             /* clear all register bit counters          */
+    for (n=0; n < CO_EMCY_REG_NUM; n++) {
         emcy->Cnt[n] = 0;
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(&node->Dir, CO_DEV(0x1014,0));    /* check existance of EMCY identifier       */
-    if (obj == 0) {                                   /* see, if an error is detected             */
-        node->Error = CO_ERR_CFG_1014_0;              /* yes: set error code                      */
+    }
+    obj = CODirFind(&node->Dir, CO_DEV(0x1014,0));
+    if (obj == 0) {
+        node->Error = CO_ERR_CFG_1014_0;
     } else {
-        size = COObjGetSize(obj, CO_LONG);            /* check object size matches expectation    */
-        if (size == 0) {                              /* see, if an error is detected             */
-            node->Error = CO_ERR_CFG_1014_0;          /* yes: set error code                      */
+        size = COObjGetSize(obj, CO_LONG);
+        if (size == 0) {
+            node->Error = CO_ERR_CFG_1014_0;
         }
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(&node->Dir, CO_DEV(0x1001,0));    /* check existance of error register        */
-    if (obj == 0) {                                   /* see, if an error is detected             */
-        node->Error = CO_ERR_CFG_1001_0;              /* yes: set error code                      */
+    }
+    obj = CODirFind(&node->Dir, CO_DEV(0x1001,0));
+    if (obj == 0) {
+        node->Error = CO_ERR_CFG_1001_0;
     } else {
-        size = COObjGetSize(obj, CO_BYTE);            /* check object size matches expectation    */
-        if (size == 0) {                              /* see, if an error is detected             */
-            node->Error = CO_ERR_CFG_1001_0;          /* yes: set error code                      */
+        size = COObjGetSize(obj, CO_BYTE);
+        if (size == 0) {
+            node->Error = CO_ERR_CFG_1001_0;
         }
-    }                                                 /*------------------------------------------*/
-
-#if CO_EMCY_HIST_EN > 0
-    CO_EmcyHistInit(emcy);                            /* initialize EMCY history object entries   */
-#endif
-}
-#endif
-
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  CHECK EMCY PARAMETER STRUCTURE
-*
-* \ingroup  INTERNAL
-*
-*           This function helps to centralize the parameter checking of the emcy structure.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \retval   =0     the given parameter emcy is ok
-* \retval   <0     an error is detected in parameter emcy
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CO_EmcyCheck(CO_EMCY *emcy)
-{
-    CO_NODE    *node;                                 /* Local: ptr to parent node                */
-    int16_t  result = -1;                          /* Local: function result                   */
-                                                      /*------------------------------------------*/
-    if (emcy == 0) {                                  /* see, if parameter pointer is invalid     */
-        CO_NodeFatalError();                          /* inform user                              */
-        return (result);                              /* abort function                           */
     }
-    node = emcy->Node;                                /* get ptr to parent node                   */
-    if (node == 0) {                                  /* see, if node pointer is invalid          */
-        CO_NodeFatalError();                          /* inform user                              */
-        return (result);                              /* abort function                           */
+
+    COEmcyHistInit(emcy);
+}
+
+/*
+* see function definition
+*/
+int16_t COEmcyCheck(CO_EMCY *emcy)
+{
+    CO_NODE *node;
+    int16_t  result = -1;
+
+    if (emcy == 0) {
+        CONodeFatalError();
+        return (result);
     }
-    if (emcy->Root == 0) {                            /* see, if root pointer is invalid          */
-        node->Error = CO_ERR_EMCY_BAD_ROOT;           /* set error indication                     */
-        return (result);                              /* abort function                           */
-    }                                                 /*------------------------------------------*/
-    result = 0;                                       /* all checks passed                        */
-    return (result);                                  /* return function result                   */
-}
-#endif
 
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  GET INTERNAL ERROR STATE
-*
-* \ingroup  INTERNAL
-*
-*           This function gets the error state of the given error identifier out of the internal
-*           error storage memory.
-*
-* \note     The parameter emcy shall be checked by the calling function.
-*
-* \param[in]       emcy          pointer to the EMCY object
-*
-* \param[in]       err           user error identifier
-*
-* \retval   =0     this error is not present
-* \retval   =1     the error is already detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CO_EmcyGetErr(CO_EMCY *emcy, uint8_t err)
-{
-    uint8_t result;                                /* Local: function result                   */
-    uint8_t byte;                                  /* Local: calculated byte in error memory   */
-    uint8_t mask;                                  /* Local: calculated bit mask in the byte   */
-                                                      /*------------------------------------------*/
-    if (err >= CO_EMCY_N) {                           /* see, if error identifier is invalid      */
-        err = CO_EMCY_N - 1;                          /* limit to last entry in user table        */
-    }                                                 /*------------------------------------------*/
-    byte = err >> 3;                                  /* calculate byte, holding the given error  */
-    mask = (uint8_t)1 << (err & 0x7);              /* calculate mask, representing the error   */
-    if ((emcy->Err[byte] & mask) == 0) {              /* see, if this error is currently not set  */
-        result = 0;                                   /* set result to 'error not detected'       */
-    } else {                                          /* otherwise, this error is currently set   */
-        result = 1;                                   /* set result to 'error present'            */
-    }                                                 /*------------------------------------------*/
-    return (result);                                  /* return function result                   */
+    node = emcy->Node;
+    if (node == 0) {
+        CONodeFatalError();
+        return (result);
+    }
+    if (emcy->Root == 0) {
+        node->Error = CO_ERR_EMCY_BAD_ROOT;
+        return (result);
+    }
+    result = 0;
+    return (result);
 }
-#endif
 
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  SET INTERNAL ERROR STATE
-*
-* \ingroup  INTERNAL
-*
-*           This function sets the error state of the given error identifier into the internal
-*           error storage memory.
-*
-* \note     The parameter emcy shall be checked by the calling function.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \param[in]       err           user error identifier
-*
-* \param[in]       state         error state (=0: no error, !=0: error)
-*
-* \retval   =0     error state is unchanged
-* \retval   =1     the error state has changed
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
-int16_t CO_EmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state)
+int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err)
 {
-    uint8_t result;                                /* Local: function result                   */
-    uint8_t byte;                                  /* Local: calculated byte in error memory   */
-    uint8_t mask;                                  /* Local: calculated bit mask in the byte   */
-                                                      /*------------------------------------------*/
-    if (err >= CO_EMCY_N) {                           /* see, if error identifier is invalid      */
-        err = CO_EMCY_N - 1;                          /* limit to last entry in user table        */
-    }                                                 /*------------------------------------------*/
-    byte = err >> 3;                                  /* calculate byte, holding the given error  */
-    mask = (uint8_t)1 << (err & 0x7);              /* calculate mask, representing the error   */
-    if ((emcy->Err[byte] & mask) == 0) {              /* see, if this error is currently not set  */
-        if (state != 0) {                             /* yes: see, if new error state is set      */
-            emcy->Err[byte] |= mask;                  /* yes: mark error detected in memory       */
-            result           = 1;                     /* indicate error state change              */
-        } else {                                      /* otherwise: both states indicates not set */
-            result           = 0;                     /* indicate same error state as before      */
+    uint8_t result;
+    uint8_t byte;
+    uint8_t mask;
+
+    if (err >= CO_EMCY_N) {
+        err = CO_EMCY_N - 1;
+    }
+
+    byte = err >> 3;
+    mask = (uint8_t)1 << (err & 0x7);
+    if ((emcy->Err[byte] & mask) == 0) {
+        result = 0;
+    } else {
+        result = 1;
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state)
+{
+    uint8_t result;
+    uint8_t byte;
+    uint8_t mask;
+
+    if (err >= CO_EMCY_N) {
+        err = CO_EMCY_N - 1;
+    }
+    byte = err >> 3;
+    mask = (uint8_t)1 << (err & 0x7);
+    if ((emcy->Err[byte] & mask) == 0) {
+        if (state != 0) {
+            emcy->Err[byte] |= mask;
+            result           = 1;
+        } else {
+            result           = 0;
         }
-    } else {                                          /* otherwise: error is currently set        */
-        if (state == 0) {                             /* yes: see, if new error state is cleared  */
-            emcy->Err[byte] &= ~mask;                 /* yes: clear detected error in memory      */
-            result           = 1;                     /* indicate error state change              */
-        } else {                                      /* otherwise: both states indicates set     */
-            result           = 0;                     /* indicate same error state as before      */
+    } else {
+        if (state == 0) {
+            emcy->Err[byte] &= ~mask;
+            result           = 1;
+        } else {
+            result           = 0;
         }
-    }                                                 /*------------------------------------------*/
-    return (result);                                  /* return function result                   */
-}
-#endif
-
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  SEND EMCY MESSAGE
-*
-* \ingroup  INTERNAL
-*
-*           This function transmits the EMCY message to the configured CANbus.
-*
-* \note     The parameter emcy shall be checked by the calling function.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \param[in]       err           user error identifier
-*
-* \param[in]       usr           manufacturer specific fields in EMCY message and/or EMCY message
-*                                (only used, when \ref CO_EMCY_EMCY_MAN_EN is set to 1)
-*
-* \param[in]       state         error state (=0: no error, !=0: error)
-*/
-/*------------------------------------------------------------------------------------------------*/
-void CO_EmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
-{
-    CO_IF_FRM    frm;                                 /* Local: CAN frame for transmission        */
-    CO_NODE     *node;                                /* Local: pointer to node informations      */
-    CO_DIR      *dir;                                 /* Local: pointer to object directory       */
-    CO_EMCY_TBL *data;                                /* Local: pointer to user error field table */
-    uint8_t   n;                                   /* Local: loop through user error field     */
-                                                      /*------------------------------------------*/
-#if CO_EMCY_EMCY_MAN_EN == 0
-    (void)usr;                                        /* unused, prevent compiler warning         */
-#endif
-
-    node = emcy->Node;                                /* get node pointer                         */
-    if ((node->Nmt.Allowed & CO_EMCY_ALLOWED) == 0) { /* see, if EMCY messages are not allowed    */
-       return;                                        /* exit function without error              */
     }
-    if (err >= CO_EMCY_N) {                           /* see, if error identifier is invalid      */
-        err = CO_EMCY_N - 1;                          /* limit to last entry in user table        */
-    }                                                 /*------------------------------------------*/
-    dir  = &node->Dir;                                /* get link to object directory             */
-    data = &emcy->Root[err];                          /* get entry of addressed user error field  */
-                                                      /*------------------------------------------*/
-    (void)CODirRdLong(dir, CO_DEV(0x1014,0),          /* read EMCY identifier (existance checked) */
+    return (result);
+}
+
+/*
+* see function definition
+*/
+void COEmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
+{
+    CO_IF_FRM    frm; 
+    CO_NODE     *node;
+    CO_DIR      *dir;
+    CO_EMCY_TBL *data;
+    uint8_t      n;
+
+    node = emcy->Node;
+    if ((node->Nmt.Allowed & CO_EMCY_ALLOWED) == 0) {
+       return;
+    }
+    if (err >= CO_EMCY_N) {
+        err = CO_EMCY_N - 1;
+    }
+    dir  = &node->Dir;
+    data = &emcy->Root[err];
+
+    (void)CODirRdLong(dir, CO_DEV(0x1014,0),
                       &frm.Identifier);
-    frm.DLC = 8;                                      /* fixed DLC (8 bytes)                      */
-    if (state == 1) {                                 /* see, if new error is detected            */
-        frm.Data[0] = (uint8_t)(data->Code);       /* set pre-defined error code in message    */
+    frm.DLC = 8;
+    if (state == 1) {
+        frm.Data[0] = (uint8_t)(data->Code);
         frm.Data[1] = (uint8_t)(data->Code >> 8);
     } else {
-        frm.Data[0] = (uint8_t)0;                  /* set error code 'no error' in message     */
+        frm.Data[0] = (uint8_t)0;
         frm.Data[1] = (uint8_t)0;
     }
-    (void)CODirRdByte(dir, CO_DEV(0x1001,0),          /* set error register (existance checked)   */
-                      &frm.Data[2]);
-    for (n=0; n<5; n++) {                             /* loop through manufacturer specific field */
-        frm.Data[3+n] = 0;                            /* clear user error codes in message        */
+    (void)CODirRdByte(dir, CO_DEV(0x1001,0), &frm.Data[2]);
+    for (n=0; n<5; n++) {
+        frm.Data[3+n] = 0;
     }
-#if CO_EMCY_EMCY_MAN_EN > 0
-    if (usr != 0) {                                   /* see, if additional infos are given       */
-        for (n=0; n<5; n++) {                         /* loop through manufacturer specific field */
-            frm.Data[3+n] = usr->Emcy[n];             /* copy user error codes in message         */
+    if (usr != 0) {
+        for (n=0; n<5; n++) {
+            frm.Data[3+n] = usr->Emcy[n];
         }
-    }                                                 /*------------------------------------------*/
-#endif
-    (void)COIfSend(&emcy->Node->If, &frm);            /* transmit EMCY message                    */
-                                                      /* possible error registered in node        */
+    }
+    (void)COIfSend(&emcy->Node->If, &frm);
 }
-#endif
 
-#if CO_EMCY_N > 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  UPDATE EMCY OBJECT ENTRIES
-*
-* \ingroup  INTERNAL
-*
-*           This function updates the EMCY object directory entries with the given error
-*           code change.
-*
-* \note     The parameter emcy shall be checked by the calling function.
-*
-* \param[in,out]   emcy          pointer to the EMCY object
-*
-* \param[in]       err           user error identifier
-*
-* \param[in]       usr           manufacturer specific fields in EMCY history and/or EMCY message
-*                                (only used, when \ref CO_EMCY_HIST_EN is set to 1)
-*
-* \param[in]       state         error state (=0: no error, !=0: error)
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
-void CO_EmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
+void COEmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
 {
-    CO_DIR     *dir;                                  /* Local: pointer to object directory       */
-    uint8_t  regbit;                               /* Local: bit in error register             */
-    uint8_t  regmask;                              /* Local: bit mask for error register       */
-    uint8_t  reg;                                  /* Local: error register value              */
-                                                      /*------------------------------------------*/
-#if CO_EMCY_HIST_EN == 0
-    (void)usr;                                        /* unused, prevent compiler warning         */
-#endif
+    CO_DIR  *dir;
+    uint8_t  regbit;
+    uint8_t  regmask;
+    uint8_t  reg;
 
-    if (err >= CO_EMCY_N) {                           /* see, if error identifier is invalid      */
-        err = CO_EMCY_N - 1;                          /* limit to last entry in user table        */
-    }                                                 /*------------------------------------------*/
-    dir     = &emcy->Node->Dir;                       /* get link to object directory             */
-    regbit  =  emcy->Root[err].Reg;                   /* get corresponding bit in error register  */
-    regmask =  (uint8_t)(1u << regbit);            /* calculate register mask                  */
-                                                      /*------------------------------------------*/
-    (void)CODirRdByte(dir, CO_DEV(0x1001,0), &reg);   /* get error register (existance checked)   */
-                                                      /*------------------------------------------*/
-    if (state != 0) {                                 /*                SET ERROR                 */
-                                                      /*------------------------------------------*/
-                                                      /*lint -e{644} : reg set in CODirRdByte()   */
-        if ((reg & regmask) == 0) {                   /* see, if this error class is not set      */
-            reg |= regmask;                           /* yes: set error class in error register   */
-            reg |= 0x01;                              /* generic error is set for any error       */
+    if (err >= CO_EMCY_N) {
+        err = CO_EMCY_N - 1;
+    }
+    dir     = &emcy->Node->Dir;
+    regbit  =  emcy->Root[err].Reg;
+    regmask =  (uint8_t)(1u << regbit);
+
+    (void)CODirRdByte(dir, CO_DEV(0x1001,0), &reg);
+
+    if (state != 0) { /* set error */
+        if ((reg & regmask) == 0) {
+            reg |= regmask;
+            reg |= 0x01;
         }
-#if CO_EMCY_HIST_EN > 0
-        CO_EmcyHistAdd(emcy, err, usr);               /* add this EMCY to EMCY history            */
-#endif
-        emcy->Cnt[regbit]++;                          /* count occurance of this error class      */
-                                                      /*------------------------------------------*/
-    } else {                                          /*               CLEAR ERROR                */
-                                                      /*------------------------------------------*/
-        emcy->Cnt[regbit]--;                          /* decrement number of occurance            */
-        if (emcy->Cnt[regbit] == 0) {                 /* see, if error was the last in this class */
-            reg &= ~regmask;                          /* yes: clear error class in error register */
-#if CO_EMCY_REG_CLASS_EN > 0
-            if ((reg & ~0x01) != 0) {                 /* see, if not all error classes are cleared*/
-                reg |= 0x01;                          /* ensure that generic error stays till end */
-            } else {                                  /* otherwise: all error classes are cleared */
-                if (emcy->Cnt[0] == 0) {              /* see, if no generic error is pending      */
-                    reg &= ~0x01;                     /* yes: clear generic error register bit    */
+        COEmcyHistAdd(emcy, err, usr);
+        emcy->Cnt[regbit]++;
+    } else { /* clear error */
+        emcy->Cnt[regbit]--;
+        if (emcy->Cnt[regbit] == 0) {
+            reg &= ~regmask;
+            if ((reg & ~0x01) != 0) {
+                reg |= 0x01;
+            } else {
+                if (emcy->Cnt[0] == 0) {
+                    reg &= ~0x01;
                 }
             }
-#endif
         }
     }
-    (void)CODirWrByte(dir, CO_DEV(0x1001,0), reg);    /* set error register (existance checked)   */
+    (void)CODirWrByte(dir, CO_DEV(0x1001,0), reg);
 }
-#endif
+
+/*
+* see function definition
+*/
+void COEmcyHistInit(CO_EMCY *emcy)
+{
+    CO_NODE  *node;
+    CO_DIR   *cod;
+    CO_OBJ   *obj;
+    uint8_t   sub;
+
+    emcy->Hist.Max = 0;
+    emcy->Hist.Num = 0;
+    emcy->Hist.Off = 0;
+
+    node = emcy->Node;
+    cod  = &node->Dir;
+    obj  = CODirFind(cod, CO_DEV(0x1003, 0));
+    if (obj == 0) {
+        node->Error = CO_ERR_NONE;
+        return;
+    }
+    obj  = CODirFind(cod, CO_DEV(0x1003, 1));
+    if (obj == 0) {
+        node->Error = CO_ERR_CFG_1003_1;
+        return;
+    }
+    sub = 2;
+    while (obj != 0) {
+        obj = CODirFind(cod, CO_DEV(0x1003, sub));
+        if (obj != 0) {
+            sub++;
+        }
+    }
+    (void)CONodeGetErr(cod->Node);
+
+    emcy->Hist.Max = sub - 1;
+    emcy->Hist.Off = 0;
+}
+
+/*
+* see function definition
+*/
+void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
+{
+    CO_NODE *node;
+    CO_DIR  *cod;
+    CO_OBJ  *obj;
+    uint32_t val = 0;
+    uint8_t  sub;
+
+    if (emcy->Hist.Max == 0) {
+        return;
+    }
+    node = emcy->Node;
+    cod  = &node->Dir;
+    emcy->Hist.Off++;
+    if (emcy->Hist.Off > emcy->Hist.Max) {
+        emcy->Hist.Off = 1;
+    }
+    sub = emcy->Hist.Off;
+    val = (uint32_t)emcy->Root[err].Code;
+    if (usr != 0) {
+        val |= (((uint32_t)usr->Hist) << 16);
+    }
+    obj = CODirFind(cod, CO_DEV(0x1003, sub));
+    COObjWrDirect(obj, &val, 4);
+
+    emcy->Hist.Num++;
+    if (emcy->Hist.Num > emcy->Hist.Max) {
+        emcy->Hist.Num = emcy->Hist.Max;
+    } else {
+        obj = CODirFind(cod, CO_DEV(0x1003, 0));
+        COObjWrDirect(obj, &(emcy->Hist.Num), 1);
+    }
+}
+
+/*
+* see function definition
+*/
+int16_t COTEmcyRead(CO_OBJ *obj, void *buf, uint32_t len)
+{
+    CO_NODE *node;
+    CO_DIR  *cod;
+    CO_EMCY *emcy;
+    int16_t  result = CO_ERR_NONE;
+    uint8_t  sub;
+    uint8_t  map;
+
+    cod  = obj->Type->Dir;
+    node = cod->Node;
+    emcy = &node->Emcy;
+    sub  = CO_GET_SUB(obj->Key);
+
+    if (sub == 0) {
+        result = COObjRdDirect(obj, buf, len);
+    } else {
+        if (sub <= emcy->Hist.Num) {
+            if (sub <= emcy->Hist.Off) {
+                map = emcy->Hist.Off - (sub - 1);
+            } else {
+                map = (emcy->Hist.Max - (sub - 1)) +
+                       emcy->Hist.Off;
+            }
+            obj = CODirFind(cod, CO_DEV(0x1003, map));
+            result = COObjRdDirect(obj, buf, len);
+        }
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+int16_t COTEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len)
+{
+    CO_NODE *node;
+    CO_DIR  *cod;
+    CO_EMCY *emcy;
+    int16_t  result = CO_ERR_TYPE_WR;
+    uint8_t  val    = 0;
+    uint8_t  sub;
+
+    (void)len;
+    cod  = obj->Type->Dir;
+    node = cod->Node;
+    emcy = &node->Emcy;
+    sub  = CO_GET_SUB(obj->Key);
+
+    if (sub == 0) {
+        val = (uint8_t)(*(uint32_t*)buf);
+        if (val == 0) {
+            COEmcyHistReset(emcy);
+            result = CO_ERR_NONE;
+        }
+    }
+
+    return (result);
+}

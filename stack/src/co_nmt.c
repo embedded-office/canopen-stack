@@ -1,302 +1,217 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_nmt.c
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    NMT SLAVE
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_nmt.c#5 $
-*
-*           This source file implements the CANopen NMT handling.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/******************************************************************************
+* INCLUDES
+******************************************************************************/
+
+#include "co_nmt.h"
 
 #include "co_core.h"
 
-/*
-****************************************************************************************************
-*                                            GOBAL DATA
-****************************************************************************************************
-*/
+/******************************************************************************
+* PUBLIC CONSTANTS
+******************************************************************************/
 
-/*------------------------------------------------------------------------------------------------*/
 /*! \brief NMT MODE ALLOWED OBJECTS
 *
-* \ingroup NMT
-*
-*          This constant codes are used to identify the allowed objects within the specific
-*          NMT state machine mode.
+*    This constant codes are used to identify the allowed objects within the
+*    specific NMT state machine mode.
 */
-/*------------------------------------------------------------------------------------------------*/
 static const uint8_t CONmtModeObj[CO_MODE_NUM] = {
-    ( 0 ),                                            /*!< objects in invalid mode                */
+    ( 0 ),                       /*!< objects in invalid mode                */
 
-    ( CO_BOOT_ALLOWED ),                              /*!< objects in initialization mode         */
+    ( CO_BOOT_ALLOWED ),         /*!< objects in initialization mode         */
 
-    (  CO_SDO_ALLOWED |                               /*!< objects in pre-operational mode        */
+    (  CO_SDO_ALLOWED |          /*!< objects in pre-operational mode        */
       CO_SYNC_ALLOWED |
       CO_TIME_ALLOWED |
       CO_EMCY_ALLOWED |
        CO_NMT_ALLOWED ),
 
-    (  CO_PDO_ALLOWED |                               /*!< objects in operational mode            */
+    (  CO_PDO_ALLOWED |          /*!< objects in operational mode            */
        CO_SDO_ALLOWED |
       CO_SYNC_ALLOWED |
       CO_TIME_ALLOWED |
       CO_EMCY_ALLOWED |
        CO_NMT_ALLOWED ),
 
-    (  CO_NMT_ALLOWED )                               /*!< objects in stop mode                   */
+    (  CO_NMT_ALLOWED )          /*!< objects in stop mode                   */
 };
 
-
-/*------------------------------------------------------------------------------------------------*/
 /*! \brief NMT MODE ENCODING
 *
-* \ingroup NMT
-*
-*          This constant codes are used to encode the NMT state machine mode within heartbeat
-*          acc. the standard.
+*    This constant codes are used to encode the NMT state machine mode within
+*    heartbeat acc. the standard.
 */
-/*------------------------------------------------------------------------------------------------*/
 static const uint8_t CONmtModeCode[CO_MODE_NUM] = {
-    255,                                              /*!< encoding for invalid mode              */
-    0,                                                /*!< encoding for initialization mode       */
-    127,                                              /*!< encoding for pre-operational mode      */
-    5,                                                /*!< encoding for operational mode          */
-    4                                                 /*!< encoding for stopped mode              */
+    255,                         /*!< encoding for invalid mode              */
+    0,                           /*!< encoding for initialization mode       */
+    127,                         /*!< encoding for pre-operational mode      */
+    5,                           /*!< encoding for operational mode          */
+    4                            /*!< encoding for stopped mode              */
 };
 
-/*
-****************************************************************************************************
-*                                            FUNCTIONS
-****************************************************************************************************
+/*! \brief OBJECT TYPE HEARTBEAT CONSUMER
+*
+*    This object type specializes the general handling of objects for the
+*    object directory entry 0x1016. This entries is designed to provide
+*    the heartbeat consumer monitor times.
 */
+const CO_OBJ_TYPE COTNmtHbCons = {
+    0, 0, 0, 0, CO_TNmtHbConsRead, CO_TNmtHbConsWrite
+};
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  RESET DEVICE
+/*! \brief OBJECT TYPE HEARTBEAT PRODUCER
 *
-* \ingroup  API
-*
-*           This function resets the CANopen device with the given type.
-*
-* \param[in,out]   nmt             reference to NMT structure
-*
-* \param[in]       type            the requested NMT reset type.
+*    This object type specializes the general handling of objects for the
+*    object directory entry 0x1017. This entries is designed to provide
+*    the heartbeat producer cycle time.
 */
-/*------------------------------------------------------------------------------------------------*/
+const CO_OBJ_TYPE COTNmtHbProd = {
+    0, 0, 0, 0, 0, CO_TNmtHbProdWrite
+};
+
+/******************************************************************************
+* FUNCTIONS
+******************************************************************************/
+
+/*
+* see function definition
+*/
 void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 {
-    uint8_t nobootup = 1;                          /* Local: suppress transmission of bootup   */
-#if CO_LSS_EN > 0
-    int16_t err;                                   /* Local: error code                        */
-#endif
-                                                      /*------------------------------------------*/
-    if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
-        CO_NodeFatalError();                          /* inform user                              */
-        return;                                       /* abort further initializations            */
-    }
-    if (nmt->Mode != CO_INIT) {                       /* see, if not in initialization mode       */
-        CONmtSetMode(nmt, CO_INIT);                   /* yes: set mode to initialization mode     */
-        nobootup = 0;                                 /* disable transmission of bootup message   */
-    }
-                                                      /*------------------------------------------*/
-    if (type == CO_RESET_NODE) {                      /*          R E S E T   N O D E             */
-                                                      /*------------------------------------------*/
-#if CO_OBJ_PARA_EN > 0
-        CONodeParaLoad(nmt->Node, CO_RESET_NODE);     /* get all parameters within 2000h..9FFFh  */
-#endif
-    }
-                                                      /*------------------------------------------*/
-    if (type <= CO_RESET_COM) {                       /*   C O M M U N I C A T I O N   R E S E T  */
-                                                      /*------------------------------------------*/
-#if CO_OBJ_PARA_EN > 0
-        CONodeParaLoad(nmt->Node, CO_RESET_COM);      /* get all parameters within 1000h..1FFFh   */
-#endif
-#if CO_LSS_EN > 0
-        err = CO_LssLoad(&nmt->Node->Baudrate,        /* Load LSS configured values               */
-                         &nmt->Node->NodeId);
-        if (err != CO_ERR_NONE) {                     /* see, if error while reading media occurs */
-        	nmt->Node->Error = CO_ERR_LSS_LOAD;       /* set error indication                     */
-            return;                                   /* abort initialization                     */
-        }
-        CO_LssInit(&nmt->Node->Lss, nmt->Node);       /* Initialise LSS slave                     */
-#endif
-        CO_TmrClear(&nmt->Node->Tmr);                 /* clear all CANopen highspeed timers       */
-        CO_NmtInit (nmt, nmt->Node);                  /* reset heartbeat timer                    */
-        CO_SdoInit (nmt->Node->Sdo, nmt->Node);       /* Initialise CANopen SDO tables            */
-        COIfReset  (&nmt->Node->If);                  /* reset communication interface            */
+    uint8_t nobootup = 1;
+    int16_t err;
 
-#if CO_EMCY_N > 0
-        COEmcyReset(&nmt->Node->Emcy, 1);             /* Reset CANopen EMCY tables                */
-#endif
-#if CO_SYNC_EN > 0
-        CO_SyncInit(&nmt->Node->Sync, nmt->Node);     /* Initialize SYNC tables                   */
-#endif
-        if (nobootup == 0) {                          /* see, if bootup message is not disabled   */
-            CO_NmtBootup(nmt);                        /* transmit boot-up message                 */
+    if (nmt == 0) {
+        CONodeFatalError();
+        return;
+    }
+    if (nmt->Mode != CO_INIT) {
+        CONmtSetMode(nmt, CO_INIT);
+        nobootup = 0;
+    }
+
+    if (type == CO_RESET_NODE) {
+        CONodeParaLoad(nmt->Node, CO_RESET_NODE);     
+    }
+
+    if (type <= CO_RESET_COM) {
+        CONodeParaLoad(nmt->Node, CO_RESET_COM);      
+        err = CO_LssLoad(&nmt->Node->Baudrate, &nmt->Node->NodeId);
+        if (err != CO_ERR_NONE) {
+            nmt->Node->Error = CO_ERR_LSS_LOAD;
+            return;
+        }
+        CO_LssInit(&nmt->Node->Lss, nmt->Node);
+        COTmrClear(&nmt->Node->Tmr);
+        CO_NmtInit(nmt, nmt->Node);
+        COSdoInit(nmt->Node->Sdo, nmt->Node);
+        COIfReset(&nmt->Node->If);
+        COEmcyReset(&nmt->Node->Emcy, 1);
+        COSyncInit(&nmt->Node->Sync, nmt->Node);
+        if (nobootup == 0) {
+            CO_NmtBootup(nmt);
         }
     }
 }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  SET CURRENT MODE
-*
-* \ingroup  API
-*
-*           This function sets the requested CANopen NMT state machine mode.
-*
-* \param[in,out]   nmt             reference to NMT structure
-*
-* \param[in]       mode            the requested NMT mode.
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 void CONmtSetMode(CO_NMT *nmt, CO_MODE mode)
 {
-    if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
-        CO_NodeFatalError();                          /* inform user                              */
-        return;                                       /* abort further initializations            */
+    if (nmt == 0) {
+        CONodeFatalError();
+        return;
     }
-    if (mode == CO_OPERATIONAL) {                     /* see, if switching to OPERATIONAL         */
-#if CO_TPDO_N > 0
-        CO_TPdoInit(nmt->Node->TPdo, nmt->Node);      /* Initialise TPDO tables                   */
-#endif
-#if CO_RPDO_N > 0
-        CO_RPdoInit(nmt->Node->RPdo, nmt->Node);      /* Initialise TPDO tables                   */
-#endif
+    if (mode == CO_OPERATIONAL) {
+        COTPdoInit(nmt->Node->TPdo, nmt->Node);
+        CORPdoInit(nmt->Node->RPdo, nmt->Node);
     }
-#if CO_CB_NMT_CHANGE_EN > 0
-    if (nmt->Mode != mode) {                          /* see, if mode has changed                 */
-        CO_NmtModeChange(nmt, mode);                  /* call mode change callback function       */
+    if (nmt->Mode != mode) {
+        CO_NmtModeChange(nmt, mode);
     }
-#endif
-    nmt->Mode    = mode;                              /* set new NMT mode                         */
-    nmt->Allowed = CONmtModeObj[mode];                /* set allowed objects for this mode        */
+    nmt->Mode    = mode;
+    nmt->Allowed = CONmtModeObj[mode];
 }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  GET CURRENT MODE
-*
-* \ingroup  API
-*
-*           This function returns the current CANopen NMT state machine mode.
-*
-* \param[in]       nmt             reference to NMT structure
-*
-* \retval   >0     The current NMT mode
-* \retval   =0     An error is detected
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 CO_MODE CONmtGetMode(CO_NMT *nmt)
 {
-    if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
-        CO_NodeFatalError();                          /* inform user                              */
-        return (CO_INVALID);                          /* abort further initializations            */
+    if (nmt == 0) {
+        CONodeFatalError();
+        return (CO_INVALID);
     }
-    return (nmt->Mode);                               /* return function result                   */
+
+    return (nmt->Mode);
 }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  SET NODE-ID
-*
-* \ingroup  API
-*
-*           This function sets the requested CANopen Node-ID within the NMT module.
-*
-* \note     The following error are detected within this function:
-*           - CO_ERR_NMT_MODE: the CANopen device is not in INIT mode
-*           - CO_ERR_BAD_ARG: the given nodeId is invalid (e.g. zero)
-* \note     If one of these errors is detected, this function call will change nothing.
-*
-* \param[in,out]   nmt             reference to NMT structure
-*
-* \param[in]       nodeId          the requested NMT node ID
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 void CONmtSetNodeId(CO_NMT *nmt, uint8_t nodeId)
 {
-    CO_MODE mode;                                     /* Local: current active NMT mode           */
-                                                      /*------------------------------------------*/
-    if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
-        CO_NodeFatalError();                          /* inform user                              */
-        return;                                       /* abort further operations                 */
+    CO_MODE mode;
+
+    if (nmt == 0) {
+        CONodeFatalError();
+        return;
     }
-    if (nmt->Node == 0) {                             /* see, if node ptr is valid                */
-        return;                                       /* abort further operations                 */
+    if (nmt->Node == 0) {
+        return;
     }
-    if (nodeId == 0) {                                /* see, if given node-ID is invalid         */
-        nmt->Node->Error = CO_ERR_BAD_ARG;            /* set error code                           */
-        return;                                       /* abort further operations                 */
+    if (nodeId == 0) {
+        nmt->Node->Error = CO_ERR_BAD_ARG;
+        return;
     }
-    mode = nmt->Mode;                                 /* get current mode                         */
-    if (mode != CO_INIT) {                            /* see, if node is not in INIT mode         */
-        nmt->Node->Error = CO_ERR_NMT_MODE;           /* set error code                           */
-    } else {                                          /* otherwise: during INIT mode change is ok */
-        nmt->Node->NodeId = nodeId;                   /* set new NodeId                           */
+    mode = nmt->Mode;
+    if (mode != CO_INIT) {
+        nmt->Node->Error = CO_ERR_NMT_MODE;
+    } else {
+        nmt->Node->NodeId = nodeId;
     }
 }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  GET NODE-ID
-*
-* \ingroup  API
-*
-*           This function returns the current CANopen Node-ID of the NMT module.
-*
-* \param[in,out]   nmt             reference to NMT structure
-*
-* \retval   =0     An error is detected
-* \retval   >0     The current NMT node ID
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 uint8_t CONmtGetNodeId(CO_NMT *nmt)
 {
-    uint8_t result = 0;                            /* Local: function result                   */
-                                                      /*------------------------------------------*/
-    if (nmt == 0) {                                   /* see, if any ptr parameters are invalid   */
-        CO_NodeFatalError();                          /* inform user                              */
-        return (0);                                   /* abort further initializations            */
+    uint8_t result = 0;
+
+    if (nmt == 0) {
+        CONodeFatalError();
+        return (0);
     }
-    if (nmt->Node != 0) {                             /* see, if node ptr is valid                */
-        result = nmt->Node->NodeId;                   /* get current node-id from object          */
+    if (nmt->Node != 0) {
+        result = nmt->Node->NodeId;
     }
-                                                      /*------------------------------------------*/
-    return result;                                    /* return function result                   */
+
+    return result;
 }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  DECODE NODE-STATE
-*
-* \ingroup  API
-*
-*           This function returns the CANopen mode to the given heartbeat state encoding.
-*
-* \param[in]   code             heartbeat state 
-*
-* \retval   =CO_INVALID   An error is detected
-* \retval   >0            The corresponding NMT heartbeat state
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 CO_MODE CONmtModeDecode(uint8_t code)
 {
     CO_MODE    result = CO_INVALID;
@@ -310,18 +225,9 @@ CO_MODE CONmtModeDecode(uint8_t code)
     return (result);
 }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  ENCODE NODE-STATE
-*
-* \ingroup  API
-*
-*           This function returns the heartbeat state code for the given CANopen mode.
-*
-* \param[in]   mode             CANopen mode
-*
-* \return   The corresponding NMT heartbeat state code.
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 uint8_t CONmtModeEncode(CO_MODE mode)
 {
     uint8_t result = CONmtModeCode[CO_INVALID];
@@ -333,145 +239,490 @@ uint8_t CONmtModeEncode(CO_MODE mode)
 }
 
 /*
-****************************************************************************************************
-*                                       INTERNAL FUNCTIONS
-****************************************************************************************************
+* see function definition
 */
+int16_t CONmtGetHbEvents(CO_NMT *nmt, uint8_t nodeId)
+{
+    int16_t    result = -1;
+    CO_HBCONS *hbc;
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  NMT SLAVE INITIALIZATION
-*
-* \ingroup  INTERNAL
-*
-*           This function initializes the CANopen NMT environment.
-*
-* \param[in,out]   nmt             reference to NMT structure
-*
-* \param[in]       node            pointer to parent node structure
+    if (nmt == 0) {
+        CONodeFatalError();
+        return (result);
+    }
+
+    hbc = nmt->HbCons;
+    while (hbc != 0) {
+        if (nodeId == hbc->NodeId) {
+            result     = (int16_t)hbc->Event;
+            hbc->Event = 0;
+        }
+        hbc = hbc->Next;
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
+CO_MODE CONmtLastHbState(CO_NMT *nmt, uint8_t nodeId)
+{
+    CO_MODE     result = CO_INVALID;
+    CO_HBCONS  *hbc;
+
+    if (nmt == 0) {
+        CONodeFatalError();
+        return (result);
+    }
+
+    hbc = nmt->HbCons;
+    while (hbc != 0) {
+        if (nodeId == hbc->NodeId) {
+            result = hbc->State;
+        }
+        hbc = hbc->Next;
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+void CO_NmtHbConsInit(CO_NMT *nmt)
+{
+    uint8_t    num;
+    int16_t    err;
+    CO_OBJ    *obj;
+    CO_HBCONS *hbc;
+    CO_NODE   *node;
+    CO_ERR     act;
+
+    if (nmt == 0) {
+        CONodeFatalError();
+        return;
+    }
+    nmt->HbCons = 0;
+
+    node = nmt->Node;
+    obj  = CODirFind(&node->Dir, CO_DEV(0x1016, 0));
+    if (obj == 0) {
+        node->Error = CO_ERR_NONE;
+        return;
+    }
+    err = COObjRdValue(obj, &num, CO_BYTE, 0);
+    if ((err != CO_ERR_NONE) || (num < 1)) {
+        node->Error = CO_ERR_CFG_1016;
+        return;
+    }
+    while (num > 0) {
+        obj = CODirFind(&node->Dir, CO_DEV(0x1016, num));
+        if (obj == 0) {
+            node->Error = CO_ERR_CFG_1016;
+            break;
+        }
+        hbc = (CO_HBCONS *)obj->Data;
+        if (hbc == 0) {
+            node->Error = CO_ERR_CFG_1016;
+            break;
+        }
+        act = CO_NmtHbConsActivate(nmt, hbc, hbc->Time, hbc->NodeId);
+        if (act != CO_ERR_NONE) {
+            node->Error = act;
+        }
+        num--;
+    }
+}
+
+/*
+* see function definition
+*/
+CO_ERR CO_NmtHbConsActivate(CO_NMT *nmt, CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
+{
+    CO_ERR      result  = CO_ERR_NONE;
+    int16_t     err;
+    CO_HBCONS  *act;
+    CO_HBCONS  *prev;
+    CO_HBCONS  *found = 0;
+
+    prev = 0;
+    act  = nmt->HbCons;
+    while (act != 0) {
+        if (act->NodeId == nodeid) {
+            found = act;
+            break;
+        }
+        prev = act;
+        act  = act->Next;
+    }
+
+    if (found != 0) {
+        if (time > 0) {
+            result = CO_ERR_OBJ_INCOMPATIBLE;
+        } else {
+            if (hbc->Tmr >= 0) {
+                err = COTmrDelete(&nmt->Node->Tmr, hbc->Tmr);
+                if (err < 0) {
+                    result = CO_ERR_TMR_DELETE;
+                }
+            }
+            hbc->Time   = time;
+            hbc->NodeId = nodeid;
+            hbc->Tmr    = -1;
+            hbc->Event  = 0;
+            hbc->State  = CO_INVALID;
+            hbc->Node   = nmt->Node;
+            if (prev == 0) {
+                nmt->HbCons = hbc->Next;
+            } else {
+                prev->Next  = hbc->Next;
+            }
+            hbc->Next   = 0;
+        }
+    } else {
+        hbc->Time   = time;
+        hbc->NodeId = nodeid;
+        hbc->Tmr    = -1;
+        hbc->Event  = 0;
+        hbc->State  = CO_INVALID;
+        hbc->Node   = nmt->Node;
+
+        if (time > 0) {
+            hbc->Next   = nmt->HbCons;
+            nmt->HbCons = hbc;
+        } else {
+            hbc->Next   = 0;
+        }
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+int16_t CO_NmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm)
+{
+    int16_t    result = -1;
+    uint32_t   cobid;
+    uint8_t    nodeid;
+    CO_MODE    state;
+    CO_HBCONS *hbc;
+
+    cobid  = frm->Identifier;
+    hbc    = nmt->HbCons;
+    if (hbc == 0) {
+        return (result);
+    }
+    if ((cobid >= 1792) &&
+        (cobid <= 1792 + 127)) {
+        nodeid = (uint8_t)(cobid - 1792);
+    } else {
+        return (result);
+    }
+    while (hbc != 0) {
+        if (hbc->NodeId != nodeid) {
+            hbc = hbc->Next;
+        } else {
+            if (hbc->Tmr >= 0) {
+                COTmrDelete(&nmt->Node->Tmr, hbc->Tmr);
+            } 
+            hbc->Tmr = COTmrCreate(&nmt->Node->Tmr,
+                CO_TMR_TICKS(hbc->Time),
+                0,
+                CO_NmtHbConsMonitor,
+                hbc);
+            if (hbc->Tmr < 0) {
+                nmt->Node->Error = CO_ERR_TMR_CREATE;
+            }
+            state = CONmtModeDecode(frm->Data[0]);
+            if (hbc->State != state) {
+                CO_NmtHbConsChange(nmt, hbc->NodeId, state);
+            }
+            hbc->State = state;
+            result     = (int16_t)hbc->NodeId;
+            break;
+        }
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+void CO_NmtHbConsMonitor(void *parg)
+{
+    CO_NODE   *node;
+    CO_HBCONS *hbc;
+
+    hbc  = (CO_HBCONS *)parg;
+    node = hbc->Node;
+
+    hbc->Tmr = COTmrCreate(&node->Tmr,
+        CO_TMR_TICKS(hbc->Time),
+        0,
+        CO_NmtHbConsMonitor,
+        hbc);
+    if (hbc->Tmr < 0) {
+        node->Error = CO_ERR_TMR_CREATE;
+    }
+    if (hbc->Event < 0xFFu) {
+        hbc->Event++;
+    }
+    CO_NmtHbConsEvent(&node->Nmt, hbc->NodeId);
+}
+
+/*
+* see function definition
+*/
+int16_t CO_TNmtHbConsWrite(CO_OBJ* obj, void *buf, uint32_t size)
+{
+    CO_NODE    *node;
+    CO_DIR     *cod;
+    CO_HBCONS  *hbc;
+    int16_t     result = CO_ERR_TYPE_WR;
+    uint32_t    value  = 0;
+    uint16_t    time;
+    uint8_t     nodeid;
+
+    cod  = obj->Type->Dir;
+    node = cod->Node;
+    hbc  = (CO_HBCONS *)obj->Data;
+    if (hbc == 0) {
+        node->Error = CO_ERR_CFG_1016;
+        return (result);
+    }
+    if (size != CO_LONG) {
+        node->Error = CO_ERR_CFG_1016;
+        return (result);
+    }
+    value  = *((uint32_t *)buf);
+    time   = (uint16_t)value;
+    nodeid = (uint8_t)(value >> 16);
+    result = CO_NmtHbConsActivate(&node->Nmt, hbc, time, nodeid);
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+int16_t CO_TNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len)
+{
+    CO_HBCONS *hbc;
+    int16_t    result = CO_ERR_NONE;
+    uint32_t   value;
+    uint8_t   *src;
+    uint8_t   *dst;
+    uint32_t   num;
+
+    hbc    = (CO_HBCONS *)(obj->Data);
+    value  = (uint32_t)(hbc->Time);
+    value |= ((uint32_t)(hbc->NodeId)) << 16;
+    num    = CO_LONG;
+    src    = (uint8_t *)&value;
+    dst    = (uint8_t *)buf;
+    while ((len > 0) && (num > 0)) {
+        *dst = *src;
+        src++;
+        dst++;
+        len--;
+        num--;
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+void CO_NmtHbProdInit(CO_NMT *nmt)
+{
+    CO_NODE *node;
+    int16_t  err;
+    uint16_t cycTime;
+
+    if (nmt == 0) {
+        CONodeFatalError();
+        return;
+    }
+    node = nmt->Node;
+    err = CODirRdWord(&node->Dir, CO_DEV(0x1017, 0), &cycTime);
+    if (err != CO_ERR_NONE) {
+        node->Error = CO_ERR_CFG_1017_0;
+    }
+    if (nmt->Tmr >= 0) {
+        err = COTmrDelete(&node->Tmr, nmt->Tmr);
+        if (err < 0) {
+            node->Error = CO_ERR_TMR_DELETE;
+        }
+    }
+
+    if (cycTime > 0) {
+        nmt->Tmr = COTmrCreate(&node->Tmr,
+            CO_TMR_TICKS(cycTime),
+            CO_TMR_TICKS(cycTime),
+            CO_NmtHbProdSend,
+            nmt);
+        if (nmt->Tmr < 0) {
+            node->Error = CO_ERR_TMR_CREATE;
+        }
+    } else {
+        nmt->Tmr = -1;
+    }
+}
+
+/*
+* see function definition
+*/
+void CO_NmtHbProdSend(void *parg)
+{
+    CO_IF_FRM  frm;
+    CO_NMT    *nmt;
+    uint8_t    state;
+
+    nmt = (CO_NMT *)parg;
+    if ((nmt->Allowed & CO_NMT_ALLOWED) == 0) {
+        return;
+    }
+
+    state = CONmtModeEncode(nmt->Mode);
+
+    CO_SET_COBID(&frm, 1792 + nmt->Node->NodeId);
+    CO_SET_DLC(&frm, 1);
+    CO_SET_BYTE(&frm, state, 0);
+
+    (void)COIfSend(&nmt->Node->If, &frm);
+}
+
+/*
+* see function definition
+*/
 void CO_NmtInit(CO_NMT *nmt, CO_NODE *node)
 {
-    if ((nmt == 0) || (node == 0)) {                  /* see, if any ptr parameters are invalid   */
-        CO_NodeFatalError();                          /* inform user                              */
-        return;                                       /* abort further initializations            */
+    if ((nmt == 0) || (node == 0)) {
+        CONodeFatalError();
+        return;
     }
-    nmt->Node = node;                                 /* set reference to parent node             */
-    CONmtSetMode(nmt, CO_INIT);                       /* set initialization mode                  */
-    CO_NmtHbProdInit(nmt);                            /* initialize heartbeat producer            */
-    CO_NmtHbConsInit(nmt);                            /* initialize heartbeat consumer            */
+    nmt->Node = node;
+    CONmtSetMode(nmt, CO_INIT);
+    CO_NmtHbProdInit(nmt);
+    CO_NmtHbConsInit(nmt);
 }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  BOOTUP EVENT
-*
-* \ingroup  INTERNAL
-*
-*           This function performs the bootup protocol to the configured CAN bus. This protocol
-*           is used to signal that a NMT slave has entered the node state PRE-OPERATIONAL after
-*           the state INITIALISING.
-*
-* \param[in,out]   nmt             reference to NMT structure
-*
-* \ds301    9.2.6.2.3
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 void CO_NmtBootup(CO_NMT *nmt)
 {
-    CO_IF_FRM    frm;                                 /* Local: boot-up CAN frame                 */
-                                                      /*------------------------------------------*/
-    if (nmt->Mode == CO_INIT) {                       /* see, if device is in INIT mode           */
-        CONmtSetMode(nmt, CO_PREOP);                  /* enter pre-operational mode               */
-                                                      /*------------------------------------------*/
-        CO_SET_COBID(&frm, 1792 + nmt->Node->NodeId); /* set bootup CAN identifier                */
-        CO_SET_DLC  (&frm, 1);                        /* set fixed DLC (1 byte)                   */
-        CO_SET_BYTE (&frm, 0, 0);                     /* set required data byte #0 to 0           */
-                                                      /*------------------------------------------*/
-        (void)COIfSend(&nmt->Node->If, &frm);         /* send bootup message                      */
-                                                      /* possible error registered in node        */
+    CO_IF_FRM frm;
+
+    if (nmt->Mode == CO_INIT) {
+        CONmtSetMode(nmt, CO_PREOP);
+
+        CO_SET_COBID(&frm, 1792 + nmt->Node->NodeId);
+        CO_SET_DLC  (&frm, 1);
+        CO_SET_BYTE (&frm, 0, 0);
+
+        (void)COIfSend(&nmt->Node->If, &frm);
     }
 }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  NMT MESSAGE CHECK
-*
-* \ingroup  INTERNAL
-*
-*           This functions checks a received frame to be a NMT message.
-*
-* \param[in,out]   nmt             reference to NMT structure
-*
-* \param[in]       frm             received CAN frame
-*
-* \retval   =0     check function successful
-* \retval   <0     mesage is not an NMT message
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 int16_t CO_NmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 {
-    int16_t result = -1;                           /* Local: function result                   */
-                                                      /*------------------------------------------*/
-    if (frm->Identifier == 0) {                       /* check for nmt message                    */
-        result = 0;                                   /* success, regardless if we are addressed  */
-        if ( (frm->Data[1] == nmt->Node->NodeId) ||   /* see, if we are addressed (or broadcast)  */
-             (frm->Data[1] == 0                ) ) {
-            switch(frm->Data[0]) {                    /* select command specifier                 */
-                case 1:                               /* Cmd: Start Remote Node                   */
-                    CONmtSetMode(nmt, CO_OPERATIONAL);/* set node to operational                  */
-                    break;                            /*------------------------------------------*/
-                case 2:                               /* Cmd: Stop Remote Node                    */
-                    CONmtSetMode(nmt, CO_STOP);       /* set node to operational                  */
-                    break;                            /*------------------------------------------*/
-                case 128:                             /* Cmd: Enter Pre-Operational Operation     */
-                    CONmtSetMode(nmt, CO_PREOP);      /* set node to operational                  */
-                    break;                            /*------------------------------------------*/
-                case 129:                             /* Cmd: Reset Node                          */
-                    CONmtReset(nmt, CO_RESET_NODE);   /* init CANOpen with reset node             */
-                    break;                            /*------------------------------------------*/
-                case 130:                             /* Cmd: Reset Communication                 */
-                    CONmtReset(nmt, CO_RESET_COM);    /* init CANOpen with reset communication    */
-                    break;                            /*------------------------------------------*/
-                default:                              /* Cmd: unknown                             */
+    int16_t result = -1;
+
+    if (frm->Identifier == 0) {
+        result = 0;
+        if ((frm->Data[1] == nmt->Node->NodeId) || (frm->Data[1] == 0)) {
+            switch(frm->Data[0]) {
+                case 1:
+                    CONmtSetMode(nmt, CO_OPERATIONAL);
+                    break;
+                case 2:
+                    CONmtSetMode(nmt, CO_STOP);
+                    break;
+                case 128:
+                    CONmtSetMode(nmt, CO_PREOP);
+                    break;
+                case 129:
+                    CONmtReset(nmt, CO_RESET_NODE);
+                    break;
+                case 130:
+                    CONmtReset(nmt, CO_RESET_COM);
+                    break;
+                default:
                     break;
             }
         }
     }
+
     return(result);
 }
 
 /*
-****************************************************************************************************
-*                                         CALLBACK FUNCTIONS
-****************************************************************************************************
+* see function definition
 */
+int16_t CO_TNmtHbProdWrite(CO_OBJ* obj, void *buf, uint32_t size)
+{
+    CO_NODE  *node;
+    uint16_t  cycTime;
+    int16_t   result = CO_ERR_OBJ_ACC;
 
-#if CO_CB_NMT_CHANGE_EN == 0
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief NMT MODE CHANGE CALLBACK
-*
-* \ingroup CALLBACK
-*
-*          This function is called when the NMT mode is changed.
-*
-* \note    This implementation is an example implementation, which will do nothing. This function
-*          is optional and application specific. The function can be implemented somewhere in the
-*          in the application code. The activation of the application callback function is done
-*          with \ref CO_CB_NMT_CHANGE_EN.
-*
-* \note    When disabling the application callback function, this example implementation is
-*          enabled, but not called. In fact: disabling the application function will remove the
-*          callback function call in the NMT mode management.
-*
-* \note    The nmt object pointer is checked to be valid before calling this function.
-*
-* \param[in]       nmt             reference to NMT structure
-*
-* \param[in]       mode            the new mode
-*/
-/*------------------------------------------------------------------------------------------------*/
+    if (size != CO_LONG) {
+        return (CO_ERR_BAD_ARG);
+    }
+    if (CO_GET_IDX(obj->Key) != 0x1017) {
+        return (CO_ERR_CFG_1017_0);
+    }
+    cycTime = (uint16_t)(*(uint32_t *)buf);
+    node    = obj->Type->Dir->Node;
+
+    if (node->Nmt.Tmr >= 0) {
+        result = COTmrDelete(&node->Tmr, node->Nmt.Tmr);
+        if (result < 0) {
+            node->Error = CO_ERR_TMR_DELETE;
+            return (CO_ERR_TMR_DELETE);
+        }
+        node->Nmt.Tmr = -1;
+    }
+    if (cycTime > 0) {
+        node->Nmt.Tmr = COTmrCreate(&node->Tmr,
+            CO_TMR_TICKS(cycTime),
+            CO_TMR_TICKS(cycTime),
+            CO_NmtHbProdSend,
+            &node->Nmt);
+        if (node->Nmt.Tmr < 0) {
+            node->Error = CO_ERR_TMR_CREATE;
+        }
+    } else {
+        node->Nmt.Tmr = -1;
+    }
+    result = COObjWrDirect(obj, (void *)&cycTime, CO_WORD);
+
+    return (result);
+}
+
 void CO_NmtModeChange(CO_NMT *nmt, CO_MODE mode)
 {
     (void)nmt;
     (void)mode;
 }
-#endif
+
+void CO_NmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId)
+{
+    (void)nmt;
+    (void)nodeId;
+}
+
+void CO_NmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
+{
+    (void)nmt;
+    (void)nodeId;
+    (void)mode;
+}

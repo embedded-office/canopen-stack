@@ -1,29 +1,20 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_err.h
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    ERROR CODE DEFINITIONS
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_err.h#3 $
-*
-*           This include file holds the definitions for the CANopen error codes.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
 #ifndef CO_ERR_H_
 #define CO_ERR_H_
@@ -37,8 +28,10 @@ extern "C" {
 *                                             DEFINES
 ****************************************************************************************************
 */
-
+    
+#ifndef CO_ERR_BASE
 #define CO_ERR_BASE    0x0100                         /*!< First CANopen stack error code         */
+#endif
 
 /*
 ****************************************************************************************************

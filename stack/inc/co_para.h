@@ -1,118 +1,248 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_para.h
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    PARAMETER GROUP DEFINITIONS
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_para.h#2 $
-*
-*           This include file holds definitions for the parameter object groups.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
 #ifndef CO_PARA_H_
 #define CO_PARA_H_
+
+/******************************************************************************
+* INCLUDES
+******************************************************************************/
+
+#include "co_obj.h"
+#include "co_err.h"
+#include "co_nmt.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/******************************************************************************
+* PUBLIC DEFINES
+******************************************************************************/
 
-#include "co_obj.h"
-#include "co_err.h"
+#define CO_PARA____   0x0000     /*!< disable                                */
+#define CO_PARA___E   0x0001     /*!< enable  (on command)                   */
+#define CO_PARA__A_   0x0002     /*!< enable  (autonomously)                 */
+#define CO_PARA__AE   0x0003     /*!< enable  (autonomously and on command)  */
 
-/*
-****************************************************************************************************
-*                                            DEFINES
-****************************************************************************************************
-*/
+#define CO_TPARA  ((CO_OBJ_TYPE *)&COTPara)  /*!< Object Type Parameter      */
 
-#define CO_PARA____        0x0000                     /*!< disable                                */
-#define CO_PARA___E        0x0001                     /*!< enable  (on command)                   */
-#define CO_PARA__A_        0x0002                     /*!< enable  (autonomously)                 */
-#define CO_PARA__AE        0x0003                     /*!< enable  (autonomously and on command)  */
+/******************************************************************************
+* PUBLIC TYPES
+******************************************************************************/
 
-/*
-****************************************************************************************************
-*                                           DATA TYPES
-****************************************************************************************************
-*/
-
-/*------------------------------------------------------------------------------------------------*/
 /*! \brief PARAMETER GROUP INFO
 *
-* \ingroup PARA
+*    This structure holds the informations of a parameter group. The
+*    parameter group is used within the special function parameter object in
+*    an object directory.
 *
-*          This structure holds the informations of a parameter group. The parameter group
-*          is used within the special function parameter object in an object directory.
-*
-* \note    This structure may be placed into ROM to reduce RAM usage.
+* \note
+*    This structure may be placed into ROM to reduce RAM usage.
 */
-/*------------------------------------------------------------------------------------------------*/
 typedef struct CO_PARA_T {
-    uint32_t             Size;                      /*!< Size of parameter memory block         */
-    uint8_t            *Start;                     /*!< Start of parameter memory block        */
-    uint8_t            *Default;                   /*!< Start of default memory block          */
-    enum CO_NMT_RESET_T    Type;                      /*!< Parameter reset type                   */
-    void                  *Ident;                     /*!< Ptr to User Ident-Code for this group  */
-    uint32_t             Value;                     /*!< value when reading parameter object    */
+    uint32_t             Size;     /*!< Size of parameter memory block       */
+    uint8_t             *Start;    /*!< Start of parameter memory block      */
+    uint8_t             *Default;  /*!< Start of default memory block        */
+    enum CO_NMT_RESET_T  Type;     /*!< Parameter reset type                 */
+    void                *Ident;    /*!< Ptr to User Ident-Code               */
+    uint32_t             Value;    /*!< value when reading parameter object  */
 
 } CO_PARA;
 
-/*
-****************************************************************************************************
-*                                     OBJECT TYPE DEFINITION
-****************************************************************************************************
+/******************************************************************************
+* EXTERN CONSTANTS
+******************************************************************************/
+
+extern const CO_OBJ_TYPE COTPara;
+
+/******************************************************************************
+* PUBLIC FUNCTIONS
+******************************************************************************/
+
+/*! \brief PARAMETER STORE
+*
+*    This function is responsible for the storing activities of the given
+*    parameter group. The whole parameter group will be stored in NVM by
+*    calling the user callback function \ref COParaSave().
+*
+* \param pg
+*    Ptr to parameter group info
+*
+* \param node
+*    Ptr to node info
 */
+void COParaStore(CO_PARA *pg, struct CO_NODE_T *node);
 
-#if CO_OBJ_PARA_EN > 0
-extern CO_OBJ_TYPE COTPara;                           /* Link to Parameter Object Type Structure  */
-
-#define CO_TPARA        ((CO_OBJ_TYPE *)&COTPara)     /*!< Object Type Parameter                  */
-#endif
-
-/*
-****************************************************************************************************
-*                                       FUNCTION PROTOTYPES
-****************************************************************************************************
+/*! \brief PARAMETER RESTORE DEFAULT
+*
+*    This function is responsible for removing the changes on the parameter
+*    values of the given parameter group. The changes in NVM of the given
+*    parameter group will be replaced with the default values by calling
+*    the user callback function \ref COParaDefault().
+*
+* \param pg
+*    Ptr to parameter group info
+*
+* \param node
+*    Ptr to node info
 */
-
-#if CO_OBJ_PARA_EN > 0
-void       COParaStore       (CO_PARA *pg, struct CO_NODE_T *node);
-void       COParaRestore     (CO_PARA *pg, struct CO_NODE_T *node);
-#endif
-
-/*
-****************************************************************************************************
-*                                  CALLBACK FUNCTION PROTOTYPES
-****************************************************************************************************
+void COParaRestore(CO_PARA *pg, struct CO_NODE_T *node);
+    
+/******************************************************************************
+* PRIVATE FUNCTIONS
+******************************************************************************/
+    
+/*! \brief CHECK PARAMETER OBJECT ACCESS
+*
+*    This function is responsible for checking the access to parameter
+*    storage (0x1010) and parameter restore default (0x1011) object
+*    entries. There are some plausibility checks of given parameter and
+*    configuration. If all checks are passed, the requested activity is
+*    returned with the encoding: 0 = restore parameter, 1 = store parameter.
+*
+* \param obj
+*    Ptr to addressed object entry
+*
+* \param buf
+*    Ptr to data buffer
+*
+* \param size
+*    Size of given data in buffer
+*
+* \retval  =0      restore activity
+* \retval  >0      store activity
+* \retval  <0      error is detected and function aborted
 */
+int16_t COParaCheck(CO_OBJ* obj, void *buf, uint32_t size);
 
-#if CO_OBJ_PARA_EN > 0
-int16_t CO_ParaLoad       (CO_PARA *pg);
-int16_t CO_ParaSave       (CO_PARA *pg);
-int16_t CO_ParaDefault    (CO_PARA *pg);
-#endif
+/*! \brief PARAMETER OBJECT READ ACCESS
+*
+*    This function is responsible for the delivery of the store- and
+*    restore-feature encoding during a read access of the parameter
+*    object entry. The feature encoding is static configured within
+*    the parameter group structure (\ref CO_PARA).
+*
+* \param obj
+*    Ptr to addressed parameter object entry
+*
+* \param buf
+*    Ptr to data buffer
+*
+* \param size
+*    Size of given data in buffer
+*
+* \retval   >0    store / restore successful
+* \retval  <=0    error is detected and function aborted
+*/
+int16_t COTypeParaRead(CO_OBJ* obj, void *buf, uint32_t size);
+
+/*! \brief PARAMETER OBJECT WRITE ACCESS
+*
+*    This function is responsible for performing all neccessary
+*    activities during a write access of the parameter object entry.
+*
+* \param obj
+*    Ptr to addressed parameter object entry
+*
+* \param buf
+*    Ptr to data buffer
+*
+* \param size
+*    Size of given data in buffer
+*
+* \retval  =0    store / restore successful
+* \retval  <0    error is detected and function aborted
+*/
+int16_t COTypeParaWrite(CO_OBJ* obj, void *buf, uint32_t size);
+
+/******************************************************************************
+* CALLBACK FUNCTIONS
+******************************************************************************/
+
+/*! \brief LOAD PARAMETER VALUES CALLBACK
+*
+*    This callback function will be called during reset and powerup events.
+*    The function is responsible for loading the parameter from NVM into the
+*    parameter group memory.
+*
+* \note
+*    This implementation is an example implementation, which will copy the
+*    given default memory to the parameters. This function is application
+*    specific and must be implemented somewhere in the application code.
+*
+* \note
+*    The parameter group info pointer is checked to be valid before calling
+*    this function.
+*
+* \param pg
+*    Ptr to parameter group info
+*
+* \retval  =0    parameter loading successful
+* \retval  <0    error is detected and function aborted
+*/
+int16_t COParaLoad(CO_PARA *pg);
+
+/*! \brief SAVE PARAMETER VALUES CALLBACK
+*
+*    This callback function will be called during storing a parameter group.
+*    The function is responsible for saving the current parameter group memory
+*    into NVM.
+*
+* \note
+*    This implementation is an example implementation, which will do nothing.
+*    This function is application specific and must be implemented somewhere
+*    in the application code.
+*
+* \note
+*    The parameter group info pointer is checked to be valid before calling
+*    this function.
+*
+* \param pg
+*    Ptr to parameter group info
+*
+* \retval  =0    parameter loading successful
+* \retval  <0    error is detected and function aborted
+*/
+int16_t COParaSave(CO_PARA *pg);
+
+/*! \brief SET DEFAULT PARAMETER VALUES CALLBACK
+*
+*    This callback function will be called during restoring the default values
+*    of a parameter group. The function is responsible for setting the factory
+*    defaults in the current parameter group memory.
+*
+* \note
+*    This implementation is an example implementation, which will copy the
+*    given default memory to the parameters. This function is application
+*    specific and must be implemented somewhere in the application code.
+*
+* \note
+*    The parameter group info pointer is checked to be valid before calling
+*    this function.
+*
+* \param pg
+*    Ptr to parameter group info
+*
+* \retval  =0    parameter loading successful
+* \retval  <0    error is detected and function aborted
+*/
+int16_t COParaDefault(CO_PARA *pg);
 
 #ifdef __cplusplus
 }

@@ -1,51 +1,42 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_if.h
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    INTERFACE DEFINITIONS
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_if.h#3 $
-*
-*           This source file contains the interface definitions.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
 #ifndef CO_IF_H_
 #define CO_IF_H_
+
+/******************************************************************************
+* INCLUDES
+******************************************************************************/
+
+#include "co_types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/******************************************************************************
+* PUBLIC DEFINITIONS
+******************************************************************************/
 
-//#include "drv_can.h"                                  /* CAN device driver definitions            */
-//#include "can_bus.h"                                  /* CAN bus management                       */
 
-/*
-****************************************************************************************************
-*                                              MACROS
-****************************************************************************************************
-*/
+/******************************************************************************
+* PUBLIC MACROS
+******************************************************************************/
 
 #define CO_GET_COBID(f)   ((uint32_t)(f)->Identifier)
 
@@ -73,66 +64,141 @@ extern "C" {
 
 #define CO_SET_BYTE(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)(n);}
 
-/*lint -emacro( {572,778}, CO_SET_WORD ) : shifting values to 0 is ok */
 #define CO_SET_WORD(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)((uint16_t)(n));\
                             (f)->Data[((p)+1)&0x7]=(uint8_t)(((uint16_t)(n))>>8);}
 
-/*lint -emacro( {572,778}, CO_SET_LONG ) : shifting values to 0 is ok */
 #define CO_SET_LONG(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)((uint32_t)(n));\
                             (f)->Data[((p)+1)&0x7]=(uint8_t)(((uint32_t)(n))>>8);\
                             (f)->Data[((p)+2)&0x7]=(uint8_t)(((uint32_t)(n))>>16);\
                             (f)->Data[((p)+3)&0x7]=(uint8_t)(((uint32_t)(n))>>24);}
 
-/*
-****************************************************************************************************
-*                                        TYPE DEFINITIONS
-****************************************************************************************************
-*/
+#define CO_IF_DRV     int //CANBUS_PARA*    /*!< driver specific bus identifier type    */
 
-#define CO_IF_DRV     int //CANBUS_PARA*                    /*!< driver specific bus identifier type    */
+/******************************************************************************
+* PUBLIC TYPES
+******************************************************************************/
 
-struct CO_NODE_T;                                     /* Declaration of node structure            */
+struct CO_NODE_T;
 
-typedef struct CO_IF_FRM_T {                          /*!< Type, which represents a CAN frame     */
-    uint32_t        Identifier;                     /*!< CAN message identifier                 */
-    uint8_t        Data[8];                        /*!< CAN message Data (payload)             */
-    uint8_t        DLC;                            /*!< CAN message data length code (DLC)     */
+typedef struct CO_IF_FRM_T {         /*!< Type, which represents a CAN frame */
+    uint32_t  Identifier;            /*!< CAN message identifier             */
+    uint8_t   Data[8];               /*!< CAN message Data (payload)         */
+    uint8_t   DLC;                   /*!< CAN message data length code (DLC) */
 
 } CO_IF_FRM;
 
-typedef struct CO_IF_T {                              /*!< Driver interface structure             */
-    struct CO_NODE_T *Node;                           /*!< Link to parent node                    */
-    CO_IF_DRV         Drv;                            /*!< Specific bus identifier of CAN driver  */
+typedef struct CO_IF_T {          /*!< Driver interface structure            */
+    struct CO_NODE_T *Node;       /*!< Link to parent node                   */
+    CO_IF_DRV         Drv;        /*!< Specific bus identifier of CAN driver */
 
 } CO_IF;
 
-/*
-****************************************************************************************************
-*                                       FUNCTION PROTOTYPES
-****************************************************************************************************
+/******************************************************************************
+* PUBLIC FUNCTIONS
+******************************************************************************/
+
+/*! \brief  READ CAN FRAME
+*
+*    This function waits for a CAN frame on the interface without timeout.
+*    If a CAN frame is received, the given frm will be filled with the
+*    received data.
+*
+* \param cif
+*    pointer to the interface structure
+*
+* \param frm
+*    pointer to the receive frame buffer
+*
+* \retval  >0    the size of CO_IF_FRM on success
+* \retval  <0    the internal CanBus error code
 */
+int16_t COIfRead(CO_IF *cif, CO_IF_FRM *frm);
 
-int16_t COIfRead     (CO_IF *cif, CO_IF_FRM *frm);
-int16_t COIfSend     (CO_IF *cif, CO_IF_FRM *frm);
-void       COIfReset    (CO_IF *cif);
-void       COIfClose    (CO_IF *cif);
-
-/*
-****************************************************************************************************
-*                                   INTERNAL FUNCTION PROTOTYPES
-****************************************************************************************************
+/*! \brief  SEND CAN FRAME
+*
+*    This function sends the given CAN frame on the interface without delay.
+*
+* \param cif
+*     pointer to the interface structure
+*
+* \param frm
+*     pointer to the receive frame buffer
+*
+* \retval  >0    the size of CO_IF_FRM on success
+* \retval  <0    the internal CanBus error code
 */
+int16_t COIfSend(CO_IF *cif, CO_IF_FRM *frm);
 
-void       CO_IfInit    (CO_IF *cif, struct CO_NODE_T *node);
-void       CO_IfEnable  (CO_IF *cif, uint32_t baudrate);
-
-/*
-****************************************************************************************************
-*                                  CALLBACK FUNCTION PROTOTYPES
-****************************************************************************************************
+/*! \brief  RESET CAN INTERFACE
+*
+*    This function resets the CAN interface and flushes all already
+*    buffered CAN frames.
+*
+* \param cif
+*    pointer to the interface structure
 */
+void COIfReset(CO_IF *cif);
 
-void       CO_IfReceive (CO_IF_FRM *frm);
+/*! \brief  CLOSE CAN INTERFACE
+*
+*    This function closes the CAN interface.
+*
+* \param cif
+*    pointer to the interface structure
+*/
+void COIfClose(CO_IF *cif);
+
+/******************************************************************************
+* PRIVATE FUNCTIONS
+******************************************************************************/
+
+/*! \brief  INITIALIZE CAN INTERFACE
+*
+*    This function initializes the CAN bus interface.
+*
+* \param cif
+*    pointer to the interface structure
+*
+* \param node
+*    pointer to the parent node
+*/
+void COIfInit(CO_IF *cif, struct CO_NODE_T *node);
+
+/*! \brief  ENABLE CAN INTERFACE
+*
+*    This function enables the CAN bus interface.
+*
+* \param cif
+*    pointer to the interface structure
+*
+* \param baudrate
+*    baudrate, if set to 0 the default baudrate is used
+*/
+void COIfEnable(CO_IF *cif, uint32_t baudrate);
+
+/******************************************************************************
+* CALLBACK FUNCTIONS
+******************************************************************************/
+
+/*! \brief INTERFACE RECEIVE CALLBACK
+*
+*    This function is called for each CAN frame, which is not consumed
+*    (processed) by the CANopen stack.
+*
+* \note
+*    This implementation is an example implementation, which will do
+*    nothing. This function is optional and application specific. The
+*    function can be implemented somewhere in the in the application
+*    code.
+*
+* \note
+*    The CAN frame pointer is checked to be valid before calling this
+*    function.
+*
+* \param frm
+*    The received CAN frame
+*/
+void COIfReceive(CO_IF_FRM *frm);
 
 #ifdef __cplusplus
 }

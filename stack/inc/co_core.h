@@ -1,176 +1,200 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_core.h
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    CORE DEFINITIONS
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_core.h#3 $
-*
-*           This include file defines the symbolic constants and data types for the CANopen
-*           protocoll stack.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
-/*! \defgroup API      Application API Functions
-*                      The application can use the listed functions to interact with the 
-*                      object directory, NMT state machine and other data of the stack.
-*/
-/*! \defgroup INTERNAL Internal Functions
-*                      The listed functions are for information only. They <b>MUST</b> not be
-*                      used within the application.
-*/
-/*! \defgroup CALLBACK Callback Functions
-*                      The listed functions are callback functions. They can be used to perform
-*                      application specific operations to the described events or operation state
-*                      changes.
-*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
 #ifndef CO_CORE_H_
 #define CO_CORE_H_
+
+/******************************************************************************
+* INCLUDES
+******************************************************************************/
+
+#include "co_types.h"
+#include "co_cfg.h"
+
+#include "co_dir.h"
+#include "co_if.h"
+#include "co_emcy.h"
+#include "co_nmt.h"
+#include "co_tmr.h"
+#include "co_sdo_srv.h"
+#include "co_pdo.h"
+#include "co_sync.h"
+#include "co_lss.h"
+#include "co_err.h"
+#include "co_obj.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/******************************************************************************
+* PUBLIC TYPES
+******************************************************************************/
 
-#include "co_ver.h"
-#include "co_tmr.h"
-#include "co_nmt.h"
-#include "co_hbprod.h"
-#include "co_hbcons.h"
-#include "co_emcy.h"
-#include "co_dir.h"
-#include "co_para.h"
-#include "co_sdo.h"
-#include "co_tpdo.h"
-#include "co_rpdo.h"
-
-#if CO_LSS_EN > 0
-#include "co_lss.h"
-#endif
-#if CO_SYNC_EN > 0
-#include "co_fsync.h"
-#endif
-#if CO_RPDO_DYN_COM_EN > 0 || CO_RPDO_DYN_MAP_EN > 0 || CO_TPDO_DYN_COM_EN > 0 || CO_TPDO_DYN_MAP_EN > 0
-#include "co_fpdo.h"
-#endif
-
-/*
-****************************************************************************************************
-*                                         TYPE DEFINITIONS
-****************************************************************************************************
-*/
-
-struct CO_DIR_T;                                      /* Declaration of CO_DIR structure          */
-struct CO_EMCY_T;                                     /* Declaration of CO_EMCY structure         */
-struct CO_EMCY_TBL_T;                                 /* Declaration of CO_EMCY_TBL structure     */
-struct CO_NMT_T;                                      /* Declaration of CO_NMT structure          */
-struct CO_SDO_T;                                      /* Declaration of CO_SDO structure          */
-struct CO_TPDO_T;                                     /* Declaration of CO_TPDO structure         */
-struct CO_TPDO_LINK_T;                                /* Declaration of CO_TPDO_LINK structure    */
-
-/*------------------------------------------------------------------------------------------------*/
 /*! \brief CANOPEN NODE
 *
-* \ingroup CORE
-*
-*          This data structure holds all informations, which represents a complete CANopen node.
+*    This data structure holds all informations, which represents a complete
+*    CANopen node.
 */
-/*------------------------------------------------------------------------------------------------*/
 typedef struct CO_NODE_T {
-    struct CO_DIR_T        Dir;                       /*!< The object directory                   */
-    struct CO_IF_T         If;                        /*!< The bus driver interface               */
-    struct CO_EMCY_T       Emcy;                      /*!< The node error state                   */
-    struct CO_NMT_T        Nmt;                       /*!< The Network management                 */
-    struct CO_TMR_T        Tmr;                       /*!< The Highspeed timer manager            */
-    struct CO_SDO_T        Sdo[CO_SDO_N];             /*!< The SDO Server Array                   */
-#if CO_SDO_SEG_EN > 0 || CO_SDO_BLK_EN > 0
-    uint8_t            *SdoBuf;                    /*!< Pointer to SDO Transfer Buffer Start   */
-#endif
-#if CO_RPDO_N > 0
-    struct CO_RPDO_T       RPdo[CO_RPDO_N];           /*!< The Receive PDO Array                  */
-#endif
-#if CO_TPDO_N > 0
-    struct CO_TPDO_T       TPdo[CO_TPDO_N];           /*!< The Transmit PDO Array                 */
-    struct CO_TPDO_LINK_T  TMap[CO_TPDO_MAP_N];       /*!< The Transmit PDO mapping link Array    */
-#endif
-#if CO_SYNC_EN > 0
-    struct CO_SYNC_T       Sync;                      /*!< The SYNC management tables             */
-#endif
-#if CO_LSS_EN > 0
-    struct CO_LSS_T        Lss;                       /*!< The LSS slave handling                 */
-#endif
-    enum   CO_ERR_T        Error;                     /*!< The internal detected error code       */
-    uint32_t             Baudrate;                  /*!< The default CAN Baudrate               */
-    uint8_t             NodeId;                    /*!< The default CANopen Node-ID            */
+    struct CO_DIR_T        Dir;                  /*!< Object directory       */
+    struct CO_IF_T         If;                   /*!< Can driver interface   */
+    struct CO_EMCY_T       Emcy;                 /*!< Node error status      */
+    struct CO_NMT_T        Nmt;                  /*!< Network management     */
+    struct CO_TMR_T        Tmr;                  /*!< Timer manager          */
+    struct CO_SDO_T        Sdo[CO_SDO_N];        /*!< SDO Server Array       */
+    uint8_t               *SdoBuf;               /*!< SDO Transfer Buffer    */
+    struct CO_RPDO_T       RPdo[CO_RPDO_N];      /*!< RPDO Array             */
+    struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */
+    struct CO_TPDO_LINK_T  TMap[CO_TPDO_N*8];    /*!< TPDO mapping links     */
+    struct CO_SYNC_T       Sync;                 /*!< SYNC management        */
+    struct CO_LSS_T        Lss;                  /*!< LSS slave handling     */
+    enum   CO_ERR_T        Error;                /*!< detected error code    */
+    uint32_t               Baudrate;             /*!< default CAN baudrate   */
+    uint8_t                NodeId;               /*!< default Node-ID        */
 
 } CO_NODE;
 
-/*------------------------------------------------------------------------------------------------*/
 /*! \brief NODE SPECIFICATION
 *
-* \ingroup CORE
-*
-*          This data structure holds all configurable components of a complete CANopen node.
+*    This data structure holds all configurable components of a complete
+*    CANopen node.
 */
-/*------------------------------------------------------------------------------------------------*/
 typedef struct CO_NODE_SPEC_T {
-    uint8_t              NodeId;                   /*!< specify default Node-Id                */
-    uint32_t              Baudrate;                 /*!< specify default Baudrate               */
-    struct CO_OBJ_T        *Dir;                      /*!< specify object directory               */
-    uint16_t              DirLen;                   /*!< specify object directory (max) length  */
-    struct CO_EMCY_TBL_T   *EmcyCode;                 /*!< specify application EMCY info fields   */
-    struct CO_TMR_MEM_T    *TmrMem;                   /*!< specify timer memory blocks            */
-    uint16_t              TmrNum;                   /*!< specify number of timer memory blocks  */
-    CO_IF_DRV               CanDrv;                   /*!< specify linked CAN bus driver          */
-    uint8_t             *SdoBuf;                   /*!< SDO Transfer Buffer Memory Start       */
+    uint8_t                NodeId;       /*!< default Node-Id                */
+    uint32_t               Baudrate;     /*!< default Baudrate               */
+    struct CO_OBJ_T       *Dir;          /*!< object directory               */
+    uint16_t               DirLen;       /*!< object directory (max) length  */
+    struct CO_EMCY_TBL_T  *EmcyCode;     /*!< application EMCY info fields   */
+    struct CO_TMR_MEM_T   *TmrMem;       /*!< timer memory blocks            */
+    uint16_t               TmrNum;       /*!< number of timer memory blocks  */
+    CO_IF_DRV              CanDrv;       /*!< linked CAN bus driver          */
+    uint8_t               *SdoBuf;       /*!< SDO Transfer Buffer Memory     */
 
 } CO_NODE_SPEC;
 
-/*
-****************************************************************************************************
-*                                       FUNCTION PROTOTYPES
-****************************************************************************************************
+/******************************************************************************
+* PUBLIC FUNCTIONS
+******************************************************************************/
+
+/*! \brief  CANOPEN STACK INITIALIZATION
+*
+*    This function initializes the internals of the CANopen stack. The
+*    specification of the CANopen node, and the CANopen node object itself
+*    is given as parameter.
+*
+* \note
+*    The node is still in INIT mode after this function call. To finalize
+*    the initialization phase (e.g. profile specific or application actions,
+*    etc..), see \ref CONodeStart().
+*
+* \param node
+*    pointer to the CANopen node object
+*
+* \param spec
+*    pointer to the configuration collection of config aspects (specification)
 */
+void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec);
 
-void       CONodeInit        (CO_NODE *node, CO_NODE_SPEC *spec);
-void       CONodeStart       (CO_NODE *node);
-void       CONodeStop        (CO_NODE *node);
-CO_ERR     CONodeGetErr      (CO_NODE *node);
-void       CONodeProcess     (CO_NODE *node);
-
-#if CO_OBJ_PARA_EN > 0
-int16_t CONodeParaLoad    (CO_NODE *node, CO_NMT_RESET type);
-#endif
-
-/*
-****************************************************************************************************
-*                                  INTERNAL FUNCTION PROTOTYPES
-****************************************************************************************************
+/*! \brief  START NODE
+*
+*    This function will finish the initialization phase. The node will change
+*    into PRE-OPERATIONAL state and is ready for communication.
+*
+* \param node
+*    pointer to the CANopen node object
 */
+void CONodeStart(CO_NODE *node);
 
-#if CO_CB_FATAL_ERROR_EN == 0
-void       CO_NodeFatalError (void);
-#endif
+/*! \brief  STOP NODE
+*
+*    This function will stop all communication activities and removes the
+*    CANopen node from the CAN bus interface.
+*
+* \note
+*    To reactivate a stopped CANopen node, the functions \ref CONodeInit()
+*    and \ref CONodeStart() must be called again.
+*
+* \param node
+*    pointer to the CANopen node object
+*/
+void CONodeStop(CO_NODE *node);
+
+/*! \brief  GET NODE ERROR
+*
+*    This function returns the current error status of the given node. If an
+*    error was detected, the error is cleared with this function call.
+*
+* \param node
+*    pointer to the CANopen node object
+*
+* \return
+*    One of the error codes in \ref CO_ERR
+*/
+CO_ERR CONodeGetErr(CO_NODE *node);
+
+/*! \brief  CAN RECEIVE PROCESSING
+*
+*    This function processes one received CAN frame from the given CAN node
+*    and initiates the specific protocol activity. If the CAN frame is not
+*    handled by the stack, the user will get this CAN frame into the
+*    (optional) callback function \see CO_IfReceive()
+*
+* \param node
+*    Ptr to node info
+*/
+void CONodeProcess(CO_NODE *node);
+
+/*! \brief LOAD PARAMETER FROM NVM
+*
+*    This function is responsible for the loading of all parameter groups
+*    with the given type. The single parameter group(s) will be loaded from
+*    NVM by calling the user application callback function \ref CO_ParaLoad().
+*
+* \note
+*    This function considers all parameter groups, which are linked to the
+*    parameter store index (1010h) within the object directory. Every not
+*    linked parameter group is not scope of this function and must be handled
+*    within the application.
+*
+* \param node
+*    Ptr to node info
+*
+* \param type
+*    Reset type, e.g. CO_RESET_COM or CO_RESET_NODE
+*
+* \retval  =0    loading successful
+* \retval  <0    an error is detected and function aborted
+*/
+int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type);
+
+/******************************************************************************
+* CALLBACK FUNCTIONS
+******************************************************************************/
+
+/*! \brief  FATAL ERROR CALLBACK
+*
+*    This function is called, after detecting a fatal error within the
+*    stack, and no way out of the situation ('panic'). The function is
+*    intended to allow the implementation of a pre-defined shutdown sequence
+*    and setting the device in a safe state.
+*/
+extern void CONodeFatalError(void);
 
 #ifdef __cplusplus
 }

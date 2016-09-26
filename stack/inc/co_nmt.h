@@ -1,149 +1,520 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_nmt.h
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    NMT SLAVE DEFINITIONS
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_nmt.h#3 $
-*
-*           This include file defines the symbolic constants and data types for the CANopen NMT
-*           handling.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
 #ifndef CO_NMT_H_
 #define CO_NMT_H_
+
+/******************************************************************************
+* INCLUDES
+******************************************************************************/
+
+#include "co_obj.h"
+#include "co_if.h"
+#include "co_err.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/******************************************************************************
+* PuBLIC INCLUDES
+******************************************************************************/
 
-#include "co_obj.h"
-#include "co_if.h"
+#define CO_NMT_ALLOWED   0x01    /*!< indication of NMT transfers allowed    */
+#define CO_BOOT_ALLOWED  0x02    /*!< indication of BOOT transfers allowed   */
+#define CO_EMCY_ALLOWED  0x04    /*!< indication of EMCY transfers allowed   */
+#define CO_TIME_ALLOWED  0x08    /*!< indication of TIME transfers allowed   */
+#define CO_SYNC_ALLOWED  0x10    /*!< indication of SYNC transfers allowed   */
+#define CO_SDO_ALLOWED   0x20    /*!< indication of SDO transfers allowed    */
+#define CO_PDO_ALLOWED   0x40    /*!< indication of PDO transfers allowed    */
 
-/*
-****************************************************************************************************
-*                                             DEFINES
-****************************************************************************************************
-*/
+#define CO_THB_PROD    ((CO_OBJ_TYPE *)&COTNmtHbProd) /*!< Object Type Heartbeat Producer         */
+#define CO_THEARTBEAT  CO_THB_PROD                    /*!< Definition for backward compatibility  */
+#define CO_THB_CONS    ((CO_OBJ_TYPE *)&COTNmtHbCons) /*!< Object Type Heartbeat Consumer         */
 
-#define CO_NMT_ALLOWED   0x01                         /*!< indication of NMT transfers allowed    */
-#define CO_BOOT_ALLOWED  0x02                         /*!< indication of BOOT transfers allowed   */
-#define CO_EMCY_ALLOWED  0x04                         /*!< indication of EMCY transfers allowed   */
-#define CO_TIME_ALLOWED  0x08                         /*!< indication of TIME transfers allowed   */
-#define CO_SYNC_ALLOWED  0x10                         /*!< indication of SYNC transfers allowed   */
-#define CO_SDO_ALLOWED   0x20                         /*!< indication of SDO transfers allowed    */
-#define CO_PDO_ALLOWED   0x40                         /*!< indication of PDO transfers allowed    */
+/******************************************************************************
+* PUBLIC CONSTANTS
+******************************************************************************/
 
-/*
-****************************************************************************************************
-*                                       TYPE DEFINITIONS
-****************************************************************************************************
-*/
+extern const CO_OBJ_TYPE COTNmtHbCons;
+extern const CO_OBJ_TYPE COTNmtHbProd;
 
-/*------------------------------------------------------------------------------------------------*/
+/******************************************************************************
+* PUBLIC TYPES
+******************************************************************************/
+
+struct CO_NODE_T;
+struct CO_HBCONS_T;
+
 /*! \brief RESET TYPE
 *
-* \ingroup NMT
-*
-*          This enumeration holds all possible reset types.
+*    This enumeration holds all possible reset types.
 */
-/*------------------------------------------------------------------------------------------------*/
 typedef enum CO_NMT_RESET_T {
-    CO_RESET_NODE = 0,                                /*!< reset application (and communication)  */
-    CO_RESET_COM,                                     /*!< reset communication                    */
+    CO_RESET_NODE = 0,           /*!< reset application (and communication)  */
+    CO_RESET_COM,                /*!< reset communication                    */
+    CO_RESET_NUM                 /*!< number of reset types                  */
 
-    CO_RESET_NUM                                      /*!< number of reset types                  */
 } CO_NMT_RESET;
 
-/*------------------------------------------------------------------------------------------------*/
 /*! \brief DEVICE MODE
 *
-* \ingroup NMT
-*
-*          This enumeration holds all possible CANopen device modes.
+*    This enumeration holds all possible CANopen device modes.
 */
-/*------------------------------------------------------------------------------------------------*/
 typedef enum CO_MODE_T {
-    CO_INVALID = 0,                                   /*!< device in INVALID mode                 */
-    CO_INIT,                                          /*!< device in INIT mode                    */
-    CO_PREOP,                                         /*!< device in PRE-OPERATIONAL mode         */
-    CO_OPERATIONAL,                                   /*!< device in OPERATIONAL mode             */
-    CO_STOP,                                          /*!< device in STOP mode                    */
-    CO_MODE_NUM                                       /*!< number of device modes                 */
+    CO_INVALID = 0,              /*!< device in INVALID mode                 */
+    CO_INIT,                     /*!< device in INIT mode                    */
+    CO_PREOP,                    /*!< device in PRE-OPERATIONAL mode         */
+    CO_OPERATIONAL,              /*!< device in OPERATIONAL mode             */
+    CO_STOP,                     /*!< device in STOP mode                    */
+    CO_MODE_NUM                  /*!< number of device modes                 */
 
 } CO_MODE;
 
-/*------------------------------------------------------------------------------------------------*/
 /*! \brief NMT MANAGEMENT
 *
-* \ingroup NMT
-*
-*          This structure holds all data, which are needed for the NMT state machine management.
+*    This structure holds all data, which are needed for the NMT state
+*    machine management.
 */
-/*------------------------------------------------------------------------------------------------*/
 typedef struct CO_NMT_T {
-    struct CO_NODE_T   *Node;                         /*!< ptr to parent CANopen node info        */
-    struct CO_HBCONS_T *HbCons;                       /*!< The used heartbeat consumer chain      */
-    enum CO_MODE_T      Mode;                         /*!< NMT mode of this node                  */
-    int16_t          Tmr;                          /*!< heartbeat producer timer identifier    */
-    uint8_t          Allowed;                      /*!< encoding of allowed CAN objects        */
+    struct CO_NODE_T   *Node;    /*!< ptr to parent CANopen node info        */
+    struct CO_HBCONS_T *HbCons;  /*!< The used heartbeat consumer chain      */
+    enum CO_MODE_T      Mode;    /*!< NMT mode of this node                  */
+    int16_t             Tmr;     /*!< heartbeat producer timer identifier    */
+    uint8_t             Allowed; /*!< encoding of allowed CAN objects        */
 
 } CO_NMT;
 
-/*
-****************************************************************************************************
-*                                       FUNCTION PROTOTYPES
-****************************************************************************************************
+/*! \brief HEARTBEAT CONSUMER STRUCTURE
+*
+*    This structure holds all data, which are needed for the heartbeat
+*    consumer handling within the object directory.
 */
+typedef struct CO_HBCONS_T {
+    struct CO_NODE_T   *Node;    /*!< Link to parent node                    */
+    struct CO_HBCONS_T *Next;    /*!< Link to next consumer in active chain  */
+    CO_MODE             State;   /*!< Received Node-State                    */
+    int16_t             Tmr;     /*!< Timer Identifier                       */
+    uint16_t            Time;    /*!< Time   (Bit00-15 when read object)     */
+    uint8_t             NodeId;  /*!< NodeId (Bit16-23 when read object)     */
+    uint8_t             Event;   /*!< Event Counter                          */
 
-void       CONmtReset       (CO_NMT *nmt, CO_NMT_RESET type);
-void       CONmtSetMode     (CO_NMT *nmt, CO_MODE mode);
-CO_MODE    CONmtGetMode     (CO_NMT *nmt);
-void       CONmtSetNodeId   (CO_NMT *nmt, uint8_t nodeId);
-uint8_t CONmtGetNodeId   (CO_NMT *nmt);
+} CO_HBCONS;
 
-CO_MODE    CONmtModeDecode  (uint8_t code);
-uint8_t CONmtModeEncode  (CO_MODE mode);
+/******************************************************************************
+* PUBLIC FUNCTIONS
+******************************************************************************/
 
-/*
-****************************************************************************************************
-*                                   INTERNAL FUNCTION PROTOTYPES
-****************************************************************************************************
+/*! \brief  RESET DEVICE
+*
+*    This function resets the CANopen device with the given type.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param type
+*    the requested NMT reset type.
 */
+void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type);
 
-void       CO_NmtInit       (CO_NMT *nmt, struct CO_NODE_T *node);
-void       CO_NmtBootup     (CO_NMT *nmt);
-int16_t CO_NmtCheck      (CO_NMT *nmt, CO_IF_FRM *frm);
-
-/*
-****************************************************************************************************
-*                                  CALLBACK FUNCTION PROTOTYPES
-****************************************************************************************************
+/*! \brief  SET CURRENT MODE
+*
+*    This function sets the requested CANopen NMT state machine mode.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param mode
+*    the requested NMT mode.
 */
+void CONmtSetMode(CO_NMT *nmt, CO_MODE mode);
 
-void       CO_NmtModeChange (CO_NMT *nmt, CO_MODE mode);
+/*! \brief  GET CURRENT MODE
+*
+*    This function returns the current CANopen NMT state machine mode.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \retval  >0    The current NMT mode
+* \retval  =0    An error is detected
+*/
+CO_MODE CONmtGetMode(CO_NMT *nmt);
+
+/*! \brief  SET NODE-ID
+*
+*    This function sets the requested CANopen Node-ID within the NMT module.
+*
+* \note
+*    The following error are detected within this function:
+*    - CO_ERR_NMT_MODE: the CANopen device is not in INIT mode
+*    - CO_ERR_BAD_ARG: the given nodeId is invalid (e.g. zero)
+*    
+* \note
+*    If one of these errors is detected, this function call will change 
+*    nothing.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param nodeId
+*    the requested NMT node ID
+*/
+void CONmtSetNodeId(CO_NMT *nmt, uint8_t nodeId);
+
+/*! \brief  GET NODE-ID
+*
+*    This function returns the current CANopen Node-ID of the NMT module.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \retval  =0    An error is detected
+* \retval  >0    The current NMT node ID
+*/
+uint8_t CONmtGetNodeId(CO_NMT *nmt);
+
+/*! \brief  DECODE NODE-STATE
+*
+*    This function returns the CANopen mode to the given heartbeat state encoding.
+*
+* \param code
+*    heartbeat state 
+*
+* \retval  =CO_INVALID    An error is detected
+* \retval  >0             The corresponding NMT heartbeat state
+*/
+CO_MODE CONmtModeDecode(uint8_t code);
+
+/*! \brief  ENCODE NODE-STATE
+*
+*    This function returns the heartbeat state code for the given CANopen mode.
+*
+* \param mode
+*    CANopen mode
+*
+* \return
+*     The corresponding NMT heartbeat state code.
+*/
+uint8_t CONmtModeEncode(CO_MODE mode);
+
+/*! \brief  GET NUMBER OF HEARTBEAT EVENTS
+*
+*    This function retuns the number of heartbeat (miss-)events, which are
+*    detected since the last call of this function or initializing the node.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param nodeId
+*    node ID of monitored node (or 0 for master node)
+*
+* \retval  >=0    number of detected heartbeat events for given node ID
+* \retval   <0    error detected (e.g. node ID is not monitored)
+*/
+int16_t CONmtGetHbEvents(CO_NMT *nmt, uint8_t nodeId);
+
+/*! \brief  GET LAST RECEIVED HEARTBEAT STATE
+*
+*    This function returns the last received heartbeat state of a given node.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param nodeId
+*    node ID of monitored node
+*
+* \retval  !=CO_INVALID    last detected heartbeat state for given node ID
+* \retval   =CO_INVALID    error detected (e.g. node ID is not monitored)
+*/
+CO_MODE CONmtLastHbState(CO_NMT *nmt, uint8_t nodeId);
+
+/******************************************************************************
+* PRIVATE FUNCTIONS
+******************************************************************************/
+
+/*! \brief  NMT SLAVE INITIALIZATION
+*
+*    This function initializes the CANopen NMT environment.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param node
+*    pointer to parent node structure
+*/
+void CO_NmtInit(CO_NMT *nmt, struct CO_NODE_T *node);
+
+/*! \brief  BOOTUP EVENT
+*
+*    This function performs the bootup protocol to the configured CAN bus.
+*    This protocol is used to signal that a NMT slave has entered the node
+*    state PRE-OPERATIONAL after the state INITIALISING.
+*
+* \param nmt
+*    reference to NMT structure
+*/
+void CO_NmtBootup(CO_NMT *nmt);
+
+/*! \brief  NMT MESSAGE CHECK
+*
+*    This functions checks a received frame to be a NMT message.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param frm
+*    received CAN frame
+*
+* \retval  =0    check function successful
+* \retval  <0    mesage is not an NMT message
+*/
+int16_t CO_NmtCheck(CO_NMT *nmt, CO_IF_FRM *frm);
+
+/*! \brief  HEARTBEAT PRODUCER INITIALIZATION
+*
+*    This function initializes the CANopen heartbeat producer.
+*
+* \param nmt
+*    reference to NMT structure
+*/
+void CO_NmtHbProdInit(CO_NMT *nmt);
+
+/*! \brief  HEARTBEAT PROTOCOL
+*
+*    This function is a (Timerevent-)callback function. The heartbeat
+*    message will be generated and sent to the configured CAN bus.
+*
+* \param parg
+*    reference to NMT structure
+*/
+void CO_NmtHbProdSend(void *parg);
+
+/*! \brief  HEARTBEAT CONSUMER INITIALIZATION
+*
+*    This function initializes the CANopen heartbeat consumer.
+*
+* \param nmt
+*    reference to NMT structure
+*/
+void CO_NmtHbConsInit(CO_NMT *nmt);
+
+/*! \brief  HEARTBEAT CONSUMER ACTIVATION
+*
+*    This function activates a single heartbeat consumer.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param hbc
+*    reference to heartbeat consumer structure
+*
+* \retval   =CO_ERR_NONE    successfull activated, or consumer is deactivated
+*                           by command
+* \retval  !=CO_ERR_NONE    error detected (double activation, timer delete
+*                           problem)
+*/
+CO_ERR CO_NmtHbConsActivate(CO_NMT    *nmt, 
+                            CO_HBCONS *hbc,
+                            uint16_t   time,
+                            uint8_t    nodeid);
+
+/*! \brief  HEARTBEAT CONSUMER CHECK
+*
+*    This function checks a received CAN frame against all heartbeat
+*    consumers and increments the receive counter in the specific
+*    consumer monitor.
+*
+* \note
+*    We allow the nodeID 0 for heartbeat consuming, because CANopen master
+*    heartbeat may come with this nodeID.
+*
+* \param frm
+*    reference to CAN frame structure
+*
+* \param nmt
+*    pointer to network management structure
+*
+* \retval   <0    CAN message is not a matching heartbeat message
+* \retval  >=0    CAN message is a matching (and consumed) heartbeat message.
+*                 The return value is equal to the consumer node-ID
+*/
+int16_t CO_NmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm);
+
+/*! \brief  HEARTBEAT CONSUMER TIMEOUT
+*
+*    This timer callback function checks that at least one received heartbeat 
+*    is detected for this heartbeat consumer.
+*
+* \param parg
+*    heartbeat consumer structure
+*/
+void CO_NmtHbConsMonitor(void *parg);
+
+/*! \brief  WRITE HEARTBEAT CONSUMER CONFIG
+*
+*    This function is a typed object write function, special for object
+*    entry 1016. This entry defines the expected rate of the heartbeat
+*    message of a specific node.
+*
+* \param obj
+*    ptr to accessed object entry
+*
+* \param buf
+*    ptr to write value
+*
+* \param size
+*    size of write value
+*
+* \retval  CO_ERR_NONE       heartbeat consumer config is written
+* \retval  CO_ERR_TYPE_WR    an error is detected and function aborted
+*/
+int16_t CO_TNmtHbConsWrite(CO_OBJ *obj, void *buf, uint32_t size);
+
+/*! \brief READ HEARTBEAT CONSUMER CONFIG
+*
+*    This function is a typed object read function, special for object
+*    entry 1016. This entry defines the expected rate of the heartbeat
+*    message of a specific node.
+*
+* \param obj
+*    ptr to accessed object entry
+*
+* \param buf
+*    ptr to write value
+*
+* \param len
+*    size of write value
+*
+* \retval   =CO_ERR_NONE    Successfully operation
+* \retval  !=CO_ERR_NONE    An error is detected
+*/
+int16_t CO_TNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len);
+
+/*! \brief  WRITE HEARTBEAT PRODUCER TIME
+*
+*    This function is a typed object write function, special for object
+*    entry 1017. This entry defines the refresh rate of the heartbeat message.
+*
+* \param obj
+*    ptr to accessed object entry
+*
+* \param buf
+*    ptr to write value
+*
+* \param size
+*    size of write value
+*
+* \retval   >0    heartbeat cycle time write successful
+* \retval  <=0    an error is detected and function aborted
+*/
+int16_t CO_TNmtHbProdWrite(CO_OBJ *obj, void *buf, uint32_t size);
+
+/******************************************************************************
+* CALLBACK FUNCTIONS
+******************************************************************************/
+
+/*! \brief NMT MODE CHANGE CALLBACK
+*
+*    This function is called when the NMT mode is changed.
+*
+* \note
+*    This implementation is an example implementation, which will do nothing.
+*    This function is optional and application specific. The function can be
+*    implemented somewhere in the in the application code. The activation of
+*    the application callback function is done with \ref CO_CB_NMT_CHANGE_EN.
+*
+* \note
+*    When disabling the application callback function, this example
+*    implementation is enabled, but not called. In fact: disabling the
+*    application function will remove the callback function call in the
+*    NMT mode management.
+*
+* \note
+*    The nmt object pointer is checked to be valid before calling this
+*    function.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param mode
+*    the new mode
+*/
+void CO_NmtModeChange(CO_NMT *nmt, CO_MODE mode);
+
+/*! \brief HEARTBEAT CONSUMER EVENT CALLBACK
+*
+*    This function is called when a heartbeat consumer monitor timer
+*    elapses, before receiving the corresponding heartbeat message.
+*
+* \note
+*    This implementation is an example implementation, which will do nothing.
+*    This function is optional and application specific. The function can be
+*    implemented somewhere in the in the application code. The activation of
+*    the application callback function is done with \ref CO_CB_HBC_EVENT_EN.
+*
+* \note
+*    When disabling the application callback function, this example
+*    implementation is enabled, but not called. In fact: disabling the
+*    application function will remove the callback function call in the
+*    consumer monitor processing.
+*
+* \note
+*    The node pointer is checked to be valid before calling this function.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param nodeId
+*    The nodeId of the missed heartbeat message
+*/
+void CO_NmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
+
+/*! \brief HEARTBEAT CONSUMER STATE CHANGE CALLBACK
+*
+*    This function is called when a heartbeat consumer monitor detects a
+*    state change, of a monitored node.
+*
+* \note
+*    This implementation is an example implementation, which will do nothing.
+*    This function is optional and application specific. The function can be
+*    implemented somewhere in the in the application code. The activation of
+*    the application callback function is done with \ref CO_CB_HBC_CHANGE_EN.
+*
+* \note
+*    When disabling the application callback function, this example
+*    implementation is enabled, but not called. In fact: disabling the
+*    application function will remove the callback function call in the
+*    consumer monitor processing.
+*
+* \note
+*    The node pointer is checked to be valid before calling this function.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param nodeId
+*    The nodeId of the monitored node
+*
+* \param mode
+*    The new received node state of the monitored node
+*/
+void CO_NmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
 
 #ifdef __cplusplus
 }

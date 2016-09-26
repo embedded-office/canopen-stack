@@ -1,30 +1,20 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_ver.h
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    CANOPEN IDENTIFICATION DEFINITION
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_ver.h#2 $
-*
-*           This include file defines the symbolic constants and data types for the CANopen
-*           version identifivation.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
 #ifndef CO_VER_H_
 #define CO_VER_H_
@@ -33,29 +23,23 @@
 extern "C" {
 #endif
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/******************************************************************************
+* INCLUDES
+******************************************************************************/
 
 #include "co_types.h"
 
-/*
-****************************************************************************************************
-*                                             DEFINES
-****************************************************************************************************
-*/
+/******************************************************************************
+* DEFINES
+******************************************************************************/
 
 #define CO_VER_MAJOR          3
 #define CO_VER_MINOR          3
 #define CO_VER_BUILD          0
 
-/*
-****************************************************************************************************
-*                                        FUNCTION PROTOTYPE
-****************************************************************************************************
-*/
+/******************************************************************************
+* PUBLIC FUNCTIONS
+******************************************************************************/
 
 uint8_t  COVerMajor   (void);
 uint8_t  COVerMinor   (void);

@@ -1,515 +1,327 @@
-/*
-****************************************************************************************************
-* (c) copyright by
-*     Embedded Office GmbH & Co. KG       Tel : (07522) 97 00 08-0
-*     Friedrich-Ebert-Str. 20/1           Fax : (07522) 97 00 08-99
-*     D-88239 Wangen                      Mail: info@embedded-office.de
-*                                         Web : http://www.embedded-office.de
+/******************************************************************************
+* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+*------------------------------------------------------------------------------
+* This file is part of CANopenStack, an open source CANopen Stack.
+* Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
+* For more information on CANopen see < http ://www.can-cia.org/>.
 *
-* All rights reserved. Confidential and Proprietary. Protected by international copyright laws.
-* Knowledge of the source code may not be used to write a similar product.
-* This file may only be used in accordance with a license and should not be
-* redistributed in any way.
-****************************************************************************************************
-*/
-/*!
-****************************************************************************************************
-* \file     co_dir.c
+* CANopenStack is free and open source software: you can redistribute
+* it and / or modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation, either version 2 of the
+* License, or (at your option) any later version.
 *
-* \brief    OBJECT DIRECTORY
-*
-*  $Id: //stream_uccanopen/_root/uccanopen/source/co_dir.c#3 $
-*
-*           This source file implements the CANopen object directory management functions.
-****************************************************************************************************
-*/
-/*----------------------------------------END OF HEADER-------------------------------------------*/
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+******************************************************************************/
 
-/*
-****************************************************************************************************
-*                                             INCLUDES
-****************************************************************************************************
-*/
+/******************************************************************************
+* INCLUDES
+******************************************************************************/
 
+#include "co_dir.h"
+
+#include "co_obj.h"
 #include "co_core.h"
 
-/*
-****************************************************************************************************
-*                                            FUNCTIONS
-****************************************************************************************************
-*/
+/******************************************************************************
+* FUNCTIONS
+******************************************************************************/
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  FIND OBJECT ENTRY IN DIRECTORY
-*
-* \ingroup  API
-*
-*           This function searches the given key within the given object directory.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \retval          >0    The pointer to the identified object entry
-* \retval          =0    Addressed object was not found
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
 CO_OBJ *CODirFind(CO_DIR *cod, uint32_t key)
 {
-    CO_OBJ     *result = 0;                           /* Local: function result                   */
-    CO_OBJ     *obj    = 0;                           /* Local: ptr to object entry               */
-    int32_t  start  = 0;                           /* Local: start of searching                */
-    int32_t  end;                                  /* Local: end of searching                  */
-    int32_t  center;                               /* Local: center of searching               */
-                                                      /*------------------------------------------*/
-    if (cod == 0) {                                   /* see, if the object directory ptr is bad  */
-        cod->Node->Error = CO_ERR_BAD_ARG;            /* set error code information               */
-        return (result);                              /* abort searching                          */
+    CO_OBJ  *result = 0;
+    CO_OBJ  *obj    = 0;
+    int32_t  start  = 0;
+    int32_t  end;
+    int32_t  center;
+
+    if (cod == 0) {
+        cod->Node->Error = CO_ERR_BAD_ARG;
+        return (result);
     }
-    if (key == 0) {                                   /* see, if key is invalid                   */
-        cod->Node->Error = CO_ERR_BAD_ARG;            /* set error code information               */
-        return (result);                              /* abort searching                          */
-    }                                                 /*------------------------------------------*/
-    key = CO_GET_DEV(key);                            /* ensure that key includes only idx/subidx */
-    end = cod->Num;                                   /* set end to number of entries             */
-    while (start <= end) {                            /* binary search algorithm                  */
+    if (key == 0) {
+        cod->Node->Error = CO_ERR_BAD_ARG;
+        return (result);
+    }
+
+    key = CO_GET_DEV(key);
+    end = cod->Num;
+    while (start <= end) {
         center = start + ((end - start) / 2);
-        obj    = &(cod->Root[center]);                /* set to center object entry               */
-        if (CO_GET_DEV(obj->Key) == key) {            /* see, if object device equal given device */
-            result = obj;                             /* return current object                    */
-            break;                                    /* break the loop                           */
+        obj    = &(cod->Root[center]);
+        if (CO_GET_DEV(obj->Key) == key) {
+            result = obj;
+            break;
         }
-        if (CO_GET_DEV(obj->Key) > key) {             /* see, if wanted device is in leading half */
-            end    = center - 1;                      /* next search in the leading half          */
-        } else {                                      /* searching entry is in the rear half      */
-            start  = center + 1;                      /* next search in the rear half             */
+        if (CO_GET_DEV(obj->Key) > key) {
+            end    = center - 1;
+        } else {
+            start  = center + 1;
         }
-    }                                                 /*------------------------------------------*/
-    if (result == 0) {                                /* see, if object is not found              */
-        cod->Node->Error = CO_ERR_OBJ_NOT_FOUND;      /* set error code information               */
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
-}
+    }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  READ BYTE FROM OBJECT DIRECTORY
-*
-* \ingroup  API
-*
-*           This function reads a 8bit value from the given object directory. The object
-*           entry is addressed with the given key and the value will be written to the
-*           given destination pointer.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \param[in]       value         pointer to the value destination
-*
-* \retval          =CO_ERR_NONE    Successfully operation
-* \retval         !=CO_ERR_NONE    An error is detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *value)
-{
-    uint32_t  sz;                                   /* Local: size of object entry              */
-    int16_t  result = CO_ERR_OBJ_NOT_FOUND;                          /* Local: function result                   */
-    CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-                                                      /*------------------------------------------*/
-    if ((cod == 0) || (value == 0)) {                 /* see, if argument pointer is invalid      */
-        return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(cod, key);                        /* try to find key within object directory  */
-    if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (uint32_t)CO_BYTE);  /* get size of object entry                 */
-        if (sz != (uint32_t)CO_BYTE) {              /* see, if object size matches byte         */
-            cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
-            result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
-        } else {                                      /*------------------------------------------*/
-            result = COObjRdValue(obj,                /* read value into given destination        */
-                                  (void *)value,
-                                  CO_BYTE,
-                                  cod->Node->NodeId);
-            if (result != CO_ERR_NONE) {              /* see, if an error was detected            */
-                cod->Node->Error = CO_ERR_OBJ_READ;   /* set error code information               */
-            }
-        }
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
-}
+    if (result == 0) {
+        cod->Node->Error = CO_ERR_OBJ_NOT_FOUND;
+    }
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  READ WORD FROM OBJECT DIRECTORY
-*
-* \ingroup  API
-*
-*           This function reads a 16bit value from the given object directory. The object
-*           entry is addressed with the given key and the value will be written to the
-*           given destination pointer.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \param[in]       value         pointer to the value destination
-*
-* \retval          =CO_ERR_NONE    Successfully operation
-* \retval         !=CO_ERR_NONE    An error is detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *value)
-{
-    uint32_t  sz;                                   /* Local: size of object entry              */
-    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
-    CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-                                                      /*------------------------------------------*/
-    if ((cod == 0) || (value == 0)) {                 /* see, if argument pointer is invalid      */
-        return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(cod, key);                        /* try to find key within object directory  */
-    if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (uint32_t)CO_WORD);  /* get size of object entry                 */
-        if (sz != (uint32_t)CO_WORD) {              /* see, if object size matches word         */
-            cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
-            result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
-        } else {                                      /*------------------------------------------*/
-            result = COObjRdValue(obj,                /* read value into given destination        */
-                                  (void *)value,
-                                  CO_WORD,
-                                  cod->Node->NodeId);
-            if (result != CO_ERR_NONE) {              /* see, if an error was detected            */
-                cod->Node->Error = CO_ERR_OBJ_READ;   /* set error code information               */
-            }
-        }
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  READ LONG FROM OBJECT DIRECTORY
-*
-* \ingroup  API
-*
-*           This function reads a 32bit value from the given object directory. The object
-*           entry is addressed with the given key and the value will be written to the
-*           given destination pointer.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \param[in]       value         pointer to the value destination
-*
-* \retval          =CO_ERR_NONE    Successfully operation
-* \retval         !=CO_ERR_NONE    An error is detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *value)
-{
-    uint32_t  sz;                                   /* Local: size of object entry              */
-    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
-    CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-                                                      /*------------------------------------------*/
-    if ((cod == 0) || (value == 0)) {                 /* see, if argument pointer is invalid      */
-        return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(cod, key);                        /* try to find key within object directory  */
-    if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (uint32_t)CO_LONG);  /* get size of object entry                 */
-        if (sz != (uint32_t)CO_LONG) {              /* see, if object size matches long         */
-            cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
-            result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
-        } else {                                      /*------------------------------------------*/
-            result = COObjRdValue(obj,                /* read value into given destination        */
-                                  (void *)value,
-                                  CO_LONG,
-                                  cod->Node->NodeId);
-            if (result != CO_ERR_NONE) {              /* see, if an error was detected            */
-                cod->Node->Error = CO_ERR_OBJ_READ;   /* set error code information               */
-            }
-        }
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  WRITE BYTE TO OBJECT DIRECTORY
-*
-* \ingroup  API
-*
-*           This function writes a 8bit value to the given object directory. The object
-*           entry is addressed with the given key and the value will be read from the
-*           given source pointer.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \param[in]       value         the source value
-*
-* \retval          =CO_ERR_NONE    Successfully operation
-* \retval         !=CO_ERR_NONE    An error is detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t value)
-{
-    uint32_t  sz;                                   /* Local: size of object entry              */
-    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
-    CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-                                                      /*------------------------------------------*/
-    if (cod == 0) {                                   /* see, if argument pointer is invalid      */
-        return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(cod, key);                        /* try to find key within object directory  */
-    if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (uint32_t)CO_BYTE);  /* get size of object entry                 */
-        if (sz != (uint32_t)CO_BYTE) {              /* see, if object size matches byte         */
-            cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
-            result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
-        } else {                                      /*------------------------------------------*/
-            result = COObjWrValue(obj,                /* write value into object directory        */
-                                  (void *)&value,
-                                  CO_BYTE,
-                                  cod->Node->NodeId);
-            if (result != CO_ERR_NONE) {              /* see, if an error was detected            */
-                cod->Node->Error = CO_ERR_OBJ_WRITE;  /* set error code information               */
-            }
-        }
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  WRITE WORD TO OBJECT DIRECTORY
-*
-* \ingroup  API
-*
-*           This function writes a 16bit value to the given object directory. The object
-*           entry is addressed with the given key and the value will be read from the
-*           given source pointer.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \param[in]       value         the source value
-*
-* \retval          =CO_ERR_NONE    Successfully operation
-* \retval         !=CO_ERR_NONE    An error is detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t value)
-{
-    uint32_t  sz;                                   /* Local: size of object entry              */
-    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
-    CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-                                                      /*------------------------------------------*/
-    if (cod == 0) {                                   /* see, if argument pointer is invalid      */
-        return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(cod, key);                        /* try to find key within object directory  */
-    if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (uint32_t)CO_WORD);  /* get size of object entry                 */
-        if (sz != (uint32_t)CO_WORD) {              /* see, if object size matches word         */
-            cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
-            result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
-        } else {                                      /*------------------------------------------*/
-            result = COObjWrValue(obj,                /* write value into object directory        */
-                                  (void *)&value,
-                                  CO_WORD,
-                                  cod->Node->NodeId);
-            if (result != CO_ERR_NONE) {              /* see, if an error was detected            */
-                cod->Node->Error = CO_ERR_OBJ_WRITE;  /* set error code information               */
-            }
-        }
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  WRITE LONG TO OBJECT DIRECTORY
-*
-* \ingroup  API
-*
-*           This function writes a 32bit value to the given object directory. The object
-*           entry is addressed with the given key and the value will be read from the
-*           given source pointer.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \param[in]       value         the source value
-*
-* \retval          =CO_ERR_NONE    Successfully operation
-* \retval         !=CO_ERR_NONE    An error is detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t value)
-{
-    uint32_t  sz;                                   /* Local: size of object entry              */
-    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
-    CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-                                                      /*------------------------------------------*/
-    if (cod == 0) {                                   /* see, if argument pointer is invalid      */
-        return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(cod, key);                        /* try to find key within object directory  */
-    if (obj != 0) {                                   /* see, if object entry was found           */
-        sz = COObjGetSize(obj, (uint32_t)CO_LONG);  /* get size of object entry                 */
-        if (sz != (uint32_t)CO_LONG) {              /* see, if object size matches long         */
-            cod->Node->Error = CO_ERR_OBJ_SIZE;       /* set error code information               */
-            result           = CO_ERR_OBJ_SIZE;       /* indicate error                           */
-        } else {                                      /*------------------------------------------*/
-            result = COObjWrValue(obj,                /* write value into object directory        */
-                                  (void *)&value,
-                                  CO_LONG,
-                                  cod->Node->NodeId);
-            if (result != CO_ERR_NONE) {              /* see, if an error was detected            */
-                cod->Node->Error = CO_ERR_OBJ_WRITE;  /* set error code information               */
-            }
-        }
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  READ BUFFER FROM OBJECT DIRECTORY
-*
-* \ingroup  API
-*
-*           This function reads a buffer byte stream from the given object directory. The
-*           object entry is addressed with the given key and the bytes will be read from
-*           the given destination buffer of the given length.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \param[in,out]   buffer        pointer to the destination buffer
-*
-* \param[in]       len           length of destination buffer
-*
-* \retval          =CO_ERR_NONE    Successfully operation
-* \retval         !=CO_ERR_NONE    An error is detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buffer, uint32_t len)
-{
-    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
-    CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-                                                      /*------------------------------------------*/
-    if ((cod == 0) || (buffer == 0)) {                /* see, if argument pointer is invalid      */
-        return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(cod, key);                        /* try to find key within object directory  */
-    if (obj != 0) {                                   /* see, if object entry was found           */
-        result = COObjRdBufStart(obj,                 /* read buffer from object directory        */
-                                 (void *)buffer,
-                                 (uint8_t)len);
-        if (result != CO_ERR_NONE) {                  /* see, if an error was detected            */
-            cod->Node->Error = CO_ERR_OBJ_READ;       /* set error code information               */
-        }
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  WRITE BUFFER TO OBJECT DIRECTORY
-*
-* \ingroup  API
-*
-*           This function writes a buffer byte stream to the given object directory. The object
-*           entry is addressed with the given key and the bytes will be read from to the
-*           given source buffer of the given length.
-*
-* \param[in,out]   cod           pointer to the CANopen object directory
-*
-* \param[in]       key           object entry key; should be generated with the macro CO_DEV()
-*
-* \param[in]       buffer        pointer to the source bytes
-*
-* \param[in]       len           length of byte buffer
-*
-* \retval          =CO_ERR_NONE    Successfully operation
-* \retval         !=CO_ERR_NONE    An error is detected
-*/
-/*------------------------------------------------------------------------------------------------*/
-int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buffer, uint32_t len)
-{
-    int16_t  result = CO_ERR_OBJ_NOT_FOUND;        /* Local: function result                   */
-    CO_OBJ     *obj;                                  /* Local: ptr to object entry               */
-                                                      /*------------------------------------------*/
-    if ((cod == 0) || (buffer == 0)) {                /* see, if argument pointer is invalid      */
-        return (CO_ERR_BAD_ARG);                      /* abort function with error indication     */
-    }                                                 /*------------------------------------------*/
-    obj = CODirFind(cod, key);                        /* try to find key within object directory  */
-    if (obj != 0) {                                   /* see, if object entry was found           */
-        result = COObjWrBufStart(obj,                 /* write buffer into object directory       */
-                                 (void *)buffer,
-                                 (uint8_t)len);
-        if (result != CO_ERR_NONE) {                  /* see, if an error was detected            */
-            cod->Node->Error = CO_ERR_OBJ_WRITE;      /* set error code information               */
-        }
-    }                                                 /*------------------------------------------*/
-    return(result);                                   /* return function result                   */
+    return(result);
 }
 
 /*
-****************************************************************************************************
-*                                          INTERNAL FUNCTIONS
-****************************************************************************************************
+* see function definition
 */
+int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val)
+{
+    uint32_t sz;
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    CO_OBJ  *obj;
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  INIT OBJECT DIRECTORY
-*
-* \ingroup  INTERNAL
-*
-*           This function identifies the number of already configured object directory entries
-*           within the given object entry array, starting at the given address (root) with the
-*           given length (max).
-*
-*           The internal object directory information structure will be updated with the
-*           identified results and linked to the given node information structure.
-*
-* \param[in,out]   cod          pointer to object directory which must be initialized
-*
-* \param[in,out]   node         pointer to the CANopen device node information structure
-*
-* \param[in]       root         pointer to the start of the object entry array
-*
-* \param[in]       max          the length of the object entry array
-*
-* \retval   >=0  identified number of already configured object directory entries
-* \retval   <0   An argument error is detected.
+    if ((cod == 0) || (val == 0)) {
+        return (CO_ERR_BAD_ARG);
+    }
+
+    obj = CODirFind(cod, key);
+    if (obj != 0) {
+        sz = COObjGetSize(obj, (uint32_t)CO_BYTE);
+        if (sz != (uint32_t)CO_BYTE) {
+            cod->Node->Error = CO_ERR_OBJ_SIZE;
+            result           = CO_ERR_OBJ_SIZE;
+        } else {
+            result = COObjRdValue(obj, (void *)val, CO_BYTE, cod->Node->NodeId);
+            if (result != CO_ERR_NONE) {
+                cod->Node->Error = CO_ERR_OBJ_READ;
+            }
+        }
+    }
+
+    return(result);
+}
+
+/*
+* see function definition
 */
-/*------------------------------------------------------------------------------------------------*/
+int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val)
+{
+    uint32_t sz;
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    CO_OBJ  *obj;
+
+    if ((cod == 0) || (val == 0)) {
+        return (CO_ERR_BAD_ARG);
+    }
+
+    obj = CODirFind(cod, key);
+    if (obj != 0) {
+        sz = COObjGetSize(obj, (uint32_t)CO_WORD);
+        if (sz != (uint32_t)CO_WORD) {
+            cod->Node->Error = CO_ERR_OBJ_SIZE;
+            result           = CO_ERR_OBJ_SIZE;
+        } else {
+            result = COObjRdValue(obj, (void *)val, CO_WORD, cod->Node->NodeId);
+            if (result != CO_ERR_NONE) {
+                cod->Node->Error = CO_ERR_OBJ_READ;
+            }
+        }
+    }
+
+    return(result);
+}
+
+/*
+* see function definition
+*/
+int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val)
+{
+    uint32_t sz;
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    CO_OBJ  *obj;
+
+    if ((cod == 0) || (val == 0)) {
+        return (CO_ERR_BAD_ARG);
+    }
+    obj = CODirFind(cod, key);
+    if (obj != 0) {
+        sz = COObjGetSize(obj, (uint32_t)CO_LONG);
+        if (sz != (uint32_t)CO_LONG) {
+            cod->Node->Error = CO_ERR_OBJ_SIZE;
+            result           = CO_ERR_OBJ_SIZE;
+        } else {
+            result = COObjRdValue(obj, (void *)val, CO_LONG, cod->Node->NodeId);
+            if (result != CO_ERR_NONE) {
+                cod->Node->Error = CO_ERR_OBJ_READ;
+            }
+        }
+    }
+
+    return(result);
+}
+
+/*
+* see function definition
+*/
+int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val)
+{
+    uint32_t sz;
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    CO_OBJ  *obj;
+
+    if (cod == 0) {
+        return (CO_ERR_BAD_ARG);
+    }
+    obj = CODirFind(cod, key);
+    if (obj != 0) {
+        sz = COObjGetSize(obj, (uint32_t)CO_BYTE);
+        if (sz != (uint32_t)CO_BYTE) {
+            cod->Node->Error = CO_ERR_OBJ_SIZE;
+            result           = CO_ERR_OBJ_SIZE;
+        } else {
+            result = COObjWrValue(obj, (void *)&val, CO_BYTE, cod->Node->NodeId);
+            if (result != CO_ERR_NONE) {
+                cod->Node->Error = CO_ERR_OBJ_WRITE;
+            }
+        }
+    }
+
+    return(result);
+}
+
+/*
+* see function definition
+*/
+int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val)
+{
+    uint32_t sz;
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    CO_OBJ  *obj;
+
+    if (cod == 0) {
+        return (CO_ERR_BAD_ARG);
+    }
+
+    obj = CODirFind(cod, key);
+    if (obj != 0) {
+        sz = COObjGetSize(obj, (uint32_t)CO_WORD);
+        if (sz != (uint32_t)CO_WORD) {
+            cod->Node->Error = CO_ERR_OBJ_SIZE;
+            result           = CO_ERR_OBJ_SIZE;
+        } else {
+            result = COObjWrValue(obj, (void *)&val, CO_WORD, cod->Node->NodeId);
+            if (result != CO_ERR_NONE) {
+                cod->Node->Error = CO_ERR_OBJ_WRITE;
+            }
+        }
+    }
+
+    return(result);
+}
+
+/*
+* see function definition
+*/
+int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val)
+{
+    uint32_t sz;
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    CO_OBJ  *obj;
+
+    if (cod == 0) {
+        return (CO_ERR_BAD_ARG);
+    }
+
+    obj = CODirFind(cod, key);
+    if (obj != 0) {
+        sz = COObjGetSize(obj, (uint32_t)CO_LONG);
+        if (sz != (uint32_t)CO_LONG) {
+            cod->Node->Error = CO_ERR_OBJ_SIZE;
+            result           = CO_ERR_OBJ_SIZE;
+        } else {
+            result = COObjWrValue(obj, (void *)&val, CO_LONG, cod->Node->NodeId);
+            if (result != CO_ERR_NONE) {
+                cod->Node->Error = CO_ERR_OBJ_WRITE;
+            }
+        }
+    }
+
+    return(result);
+}
+
+/*
+* see function definition
+*/
+int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
+{
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    CO_OBJ  *obj;
+
+    if ((cod == 0) || (buf == 0)) {
+        return (CO_ERR_BAD_ARG);
+    }
+
+    obj = CODirFind(cod, key);
+    if (obj != 0) {
+        result = COObjRdBufStart(obj, (void *)buf, (uint8_t)len);
+        if (result != CO_ERR_NONE) {
+            cod->Node->Error = CO_ERR_OBJ_READ;
+        }
+    }
+
+    return(result);
+}
+
+int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
+{
+    int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    CO_OBJ  *obj;
+
+    if ((cod == 0) || (buf == 0)) {
+        return (CO_ERR_BAD_ARG);
+    }
+
+    obj = CODirFind(cod, key);
+    if (obj != 0) {
+        result = COObjWrBufStart(obj, (void *)buf, (uint8_t)len);
+        if (result != CO_ERR_NONE) {
+            cod->Node->Error = CO_ERR_OBJ_WRITE;
+        }
+    }
+
+    return(result);
+}
+
+/*
+* see function definition
+*/
 int16_t CO_DirInit(CO_DIR *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
 {
-    CO_OBJ     *obj;                                  /* Local: ptr to working object             */
-    uint16_t  num = 0;                              /* Local: num of valid objects in directory */
-                                                      /*------------------------------------------*/
-    if ((cod == 0) || (node == 0) || (root == 0)) {   /* see, if any ptr is invalid               */
-        CO_NodeFatalError();                          /* inform user                              */
-        return (-1);                                  /* return error indication                  */
+    CO_OBJ   *obj;
+    uint16_t  num = 0;
+
+    if ((cod == 0) || (node == 0) || (root == 0)) {
+        CONodeFatalError();
+        return (-1);
     }
-    if (max == 0) {                                   /* see, if directory size is invalid        */
-        node->Error = CO_ERR_BAD_ARG;                 /* set error code information               */
-        return (-1);                                  /* return error indication                  */
-    }                                                 /*------------------------------------------*/
-    obj = root;                                       /* start counting at given root object      */
-    while ((obj->Key != 0) && (num < max)) {          /* while object is valid & end not reached  */
-        if (obj->Type != 0) {                         /* see, if a type structure is referenced   */
-            obj->Type->Dir = cod;                     /* link this type to the object directory   */
+    if (max == 0) {
+        node->Error = CO_ERR_BAD_ARG;
+        return (-1);
+    }
+    obj = root;
+    while ((obj->Key != 0) && (num < max)) {
+        if (obj->Type != 0) {
+            obj->Type->Dir = cod;
         }
-        num++;                                        /* count object                             */
-        obj++;                                        /* goto next entry                          */
-    }                                                 /*------------------------------------------*/
-    cod->Root  = root;                                /* set ptr to root object                   */
-    cod->Num   = num;                                 /* set number of valid objects              */
-    cod->Max   = max;                                 /* set max. number of objects in directory  */
-    cod->Node  = node;                                /* set link to parent CANopen node          */
-                                                      /*------------------------------------------*/
-    return ((int16_t)num);                         /* return function result                   */
+        num++;
+        obj++;
+    }
+
+    cod->Root  = root;
+    cod->Num   = num;
+    cod->Max   = max;
+    cod->Node  = node;
+
+    return ((int16_t)num);
 }
