@@ -79,6 +79,7 @@ int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    uint8_t  nodeid;
     CO_OBJ  *obj;
 
     if ((cod == 0) || (val == 0)) {
@@ -92,7 +93,8 @@ int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val)
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
-            result = COObjRdValue(obj, (void *)val, CO_BYTE, cod->Node->NodeId);
+            nodeid = cod->Node->NodeId;
+            result = COObjRdValue(obj, (void *)val, CO_BYTE, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_READ;
             }
@@ -109,6 +111,7 @@ int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    uint8_t  nodeid;
     CO_OBJ  *obj;
 
     if ((cod == 0) || (val == 0)) {
@@ -122,7 +125,8 @@ int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val)
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
-            result = COObjRdValue(obj, (void *)val, CO_WORD, cod->Node->NodeId);
+            nodeid = cod->Node->NodeId;
+            result = COObjRdValue(obj, (void *)val, CO_WORD, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_READ;
             }
@@ -139,6 +143,7 @@ int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    uint8_t  nodeid;
     CO_OBJ  *obj;
 
     if ((cod == 0) || (val == 0)) {
@@ -151,7 +156,8 @@ int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val)
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
-            result = COObjRdValue(obj, (void *)val, CO_LONG, cod->Node->NodeId);
+            nodeid = cod->Node->NodeId;
+            result = COObjRdValue(obj, (void *)val, CO_LONG, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_READ;
             }
@@ -168,6 +174,7 @@ int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    uint8_t  nodeid;
     CO_OBJ  *obj;
 
     if (cod == 0) {
@@ -180,7 +187,8 @@ int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val)
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
-            result = COObjWrValue(obj, (void *)&val, CO_BYTE, cod->Node->NodeId);
+            nodeid = cod->Node->NodeId;
+            result = COObjWrValue(obj, (void *)&val, CO_BYTE, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_WRITE;
             }
@@ -197,6 +205,7 @@ int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    uint8_t  nodeid;
     CO_OBJ  *obj;
 
     if (cod == 0) {
@@ -210,7 +219,8 @@ int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val)
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
-            result = COObjWrValue(obj, (void *)&val, CO_WORD, cod->Node->NodeId);
+            nodeid = cod->Node->NodeId;
+            result = COObjWrValue(obj, (void *)&val, CO_WORD, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_WRITE;
             }
@@ -227,6 +237,7 @@ int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
+    uint8_t  nodeid;
     CO_OBJ  *obj;
 
     if (cod == 0) {
@@ -240,7 +251,8 @@ int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val)
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
-            result = COObjWrValue(obj, (void *)&val, CO_LONG, cod->Node->NodeId);
+            nodeid = cod->Node->NodeId;
+            result = COObjWrValue(obj, (void *)&val, CO_LONG, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_WRITE;
             }

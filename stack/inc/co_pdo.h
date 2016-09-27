@@ -236,7 +236,8 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num);
 *    Number of TPDO (0..511)
 *
 * \retval  =0    Mapping successful parsed out of object directory
-* \retval  <0    At least one error is detected within the mapping configuration
+* \retval  <0    At least one error is detected within the mapping
+*                configuration
 *
 * \internal
 */

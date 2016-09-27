@@ -148,7 +148,6 @@ int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val);
 */
 int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val);
 
-/*------------------------------------------------------------------------------------------------*/
 /*! \brief  WRITE WORD TO OBJECT DIRECTORY
 *
 *    This function writes a 16bit value to the given object directory. The
@@ -266,7 +265,6 @@ int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len);
 * \retval  >=0    identified number of already configured object directory
 *                 entries
 */
-/*------------------------------------------------------------------------------------------------*/
 int16_t CO_DirInit(CO_DIR *cod,
                    struct CO_NODE_T *node,
                    struct CO_OBJ_T *root,

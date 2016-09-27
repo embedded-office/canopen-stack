@@ -22,150 +22,83 @@
 
 #include "co_ver.h"
 
-/*
-****************************************************************************************************
-*                                          TYPE DEFINITIONS
-****************************************************************************************************
-*/
+/******************************************************************************
+* PRIVATE TYPES
+******************************************************************************/
 
 typedef struct CO_VER_T {
-    uint8_t Build;                                 /*!< version build number                   */
-    uint8_t Minor;                                 /*!< minor version number                   */
-    uint8_t Major;                                 /*!< major version number                   */
+    uint8_t Build;               /*!< version build number                   */
+    uint8_t Minor;               /*!< minor version number                   */
+    uint8_t Major;               /*!< major version number                   */
+
 } CO_VER;
 
-/*
-****************************************************************************************************
-*                                          LOCAL VARIABLES
-****************************************************************************************************
-*/
+/******************************************************************************
+* PRIVATE VARIABLES
+******************************************************************************/
 
 static CO_VER COVer = { 0L, 0, 0 };
 
-/*
-****************************************************************************************************
-*                                     LOCAL FUNCTION PROTOTYPES
-****************************************************************************************************
-*/
-
-static void CO_VerInit(void);
+/******************************************************************************
+* FUNCTIONS
+******************************************************************************/
 
 /*
-****************************************************************************************************
-*                                            FUNCTIONS
-****************************************************************************************************
+* see function definition
 */
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  GET MAJOR VERSION VALUE
-*
-* \ingroup  API
-*
-*           This function returns the major version value of the encoded version information:
-*
-*           Version <major>.<minor>.<build>-<change>
-*
-* \return   The major version value.
-*/
-/*------------------------------------------------------------------------------------------------*/
 uint8_t COVerMajor(void)
 {
-    if (COVer.Major == 0L) {                          /* see, if class CO_VER is not initialized  */
-        CO_VerInit();                                 /* yes: initialize static instance now      */
+    if (COVer.Major == 0L) {
+        CO_VerInit();
     }
-                                                      /*------------------------------------------*/
-    return COVer.Major;                               /* return function result                   */
-}
 
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  GET MINOR VERSION VALUE
-*
-* \ingroup  API
-*
-*           This function returns the minor version value of the encoded version information:
-*
-*           Version <major>.<minor>.<build>-<change>
-*
-* \return   The minor version value.
-*/
-/*------------------------------------------------------------------------------------------------*/
-uint8_t COVerMinor(void)
-{
-    if (COVer.Major == 0L) {                          /* see, if class CO_VER is not initialized  */
-        CO_VerInit();                                 /* yes: initialize static instance now      */
-    }
-                                                      /*------------------------------------------*/
-    return COVer.Minor;                               /* return function result                   */
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  GET BUILD VERSION VALUE
-*
-* \ingroup  API
-*
-*           This function returns the build version value of the encoded version information:
-*
-*           Version <major>.<minor>.<build>-<change>
-*
-* \return   The build version value.
-*/
-/*------------------------------------------------------------------------------------------------*/
-uint8_t COVerBuild(void)
-{
-    if (COVer.Major == 0L) {                          /* see, if class CO_VER is not initialized  */
-        CO_VerInit();                                 /* yes: initialize static instance now      */
-    }
-                                                      /*------------------------------------------*/
-    return COVer.Build;                               /* return function result                   */
-}
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  GET VERSION INFORMATION
-*
-* \ingroup  API
-*
-*           This function returns the compact version information of the encoded version
-*           information:
-*
-*           Version <major>.<minor>.<build>-<change>
-*
-*           in the following way:
-*
-*           Version Information =  <major> * 10000 + <minor> * 100 + <build>
-*
-*           For example the version 3.1.0 is encoded as decimal value: 30100.
-*
-* \return   The calculated version information value.
-*/
-/*------------------------------------------------------------------------------------------------*/
-uint32_t COVersion(void)
-{
-    uint32_t version;                               /* Local: function result                   */
-                                                      /*------------------------------------------*/
-    version = COVerMajor() * 10000 +                  /* calculate version identification         */
-              COVerMinor() * 100 +
-              COVerBuild();
-                                                      /*------------------------------------------*/
-    return version;                                   /* return function result                   */
+    return COVer.Major;
 }
 
 /*
-****************************************************************************************************
-*                                       INTERNAL FUNCTIONS
-****************************************************************************************************
+* see function definition
 */
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief  INITIALIZE VERSION INFORMATIONS
-*
-* \ingroup  INTERNAL
-*
-*           This function initializes the version information values in the local version object.
-*/
-/*------------------------------------------------------------------------------------------------*/
-static void CO_VerInit(void)
+uint8_t COVerMinor(void)
 {
-    COVer.Major     = CO_VER_MAJOR;                   /* set given major version number           */
-    COVer.Minor     = CO_VER_MINOR;                   /* set given minor version number           */
-    COVer.Build     = CO_VER_BUILD;                   /* set given build information              */
+    if (COVer.Major == 0L) {
+        CO_VerInit();
+    }
+
+    return COVer.Minor;
+}
+
+/*
+* see function definition
+*/
+uint8_t COVerBuild(void)
+{
+    if (COVer.Major == 0L) {
+        CO_VerInit();
+    }
+
+    return COVer.Build;
+}
+
+/*
+* see function definition
+*/
+uint32_t COVersion(void)
+{
+    uint32_t version;
+
+    version = COVerMajor() * 10000 +
+              COVerMinor() * 100 +
+              COVerBuild();
+
+    return version;
+}
+
+/*
+* see function definition
+*/
+void CO_VerInit(void)
+{
+    COVer.Major     = CO_VER_MAJOR;
+    COVer.Minor     = CO_VER_MINOR;
+    COVer.Build     = CO_VER_BUILD;
 }

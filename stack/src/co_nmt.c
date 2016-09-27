@@ -338,7 +338,10 @@ void CO_NmtHbConsInit(CO_NMT *nmt)
 /*
 * see function definition
 */
-CO_ERR CO_NmtHbConsActivate(CO_NMT *nmt, CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
+CO_ERR CO_NmtHbConsActivate(CO_NMT    *nmt,
+                            CO_HBCONS *hbc,
+                            uint16_t   time,
+                            uint8_t    nodeid)
 {
     CO_ERR      result  = CO_ERR_NONE;
     int16_t     err;

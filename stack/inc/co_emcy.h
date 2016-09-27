@@ -85,14 +85,14 @@ extern "C" {
 *    object (1001h) in the object directory. These values can be used to
 *    specify a standard conform EMCY error code relation table.
 */
-#define CO_EMCY_REG_GENERAL        0   /*!< general error (includes all classes)   */
-#define CO_EMCY_REG_CURRENT        1   /*!< error class: current                   */
-#define CO_EMCY_REG_VOLTAGE        2   /*!< error class: voltage                   */
-#define CO_EMCY_REG_TEMP           3   /*!< error class: temperature               */
-#define CO_EMCY_REG_COM            4   /*!< error class: communication             */
-#define CO_EMCY_REG_PROFILE        5   /*!< error class: profile specific error    */
-#define CO_EMCY_REG_MANUFACTURER   7   /*!< error class: manufacturer specific     */
-#define CO_EMCY_REG_NUM            8   /*!< number of supported error classes      */
+#define CO_EMCY_REG_GENERAL        0   /*!< general (includes all classes)   */
+#define CO_EMCY_REG_CURRENT        1   /*!< class: current                   */
+#define CO_EMCY_REG_VOLTAGE        2   /*!< class: voltage                   */
+#define CO_EMCY_REG_TEMP           3   /*!< class: temperature               */
+#define CO_EMCY_REG_COM            4   /*!< class: communication             */
+#define CO_EMCY_REG_PROFILE        5   /*!< class: profile specific error    */
+#define CO_EMCY_REG_MANUFACTURER   7   /*!< class: manufacturer specific     */
+#define CO_EMCY_REG_NUM            8   /*!< number of supported classes      */
 
 /******************************************************************************
 * PUBLIC CONSTANTS
@@ -146,11 +146,11 @@ typedef struct CO_EMCY_TBL_T {
 *    manage the change detection on all individual EMCY codes.
 */
 typedef struct CO_EMCY_T {
-    struct CO_NODE_T      *Node;                  /*!< link to parent node information        */
-    struct CO_EMCY_TBL_T  *Root;                  /*!< root pointer to user EMCY table        */
-    struct CO_EMCY_HIST_T  Hist;                  /*!< EMCY history informations              */
-    uint8_t                Cnt[CO_EMCY_REG_NUM];  /*!< Count occurance of register bits       */
-    uint8_t                Err[CO_EMCY_STORAGE];  /*!< individual error code status storage   */
+    struct CO_NODE_T      *Node;                  /*!< parent node           */
+    struct CO_EMCY_TBL_T  *Root;                  /*!< root to EMCY table    */
+    struct CO_EMCY_HIST_T  Hist;                  /*!< EMCY history          */
+    uint8_t                Cnt[CO_EMCY_REG_NUM];  /*!< count register bits   */
+    uint8_t                Err[CO_EMCY_STORAGE];  /*!< error status storage  */
 
 } CO_EMCY;
 

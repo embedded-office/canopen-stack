@@ -43,9 +43,8 @@ extern "C" {
 #define CO_SDO_ALLOWED   0x20    /*!< indication of SDO transfers allowed    */
 #define CO_PDO_ALLOWED   0x40    /*!< indication of PDO transfers allowed    */
 
-#define CO_THB_PROD    ((CO_OBJ_TYPE *)&COTNmtHbProd) /*!< Object Type Heartbeat Producer         */
-#define CO_THEARTBEAT  CO_THB_PROD                    /*!< Definition for backward compatibility  */
-#define CO_THB_CONS    ((CO_OBJ_TYPE *)&COTNmtHbCons) /*!< Object Type Heartbeat Consumer         */
+#define CO_THB_PROD  ((CO_OBJ_TYPE *)&COTNmtHbProd)  /*!< Heartbeat Producer */
+#define CO_THB_CONS  ((CO_OBJ_TYPE *)&COTNmtHbCons)  /*!< Heartbeat Consumer */
 
 /******************************************************************************
 * PUBLIC CONSTANTS
@@ -191,7 +190,8 @@ uint8_t CONmtGetNodeId(CO_NMT *nmt);
 
 /*! \brief  DECODE NODE-STATE
 *
-*    This function returns the CANopen mode to the given heartbeat state encoding.
+*    This function returns the CANopen mode to the given heartbeat state
+*    encoding.
 *
 * \param code
 *    heartbeat state 
@@ -203,7 +203,8 @@ CO_MODE CONmtModeDecode(uint8_t code);
 
 /*! \brief  ENCODE NODE-STATE
 *
-*    This function returns the heartbeat state code for the given CANopen mode.
+*    This function returns the heartbeat state code for the given CANopen
+*    mode.
 *
 * \param mode
 *    CANopen mode
