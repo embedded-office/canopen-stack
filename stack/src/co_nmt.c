@@ -1,9 +1,9 @@
 /******************************************************************************
-* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+* (c) by Embedded Office GmbH & Co. KG, <http://www.embedded-office.com/>
 *------------------------------------------------------------------------------
 * This file is part of CANopenStack, an open source CANopen Stack.
 * Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
-* For more information on CANopen see < http ://www.can-cia.org/>.
+* For more information on CANopen see <http://www.can-cia.org/>.
 *
 * CANopenStack is free and open source software: you can redistribute
 * it and / or modify it under the terms of the GNU General Public License
@@ -74,7 +74,7 @@ static const uint8_t CONmtModeCode[CO_MODE_NUM] = {
 *    the heartbeat consumer monitor times.
 */
 const CO_OBJ_TYPE COTNmtHbCons = {
-    0, 0, 0, 0, CO_TNmtHbConsRead, CO_TNmtHbConsWrite
+    0, 0, 0, 0, COTypeNmtHbConsRead, COTypeNmtHbConsWrite
 };
 
 /*! \brief OBJECT TYPE HEARTBEAT PRODUCER
@@ -84,7 +84,7 @@ const CO_OBJ_TYPE COTNmtHbCons = {
 *    the heartbeat producer cycle time.
 */
 const CO_OBJ_TYPE COTNmtHbProd = {
-    0, 0, 0, 0, 0, CO_TNmtHbProdWrite
+    0, 0, 0, 0, 0, COTypeNmtHbProdWrite
 };
 
 /******************************************************************************
@@ -114,20 +114,20 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 
     if (type <= CO_RESET_COM) {
         CONodeParaLoad(nmt->Node, CO_RESET_COM);      
-        err = CO_LssLoad(&nmt->Node->Baudrate, &nmt->Node->NodeId);
+        err = COLssLoad(&nmt->Node->Baudrate, &nmt->Node->NodeId);
         if (err != CO_ERR_NONE) {
             nmt->Node->Error = CO_ERR_LSS_LOAD;
             return;
         }
-        CO_LssInit(&nmt->Node->Lss, nmt->Node);
+        COLssInit(&nmt->Node->Lss, nmt->Node);
         COTmrClear(&nmt->Node->Tmr);
-        CO_NmtInit(nmt, nmt->Node);
+        CONmtInit(nmt, nmt->Node);
         COSdoInit(nmt->Node->Sdo, nmt->Node);
         COIfReset(&nmt->Node->If);
         COEmcyReset(&nmt->Node->Emcy, 1);
         COSyncInit(&nmt->Node->Sync, nmt->Node);
         if (nobootup == 0) {
-            CO_NmtBootup(nmt);
+            CONmtBootup(nmt);
         }
     }
 }
@@ -146,7 +146,7 @@ void CONmtSetMode(CO_NMT *nmt, CO_MODE mode)
         CORPdoInit(nmt->Node->RPdo, nmt->Node);
     }
     if (nmt->Mode != mode) {
-        CO_NmtModeChange(nmt, mode);
+        CONmtModeChange(nmt, mode);
     }
     nmt->Mode    = mode;
     nmt->Allowed = CONmtModeObj[mode];
@@ -290,7 +290,7 @@ CO_MODE CONmtLastHbState(CO_NMT *nmt, uint8_t nodeId)
 /*
 * see function definition
 */
-void CO_NmtHbConsInit(CO_NMT *nmt)
+void CONmtHbConsInit(CO_NMT *nmt)
 {
     uint8_t    num;
     int16_t    err;
@@ -327,7 +327,7 @@ void CO_NmtHbConsInit(CO_NMT *nmt)
             node->Error = CO_ERR_CFG_1016;
             break;
         }
-        act = CO_NmtHbConsActivate(nmt, hbc, hbc->Time, hbc->NodeId);
+        act = CONmtHbConsActivate(nmt, hbc, hbc->Time, hbc->NodeId);
         if (act != CO_ERR_NONE) {
             node->Error = act;
         }
@@ -338,7 +338,7 @@ void CO_NmtHbConsInit(CO_NMT *nmt)
 /*
 * see function definition
 */
-CO_ERR CO_NmtHbConsActivate(CO_NMT    *nmt,
+CO_ERR CONmtHbConsActivate(CO_NMT    *nmt,
                             CO_HBCONS *hbc,
                             uint16_t   time,
                             uint8_t    nodeid)
@@ -405,7 +405,7 @@ CO_ERR CO_NmtHbConsActivate(CO_NMT    *nmt,
 /*
 * see function definition
 */
-int16_t CO_NmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm)
+int16_t CONmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 {
     int16_t    result = -1;
     uint32_t   cobid;
@@ -434,14 +434,14 @@ int16_t CO_NmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm)
             hbc->Tmr = COTmrCreate(&nmt->Node->Tmr,
                 CO_TMR_TICKS(hbc->Time),
                 0,
-                CO_NmtHbConsMonitor,
+                CONmtHbConsMonitor,
                 hbc);
             if (hbc->Tmr < 0) {
                 nmt->Node->Error = CO_ERR_TMR_CREATE;
             }
             state = CONmtModeDecode(frm->Data[0]);
             if (hbc->State != state) {
-                CO_NmtHbConsChange(nmt, hbc->NodeId, state);
+                CONmtHbConsChange(nmt, hbc->NodeId, state);
             }
             hbc->State = state;
             result     = (int16_t)hbc->NodeId;
@@ -455,7 +455,7 @@ int16_t CO_NmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 /*
 * see function definition
 */
-void CO_NmtHbConsMonitor(void *parg)
+void CONmtHbConsMonitor(void *parg)
 {
     CO_NODE   *node;
     CO_HBCONS *hbc;
@@ -466,7 +466,7 @@ void CO_NmtHbConsMonitor(void *parg)
     hbc->Tmr = COTmrCreate(&node->Tmr,
         CO_TMR_TICKS(hbc->Time),
         0,
-        CO_NmtHbConsMonitor,
+        CONmtHbConsMonitor,
         hbc);
     if (hbc->Tmr < 0) {
         node->Error = CO_ERR_TMR_CREATE;
@@ -474,13 +474,13 @@ void CO_NmtHbConsMonitor(void *parg)
     if (hbc->Event < 0xFFu) {
         hbc->Event++;
     }
-    CO_NmtHbConsEvent(&node->Nmt, hbc->NodeId);
+    CONmtHbConsEvent(&node->Nmt, hbc->NodeId);
 }
 
 /*
 * see function definition
 */
-int16_t CO_TNmtHbConsWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_NODE    *node;
     CO_DIR     *cod;
@@ -504,7 +504,7 @@ int16_t CO_TNmtHbConsWrite(CO_OBJ* obj, void *buf, uint32_t size)
     value  = *((uint32_t *)buf);
     time   = (uint16_t)value;
     nodeid = (uint8_t)(value >> 16);
-    result = CO_NmtHbConsActivate(&node->Nmt, hbc, time, nodeid);
+    result = CONmtHbConsActivate(&node->Nmt, hbc, time, nodeid);
 
     return (result);
 }
@@ -512,7 +512,7 @@ int16_t CO_TNmtHbConsWrite(CO_OBJ* obj, void *buf, uint32_t size)
 /*
 * see function definition
 */
-int16_t CO_TNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len)
+int16_t COTypeNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len)
 {
     CO_HBCONS *hbc;
     int16_t    result = CO_ERR_NONE;
@@ -541,7 +541,7 @@ int16_t CO_TNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len)
 /*
 * see function definition
 */
-void CO_NmtHbProdInit(CO_NMT *nmt)
+void CONmtHbProdInit(CO_NMT *nmt)
 {
     CO_NODE *node;
     int16_t  err;
@@ -567,7 +567,7 @@ void CO_NmtHbProdInit(CO_NMT *nmt)
         nmt->Tmr = COTmrCreate(&node->Tmr,
             CO_TMR_TICKS(cycTime),
             CO_TMR_TICKS(cycTime),
-            CO_NmtHbProdSend,
+            CONmtHbProdSend,
             nmt);
         if (nmt->Tmr < 0) {
             node->Error = CO_ERR_TMR_CREATE;
@@ -580,7 +580,7 @@ void CO_NmtHbProdInit(CO_NMT *nmt)
 /*
 * see function definition
 */
-void CO_NmtHbProdSend(void *parg)
+void CONmtHbProdSend(void *parg)
 {
     CO_IF_FRM  frm;
     CO_NMT    *nmt;
@@ -603,7 +603,7 @@ void CO_NmtHbProdSend(void *parg)
 /*
 * see function definition
 */
-void CO_NmtInit(CO_NMT *nmt, CO_NODE *node)
+void CONmtInit(CO_NMT *nmt, CO_NODE *node)
 {
     if ((nmt == 0) || (node == 0)) {
         CONodeFatalError();
@@ -611,14 +611,14 @@ void CO_NmtInit(CO_NMT *nmt, CO_NODE *node)
     }
     nmt->Node = node;
     CONmtSetMode(nmt, CO_INIT);
-    CO_NmtHbProdInit(nmt);
-    CO_NmtHbConsInit(nmt);
+    CONmtHbProdInit(nmt);
+    CONmtHbConsInit(nmt);
 }
 
 /*
 * see function definition
 */
-void CO_NmtBootup(CO_NMT *nmt)
+void CONmtBootup(CO_NMT *nmt)
 {
     CO_IF_FRM frm;
 
@@ -636,7 +636,7 @@ void CO_NmtBootup(CO_NMT *nmt)
 /*
 * see function definition
 */
-int16_t CO_NmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
+int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 {
     int16_t result = -1;
 
@@ -671,7 +671,7 @@ int16_t CO_NmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 /*
 * see function definition
 */
-int16_t CO_TNmtHbProdWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, void *buf, uint32_t size)
 {
     CO_NODE  *node;
     uint16_t  cycTime;
@@ -698,7 +698,7 @@ int16_t CO_TNmtHbProdWrite(CO_OBJ* obj, void *buf, uint32_t size)
         node->Nmt.Tmr = COTmrCreate(&node->Tmr,
             CO_TMR_TICKS(cycTime),
             CO_TMR_TICKS(cycTime),
-            CO_NmtHbProdSend,
+            CONmtHbProdSend,
             &node->Nmt);
         if (node->Nmt.Tmr < 0) {
             node->Error = CO_ERR_TMR_CREATE;
@@ -711,19 +711,19 @@ int16_t CO_TNmtHbProdWrite(CO_OBJ* obj, void *buf, uint32_t size)
     return (result);
 }
 
-void CO_NmtModeChange(CO_NMT *nmt, CO_MODE mode)
+void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
 {
     (void)nmt;
     (void)mode;
 }
 
-void CO_NmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId)
+void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId)
 {
     (void)nmt;
     (void)nodeId;
 }
 
-void CO_NmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
+void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
 {
     (void)nmt;
     (void)nodeId;

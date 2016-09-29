@@ -1,9 +1,9 @@
 /******************************************************************************
-* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+* (c) by Embedded Office GmbH & Co. KG, <http://www.embedded-office.com/>
 *------------------------------------------------------------------------------
 * This file is part of CANopenStack, an open source CANopen Stack.
 * Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
-* For more information on CANopen see < http ://www.can-cia.org/>.
+* For more information on CANopen see <http://www.can-cia.org/>.
 *
 * CANopenStack is free and open source software: you can redistribute
 * it and / or modify it under the terms of the GNU General Public License
@@ -308,7 +308,7 @@ int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
 /*
 * see function definition
 */
-int16_t CO_DirInit(CO_DIR *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
+int16_t CODirInit(CO_DIR *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
 {
     CO_OBJ   *obj;
     uint16_t  num = 0;

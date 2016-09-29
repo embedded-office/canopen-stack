@@ -1,9 +1,9 @@
 /******************************************************************************
-* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+* (c) by Embedded Office GmbH & Co. KG, <http://www.embedded-office.com/>
 *------------------------------------------------------------------------------
 * This file is part of CANopenStack, an open source CANopen Stack.
 * Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
-* For more information on CANopen see < http ://www.can-cia.org/>.
+* For more information on CANopen see <http://www.can-cia.org/>.
 *
 * CANopenStack is free and open source software: you can redistribute
 * it and / or modify it under the terms of the GNU General Public License
@@ -445,7 +445,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
 *
 * \internal
 */
-int16_t COTEmcyRead(CO_OBJ *obj, void *buf, uint32_t len);
+int16_t COTypeEmcyRead(CO_OBJ *obj, void *buf, uint32_t len);
 
 /*! \brief EMCY OBJECT WRITE ACCESS
 *
@@ -468,7 +468,7 @@ int16_t COTEmcyRead(CO_OBJ *obj, void *buf, uint32_t len);
 *
 * \internal
 */
-int16_t COTEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len);
+int16_t COTypeEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len);
 
 #ifdef __cplusplus
 }

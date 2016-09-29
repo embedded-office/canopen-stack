@@ -1,9 +1,9 @@
 /******************************************************************************
-* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+* (c) by Embedded Office GmbH & Co. KG, <http://www.embedded-office.com/>
 *------------------------------------------------------------------------------
 * This file is part of CANopenStack, an open source CANopen Stack.
 * Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
-* For more information on CANopen see < http ://www.can-cia.org/>.
+* For more information on CANopen see <http://www.can-cia.org/>.
 *
 * CANopenStack is free and open source software: you can redistribute
 * it and / or modify it under the terms of the GNU General Public License
@@ -259,7 +259,7 @@ CO_MODE CONmtLastHbState(CO_NMT *nmt, uint8_t nodeId);
 * \param node
 *    pointer to parent node structure
 */
-void CO_NmtInit(CO_NMT *nmt, struct CO_NODE_T *node);
+void CONmtInit(CO_NMT *nmt, struct CO_NODE_T *node);
 
 /*! \brief  BOOTUP EVENT
 *
@@ -270,7 +270,7 @@ void CO_NmtInit(CO_NMT *nmt, struct CO_NODE_T *node);
 * \param nmt
 *    reference to NMT structure
 */
-void CO_NmtBootup(CO_NMT *nmt);
+void CONmtBootup(CO_NMT *nmt);
 
 /*! \brief  NMT MESSAGE CHECK
 *
@@ -285,7 +285,7 @@ void CO_NmtBootup(CO_NMT *nmt);
 * \retval  =0    check function successful
 * \retval  <0    mesage is not an NMT message
 */
-int16_t CO_NmtCheck(CO_NMT *nmt, CO_IF_FRM *frm);
+int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm);
 
 /*! \brief  HEARTBEAT PRODUCER INITIALIZATION
 *
@@ -294,7 +294,7 @@ int16_t CO_NmtCheck(CO_NMT *nmt, CO_IF_FRM *frm);
 * \param nmt
 *    reference to NMT structure
 */
-void CO_NmtHbProdInit(CO_NMT *nmt);
+void CONmtHbProdInit(CO_NMT *nmt);
 
 /*! \brief  HEARTBEAT PROTOCOL
 *
@@ -304,7 +304,7 @@ void CO_NmtHbProdInit(CO_NMT *nmt);
 * \param parg
 *    reference to NMT structure
 */
-void CO_NmtHbProdSend(void *parg);
+void CONmtHbProdSend(void *parg);
 
 /*! \brief  HEARTBEAT CONSUMER INITIALIZATION
 *
@@ -313,7 +313,7 @@ void CO_NmtHbProdSend(void *parg);
 * \param nmt
 *    reference to NMT structure
 */
-void CO_NmtHbConsInit(CO_NMT *nmt);
+void CONmtHbConsInit(CO_NMT *nmt);
 
 /*! \brief  HEARTBEAT CONSUMER ACTIVATION
 *
@@ -330,10 +330,10 @@ void CO_NmtHbConsInit(CO_NMT *nmt);
 * \retval  !=CO_ERR_NONE    error detected (double activation, timer delete
 *                           problem)
 */
-CO_ERR CO_NmtHbConsActivate(CO_NMT    *nmt, 
-                            CO_HBCONS *hbc,
-                            uint16_t   time,
-                            uint8_t    nodeid);
+CO_ERR CONmtHbConsActivate(CO_NMT    *nmt, 
+                           CO_HBCONS *hbc,
+                           uint16_t   time,
+                           uint8_t    nodeid);
 
 /*! \brief  HEARTBEAT CONSUMER CHECK
 *
@@ -355,7 +355,7 @@ CO_ERR CO_NmtHbConsActivate(CO_NMT    *nmt,
 * \retval  >=0    CAN message is a matching (and consumed) heartbeat message.
 *                 The return value is equal to the consumer node-ID
 */
-int16_t CO_NmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm);
+int16_t CONmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm);
 
 /*! \brief  HEARTBEAT CONSUMER TIMEOUT
 *
@@ -365,7 +365,7 @@ int16_t CO_NmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm);
 * \param parg
 *    heartbeat consumer structure
 */
-void CO_NmtHbConsMonitor(void *parg);
+void CONmtHbConsMonitor(void *parg);
 
 /*! \brief  WRITE HEARTBEAT CONSUMER CONFIG
 *
@@ -385,7 +385,7 @@ void CO_NmtHbConsMonitor(void *parg);
 * \retval  CO_ERR_NONE       heartbeat consumer config is written
 * \retval  CO_ERR_TYPE_WR    an error is detected and function aborted
 */
-int16_t CO_TNmtHbConsWrite(CO_OBJ *obj, void *buf, uint32_t size);
+int16_t COTypeNmtHbConsWrite(CO_OBJ *obj, void *buf, uint32_t size);
 
 /*! \brief READ HEARTBEAT CONSUMER CONFIG
 *
@@ -405,7 +405,7 @@ int16_t CO_TNmtHbConsWrite(CO_OBJ *obj, void *buf, uint32_t size);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CO_TNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len);
+int16_t COTypeNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len);
 
 /*! \brief  WRITE HEARTBEAT PRODUCER TIME
 *
@@ -424,7 +424,7 @@ int16_t CO_TNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len);
 * \retval   >0    heartbeat cycle time write successful
 * \retval  <=0    an error is detected and function aborted
 */
-int16_t CO_TNmtHbProdWrite(CO_OBJ *obj, void *buf, uint32_t size);
+int16_t COTypeNmtHbProdWrite(CO_OBJ *obj, void *buf, uint32_t size);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS
@@ -456,7 +456,7 @@ int16_t CO_TNmtHbProdWrite(CO_OBJ *obj, void *buf, uint32_t size);
 * \param mode
 *    the new mode
 */
-void CO_NmtModeChange(CO_NMT *nmt, CO_MODE mode);
+void CONmtModeChange(CO_NMT *nmt, CO_MODE mode);
 
 /*! \brief HEARTBEAT CONSUMER EVENT CALLBACK
 *
@@ -484,7 +484,7 @@ void CO_NmtModeChange(CO_NMT *nmt, CO_MODE mode);
 * \param nodeId
 *    The nodeId of the missed heartbeat message
 */
-void CO_NmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
+void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
 
 /*! \brief HEARTBEAT CONSUMER STATE CHANGE CALLBACK
 *
@@ -515,7 +515,7 @@ void CO_NmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
 * \param mode
 *    The new received node state of the monitored node
 */
-void CO_NmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
+void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
 
 #ifdef __cplusplus
 }

@@ -1,9 +1,9 @@
 /******************************************************************************
-* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+* (c) by Embedded Office GmbH & Co. KG, <http://www.embedded-office.com/>
 *------------------------------------------------------------------------------
 * This file is part of CANopenStack, an open source CANopen Stack.
 * Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
-* For more information on CANopen see < http ://www.can-cia.org/>.
+* For more information on CANopen see <http://www.can-cia.org/>.
 *
 * CANopenStack is free and open source software: you can redistribute
 * it and / or modify it under the terms of the GNU General Public License
@@ -35,7 +35,7 @@
 *
 *    This type is responsible for the access to the EMCY history.
 */
-const CO_OBJ_TYPE COTEmcy = { 0, 0, 0, 0, COTEmcyRead, COTEmcyWrite };
+const CO_OBJ_TYPE COTEmcy = { 0, 0, 0, 0, COTypeEmcyRead, COTypeEmcyWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -476,7 +476,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 /*
 * see function definition
 */
-int16_t COTEmcyRead(CO_OBJ *obj, void *buf, uint32_t len)
+int16_t COTypeEmcyRead(CO_OBJ *obj, void *buf, uint32_t len)
 {
     CO_NODE *node;
     CO_DIR  *cod;
@@ -511,7 +511,7 @@ int16_t COTEmcyRead(CO_OBJ *obj, void *buf, uint32_t len)
 /*
 * see function definition
 */
-int16_t COTEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len)
+int16_t COTypeEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len)
 {
     CO_NODE *node;
     CO_DIR  *cod;

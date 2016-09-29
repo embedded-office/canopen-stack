@@ -1,9 +1,9 @@
 /******************************************************************************
-* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+* (c) by Embedded Office GmbH & Co. KG, <http://www.embedded-office.com/>
 *------------------------------------------------------------------------------
 * This file is part of CANopenStack, an open source CANopen Stack.
 * Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
-* For more information on CANopen see < http ://www.can-cia.org/>.
+* For more information on CANopen see <http://www.can-cia.org/>.
 *
 * CANopenStack is free and open source software: you can redistribute
 * it and / or modify it under the terms of the GNU General Public License
@@ -41,7 +41,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     node->NodeId   = spec->NodeId;
     node->Error    = CO_ERR_NONE;
     node->Nmt.Tmr  = -1;
-    err = CO_LssLoad(&node->Baudrate, &node->NodeId);
+    err = COLssLoad(&node->Baudrate, &node->NodeId);
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_LSS_LOAD;
         return;
@@ -49,13 +49,13 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum);
     COIfInit(&node->If, node);
     COIfEnable(&node->If, node->Baudrate);
-    err = CO_DirInit(&node->Dir, node, spec->Dir, spec->DirLen);
+    err = CODirInit(&node->Dir, node, spec->Dir, spec->DirLen);
     if (err < 0) {
         return;
     }
     CONodeParaLoad(node, CO_RESET_COM);
     CONodeParaLoad(node, CO_RESET_NODE);
-    CO_NmtInit(&node->Nmt, node);
+    CONmtInit(&node->Nmt, node);
     COSdoInit( node->Sdo, node);
     COTPdoClear(node->TPdo, node);
     CORPdoClear(node->RPdo, node);
@@ -63,7 +63,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
         COEmcyInit(&node->Emcy, node, spec->EmcyCode); 
     }
     COSyncInit(&node->Sync, node);
-    CO_LssInit(&node->Lss, node);
+    COLssInit(&node->Lss, node);
 }
 
 /*
@@ -75,7 +75,7 @@ void CONodeStart(CO_NODE *node)
 
     mode = CONmtGetMode(&node->Nmt);
     if (mode == CO_INIT) {
-        CO_NmtBootup(&node->Nmt);
+        CONmtBootup(&node->Nmt);
     }
 }
 
@@ -157,7 +157,7 @@ void CONodeProcess(CO_NODE *node)
         allowed = node->Nmt.Allowed;
     }
 
-    err = CO_LssCheck(&node->Lss, &frm);
+    err = COLssCheck(&node->Lss, &frm);
     if (err != 0) {
         if (err > 0) {
             (void)COIfSend(&node->If, &frm);
@@ -177,9 +177,9 @@ void CONodeProcess(CO_NODE *node)
     }
 
     if ((allowed & CO_NMT_ALLOWED) != 0) {
-        if (CO_NmtCheck(&node->Nmt, &frm) >= 0) {
+        if (CONmtCheck(&node->Nmt, &frm) >= 0) {
             allowed = 0;
-        } else if (CO_NmtHbConsCheck(&node->Nmt, &frm) >= 0) {
+        } else if (CONmtHbConsCheck(&node->Nmt, &frm) >= 0) {
             allowed = 0;
         }
     }

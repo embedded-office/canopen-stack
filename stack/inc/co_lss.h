@@ -1,9 +1,9 @@
 /******************************************************************************
-* (c) by Embedded Office GmbH & Co. KG, http://www.embedded-office.com
+* (c) by Embedded Office GmbH & Co. KG, <http://www.embedded-office.com/>
 *------------------------------------------------------------------------------
 * This file is part of CANopenStack, an open source CANopen Stack.
 * Project home page is <https://github.com/MichaelHillmann/CANopenStack.git>.
-* For more information on CANopen see < http ://www.can-cia.org/>.
+* For more information on CANopen see <http://www.can-cia.org/>.
 *
 * CANopenStack is free and open source software: you can redistribute
 * it and / or modify it under the terms of the GNU General Public License
@@ -103,7 +103,7 @@ typedef struct CO_LSS_MAP_T {
 *
 *    This function initializes the LSS object.
 */
-void CO_LssInit(CO_LSS *lss, struct CO_NODE_T *node);
+void COLssInit(CO_LSS *lss, struct CO_NODE_T *node);
 
 /*! \brief LSS MESSAGE CHECK
 *
@@ -118,29 +118,29 @@ void CO_LssInit(CO_LSS *lss, struct CO_NODE_T *node);
 * \retval  <0    ignored LSS request
 * \retval  >0    successful processed LSS request
 */
-int16_t CO_LssCheck(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssCheck(CO_LSS *lss, CO_IF_FRM *frm);
 
-int16_t CO_LssSwitchStateGlobal(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssSwitchStateSelective_Vendor(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssSwitchStateSelective_Product(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssSwitchStateSelective_Revision(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssSwitchStateSelective_Serial(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssActivateBitTiming(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssConfigureBitTiming(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssConfigureNodeId(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssStoreConfiguration(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssInquireAddress_Vendor(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssInquireAddress_Product(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssInquireAddress_Revision(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssInquireAddress_Serial(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssInquireNodeId(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssIdentifyRemoteSlave_Vendor(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssIdentifyRemoteSlave_Product(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssIdentifyRemoteSlave_RevMin(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssIdentifyRemoteSlave_RevMax(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssIdentifyRemoteSlave_SerMin(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm);
-int16_t CO_LssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssSwitchStateGlobal(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssSwitchStateSelective_Vendor(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssSwitchStateSelective_Product(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssSwitchStateSelective_Revision(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssSwitchStateSelective_Serial(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssActivateBitTiming(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssConfigureBitTiming(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssConfigureNodeId(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssStoreConfiguration(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssInquireAddress_Vendor(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssInquireAddress_Product(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssInquireAddress_Revision(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssInquireAddress_Serial(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssInquireNodeId(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssIdentifyRemoteSlave_Vendor(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssIdentifyRemoteSlave_Product(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssIdentifyRemoteSlave_RevMin(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssIdentifyRemoteSlave_RevMax(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssIdentifyRemoteSlave_SerMin(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS
@@ -174,7 +174,7 @@ int16_t CO_LssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm);
 * \param nodeId
 *    The configured node id for storage
 */
-int16_t CO_LssStore(uint32_t baudrate, uint8_t nodeId);
+int16_t COLssStore(uint32_t baudrate, uint8_t nodeId);
 
 /*! \brief LSS CONFIGURATION LOAD CALLBACK
 *
@@ -203,7 +203,7 @@ int16_t CO_LssStore(uint32_t baudrate, uint8_t nodeId);
 * \param nodeId
 *    The configured node id from storage
 */
-int16_t CO_LssLoad(uint32_t *baudrate, uint8_t *nodeId);
+int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId);
 
 #ifdef __cplusplus
 }
