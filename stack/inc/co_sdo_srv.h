@@ -52,7 +52,7 @@
 #define CO_SDO_RD               1             /*!< Object read access                     */
 #define CO_SDO_WR               2             /*!< Object write access                    */
 
-#define CO_SDO_COBID_OFF   ((uint32_t)1<<31)  /*!< Disabled SDO server / COBID            */
+#define CO_SDO_ID_OFF      ((uint32_t)1<<31)  /*!< Disabled SDO server / COBID            */
 
 #define CO_SDO_BUF_SEG     127
 #define CO_SDO_BUF_BYTE    (CO_SDO_BUF_SEG*7) /*!< transfer buffer size in byte           */

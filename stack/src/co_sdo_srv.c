@@ -68,8 +68,8 @@ void COSdoReset(CO_SDO *srv, uint8_t num, CO_NODE *node)
 
     srvnum               = &srv[num];
     srvnum->Node         = node;
-    srvnum->RxId         = CO_SDO_COBID_OFF;
-    srvnum->TxId         = CO_SDO_COBID_OFF;
+    srvnum->RxId         = CO_SDO_ID_OFF;
+    srvnum->TxId         = CO_SDO_ID_OFF;
     srvnum->Frm          = 0;
     srvnum->Obj          = 0;
     offset               = num * CO_SDO_BUF_BYTE;
@@ -97,8 +97,8 @@ void COSdoEnable(CO_SDO *srv, uint8_t num)
         return;
     }
     srvnum       = &srv[num];
-    srvnum->RxId = CO_SDO_COBID_OFF;
-    srvnum->TxId = CO_SDO_COBID_OFF;
+    srvnum->RxId = CO_SDO_ID_OFF;
+    srvnum->TxId = CO_SDO_ID_OFF;
 
     node = srv->Node;
     err  = CODirRdLong(&node->Dir, CO_DEV(0x1200 + num, 1), &rxId);
@@ -110,8 +110,8 @@ void COSdoEnable(CO_SDO *srv, uint8_t num)
         return;
     }
 
-    if (((rxId & CO_SDO_COBID_OFF) == 0) &&
-        ((txId & CO_SDO_COBID_OFF) == 0) ) {
+    if (((rxId & CO_SDO_ID_OFF) == 0) &&
+        ((txId & CO_SDO_ID_OFF) == 0) ) {
         srvnum->RxId = rxId;
         srvnum->TxId = txId;
     }
@@ -963,8 +963,8 @@ int16_t COTypeSdoIdWrite(CO_OBJ* obj, void *buf, uint32_t size)
     num    = CO_GET_IDX(obj->Key) & 0x7F;
     node   = obj->Type->Dir->Node;
 
-    if ((curval & CO_SDO_COBID_OFF) == 0) {
-        if ((newval & CO_SDO_COBID_OFF) != 0) {
+    if ((curval & CO_SDO_ID_OFF) == 0) {
+        if ((newval & CO_SDO_ID_OFF) != 0) {
             err = COObjWrDirect(obj, &newval, CO_LONG);
             if (err == CO_ERR_NONE) {
                 COSdoReset(node->Sdo, num, node);

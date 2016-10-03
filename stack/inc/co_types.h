@@ -54,4 +54,6 @@ typedef unsigned long    int32_t;
 /*-- crtdefs.h --*/
 typedef unsigned long    intptr_t;
 
+#endif
+
 #endif /* ifndef CO_TYPES_H_ */
