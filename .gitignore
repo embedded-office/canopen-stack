@@ -43,3 +43,4 @@ prj_canopenstack*
 /gcc_Debug.h
 /gcc_Release.h
 /nxp_lpc.xml
+/.vs/

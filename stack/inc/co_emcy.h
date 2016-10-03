@@ -28,10 +28,6 @@
 
 #include "co_obj.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -469,9 +465,5 @@ int16_t COTypeEmcyRead(CO_OBJ *obj, void *buf, uint32_t len);
 * \internal
 */
 int16_t COTypeEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_EMCY_H_ */

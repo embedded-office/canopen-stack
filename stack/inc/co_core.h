@@ -38,10 +38,6 @@
 #include "co_err.h"
 #include "co_obj.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
@@ -61,7 +57,7 @@ typedef struct CO_NODE_T {
     uint8_t               *SdoBuf;               /*!< SDO Transfer Buffer    */
     struct CO_RPDO_T       RPdo[CO_RPDO_N];      /*!< RPDO Array             */
     struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */
-    struct CO_TPDO_LINK_T  TMap[CO_TPDO_N*8];    /*!< TPDO mapping links     */
+    struct CO_TPDO_LINK_T  TMap[CO_TPDO_N * 8];  /*!< TPDO mapping links     */
     struct CO_SYNC_T       Sync;                 /*!< SYNC management        */
     struct CO_LSS_T        Lss;                  /*!< LSS slave handling     */
     enum   CO_ERR_T        Error;                /*!< detected error code    */
@@ -195,9 +191,5 @@ int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type);
 *    and setting the device in a safe state.
 */
 extern void CONodeFatalError(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_CORE_H_ */

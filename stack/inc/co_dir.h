@@ -25,10 +25,6 @@
 
 #include "co_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
@@ -269,9 +265,5 @@ int16_t CODirInit(CO_DIR *cod,
                   struct CO_NODE_T *node,
                   struct CO_OBJ_T *root,
                   uint16_t max);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_DIR_H_ */

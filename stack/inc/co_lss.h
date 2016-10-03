@@ -25,10 +25,6 @@
 
 #include "co_if.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -204,9 +200,5 @@ int16_t COLssStore(uint32_t baudrate, uint8_t nodeId);
 *    The configured node id from storage
 */
 int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_LSS_H_ */

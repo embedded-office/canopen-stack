@@ -27,10 +27,6 @@
 #include "co_if.h"
 #include "co_err.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PuBLIC INCLUDES
 ******************************************************************************/
@@ -516,9 +512,5 @@ void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
 *    The new received node state of the monitored node
 */
 void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_NMT_H_ */

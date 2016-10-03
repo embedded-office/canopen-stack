@@ -26,10 +26,6 @@
 #include "co_types.h"
 #include "co_cfg.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -331,9 +327,5 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action);
 * \internal
 */
 void COTmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_TMR_H_ */

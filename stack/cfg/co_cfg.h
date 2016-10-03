@@ -20,7 +20,8 @@
 #define CO_CFG_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #ifndef CO_SDO_N

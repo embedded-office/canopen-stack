@@ -26,10 +26,6 @@
 #include "co_types.h"
 #include "co_cfg.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * DEFINES
 ******************************************************************************/
@@ -735,9 +731,5 @@ int16_t COTypeDomainRead(CO_OBJ *obj, void *buf, uint32_t len);
 * \retval  !=CO_ERR_NONE    An error is detected
 */
 int16_t COTypeDomainWrite(CO_OBJ *obj, void *buf, uint32_t len);
-    
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_OBJ_H_ */

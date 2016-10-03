@@ -19,7 +19,6 @@
 #ifndef CO_TYPES_H_
 #define CO_TYPES_H_
 
-
 #if defined(__STDC__) && (__STDC_VERSION__ >= 199901L)           /* ANSI C99 */
 
 /******************************************************************************
@@ -35,10 +34,6 @@
 /******************************************************************************
 * ANSI-C STANDARD TYPES
 ******************************************************************************/
-
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /*-- stddef.h --*/
 #define NULL             0u
@@ -58,11 +53,5 @@ typedef unsigned long    int32_t;
 
 /*-- crtdefs.h --*/
 typedef unsigned long    intptr_t;
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
 
 #endif /* ifndef CO_TYPES_H_ */

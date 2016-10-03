@@ -27,10 +27,6 @@
 #include "co_obj.h"
 #include "co_if.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -627,9 +623,5 @@ void COTPdoTransmit(CO_IF_FRM *frm);
 * \retval   >0    CAN message frame is consumed
 */
 int16_t CORPdoReceive(CO_IF_FRM *frm);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_TPDO_H_ */

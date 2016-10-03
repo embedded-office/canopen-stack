@@ -27,10 +27,6 @@
 #include "co_err.h"
 #include "co_nmt.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -243,9 +239,5 @@ int16_t COParaSave(CO_PARA *pg);
 * \retval  <0    error is detected and function aborted
 */
 int16_t COParaDefault(CO_PARA *pg);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_PARA_H_ */

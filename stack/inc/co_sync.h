@@ -27,10 +27,6 @@
 #include "co_cfg.h"
 #include "co_if.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -153,9 +149,5 @@ int16_t COSyncUpdate(CO_SYNC *sync, CO_IF_FRM *frm);
 *    Pointer to SYNC object
 */
 void COSyncRestart(CO_SYNC *sync);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_SYNC_H_ */

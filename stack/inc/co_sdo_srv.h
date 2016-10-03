@@ -27,10 +27,6 @@
 #include "co_cfg.h"
 #include "co_if.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -645,9 +641,5 @@ void COSdoAbortReq(CO_SDO *srv);
 * \internal
 */
 int16_t COTypeSdoIdWrite(CO_OBJ* obj, void *buf, uint32_t size);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_SDO_H_ */

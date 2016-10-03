@@ -25,10 +25,6 @@
 
 #include "co_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * PUBLIC DEFINITIONS
 ******************************************************************************/
@@ -199,9 +195,5 @@ void COIfEnable(CO_IF *cif, uint32_t baudrate);
 *    The received CAN frame
 */
 void COIfReceive(CO_IF_FRM *frm);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* CO_IF_H_ */

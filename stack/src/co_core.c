@@ -56,7 +56,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     CONodeParaLoad(node, CO_RESET_COM);
     CONodeParaLoad(node, CO_RESET_NODE);
     CONmtInit(&node->Nmt, node);
-    COSdoInit( node->Sdo, node);
+    COSdoInit(node->Sdo, node);
     COTPdoClear(node->TPdo, node);
     CORPdoClear(node->RPdo, node);
     if (spec->EmcyCode != 0) {
@@ -116,14 +116,14 @@ int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
     uint8_t  sub;
 
     cod = &node->Dir;
-    err = CODirRdByte(cod, CO_DEV(0x1010,0), &num);
+    err = CODirRdByte(cod, CO_DEV(0x1010, 0), &num);
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_NONE;
         return (result);
     }
 
     for (sub = 1; sub <= num; sub++) {
-        obj = CODirFind(cod, CO_DEV(0x1010,sub));
+        obj = CODirFind(cod, CO_DEV(0x1010, sub));
         if (obj != 0) {
             pg = (CO_PARA *)obj->Data;
             if (pg->Type == type) {

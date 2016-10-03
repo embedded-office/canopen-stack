@@ -19,10 +19,6 @@
 #ifndef CO_VER_H_
 #define CO_VER_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -101,9 +97,5 @@ uint32_t COVersion(void);
 *    version object.
 */
 void CO_VerInit(void);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* ifndef CO_VER_H_ */
