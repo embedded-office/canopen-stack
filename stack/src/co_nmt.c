@@ -593,7 +593,7 @@ void CONmtHbProdSend(void *parg)
 
     state = CONmtModeEncode(nmt->Mode);
 
-    CO_SET_COBID(&frm, 1792 + nmt->Node->NodeId);
+    CO_SET_ID(&frm, 1792 + nmt->Node->NodeId);
     CO_SET_DLC(&frm, 1);
     CO_SET_BYTE(&frm, state, 0);
 
@@ -625,7 +625,7 @@ void CONmtBootup(CO_NMT *nmt)
     if (nmt->Mode == CO_INIT) {
         CONmtSetMode(nmt, CO_PREOP);
 
-        CO_SET_COBID(&frm, 1792 + nmt->Node->NodeId);
+        CO_SET_ID(&frm, 1792 + nmt->Node->NodeId);
         CO_SET_DLC  (&frm, 1);
         CO_SET_BYTE (&frm, 0, 0);
 

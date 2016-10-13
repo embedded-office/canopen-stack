@@ -26,49 +26,155 @@
 #include "co_types.h"
 
 /******************************************************************************
-* PUBLIC DEFINITIONS
-******************************************************************************/
-
-
-/******************************************************************************
 * PUBLIC MACROS
 ******************************************************************************/
 
-#define CO_GET_COBID(f)   ((uint32_t)(f)->Identifier)
+/*! \brief GET IDENTIFIER
+*
+*    This macro extracts the CAN identifier out of the CAN frame.
+*
+* \param f
+*    The CAN frame
+*/
+#define CO_GET_ID(f)         \
+    ( (uint32_t)(f)->Identifier )
 
-#define CO_SET_COBID(f,n) ((f)->Identifier=(uint32_t)(n))
+/*! \brief SET IDENTIFIER
+*
+*    This macro sets the CAN identifier within the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param n
+*    The CAN identifier
+*/
+#define CO_SET_ID(f,n)       \
+    ( (f)->Identifier = (uint32_t)(n) )
 
-#define CO_GET_DLC(f)     ((uint8_t)(f)->DLC)
+/*! \brief GET DATA LENGTH CODE
+*
+*    This macro extracts the data length code (DLC) out of the CAN frame.
+*
+* \param f
+*    The CAN frame
+*/
+#define CO_GET_DLC(f)        \
+    ( (uint8_t)(f)->DLC )
 
-#define CO_SET_DLC(f,n)   ((f)->DLC=(uint8_t)(n))
+/*! \brief SET DATA LENGTH CODE
+*
+*    This macro sets the data length code (DLC) within the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param n
+*    The data length code (DLC)
+*/
+#define CO_SET_DLC(f,n)      \
+    ((f)->DLC = (uint8_t)(n))
 
-#define CO_GET_BYTE(f,p)  (uint8_t)(                  \
-                            (uint8_t)(f)->Data[(p)&0x7] \
-                          )
+/*! \brief GET DATA BYTE
+*
+*    This macro extracts a data byte (8 bit) out of the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param p
+*    The data position (0..7)
+*/
+#define CO_GET_BYTE(f,p)     \
+    (uint8_t)( (uint8_t)(f)->Data[(p)&0x7] )
 
-#define CO_GET_WORD(f,p)  (uint16_t)(                                     \
-                            ( ( (uint16_t)((f)->Data[((p)+1)&0x7]) ) << 8 ) | \
-                            ( ( (uint16_t)((f)->Data[((p)  )&0x7]) )      )   \
-                          )
+/*! \brief SET DATA BYTE
+*
+*    This macro sets a data byte (8 bit) within the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param n
+*    The data value
+*
+* \param p
+*    The data position (0..7)
+*/
+#define CO_SET_BYTE(f,n,p)   \
+    { (f)->Data[(p)&0x7] = (uint8_t)(n); }
 
-#define CO_GET_LONG(f,p)  (uint32_t)(                                      \
-                            ( ( (uint32_t)((f)->Data[((p)+3)&0x7]) ) << 24 ) | \
-                            ( ( (uint32_t)((f)->Data[((p)+2)&0x7]) ) << 16 ) | \
-                            ( ( (uint32_t)((f)->Data[((p)+1)&0x7]) ) <<  8 ) | \
-                            ( ( (uint32_t)((f)->Data[((p)  )&0x7]) )       )   \
-                          )
+/*! \brief GET DATA WORD
+*
+*    This macro extracts a data word (16 bit) out of the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param p
+*    The data position (0..6)
+*/
+#define CO_GET_WORD(f,p)     \
+    (uint16_t)( ( ( (uint16_t)((f)->Data[((p)+1)&0x7]) ) << 8 ) | \
+                ( ( (uint16_t)((f)->Data[((p)  )&0x7]) )      )   )
 
-#define CO_SET_BYTE(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)(n);}
+/*! \brief SET DATA WORD
+*
+*    This macro sets a data word (16 bit) within the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param n
+*    The data value
+*
+* \param p
+*    The data position (0..6)
+*/
+#define CO_SET_WORD(f,n,p)   \
+    { (f)->Data[((p)  )&0x7] = (uint8_t)( ((uint16_t)(n) )     ); \
+      (f)->Data[((p)+1)&0x7] = (uint8_t)( ((uint16_t)(n) ) >> 8); }
 
-#define CO_SET_WORD(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)((uint16_t)(n));\
-                            (f)->Data[((p)+1)&0x7]=(uint8_t)(((uint16_t)(n))>>8);}
+/*! \brief GET DATA LONG
+*
+*    This macro extracts a data long (32 bit) out of the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param p
+*    The data position (0..4)
+*/
+#define CO_GET_LONG(f,p)     \
+    (uint32_t)( ( ( (uint32_t)((f)->Data[((p)+3)&0x7]) ) << 24 ) | \
+                ( ( (uint32_t)((f)->Data[((p)+2)&0x7]) ) << 16 ) | \
+                ( ( (uint32_t)((f)->Data[((p)+1)&0x7]) ) <<  8 ) | \
+                ( ( (uint32_t)((f)->Data[((p)  )&0x7]) )       )   )
 
-#define CO_SET_LONG(f,n,p) {(f)->Data[(p)&0x7]=(uint8_t)((uint32_t)(n));\
-                            (f)->Data[((p)+1)&0x7]=(uint8_t)(((uint32_t)(n))>>8);\
-                            (f)->Data[((p)+2)&0x7]=(uint8_t)(((uint32_t)(n))>>16);\
-                            (f)->Data[((p)+3)&0x7]=(uint8_t)(((uint32_t)(n))>>24);}
+/*! \brief SET DATA LONG
+*
+*    This macro sets a data long (32 bit) within the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param n
+*    The data value
+*
+* \param p
+*    The data position (0..4)
+*/
+#define CO_SET_LONG(f,n,p)   \
+    { (f)->Data[((p)  )&0x7] = (uint8_t)(((uint32_t)(n))      ); \
+      (f)->Data[((p)+1)&0x7] = (uint8_t)(((uint32_t)(n)) >>  8); \
+      (f)->Data[((p)+2)&0x7] = (uint8_t)(((uint32_t)(n)) >> 16); \
+      (f)->Data[((p)+3)&0x7] = (uint8_t)(((uint32_t)(n)) >> 24); }
 
-#define CO_IF_DRV     int //CANBUS_PARA*    /*!< driver specific bus identifier type    */
+/*! \brief CAN DRIVER IDENTIFIER
+*
+*    The driver specific bus identifier type.
+*/
+#define CO_IF_DRV    int
 
 /******************************************************************************
 * PUBLIC TYPES

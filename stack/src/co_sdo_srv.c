@@ -128,8 +128,8 @@ CO_SDO *COSdoCheck(CO_SDO *srv, CO_IF_FRM *frm)
     if (frm != 0) {
         n = 0;
         while ((n < CO_SDO_N) && (result == 0)) {
-            if (CO_GET_COBID(frm) == srv[n].RxId) {
-                CO_SET_COBID(frm, srv[n].TxId);
+            if (CO_GET_ID(frm) == srv[n].RxId) {
+                CO_SET_ID(frm, srv[n].TxId);
                 srv[n].Frm = frm;
                 if (srv[n].Obj == 0) {
                     srv[n].Idx = CO_GET_WORD(frm, 1);

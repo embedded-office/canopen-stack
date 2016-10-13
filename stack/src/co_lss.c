@@ -110,7 +110,7 @@ int16_t COLssCheck (CO_LSS *lss, CO_IF_FRM *frm)
     uint8_t           sid;
     uint8_t           cmd;
 
-    if (CO_GET_COBID(frm) == CO_LSS_RX_ID) {
+    if (CO_GET_ID(frm) == CO_LSS_RX_ID) {
         result = -1;
         cmd    = CO_GET_BYTE(frm, 0);
         for (sid = 0; sid < CO_LSS_MAX_SID; sid++) {
@@ -216,7 +216,7 @@ int16_t COLssSwitchStateSelective_Serial(CO_LSS *lss, CO_IF_FRM *frm)
         CO_SET_LONG (frm, 0L, 0);
         CO_SET_LONG (frm, 0L, 4);
         CO_SET_BYTE (frm, CO_LSS_RES_SEL_OK, 0);
-        CO_SET_COBID(frm, CO_LSS_TX_ID);
+        CO_SET_ID(frm, CO_LSS_TX_ID);
         lss->Mode = CO_LSS_CONF;
         result    = 1;
     }
@@ -279,7 +279,7 @@ int16_t COLssConfigureBitTiming(CO_LSS *lss, CO_IF_FRM *frm)
     }
     CO_SET_BYTE(frm, error_code, 1);
     CO_SET_BYTE(frm, 0, 2);
-    CO_SET_COBID(frm, CO_LSS_TX_ID);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
 
     return result;
 }
@@ -296,7 +296,7 @@ int16_t COLssConfigureNodeId(CO_LSS *lss, CO_IF_FRM *frm)
     } else {
         CO_SET_BYTE(frm, 1, 1);
     }
-    CO_SET_COBID(frm, CO_LSS_TX_ID);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
 
     return result;
 }
@@ -313,7 +313,7 @@ int16_t COLssStoreConfiguration(CO_LSS *lss, CO_IF_FRM *frm)
         CO_SET_BYTE(frm, 2, 1);
     }
 
-    CO_SET_COBID(frm, CO_LSS_TX_ID);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
 
     return 1;
 }
@@ -324,7 +324,7 @@ int16_t COLssInquireAddress_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
 
     (void)CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 1), &ident);
     CO_SET_LONG (frm, ident, 1);
-    CO_SET_COBID(frm, CO_LSS_TX_ID);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
 
     return 1;
 }
@@ -335,7 +335,7 @@ int16_t COLssInquireAddress_Product(CO_LSS *lss, CO_IF_FRM *frm)
 
     (void)CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 2), &ident);
     CO_SET_LONG(frm, ident, 1);
-    CO_SET_COBID(frm, CO_LSS_TX_ID);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
 
     return 1;
 }
@@ -346,7 +346,7 @@ int16_t COLssInquireAddress_Revision(CO_LSS *lss, CO_IF_FRM *frm)
 
     (void)CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 3), &ident);
     CO_SET_LONG(frm, ident, 1);
-    CO_SET_COBID(frm, CO_LSS_TX_ID);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
 
     return 1;
 }
@@ -357,7 +357,7 @@ int16_t COLssInquireAddress_Serial(CO_LSS *lss, CO_IF_FRM *frm)
 
     (void)CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 4), &ident);
     CO_SET_LONG(frm, ident, 1);
-    CO_SET_COBID(frm, CO_LSS_TX_ID);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
 
     return 1;
 }
@@ -368,7 +368,7 @@ int16_t COLssInquireNodeId(CO_LSS *lss, CO_IF_FRM *frm)
 
     nodeId = CONmtGetNodeId(&lss->Node->Nmt);
     CO_SET_BYTE (frm, nodeId, 1);
-    CO_SET_COBID(frm, CO_LSS_TX_ID);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
 
     return 1;
 }
@@ -484,7 +484,7 @@ int16_t COLssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm)
         CO_SET_LONG(frm, 0L, 0);
         CO_SET_LONG(frm, 0L, 4);
         CO_SET_BYTE(frm, CO_LSS_RES_SLAVE, 0);
-        CO_SET_COBID(frm, CO_LSS_TX_ID);
+        CO_SET_ID(frm, CO_LSS_TX_ID);
         result = 1;
     }
     return result;
@@ -501,7 +501,7 @@ int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm)
         CO_SET_LONG(frm, 0L, 0);
         CO_SET_LONG(frm, 0L, 4);
         CO_SET_BYTE(frm, CO_LSS_RES_UNCONF, 0);
-        CO_SET_COBID(frm, CO_LSS_TX_ID);
+        CO_SET_ID(frm, CO_LSS_TX_ID);
         result = 1;
     }
     return result;
