@@ -25,7 +25,7 @@
 #include "co_core.h"
 
 /******************************************************************************
-* PUBLIC CONSTANTS
+* PRIVATE CONSTANTS
 ******************************************************************************/
 
 /*! \brief NMT MODE ALLOWED OBJECTS
@@ -67,25 +67,12 @@ static const uint8_t CONmtModeCode[CO_MODE_NUM] = {
     4                            /*!< encoding for stopped mode              */
 };
 
-/*! \brief OBJECT TYPE HEARTBEAT CONSUMER
-*
-*    This object type specializes the general handling of objects for the
-*    object directory entry 0x1016. This entries is designed to provide
-*    the heartbeat consumer monitor times.
-*/
-const CO_OBJ_TYPE COTNmtHbCons = {
-    0, 0, 0, 0, COTypeNmtHbConsRead, COTypeNmtHbConsWrite
-};
+/******************************************************************************
+* PUBLIC CONSTANTS
+******************************************************************************/
 
-/*! \brief OBJECT TYPE HEARTBEAT PRODUCER
-*
-*    This object type specializes the general handling of objects for the
-*    object directory entry 0x1017. This entries is designed to provide
-*    the heartbeat producer cycle time.
-*/
-const CO_OBJ_TYPE COTNmtHbProd = {
-    0, 0, 0, 0, 0, COTypeNmtHbProdWrite
-};
+const CO_OBJ_TYPE COTNmtHbCons = { 0, 0, 0, 0, COTypeNmtHbConsRead, COTypeNmtHbConsWrite };
+const CO_OBJ_TYPE COTNmtHbProd = { 0, 0, 0, 0, 0, COTypeNmtHbProdWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -709,23 +696,4 @@ int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, void *buf, uint32_t size)
     result = COObjWrDirect(obj, (void *)&cycTime, CO_WORD);
 
     return (result);
-}
-
-void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
-{
-    (void)nmt;
-    (void)mode;
-}
-
-void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId)
-{
-    (void)nmt;
-    (void)nodeId;
-}
-
-void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
-{
-    (void)nmt;
-    (void)nodeId;
-    (void)mode;
 }

@@ -94,6 +94,10 @@
 * PUBLIC CONSTANTS
 ******************************************************************************/
     
+/*! \brief OBJECT TYPE EMCY HISTORY
+*
+*    This type is responsible for the access to the EMCY history.
+*/
 extern const CO_OBJ_TYPE COTEmcy;      /* Link to EMCY Object Type Structure */
 
 /******************************************************************************

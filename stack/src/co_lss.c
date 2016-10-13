@@ -506,28 +506,3 @@ int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm)
     }
     return result;
 }
-
-
-uint32_t RamStorage_Baudrate = 0xFFFFFFFF;
-uint8_t RamStorage_NodeId   = 0xFF;
-int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
-{
-    if (baudrate != 0) {
-        RamStorage_Baudrate = baudrate;
-    }
-    if (nodeId != 0) {
-        RamStorage_NodeId   = nodeId;
-    }
-    return (CO_ERR_NONE);
-}
-
-int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
-{
-    if (RamStorage_Baudrate != 0xFFFFFFFFL) {
-        *baudrate = RamStorage_Baudrate;
-    }
-    if (RamStorage_NodeId != 0xFF) {
-        *nodeId = RamStorage_NodeId;                  
-    }
-    return (CO_ERR_NONE);
-}

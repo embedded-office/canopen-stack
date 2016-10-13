@@ -26,12 +26,6 @@
 * GLOBAL CONSTANTS
 ******************************************************************************/
 
-/*! \brief OBJECT TYPE SDO IDENTIFIER
-*
-*    This object type specializes the general handling of objects for the
-*    object directory entries holding a SDO identifier. These entries are
-*    designed to provide the feature of changing a SDO identifier.
-*/
 const CO_OBJ_TYPE COTSdoId = { 0, 0, 0, 0, 0, COTypeSdoIdWrite };
 
 /******************************************************************************
@@ -45,7 +39,7 @@ void COSdoInit(CO_SDO *srv, CO_NODE *node)
 {
     uint8_t n;
 
-    for (n=0; n < CO_SDO_N; n++) {
+    for (n=0; n < CO_SDOS_N; n++) {
         COSdoReset (srv, n, node);
         COSdoEnable(srv, n);
     }
@@ -62,7 +56,7 @@ void COSdoReset(CO_SDO *srv, uint8_t num, CO_NODE *node)
     if (srv == 0) {
         return;
     }
-    if (num >= CO_SDO_N) {
+    if (num >= CO_SDOS_N) {
         return;
     }
 
@@ -93,7 +87,7 @@ void COSdoEnable(CO_SDO *srv, uint8_t num)
     CO_SDO  *srvnum;
     int16_t  err;
 
-    if (num >= CO_SDO_N) {
+    if (num >= CO_SDOS_N) {
         return;
     }
     srvnum       = &srv[num];
@@ -127,7 +121,7 @@ CO_SDO *COSdoCheck(CO_SDO *srv, CO_IF_FRM *frm)
 
     if (frm != 0) {
         n = 0;
-        while ((n < CO_SDO_N) && (result == 0)) {
+        while ((n < CO_SDOS_N) && (result == 0)) {
             if (CO_GET_ID(frm) == srv[n].RxId) {
                 CO_SET_ID(frm, srv[n].TxId);
                 srv[n].Frm = frm;

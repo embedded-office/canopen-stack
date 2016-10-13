@@ -46,7 +46,20 @@
 * PUBLIC CONSTANTS
 ******************************************************************************/
 
+/*! \brief OBJECT TYPE HEARTBEAT CONSUMER
+*
+*    This object type specializes the general handling of objects for the
+*    object directory entry 0x1016. This entries is designed to provide
+*    the heartbeat consumer monitor times.
+*/
 extern const CO_OBJ_TYPE COTNmtHbCons;
+
+/*! \brief OBJECT TYPE HEARTBEAT PRODUCER
+*
+*    This object type specializes the general handling of objects for the
+*    object directory entry 0x1017. This entries is designed to provide
+*    the heartbeat producer cycle time.
+*/
 extern const CO_OBJ_TYPE COTNmtHbProd;
 
 /******************************************************************************
@@ -431,18 +444,6 @@ int16_t COTypeNmtHbProdWrite(CO_OBJ *obj, void *buf, uint32_t size);
 *    This function is called when the NMT mode is changed.
 *
 * \note
-*    This implementation is an example implementation, which will do nothing.
-*    This function is optional and application specific. The function can be
-*    implemented somewhere in the in the application code. The activation of
-*    the application callback function is done with \ref CO_CB_NMT_CHANGE_EN.
-*
-* \note
-*    When disabling the application callback function, this example
-*    implementation is enabled, but not called. In fact: disabling the
-*    application function will remove the callback function call in the
-*    NMT mode management.
-*
-* \note
 *    The nmt object pointer is checked to be valid before calling this
 *    function.
 *
@@ -452,24 +453,12 @@ int16_t COTypeNmtHbProdWrite(CO_OBJ *obj, void *buf, uint32_t size);
 * \param mode
 *    the new mode
 */
-void CONmtModeChange(CO_NMT *nmt, CO_MODE mode);
+extern void CONmtModeChange(CO_NMT *nmt, CO_MODE mode);
 
 /*! \brief HEARTBEAT CONSUMER EVENT CALLBACK
 *
 *    This function is called when a heartbeat consumer monitor timer
 *    elapses, before receiving the corresponding heartbeat message.
-*
-* \note
-*    This implementation is an example implementation, which will do nothing.
-*    This function is optional and application specific. The function can be
-*    implemented somewhere in the in the application code. The activation of
-*    the application callback function is done with \ref CO_CB_HBC_EVENT_EN.
-*
-* \note
-*    When disabling the application callback function, this example
-*    implementation is enabled, but not called. In fact: disabling the
-*    application function will remove the callback function call in the
-*    consumer monitor processing.
 *
 * \note
 *    The node pointer is checked to be valid before calling this function.
@@ -480,24 +469,12 @@ void CONmtModeChange(CO_NMT *nmt, CO_MODE mode);
 * \param nodeId
 *    The nodeId of the missed heartbeat message
 */
-void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
+extern void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
 
 /*! \brief HEARTBEAT CONSUMER STATE CHANGE CALLBACK
 *
 *    This function is called when a heartbeat consumer monitor detects a
 *    state change, of a monitored node.
-*
-* \note
-*    This implementation is an example implementation, which will do nothing.
-*    This function is optional and application specific. The function can be
-*    implemented somewhere in the in the application code. The activation of
-*    the application callback function is done with \ref CO_CB_HBC_CHANGE_EN.
-*
-* \note
-*    When disabling the application callback function, this example
-*    implementation is enabled, but not called. In fact: disabling the
-*    application function will remove the callback function call in the
-*    consumer monitor processing.
 *
 * \note
 *    The node pointer is checked to be valid before calling this function.
@@ -511,6 +488,6 @@ void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
 * \param mode
 *    The new received node state of the monitored node
 */
-void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
+extern void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
 
 #endif  /* #ifndef CO_NMT_H_ */

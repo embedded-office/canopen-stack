@@ -32,24 +32,9 @@
 #define CO_PARA_RESTORE_SIG  0x64616F6c     /*!< restore parameter signature */
 
 /******************************************************************************
-* EXTERNAL FUNCTIONS
-******************************************************************************/
-
-extern int16_t COParaLoad(CO_PARA *pg);
-extern int16_t COParaSave(CO_PARA *pg);
-extern int16_t COParaDefault(CO_PARA *pg);
-
-/******************************************************************************
 * GLOBAL CONSTANTS
 ******************************************************************************/
 
-/*! \brief OBJECT TYPE PARAMETER
-*
-*    This object type specializes the general handling of objects for the
-*    object directory entries 0x1010 and 0x1011. These entries are designed
-*    to provide the store and restore feature of a configurable parameter
-*    group.
-*/
 const CO_OBJ_TYPE COTPara = { 0, 0, 0, 0, COTypeParaRead, COTypeParaWrite };
 
 /******************************************************************************

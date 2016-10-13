@@ -26,29 +26,8 @@
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-/*
-* see extern declartion
-*/
-const CO_OBJ_TYPE COTString = { 
-    0,
-    0,
-    COTypeStringSize,
-    COTypeStringCtrl,
-    COTypeStringRead,
-    0
-};
-
-/*
-* see extern declartion
-*/
-const CO_OBJ_TYPE COTDomain = {
-    0,
-    0,
-    COTypeDomainSize,
-    COTypeDomainCtrl,
-    COTypeDomainRead,
-    COTypeDomainWrite
-};
+const CO_OBJ_TYPE COTString = { 0, 0, COTypeStringSize, COTypeStringCtrl, COTypeStringRead, 0 };
+const CO_OBJ_TYPE COTDomain = { 0, 0, COTypeDomainSize, COTypeDomainCtrl, COTypeDomainRead, COTypeDomainWrite };
 
 /******************************************************************************
 * FUNCTIONS

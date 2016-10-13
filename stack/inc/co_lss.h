@@ -142,23 +142,11 @@ int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm);
 * CALLBACK FUNCTIONS
 ******************************************************************************/
 
-
 /*! \brief LSS CONFIGURATION STORE CALLBACK
 *
 *    This function is called with new configuration data, which is set by
-*    the LSS service.
-*
-* \note
-*    This implementation is an example implementation, which will do nothing.
-*    This function is optional and application specific. The function can be
-*    implemented somewhere in the in the application code. The activation of
-*    the application callback function is done with \ref CO_CB_LSS_STORE_EN.
-*
-* \note
-*    When disabling the application callback function, this example
-*    implementation is enabled, but not called. In fact: disabling the
-*    application function will remove the callback function call in the
-*    interface receive processing.
+*    the LSS service. If a configuration data should stay unchanged, the
+*    argument is 0.
 *
 * \note
 *    The CAN frame pointer is checked to be valid before calling this
@@ -169,36 +157,31 @@ int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm);
 *    
 * \param nodeId
 *    The configured node id for storage
+*
+* \retval  =CO_ERR_NONE   configuration stored
+* \retval !=CO_ERR_NONE   error is detected
 */
-int16_t COLssStore(uint32_t baudrate, uint8_t nodeId);
+extern int16_t COLssStore(uint32_t baudrate, uint8_t nodeId);
 
 /*! \brief LSS CONFIGURATION LOAD CALLBACK
 *
 *    This function is called during reset communication to load the stored
-*    LSS configuration.
-*
-* \note
-*    This implementation is an example implementation, which will do nothing.
-*    This function is optional and application specific. The function can be
-*    implemented somewhere in the in the application code. The activation of
-*    the application callback function is done with \ref CO_CB_LSS_STORE_EN.
-*
-* \note
-*    When disabling the application callback function, this example
-*    implementation is enabled, but not called. In fact: disabling the
-*    application function will remove the callback function call in the
-*    interface receive processing.
+*    LSS configuration. If no storage for a configuration data is found,
+*    the referenced argument should stay unchanged.
 *
 * \note
 *    The CAN frame pointer is checked to be valid before calling this
 *    function.
 *
 * \param baudrate
-*    The configured baudrate from storage
+*    Reference to the baudrate, which should be set to storage value
 *    
 * \param nodeId
-*    The configured node id from storage
+*    Reference to the baudrate, which should be set to storage value
+*
+* \retval  =CO_ERR_NONE   configuration stored
+* \retval !=CO_ERR_NONE   error is detected
 */
-int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId);
+extern int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId);
 
 #endif  /* #ifndef CO_LSS_H_ */

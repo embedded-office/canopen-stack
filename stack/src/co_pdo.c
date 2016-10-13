@@ -20,67 +20,19 @@
 * INCLUDES
 ******************************************************************************/
 
+#include "co_pdo.h"
+
 #include "co_core.h"
-
-/******************************************************************************
-* EXTERNAL FUNCTIONS
-******************************************************************************/
-
-void COTPdoTransmit(CO_IF_FRM *frm); 
-int16_t CORPdoReceive(CO_IF_FRM *frm);
 
 /******************************************************************************
 * GLOBAL CONSTANTS
 ******************************************************************************/
 
-/*! \brief OBJECT TYPE: ASYNCHRONOUS TRANSMIT PDO OBJECT
-*
-*    This object type specializes the general handling of objects for
-*    object directory entries, which triggers a TPDO event on changed values.
-*/
-const CO_OBJ_TYPE COTAsync = { 0, 0, 0, COTypeAsyncCtrl, 0, 0 };
-
-/*! \brief OBJECT TYPE: TRANSMIT PDO EVENT TIMER
-*
-*    This object type specializes the general handling of the event timer
-*    object within the TPDO communication profile.
-*/
-const CO_OBJ_TYPE COTEvent = { 0, 0, 0, 0, 0, COTypeEventWrite };
-
-/*! \brief OBJECT TYPE: NUMBER OF PDO MAPPINGS
-*
-*    This type is responsible for the access to the number of PDO mapping
-*    entries. Due to the special handling of PDO mapping change accesses, only
-*    the write access needs to be handled via the type structure; the read
-*    operation can be performed directly.
-*/
+const CO_OBJ_TYPE COTAsync   = { 0, 0, 0, COTypeAsyncCtrl, 0, 0 };
+const CO_OBJ_TYPE COTEvent   = { 0, 0, 0, 0, 0, COTypeEventWrite };
 const CO_OBJ_TYPE COTPdoMapN = { 0, 0, 0, 0, 0, COTypePdoMapNumWrite };
-
-/*! \brief OBJECT TYPE: PDO MAPPING ENTRY
-*
-*    This type is responsible for the access to the PDO mapping entries. Due
-*    to the special handling of PDO mapping change accesses, only the write
-*    access needs to be handled via the type structure; the read operation
-*    can be performed directly.
-*/
-const CO_OBJ_TYPE COTPdoMap = { 0, 0, 0, 0, 0, COTypePdoMapWrite };
-
-/*! \brief OBJECT TYPE: PDO IDENTIFIER
-*
-*    This type is responsible for the access to the PDO communication
-*    entries. Due to the special handling of PDO communication change
-*    accesses, only the write access needs to be handled via the type
-*    structure; the read operation can be performed directly.
-*/
-const CO_OBJ_TYPE COTPdoId = { 0, 0, 0, 0, 0, COTypePdoComIdWrite };
-
-/*! \brief OBJECT TYPE: PDO TRANSMISSION TYPE
-*
-*    This type is responsible for the access to the PDO communication
-*    entries. Due to the special handling of PDO communication change
-*    accesses, only the write access needs to be handled via the type
-*    structure; the read operation can be performed directly.
-*/
+const CO_OBJ_TYPE COTPdoMap  = { 0, 0, 0, 0, 0, COTypePdoMapWrite };
+const CO_OBJ_TYPE COTPdoId   = { 0, 0, 0, 0, 0, COTypePdoComIdWrite };
 const CO_OBJ_TYPE COTPdoType = { 0, 0, 0, 0, 0, COTypePdoComTypeWrite };
 
 /******************************************************************************
@@ -426,8 +378,8 @@ void COTPdoTx (CO_TPDO *pdo)
             frm.DLC += (uint8_t)sz;
         }
     }
-    COTPdoTransmit(&frm);
 
+    COPdoTransmit(&frm);
     (void)COIfSend(&pdo->Node->If, &frm);
 }
 
@@ -765,13 +717,13 @@ void CORPdoRx(CO_RPDO *pdo, uint16_t num, CO_IF_FRM *frm)
 {
     int16_t err = 0;
 
-    if ((pdo[num].Flag & CO_RPDO_FLG_S_) == 0) {
-        err = CORPdoReceive(frm);
-        if (err == 0) {
+    err = COPdoReceive(frm);
+    if (err == 0) {
+        if ((pdo[num].Flag & CO_RPDO_FLG_S_) == 0) {
             CORPdoWrite(&pdo[num], frm);
+        } else {
+            COSyncRx(&pdo[num].Node->Sync, frm);
         }
-    } else {
-        COSyncRx(&pdo[num].Node->Sync, frm);
     }
 }
 

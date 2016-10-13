@@ -118,11 +118,54 @@ typedef struct CO_RPDO_T {
 * GLOBAL VARIABLES
 ******************************************************************************/
 
+/*! \brief OBJECT TYPE: ASYNCHRONOUS TRANSMIT PDO OBJECT
+*
+*    This object type specializes the general handling of objects for
+*    object directory entries, which triggers a TPDO event on changed values.
+*/
 extern const CO_OBJ_TYPE COTAsync;          /*!< Async Object Type           */
+
+/*! \brief OBJECT TYPE: TRANSMIT PDO EVENT TIMER
+*
+*    This object type specializes the general handling of the event timer
+*    object within the TPDO communication profile.
+*/
 extern const CO_OBJ_TYPE COTEvent;          /*!< PDO Event Type              */
+
+/*! \brief OBJECT TYPE: NUMBER OF PDO MAPPINGS
+*
+*    This type is responsible for the access to the number of PDO mapping
+*    entries. Due to the special handling of PDO mapping change accesses, only
+*    the write access needs to be handled via the type structure; the read
+*    operation can be performed directly.
+*/
 extern const CO_OBJ_TYPE COTPdoMapN;        /*!< PDO Map Numbers Type        */
+
+/*! \brief OBJECT TYPE: PDO MAPPING ENTRY
+*
+*    This type is responsible for the access to the PDO mapping entries. Due
+*    to the special handling of PDO mapping change accesses, only the write
+*    access needs to be handled via the type structure; the read operation
+*    can be performed directly.
+*/
 extern const CO_OBJ_TYPE COTPdoMap;         /*!< PDO Mapping Type            */
+
+/*! \brief OBJECT TYPE: PDO IDENTIFIER
+*
+*    This type is responsible for the access to the PDO communication
+*    entries. Due to the special handling of PDO communication change
+*    accesses, only the write access needs to be handled via the type
+*    structure; the read operation can be performed directly.
+*/
 extern const CO_OBJ_TYPE COTPdoId;          /*!< PDO Identifier Type         */
+
+/*! \brief OBJECT TYPE: PDO TRANSMISSION TYPE
+*
+*    This type is responsible for the access to the PDO communication
+*    entries. Due to the special handling of PDO communication change
+*    accesses, only the write access needs to be handled via the type
+*    structure; the read operation can be performed directly.
+*/
 extern const CO_OBJ_TYPE COTPdoType;        /*!< PDO Transmission Type       */
 
 /******************************************************************************
@@ -599,29 +642,31 @@ int16_t COTypePdoComTypeWrite(CO_OBJ* obj, void *buf, uint32_t size);
 * CALLBACK FUNCTIONS
 ******************************************************************************/
 
-/* todo: function header of callback function COTPdoTransmit() */
-void COTPdoTransmit(CO_IF_FRM *frm);
-
-/*! \brief  RPDO RECEIVE CALLBACK
+/*! \brief  PDO TRANSMIT CALLBACK
 *
-*    This function is called just before the RPDO receiption will distribute
-*    the RPDO message frame into the object directory. This callback function
-*    is able to <i>consume</i> the RPDO message frame, e.g. the distribution
-*    into the object directory will be skipped. Furthermore without
-*    <i>consuming</i> the RPDO message frame, this function could modify the
-*    recieved data before distribution takes place.
-*
-* \note
-*    This function can be implemented within the application. This function
-*    is a placeholder only. The application implementation of this function
-*    is activated with the configuration define \ref CO_CB_RPDO_RECEIVE_EN.
+*    This function is called just before the PDO transmission will send
+*    the PDO message frame to the CANopen network.
 *
 * \param frm
-*    Pointer to TPDO message frame
+*    Pointer to PDO message frame
+*/
+extern void COPdoTransmit(CO_IF_FRM *frm);
+
+/*! \brief  PDO RECEIVE CALLBACK
+*
+*    This function is called just before the PDO receiption will distribute
+*    the PDO message frame into the object directory. This callback function
+*    is able to <i>consume</i> the PDO message frame, e.g. the distribution
+*    into the object directory will be skipped. Furthermore without
+*    <i>consuming</i> the PDO message frame, this function could modify the
+*    recieved data before distribution takes place.
+*
+* \param frm
+*    Pointer to PDO message frame
 *
 * \retval   =0    CAN message frame is not consumed
 * \retval   >0    CAN message frame is consumed
 */
-int16_t CORPdoReceive(CO_IF_FRM *frm);
+extern int16_t COPdoReceive(CO_IF_FRM *frm);
 
 #endif  /* #ifndef CO_TPDO_H_ */

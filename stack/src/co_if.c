@@ -116,11 +116,3 @@ void COIfEnable(CO_IF *cif, uint32_t baudrate)
     	cif->Node->Baudrate = baudrate;
     }
 }
-
-/*
-* see function definition
-*/
-void COIfReceive(CO_IF_FRM *frm)
-{
-    (void)frm;
-}

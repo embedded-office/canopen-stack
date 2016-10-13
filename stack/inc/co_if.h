@@ -288,18 +288,12 @@ void COIfEnable(CO_IF *cif, uint32_t baudrate);
 *    (processed) by the CANopen stack.
 *
 * \note
-*    This implementation is an example implementation, which will do
-*    nothing. This function is optional and application specific. The
-*    function can be implemented somewhere in the in the application
-*    code.
-*
-* \note
 *    The CAN frame pointer is checked to be valid before calling this
 *    function.
 *
 * \param frm
 *    The received CAN frame
 */
-void COIfReceive(CO_IF_FRM *frm);
+extern void COIfReceive(CO_IF_FRM *frm);
 
 #endif /* CO_IF_H_ */

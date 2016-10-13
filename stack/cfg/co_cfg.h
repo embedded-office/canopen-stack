@@ -19,29 +19,41 @@
 #ifndef CO_CFG_H_
 #define CO_CFG_H_
 
-#ifdef __cplusplus
-extern "C"
-{
+/*! \brief DEFAULT SDO SERVER
+*
+*    This configuration define specifies how many SDO servers the library
+*    will support.
+*/
+#ifndef CO_SDOS_N
+#define CO_SDOS_N               1
 #endif
 
-#ifndef CO_SDO_N
-#define CO_SDO_N                1
-#endif
+/*! \brief DEFAULT EMERGENCY CODES
+*
+*    This configuration define specifies how many emergency codes the library
+*    will support.
+*/
 #ifndef CO_EMCY_N
-#define CO_EMCY_N               4
+#define CO_EMCY_N              32
 #endif
-#ifndef CO_TMR_N
-#define CO_TMR_N                5
-#endif
+
+/*! \brief DEFAULT RECEIVE PDO
+*
+*    This configuration define specifies how many receive PDOs the library
+*    will support.
+*/
 #ifndef CO_RPDO_N
 #define CO_RPDO_N               4
 #endif
+
+/*! \brief DEFAULT TRANSMIT PDO
+*
+*    This configuration define specifies how many transmit PDOs the library
+*    will support.
+*/
 #ifndef CO_TPDO_N
 #define CO_TPDO_N               4
 #endif
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif  /* #ifndef CO_CFG_H_ */

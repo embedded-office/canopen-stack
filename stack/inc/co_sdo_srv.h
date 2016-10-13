@@ -63,7 +63,13 @@
 * PUBLIC CONSTANTS
 ******************************************************************************/
 
-extern const CO_OBJ_TYPE COTSdoId;   /* Link to SDO-Id Object Type Structure */
+/*! \brief OBJECT TYPE SDO IDENTIFIER
+*
+*    This object type specializes the general handling of objects for the
+*    object directory entries holding a SDO identifier. These entries are
+*    designed to provide the feature of changing a SDO identifier.
+*/
+extern const CO_OBJ_TYPE COTSdoId;
     
 /******************************************************************************
 * PUBLIC TYPES

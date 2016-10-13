@@ -320,7 +320,7 @@ typedef struct CO_DOM_T {
 *    If the object entry is marked to be read-/write-able, the write access
 *    to the object entry will change the start address of the string - not
 *    the string itself. If writing the string itself is needed, another
-*    (user-)type must be defined. The write function must be implemented
+*    (user-)type must be defined. The write function must be adapted
 *    with the needed memory handling. The other functions may be reused.
 */
 extern const CO_OBJ_TYPE COTString;

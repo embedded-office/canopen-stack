@@ -65,6 +65,13 @@ typedef struct CO_PARA_T {
 * EXTERN CONSTANTS
 ******************************************************************************/
 
+/*! \brief OBJECT TYPE PARAMETER
+*
+*    This object type specializes the general handling of objects for the
+*    object directory entries 0x1010 and 0x1011. These entries are designed
+*    to provide the store and restore feature of a configurable parameter
+*    group.
+*/
 extern const CO_OBJ_TYPE COTPara;
 
 /******************************************************************************
@@ -178,11 +185,6 @@ int16_t COTypeParaWrite(CO_OBJ* obj, void *buf, uint32_t size);
 *    parameter group memory.
 *
 * \note
-*    This implementation is an example implementation, which will copy the
-*    given default memory to the parameters. This function is application
-*    specific and must be implemented somewhere in the application code.
-*
-* \note
 *    The parameter group info pointer is checked to be valid before calling
 *    this function.
 *
@@ -192,7 +194,7 @@ int16_t COTypeParaWrite(CO_OBJ* obj, void *buf, uint32_t size);
 * \retval  =0    parameter loading successful
 * \retval  <0    error is detected and function aborted
 */
-int16_t COParaLoad(CO_PARA *pg);
+extern int16_t COParaLoad(CO_PARA *pg);
 
 /*! \brief SAVE PARAMETER VALUES CALLBACK
 *
@@ -201,11 +203,6 @@ int16_t COParaLoad(CO_PARA *pg);
 *    into NVM.
 *
 * \note
-*    This implementation is an example implementation, which will do nothing.
-*    This function is application specific and must be implemented somewhere
-*    in the application code.
-*
-* \note
 *    The parameter group info pointer is checked to be valid before calling
 *    this function.
 *
@@ -215,7 +212,7 @@ int16_t COParaLoad(CO_PARA *pg);
 * \retval  =0    parameter loading successful
 * \retval  <0    error is detected and function aborted
 */
-int16_t COParaSave(CO_PARA *pg);
+extern int16_t COParaSave(CO_PARA *pg);
 
 /*! \brief SET DEFAULT PARAMETER VALUES CALLBACK
 *
@@ -224,11 +221,6 @@ int16_t COParaSave(CO_PARA *pg);
 *    defaults in the current parameter group memory.
 *
 * \note
-*    This implementation is an example implementation, which will copy the
-*    given default memory to the parameters. This function is application
-*    specific and must be implemented somewhere in the application code.
-*
-* \note
 *    The parameter group info pointer is checked to be valid before calling
 *    this function.
 *
@@ -238,6 +230,6 @@ int16_t COParaSave(CO_PARA *pg);
 * \retval  =0    parameter loading successful
 * \retval  <0    error is detected and function aborted
 */
-int16_t COParaDefault(CO_PARA *pg);
+extern int16_t COParaDefault(CO_PARA *pg);
 
 #endif  /* #ifndef CO_PARA_H_ */

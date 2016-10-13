@@ -53,7 +53,7 @@ typedef struct CO_NODE_T {
     struct CO_EMCY_T       Emcy;                 /*!< Node error status      */
     struct CO_NMT_T        Nmt;                  /*!< Network management     */
     struct CO_TMR_T        Tmr;                  /*!< Timer manager          */
-    struct CO_SDO_T        Sdo[CO_SDO_N];        /*!< SDO Server Array       */
+    struct CO_SDO_T        Sdo[CO_SDOS_N];        /*!< SDO Server Array       */
     uint8_t               *SdoBuf;               /*!< SDO Transfer Buffer    */
     struct CO_RPDO_T       RPdo[CO_RPDO_N];      /*!< RPDO Array             */
     struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */
