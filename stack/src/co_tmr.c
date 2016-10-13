@@ -66,12 +66,13 @@ int16_t COTmrCreate(CO_TMR      *tmr,
         tmr->Node->Error = CO_ERR_BAD_ARG;
         return -1;
     }
-    if (tmr->Acts == 0) {
-        tmr->Node->Error = CO_ERR_TMR_NO_ACT;
-        return -1;
-    }
 
     COTmrLock();
+    if (tmr->Acts == 0) {
+        tmr->Node->Error = CO_ERR_TMR_NO_ACT;
+        COTmrUnlock();
+        return -1;
+    }
 
     act            = tmr->Acts;
     tmr->Acts      = act->Next;

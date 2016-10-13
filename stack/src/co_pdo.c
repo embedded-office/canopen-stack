@@ -172,7 +172,7 @@ void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
         for (on = 0; on < 8; on++) {
             pdo[num].Map[on] = 0;
         }
-        err = CODirRdByte(&node->Dir, CO_DEV(0x1800,0),&tnum);
+        err = CODirRdByte(&node->Dir, CO_DEV(0x1800 + num,0),&tnum);
         if (err == CO_ERR_NONE) {
             COTPdoReset(pdo, num);
         } else {
@@ -345,6 +345,7 @@ void COTPdoTmrEvent (void *parg)
     CO_TPDO *pdo;
 
     pdo = (CO_TPDO *)parg;
+    pdo->EvTmr = -1;
     COTPdoTx(pdo);
 }
 
