@@ -100,7 +100,6 @@ void COIfInit(CO_IF *cif, struct CO_NODE_T *node)
 void COIfEnable(CO_IF *cif, uint32_t baudrate)
 {
     int16_t err = -1;
-    CO_IF_DRV  drv;
 
     if (baudrate == 0) {
     	baudrate = cif->Node->Baudrate;
