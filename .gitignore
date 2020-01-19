@@ -46,3 +46,5 @@ prj_canopenstack*
 /.vs/
 *.old00
 /.history
+/build
+/.vscode
