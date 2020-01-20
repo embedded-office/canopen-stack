@@ -4,12 +4,12 @@ project(canopen-stack VERSION 3.3.0)
 include(CTest)
 enable_testing()
 
-include_directories(stack/inc)
-include_directories(stack/cfg)
+include_directories(canopen/inc)
+include_directories(canopen/cfg)
 
 file(GLOB_RECURSE SOURCES
-    stack/src/*.c
-    stack/inc/*.h
+    canopen/src/*.c
+    canopen/inc/*.h
 )
 
 add_library(${PROJECT_NAME} ${SOURCES})

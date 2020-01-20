@@ -40,7 +40,7 @@ The CANopen stack implementation supports all mandatory services and many of the
 
 ### Integrate sourcecode in your project
 
-Get the repository and add the directory `/stack/src` to your project sourcefiles and the directories `stack/inc` and `stack/cfg` to your include searchpath. You should be able to compile your project without an error.
+Get the repository and add the directory `/canopen/src` to your project sourcefiles and the directories `canopen/inc` and `canopen/cfg` to your include searchpath. You should be able to compile your project without an error.
 
 ### Connect with CAN controller
 
