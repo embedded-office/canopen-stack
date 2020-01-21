@@ -17,7 +17,8 @@
 #ifndef CO_TYPES_H_
 #define CO_TYPES_H_
 
-#if defined(__STDC__) && (__STDC_VERSION__ >= 199901L)           /* ANSI C99 */
+#if defined(__STDC__) && (__STDC_VERSION__ >= 199901L) ||       /* ANSI C99 */\
+    defined(_MSC_VER)
 
 /******************************************************************************
 * INCLUDES
@@ -42,15 +43,17 @@ typedef int              bool;
 #define true             1u
 
 /*-- stdint.h --*/
-typedef unsigned char    uint8_t;
-typedef unsigned char    int8_t;
-typedef unsigned short   uint16_t;
-typedef unsigned short   int16_t;
-typedef unsigned long    uint32_t;
-typedef unsigned long    int32_t;
+typedef unsigned char       uint8_t;
+typedef   signed char       int8_t;
+typedef unsigned short      uint16_t;
+typedef   signed short      int16_t;
+typedef unsigned long       uint32_t;
+typedef   signed long       int32_t;
+typedef unsigned long long  uint64_t;
+typedef   signed long long  int64_t;
 
 /*-- crtdefs.h --*/
-typedef unsigned long    intptr_t;
+typedef unsigned int        uintptr_t;
 
 #endif
 
