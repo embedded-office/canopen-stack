@@ -633,6 +633,9 @@ void COSdoAbortReq(CO_SDO *srv);
 * \param obj
 *    Ptr to addressed object entry
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Ptr to data buffer
 *
@@ -644,6 +647,6 @@ void COSdoAbortReq(CO_SDO *srv);
 *
 * \internal
 */
-int16_t COTypeSdoIdWrite(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COTypeSdoIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 #endif  /* #ifndef CO_SDO_H_ */

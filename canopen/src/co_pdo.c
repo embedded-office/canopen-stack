@@ -26,12 +26,12 @@
 * GLOBAL CONSTANTS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTAsync   = { 0, 0, 0, COTypeAsyncCtrl, 0, 0 };
-const CO_OBJ_TYPE COTEvent   = { 0, 0, 0, 0, 0, COTypeEventWrite };
-const CO_OBJ_TYPE COTPdoMapN = { 0, 0, 0, 0, 0, COTypePdoMapNumWrite };
-const CO_OBJ_TYPE COTPdoMap  = { 0, 0, 0, 0, 0, COTypePdoMapWrite };
-const CO_OBJ_TYPE COTPdoId   = { 0, 0, 0, 0, 0, COTypePdoComIdWrite };
-const CO_OBJ_TYPE COTPdoType = { 0, 0, 0, 0, 0, COTypePdoComTypeWrite };
+const CO_OBJ_TYPE COTAsync   = { 0, COTypeAsyncCtrl, 0, 0 };
+const CO_OBJ_TYPE COTEvent   = { 0, 0, 0, COTypeEventWrite };
+const CO_OBJ_TYPE COTPdoMapN = { 0, 0, 0, COTypePdoMapNumWrite };
+const CO_OBJ_TYPE COTPdoMap  = { 0, 0, 0, COTypePdoMapWrite };
+const CO_OBJ_TYPE COTPdoId   = { 0, 0, 0, COTypePdoComIdWrite };
+const CO_OBJ_TYPE COTPdoType = { 0, 0, 0, COTypePdoComTypeWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -194,9 +194,6 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
                 timer = CO_TPDO_ROUND(timer, CO_TPDO_TMR_MIN);
             }
         }
-    } else {
-        pdo->Node->Error = CO_ERR_TPDO_COM_OBJ;
-        return;
     }
     
     err = CODirRdLong(cod, CO_DEV(0x1800 + num, 1), &id);
@@ -362,9 +359,9 @@ void COTPdoTx (CO_TPDO *pdo)
     frm.Identifier = pdo->Identifier;
     frm.DLC        = 0;
     for (num = 0; num < pdo->ObjNum; num++) {
-        sz = COObjGetSize(pdo->Map[num], 0L);
+        sz = COObjGetSize(pdo->Map[num], pdo->Node, 0L);
         if (sz <= (uint32_t)(8 - frm.DLC)) {
-            COObjRdValue(pdo->Map[num], &data, CO_LONG, pdo->Node->NodeId);
+            COObjRdValue(pdo->Map[num], pdo->Node, &data, CO_LONG, pdo->Node->NodeId);
 
             if (sz == CO_BYTE) {
                 CO_SET_BYTE(&frm, data, frm.DLC);
@@ -443,15 +440,13 @@ void COTPdoMapDelSig(CO_TPDO_LINK *map, CO_OBJ *obj)
 /*
 * see function definition
 */
-int16_t COTypeAsyncCtrl (CO_OBJ* obj, uint16_t func, uint32_t para)
+int16_t COTypeAsyncCtrl (CO_OBJ* obj, struct CO_NODE_T *node, uint16_t func, uint32_t para)
 {
-    CO_NODE *node;
     int16_t  result = -1;
 
     (void)para;
 
     if (func == CO_TPDO_ASYNC) {
-        node = obj->Type->Dir->Node;
         COTPdoTrigObj(node->TPdo, obj);
         result = 0;
     }
@@ -462,7 +457,7 @@ int16_t COTypeAsyncCtrl (CO_OBJ* obj, uint16_t func, uint32_t para)
 /*
 * see function definition
 */
-int16_t COTypeEventWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_DIR   *cod;
     CO_NMT   *nmt;
@@ -477,11 +472,11 @@ int16_t COTypeEventWrite(CO_OBJ* obj, void *buf, uint32_t size)
     if (err != CO_ERR_NONE) {
         return (-1);
     }
-    cod     = obj->Type->Dir;
-    nmt     = &cod->Node->Nmt;
+    cod     = &node->Dir;
+    nmt     = &node->Nmt;
     num     = CO_GET_IDX(obj->Key);
     num    &= 0x1FF;
-    pdo     = &cod->Node->TPdo[num];
+    pdo     = &node->TPdo[num];
     if (nmt->Mode != CO_OPERATIONAL) {
         return (err);
     }
@@ -560,7 +555,7 @@ void CORPdoInit(CO_RPDO *pdo, CO_NODE *node)
         pdo[num].Node       = node;
         pdo[num].Identifier = 0;
         pdo[num].ObjNum     = 0;
-        err = CODirRdByte(&node->Dir, CO_DEV(0x1400, 0), &rnum);
+        err = CODirRdByte(&node->Dir, CO_DEV(0x1400 + num, 0), &rnum);
         if (err == CO_ERR_NONE) {
             CORPdoReset(pdo, num);
         } else {
@@ -597,10 +592,6 @@ int16_t CORPdoReset(CO_RPDO *pdo, int16_t num)
     /* communication */
     err = CODirRdByte(cod, CO_DEV(0x1400 + num, 2), &type);
     if (err != CO_ERR_NONE) {
-        pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
-        return (-1);
-    }
-    if (type <= 240) {
         pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
         return (-1);
     }
@@ -763,19 +754,19 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
     for (on = 0; on < pdo->ObjNum; on++) {
         obj = pdo->Map[on];
         if (obj != 0) {
-            sz = (uint8_t)COObjGetSize(obj, 0L);
+            sz = (uint8_t)COObjGetSize(obj, pdo->Node, 0L);
             if (sz == CO_BYTE) {
                 val08 = CO_GET_BYTE(frm, dlc);
                 dlc++;
-                COObjWrValue(obj, (void *)&val08, sz, pdo->Node->NodeId);
+                COObjWrValue(obj, pdo->Node, (void *)&val08, sz, pdo->Node->NodeId);
             } else if (sz == CO_WORD) {
                 val16 = CO_GET_WORD(frm, dlc);
                 dlc += 2;
-                COObjWrValue(obj, (void *)&val16, sz, pdo->Node->NodeId);
+                COObjWrValue(obj, pdo->Node, (void *)&val16, sz, pdo->Node->NodeId);
             } else if (sz == CO_LONG) {
                 val32 = CO_GET_LONG(frm, dlc);
                 dlc += 4;
-                COObjWrValue(obj, (void *)&val32, sz, pdo->Node->NodeId);
+                COObjWrValue(obj, pdo->Node, (void *)&val32, sz, pdo->Node->NodeId);
             }
         }
     }
@@ -784,7 +775,7 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
 /*
 * see function definition
 */
-int16_t COTypePdoMapNumWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypePdoMapNumWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_DIR   *cod;
     uint32_t  id;
@@ -807,7 +798,7 @@ int16_t COTypePdoMapNumWrite(CO_OBJ* obj, void *buf, uint32_t size)
         return (CO_ERR_OBJ_MAP_LEN);
     }
 
-    cod     = obj->Type->Dir;
+    cod     = &node->Dir;
     pmapidx = CO_GET_IDX(obj->Key);
     if ((pmapidx >= 0x1600) && (pmapidx <= 0x17FF)) {
     } else if ((pmapidx >= 0x1A00) && (pmapidx <= 0x1BFF)) {
@@ -842,7 +833,7 @@ int16_t COTypePdoMapNumWrite(CO_OBJ* obj, void *buf, uint32_t size)
 /*
 * see function definition
 */
-int16_t COTypePdoMapWrite(CO_OBJ *obj, void *buf, uint32_t size)
+int16_t COTypePdoMapWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_DIR  *cod;
     CO_OBJ  *objm;
@@ -862,7 +853,7 @@ int16_t COTypePdoMapWrite(CO_OBJ *obj, void *buf, uint32_t size)
         return (CO_ERR_TPDO_MAP_OBJ);
     }
 
-    cod     = obj->Type->Dir;
+    cod     = &node->Dir;
     pmapidx = CO_GET_IDX(obj->Key);
     if ((pmapidx >= 0x1600) && (pmapidx <= 0x17FF)) {
     } else if ((pmapidx >= 0x1A00) && (pmapidx <= 0x1BFF)) {
@@ -912,7 +903,7 @@ int16_t COTypePdoMapWrite(CO_OBJ *obj, void *buf, uint32_t size)
 /*
 * see function definition
 */
-int16_t COTypePdoComIdWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_DIR   *cod;
     CO_NMT   *nmt;
@@ -937,17 +928,17 @@ int16_t COTypePdoComIdWrite(CO_OBJ* obj, void *buf, uint32_t size)
         return (CO_ERR_OBJ_RANGE);
     }
 
-    cod     = obj->Type->Dir;
-    nmt     = &cod->Node->Nmt;
+    cod     = &node->Dir;
+    nmt     = &node->Nmt;
     pcomidx = CO_GET_IDX(obj->Key);
     if ((pcomidx >= 0x1400) && (pcomidx <= 0x15FF)) {
-        rpdo = cod->Node->RPdo;
+        rpdo = node->RPdo;
         num  = pcomidx & 0x1FF;
     } else if ((pcomidx >= 0x1800) && (pcomidx <= 0x19FF)) {
         if ((nid & CO_TPDO_COBID_REMOTE) == 0) {
             return (CO_ERR_OBJ_RANGE);
         }
-        tpdo = cod->Node->TPdo;
+        tpdo = node->TPdo;
         num  = pcomidx & 0x1FF;
     } else {
         return (CO_ERR_TPDO_COM_OBJ);
@@ -990,7 +981,7 @@ int16_t COTypePdoComIdWrite(CO_OBJ* obj, void *buf, uint32_t size)
 /*
 * see function definition
 */
-int16_t COTypePdoComTypeWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypePdoComTypeWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_DIR   *cod;
     uint8_t   type;
@@ -1005,12 +996,8 @@ int16_t COTypePdoComTypeWrite(CO_OBJ* obj, void *buf, uint32_t size)
         return (CO_ERR_PARA_IDX);
     }
 
-    type = *(uint8_t*)buf;
-    if (type < 254) {
-        return (CO_ERR_OBJ_ACC);
-    }
-
-    cod     = obj->Type->Dir;
+    type    = *(uint8_t*)buf;
+    cod     = &node->Dir;
     pcomidx = CO_GET_IDX(obj->Key);
     if ((pcomidx >= 0x1400) && (pcomidx <= 0x15FF)) {
     } else if ((pcomidx >= 0x1800) && (pcomidx <= 0x19FF)) {

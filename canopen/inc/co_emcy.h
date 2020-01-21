@@ -432,6 +432,9 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
 * \param obj
 *    EMCY history object entry reference
 *
+* \param node
+*    Reference to parent node
+*
 * \param buf
 *    Pointer to buffer memory
 *
@@ -443,7 +446,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
 *
 * \internal
 */
-int16_t COTypeEmcyRead(CO_OBJ *obj, void *buf, uint32_t len);
+int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief EMCY OBJECT WRITE ACCESS
 *
@@ -454,6 +457,9 @@ int16_t COTypeEmcyRead(CO_OBJ *obj, void *buf, uint32_t len);
 *
 * \param obj
 *    EMCY history object entry reference
+*
+* \param node
+*    reference to parent node
 *
 * \param buf
 *    Pointer to buffer memory
@@ -466,6 +472,6 @@ int16_t COTypeEmcyRead(CO_OBJ *obj, void *buf, uint32_t len);
 *
 * \internal
 */
-int16_t COTypeEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len);
+int16_t COTypeEmcyWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 #endif  /* #ifndef CO_EMCY_H_ */

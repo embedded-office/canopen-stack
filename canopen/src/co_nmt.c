@@ -69,8 +69,8 @@ static const uint8_t CONmtModeCode[CO_MODE_NUM] = {
 * PUBLIC CONSTANTS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTNmtHbCons = { 0, 0, 0, 0, COTypeNmtHbConsRead, COTypeNmtHbConsWrite };
-const CO_OBJ_TYPE COTNmtHbProd = { 0, 0, 0, 0, 0, COTypeNmtHbProdWrite };
+const CO_OBJ_TYPE COTNmtHbCons = { 0, 0, COTypeNmtHbConsRead, COTypeNmtHbConsWrite };
+const CO_OBJ_TYPE COTNmtHbProd = { 0, 0, 0, COTypeNmtHbProdWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -296,7 +296,7 @@ void CONmtHbConsInit(CO_NMT *nmt)
         node->Error = CO_ERR_NONE;
         return;
     }
-    err = COObjRdValue(obj, &num, CO_BYTE, 0);
+    err = COObjRdValue(obj, node, &num, CO_BYTE, 0);
     if ((err != CO_ERR_NONE) || (num < 1)) {
         node->Error = CO_ERR_CFG_1016;
         return;
@@ -465,9 +465,8 @@ void CONmtHbConsMonitor(void *parg)
 /*
 * see function definition
 */
-int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_NODE    *node;
     CO_DIR     *cod;
     CO_HBCONS  *hbc;
     int16_t     result = CO_ERR_TYPE_WR;
@@ -475,8 +474,7 @@ int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, void *buf, uint32_t size)
     uint16_t    time;
     uint8_t     nodeid;
 
-    cod  = obj->Type->Dir;
-    node = cod->Node;
+    cod  = &node->Dir;
     hbc  = (CO_HBCONS *)obj->Data;
     if (hbc == 0) {
         node->Error = CO_ERR_CFG_1016;
@@ -497,7 +495,7 @@ int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, void *buf, uint32_t size)
 /*
 * see function definition
 */
-int16_t COTypeNmtHbConsRead(CO_OBJ *obj, void *buf, uint32_t len)
+int16_t COTypeNmtHbConsRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
 {
     CO_HBCONS *hbc;
     int16_t    result = CO_ERR_NONE;
@@ -656,9 +654,8 @@ int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 /*
 * see function definition
 */
-int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_NODE  *node;
     uint16_t  cycTime;
     int16_t   result = CO_ERR_OBJ_ACC;
 
@@ -669,7 +666,6 @@ int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, void *buf, uint32_t size)
         return (CO_ERR_CFG_1017_0);
     }
     cycTime = (uint16_t)(*(uint32_t *)buf);
-    node    = obj->Type->Dir->Node;
 
     if (node->Nmt.Tmr >= 0) {
         result = COTmrDelete(&node->Tmr, node->Nmt.Tmr);

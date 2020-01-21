@@ -24,7 +24,7 @@
 * GLOBAL CONSTANTS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTSdoId = { 0, 0, 0, 0, 0, COTypeSdoIdWrite };
+const CO_OBJ_TYPE COTSdoId = { 0, 0, 0, COTypeSdoIdWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -269,7 +269,7 @@ uint32_t COSdoGetSize(CO_SDO *srv, uint32_t width)
     uint32_t result = 0;
     uint32_t size;
 
-    size = COObjGetSize(srv->Obj, width);
+    size = COObjGetSize(srv->Obj, srv->Node, width);
     if (size == 0) {
         COSdoAbort(srv, CO_SDO_ERR_TOS);
         return (result);
@@ -309,7 +309,7 @@ int16_t COSdoUploadExpedited(CO_SDO *srv)
         return (result);
     } else if ((size > 0) && (size <= 4)) {
         nodeid = srv->Node->NodeId;
-        num    = COObjRdValue(srv->Obj, (void *)&data, CO_LONG, nodeid);
+        num    = COObjRdValue(srv->Obj, srv->Node, (void *)&data, CO_LONG, nodeid);
         if (num != CO_ERR_NONE) {
             COSdoAbort(srv, CO_SDO_ERR_TOS);
             return (result);
@@ -354,7 +354,7 @@ int16_t COSdoDownloadExpedited(CO_SDO *srv)
     if ((size > 0) && (size <= 4)) {
         nodeid = srv->Node->NodeId;
         data   = CO_GET_LONG(srv->Frm, 4);
-        num    = COObjWrValue(srv->Obj, (void*)&data, CO_LONG, nodeid);
+        num    = COObjWrValue(srv->Obj, srv->Node, (void*)&data, CO_LONG, nodeid);
         if (num != CO_ERR_NONE) {
             if (num ==  CO_ERR_OBJ_RANGE) {
                 COSdoAbort(srv, CO_SDO_ERR_RANGE);
@@ -411,7 +411,7 @@ int16_t COSdoInitUploadSegmented(CO_SDO *srv, uint32_t size)
     srv->Buf.Cur  = srv->Buf.Start;
     srv->Buf.Num  = 0;
 
-    result = COObjRdBufStart(srv->Obj, srv->Buf.Cur, 0);
+    result = COObjRdBufStart(srv->Obj, srv->Node, srv->Buf.Cur, 0);
     if (result != CO_ERR_NONE) {
         srv->Node->Error = CO_ERR_SDO_READ;
         result           = CO_ERR_NONE;
@@ -445,7 +445,7 @@ int16_t COSdoInitDownloadSegmented(CO_SDO *srv)
         srv->Buf.Cur  = srv->Buf.Start;
         srv->Buf.Num  = 0;
         
-        result = COObjWrBufStart(srv->Obj, srv->Buf.Cur, 0);
+        result = COObjWrBufStart(srv->Obj, srv->Node, srv->Buf.Cur, 0);
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
             result           = CO_ERR_NONE;
@@ -495,7 +495,7 @@ int16_t COSdoDownloadSegmented(CO_SDO *srv)
 
     if ((cmd & 0x01) == 0x01) {
         len    = (uint32_t)srv->Buf.Num;
-        result = COObjWrBufCont(srv->Obj, srv->Buf.Start, len);
+        result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
         if (result != CO_ERR_NONE) {
             COSdoAbort(srv, CO_SDO_ERR_TOS);
             result = -1;
@@ -505,7 +505,7 @@ int16_t COSdoDownloadSegmented(CO_SDO *srv)
         srv->Obj      = 0;
     } else {
         len    = (uint32_t)srv->Buf.Num;
-        result = COObjWrBufCont(srv->Obj, srv->Buf.Start, len);
+        result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
         if (result != CO_ERR_NONE) {
             COSdoAbort(srv, CO_SDO_ERR_TOS);
             result = -1;
@@ -557,9 +557,9 @@ int16_t COSdoUploadSegmented(CO_SDO *srv)
     }
 
     if (c_bit == 1) {
-        result = COObjRdBufCont(srv->Obj, srv->Buf.Start, width);
+        result = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Start, width);
     } else {
-        result = COObjRdBufCont(srv->Obj, srv->Buf.Start, width);
+        result = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Start, width);
     }
     if (result != CO_ERR_NONE) {
         COSdoAbort(srv, CO_SDO_ERR_TOS);
@@ -614,7 +614,7 @@ int16_t COSdoInitDownloadBlock(CO_SDO *srv)
         return (result);
     }
     if (width <= size) {
-        result = COObjWrBufStart(srv->Obj, srv->Buf.Cur, 0);
+        result = COObjWrBufStart(srv->Obj, srv->Node, srv->Buf.Cur, 0);
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
             result           = CO_ERR_NONE;
@@ -647,7 +647,7 @@ int16_t COSdoEndDownloadBlock(CO_SDO *srv)
     if ((cmd & 0x01) != 0) {
         n      = (cmd & 0x1C) >> 2;
         len    = ((uint32_t)srv->Buf.Num - n);
-        result = COObjWrBufCont(srv->Obj, srv->Buf.Start, len);
+        result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
             result = -1;
@@ -703,7 +703,7 @@ int16_t COSdoDownloadBlock(CO_SDO *srv)
         if (result == 0) {
             if ((cmd & 0x80) == 0) {
                 len = (uint32_t)srv->Buf.Num;
-                err = COObjWrBufCont(srv->Obj, srv->Buf.Start, len);
+                err = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
                 if (err != CO_ERR_NONE) {
                     srv->Node->Error = CO_ERR_SDO_WRITE;
                 }
@@ -773,7 +773,7 @@ int16_t COSdoInitUploadBlock(CO_SDO *srv)
     srv->Blk.LastValid = 0xFF;
     srv->Blk.Len       = srv->Blk.Size;
     
-    err = COObjRdBufStart(srv->Obj, srv->Buf.Cur, 0);
+    err = COObjRdBufStart(srv->Obj, srv->Node, srv->Buf.Cur, 0);
     if (err != CO_ERR_NONE) {
         srv->Node->Error = CO_ERR_SDO_READ;
     }
@@ -804,7 +804,7 @@ int16_t COSdoUploadBlock(CO_SDO *srv)
     } else {
         if (srv->Blk.Size > srv->Buf.Num) {
             num = (uint32_t)srv->Buf.Num;
-            err = COObjRdBufCont(srv->Obj, srv->Buf.Start, num);
+            err = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Start, num);
             if (err != CO_ERR_NONE) {
                 srv->Node->Error = CO_ERR_SDO_READ;
             }
@@ -812,7 +812,7 @@ int16_t COSdoUploadBlock(CO_SDO *srv)
         } else {
             num = (uint32_t)srv->Buf.Num;
             srv->Buf.Num   = srv->Blk.Size;
-            err = COObjRdBufCont(srv->Obj, srv->Buf.Start, num);
+            err = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Start, num);
             if (err != CO_ERR_NONE) {
                 srv->Node->Error = CO_ERR_SDO_READ;
             }
@@ -939,11 +939,10 @@ void COSdoAbortReq(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COTypeSdoIdWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypeSdoIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     uint32_t  newval;
     uint32_t  curval;
-    CO_NODE  *node;
     int16_t   err = CO_ERR_NONE;
     uint8_t   num;
 
@@ -953,7 +952,6 @@ int16_t COTypeSdoIdWrite(CO_OBJ* obj, void *buf, uint32_t size)
     newval = *(uint32_t *)buf;
     (void)COObjRdDirect(obj, &curval, CO_LONG);
     num    = CO_GET_IDX(obj->Key) & 0x7F;
-    node   = obj->Type->Dir->Node;
 
     if ((curval & CO_SDO_ID_OFF) == 0) {
         if ((newval & CO_SDO_ID_OFF) != 0) {

@@ -82,11 +82,11 @@
 *    This define may be used in object directory definitions. It marks the
 *    first unused object entry.
 */
-#define CO_OBJ_DIR_ENDMARK   { (uint32_t)0, (CO_OBJ_TYPE *)0, (uint32_t)0 }
+#define CO_OBJ_DIR_ENDMARK   { (uint32_t)0, (CO_OBJ_TYPE *)0, (uintptr_t)0 }
 
 #define CO_TSTRING    ((CO_OBJ_TYPE *)&COTString)   /*!< Object Type String  */
 #define CO_TDOMAIN    ((CO_OBJ_TYPE *)&COTDomain)   /*!< Object Type Domain  */
-    
+
 /******************************************************************************
 * PUBLIC MACROS
 ******************************************************************************/
@@ -264,18 +264,18 @@ typedef struct CO_OBJ_T {
                                  /*   - 7: 1=direct (ptr is value if Type=0) */
     struct CO_OBJ_TYPE_T *Type;  /*!< ==0: value access via Data-Ptr,        */
                                  /*   !=0: access via type structure         */
-    uint32_t              Data;  /*!< Address of value or data structure     */
+    uintptr_t             Data;  /*!< Address of value or data structure     */
                                  /*   or data value for direct access        */
 } CO_OBJ;
 
 /*!< Size type function prototype */
-typedef uint32_t (*CO_OBJ_SIZE_FUNC) (CO_OBJ *, uint32_t);
+typedef uint32_t (*CO_OBJ_SIZE_FUNC) (CO_OBJ *, struct CO_NODE_T *, uint32_t);
 /*!< Control type function prototype */
-typedef int16_t  (*CO_OBJ_CTRL_FUNC) (CO_OBJ *, uint16_t, uint32_t);
+typedef int16_t  (*CO_OBJ_CTRL_FUNC) (CO_OBJ *, struct CO_NODE_T *, uint16_t, uint32_t);
 /*!< Read type function prototype */
-typedef int16_t  (*CO_OBJ_READ_FUNC) (CO_OBJ *, void*, uint32_t);
+typedef int16_t  (*CO_OBJ_READ_FUNC) (CO_OBJ *, struct CO_NODE_T *, void*, uint32_t);
 /*!< Write type function prototype */
-typedef int16_t  (*CO_OBJ_WRITE_FUNC)(CO_OBJ *, void*, uint32_t);
+typedef int16_t  (*CO_OBJ_WRITE_FUNC)(CO_OBJ *, struct CO_NODE_T *, void*, uint32_t);
 
 /*! \brief OBJECT TYPE
 *
@@ -283,8 +283,6 @@ typedef int16_t  (*CO_OBJ_WRITE_FUNC)(CO_OBJ *, void*, uint32_t);
 *    entry type.
 */
 typedef struct CO_OBJ_TYPE_T {
-    struct CO_DIR_T   *Dir;            /*!< Link to parent object directory  */
-    uint32_t           Offset;         /*!< Offset within the data memory    */
     CO_OBJ_SIZE_FUNC   Size;           /*!< Get size of type function        */
     CO_OBJ_CTRL_FUNC   Ctrl;           /*!< Special type control function    */
     CO_OBJ_READ_FUNC   Read;           /*!< Read function                    */
@@ -297,11 +295,23 @@ typedef struct CO_OBJ_TYPE_T {
 *    This structure holds all data, which are needed for the domain object
 *    management within the object directory.
 */
-typedef struct CO_DOM_T {
+typedef struct CO_OBJ_DOM_T {
+    uint32_t  Offset;                  /*!< Internal offset information      */
     uint32_t  Size;                    /*!< Domain size information          */
     uint8_t  *Start;                   /*!< Domain start address             */
 
-} CO_DOM;
+} CO_OBJ_DOM;
+
+/*! \brief STRING MANAGEMENT STRUCTURE
+*
+*    This structure holds all data, which are needed for the string object
+*    management within the object directory.
+*/
+typedef struct CO_OBJ_STR_T {
+    uint32_t  Offset;                  /*!< Internal offset information      */
+    uint8_t  *Start;                   /*!< String start address             */
+
+} CO_OBJ_STR;
 
 /******************************************************************************
 * PUBLIC CONSTANTS
@@ -311,15 +321,8 @@ typedef struct CO_DOM_T {
 *
 *    This type is responsible for the access to unlimited string constants.
 *    It is assumed, that the strings are declared in nonvolatile memory
-*    (e.g. FLASH) and the starting address is stored in the object entry
-*    member 'Data'.
-*
-* \note
-*    If the object entry is marked to be read-/write-able, the write access
-*    to the object entry will change the start address of the string - not
-*    the string itself. If writing the string itself is needed, another
-*    (user-)type must be defined. The write function must be adapted
-*    with the needed memory handling. The other functions may be reused.
+*    (e.g. FLASH) and the string management structure is stored in the
+*    object entry member 'Data'.
 */
 extern const CO_OBJ_TYPE COTString;
 
@@ -327,7 +330,8 @@ extern const CO_OBJ_TYPE COTString;
 *
 *    This type is responsible for the access to domain memory areas. It is
 *    assumed, that the memory is declared in random accessible memory
-*    (e.g. RAM, FLASH, etc..).
+*    (e.g. RAM, FLASH, etc..) and the domain management structure is stored
+*    in the object entry member 'Data'.
 *
 * \note
 *    This exemplary implementation is usable for reading and writing in
@@ -348,13 +352,16 @@ extern const CO_OBJ_TYPE COTDomain;
 * \param obj
 *    pointer to the CANopen directory entry
 *
+* \param node
+*    reference to parent node
+*
 * \param width
 *    Expected object size in byte (or 0 if unknown)
 *
 * \retval  >0    Object entry size in bytes
 * \retval  =0    An error is detected
 */
-uint32_t COObjGetSize(CO_OBJ *obj, uint32_t width);
+uint32_t COObjGetSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 
 /*! \brief  READ VALUE FROM OBJECT ENTRY
 *
@@ -362,6 +369,9 @@ uint32_t COObjGetSize(CO_OBJ *obj, uint32_t width);
 *
 * \param obj
 *    pointer to the CANopen directory entry
+*
+* \param node
+*    reference to parent node
 *
 * \param value
 *    pointer to the result memory
@@ -376,7 +386,7 @@ uint32_t COObjGetSize(CO_OBJ *obj, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdValue(CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid);
+int16_t COObjRdValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
 
 /*! \brief  WRITE VALUE TO OBJECT ENTRY
 *
@@ -384,6 +394,9 @@ int16_t COObjRdValue(CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid);
 *
 * \param obj
 *    pointer to the CANopen object directory entry
+*
+* \param node
+*    reference to parent node
 *
 * \param value
 *    pointer to the source memory
@@ -398,7 +411,7 @@ int16_t COObjRdValue(CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrValue(CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid);
+int16_t COObjWrValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
 
 /*! \brief  START READ BUFFER FROM OBJECT ENTRY
 *
@@ -409,6 +422,9 @@ int16_t COObjWrValue(CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid);
 * \param obj
 *    pointer to the CANopen object directory entry
 *
+* \param node
+*    reference to parent node
+*
 * \param buffer
 *    pointer to the destination buffer
 *
@@ -418,7 +434,7 @@ int16_t COObjWrValue(CO_OBJ *obj, void *value, uint8_t width, uint8_t nodeid);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdBufStart(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
+int16_t COObjRdBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  CONTINUE READ BUFFER FROM OBJECT ENTRY
 *
@@ -429,6 +445,9 @@ int16_t COObjRdBufStart(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
 * \param obj
 *    pointer to the CANopen object directory entry
 *
+* \param node
+*    reference to parent node
+*
 * \param buffer
 *    pointer to the destination buffer
 *
@@ -438,7 +457,7 @@ int16_t COObjRdBufStart(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdBufCont(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
+int16_t COObjRdBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  START WRITE BUFFER TO OBJECT ENTRY
 *
@@ -447,6 +466,9 @@ int16_t COObjRdBufCont(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
 *
 * \param obj
 *    pointer to the CANopen object directory entry
+*
+* \param node
+*    reference to parent node
 *
 * \param buffer
 *    pointer to the source buffer
@@ -457,7 +479,7 @@ int16_t COObjRdBufCont(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrBufStart(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
+int16_t COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  CONTINUE WRITE BUFFER TO OBJECT ENTRY
 *
@@ -468,6 +490,9 @@ int16_t COObjWrBufStart(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
 * \param obj
 *    pointer to the CANopen object directory entry
 *
+* \param node
+*    reference to parent node
+*
 * \param buffer
 *    pointer to the source buffer
 *
@@ -477,7 +502,7 @@ int16_t COObjWrBufStart(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrBufCont(CO_OBJ *obj, uint8_t *buffer, uint32_t len);
+int16_t COObjWrBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -559,8 +584,14 @@ int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 * \param obj
 *    pointer to the CANopen object directory entry
 *
+* \param node
+*    reference to parent node
+*
 * \param dst
 *    pointer to the result memory
+*
+* \param node
+*    reference to parent node
 *
 * \param len
 *    length of value in bytes
@@ -571,7 +602,7 @@ int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdType(CO_OBJ *obj, void *dst, uint32_t len, uint32_t off);
+int16_t COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off);
 
 /*! \brief  WRITE WITH TYPE FUNCTIONS
 *
@@ -580,6 +611,9 @@ int16_t COObjRdType(CO_OBJ *obj, void *dst, uint32_t len, uint32_t off);
 *
 * \param obj
 *    pointer to the CANopen object directory entry
+*
+* \param node
+*    reference to parent node
 *
 * \param src
 *    pointer to the source memory
@@ -593,7 +627,7 @@ int16_t COObjRdType(CO_OBJ *obj, void *dst, uint32_t len, uint32_t off);
 * \retval    =CO_ERR_NONE    Successfully operation
 * \retval   !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrType(CO_OBJ *obj, void *dst, uint32_t len, uint32_t off);
+int16_t COObjWrType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off);
 
 /*! \brief STRING OBJECT SIZE
 *
@@ -605,6 +639,9 @@ int16_t COObjWrType(CO_OBJ *obj, void *dst, uint32_t len, uint32_t off);
 * \param obj
 *    String object entry reference
 *
+* \param node
+*    reference to parent node
+*
 * \param width
 *    Requested string size (or 0 if unknown)
 *
@@ -612,7 +649,7 @@ int16_t COObjWrType(CO_OBJ *obj, void *dst, uint32_t len, uint32_t off);
 *    Number of character in the string, counting without the end of string
 *    mark.
 */
-uint32_t COTypeStringSize(CO_OBJ *obj, uint32_t width);
+uint32_t COTypeStringSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 
 /*! \brief STRING OBJECT ACCESS CONTROL
 *
@@ -625,6 +662,9 @@ uint32_t COTypeStringSize(CO_OBJ *obj, uint32_t width);
 * \param obj
 *    String object entry reference
 *
+* \param node
+*    reference to parent node
+*
 * \param func
 *    Control function code
 *
@@ -634,7 +674,7 @@ uint32_t COTypeStringSize(CO_OBJ *obj, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeStringCtrl(CO_OBJ *obj, uint16_t func, uint32_t para);
+int16_t COTypeStringCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
 
 /*! \brief STRING OBJECT READ ACCESS
 *
@@ -643,6 +683,9 @@ int16_t COTypeStringCtrl(CO_OBJ *obj, uint16_t func, uint32_t para);
 *
 * \param obj
 *    String object entry reference
+*
+* \param node
+*    reference to parent node
 *
 * \param buf
 *    Pointer to buffer memory
@@ -653,7 +696,7 @@ int16_t COTypeStringCtrl(CO_OBJ *obj, uint16_t func, uint32_t para);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeStringRead(CO_OBJ *obj, void *buf, uint32_t len);
+int16_t COTypeStringRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief DOMAIN OBJECT SIZE
 *
@@ -662,13 +705,16 @@ int16_t COTypeStringRead(CO_OBJ *obj, void *buf, uint32_t len);
 * \param obj
 *    Domain object entry reference
 *
+* \param node
+*    reference to parent node
+*
 * \param width
 *    Requested Domain size (or 0 if unknown)
 *
 * \return
 *    Size in bytes of the domain.
 */
-uint32_t COTypeDomainSize(CO_OBJ *obj, uint32_t width);
+uint32_t COTypeDomainSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 
 /*! \brief DOMAIN OBJECT ACCESS CONTROL
 *
@@ -681,6 +727,9 @@ uint32_t COTypeDomainSize(CO_OBJ *obj, uint32_t width);
 * \param obj
 *    Domain object entry reference
 *
+* \param node
+*    reference to parent node
+*
 * \param func
 *    Control function code
 *
@@ -690,7 +739,7 @@ uint32_t COTypeDomainSize(CO_OBJ *obj, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainCtrl(CO_OBJ *obj, uint16_t func, uint32_t para);
+int16_t COTypeDomainCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
 
 /*! \brief DOMAIN OBJECT READ ACCESS
 *
@@ -700,6 +749,9 @@ int16_t COTypeDomainCtrl(CO_OBJ *obj, uint16_t func, uint32_t para);
 * \param obj
 *    Domain object entry reference
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Pointer to buffer memory
 *
@@ -709,7 +761,7 @@ int16_t COTypeDomainCtrl(CO_OBJ *obj, uint16_t func, uint32_t para);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainRead(CO_OBJ *obj, void *buf, uint32_t len);
+int16_t COTypeDomainRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief DOMAIN OBJECT WRITE ACCESS
 *
@@ -719,6 +771,9 @@ int16_t COTypeDomainRead(CO_OBJ *obj, void *buf, uint32_t len);
 * \param obj
 *    Domain object entry reference
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Pointer to buffer memory
 *
@@ -728,6 +783,6 @@ int16_t COTypeDomainRead(CO_OBJ *obj, void *buf, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainWrite(CO_OBJ *obj, void *buf, uint32_t len);
+int16_t COTypeDomainWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 #endif  /* #ifndef CO_OBJ_H_ */

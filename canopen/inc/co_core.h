@@ -35,6 +35,7 @@
 #include "co_lss.h"
 #include "co_err.h"
 #include "co_obj.h"
+#include "co_para.h"
 
 /******************************************************************************
 * PUBLIC TYPES

@@ -120,6 +120,9 @@ void COParaRestore(CO_PARA *pg, struct CO_NODE_T *node);
 * \param obj
 *    Ptr to addressed object entry
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Ptr to data buffer
 *
@@ -130,7 +133,7 @@ void COParaRestore(CO_PARA *pg, struct CO_NODE_T *node);
 * \retval  >0      store activity
 * \retval  <0      error is detected and function aborted
 */
-int16_t COParaCheck(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief PARAMETER OBJECT READ ACCESS
 *
@@ -142,6 +145,9 @@ int16_t COParaCheck(CO_OBJ* obj, void *buf, uint32_t size);
 * \param obj
 *    Ptr to addressed parameter object entry
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Ptr to data buffer
 *
@@ -151,7 +157,7 @@ int16_t COParaCheck(CO_OBJ* obj, void *buf, uint32_t size);
 * \retval   >0    store / restore successful
 * \retval  <=0    error is detected and function aborted
 */
-int16_t COTypeParaRead(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COTypeParaRead(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief PARAMETER OBJECT WRITE ACCESS
 *
@@ -160,6 +166,9 @@ int16_t COTypeParaRead(CO_OBJ* obj, void *buf, uint32_t size);
 *
 * \param obj
 *    Ptr to addressed parameter object entry
+*
+* \param node
+*    reference to parent node
 *
 * \param buf
 *    Ptr to data buffer
@@ -170,7 +179,7 @@ int16_t COTypeParaRead(CO_OBJ* obj, void *buf, uint32_t size);
 * \retval  =0    store / restore successful
 * \retval  <0    error is detected and function aborted
 */
-int16_t COTypeParaWrite(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COTypeParaWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

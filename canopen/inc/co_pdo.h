@@ -386,6 +386,9 @@ void COTPdoMapDelSig(CO_TPDO_LINK *map, struct CO_OBJ_T *obj);
 * \param obj
 *    Pointer to object entry
 *
+* \param node
+*    reference to parent node
+*
 * \param func
 *    Control function code (must be \ref CO_TPDO_ASYNC)
 *
@@ -397,7 +400,7 @@ void COTPdoMapDelSig(CO_TPDO_LINK *map, struct CO_OBJ_T *obj);
 *
 * \internal
 */
-int16_t COTypeAsyncCtrl(CO_OBJ* obj, uint16_t func, uint32_t para);
+int16_t COTypeAsyncCtrl(CO_OBJ* obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
 
 /*! \brief TPDO EVENT TIMER OBJECT WRITE ACCESS
 *
@@ -406,6 +409,9 @@ int16_t COTypeAsyncCtrl(CO_OBJ* obj, uint16_t func, uint32_t para);
 *
 * \param obj
 *    Ptr to addressed parameter object entry
+*
+* \param node
+*    reference to parent node
 *
 * \param buf
 *    Ptr to data buffer
@@ -418,7 +424,7 @@ int16_t COTypeAsyncCtrl(CO_OBJ* obj, uint16_t func, uint32_t para);
 *
 * \internal
 */
-int16_t COTypeEventWrite(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief RPDO CLEAR
 *
@@ -560,6 +566,9 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm);
 * \param obj
 *    Pointer to PDO number of mappings object
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Pointer to write data value
 *
@@ -571,7 +580,7 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm);
 *
 * \internal
 */
-int16_t COTypePdoMapNumWrite(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COTypePdoMapNumWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief  WRITE PDO MAPPING
 *
@@ -581,6 +590,9 @@ int16_t COTypePdoMapNumWrite(CO_OBJ* obj, void *buf, uint32_t size);
 * \param obj
 *    Pointer to PDO mapping object
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Pointer to write data value
 *
@@ -592,7 +604,7 @@ int16_t COTypePdoMapNumWrite(CO_OBJ* obj, void *buf, uint32_t size);
 *
 * \internal
 */
-int16_t COTypePdoMapWrite(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COTypePdoMapWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief  WRITE PDO IDENTIFIER
 *
@@ -602,6 +614,9 @@ int16_t COTypePdoMapWrite(CO_OBJ* obj, void *buf, uint32_t size);
 * \param obj
 *    Pointer to PDO identifier object
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Pointer to write data value
 *
@@ -613,7 +628,7 @@ int16_t COTypePdoMapWrite(CO_OBJ* obj, void *buf, uint32_t size);
 *
 * \internal
 */
-int16_t COTypePdoComIdWrite(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief  WRITE PDO IDENTIFIER
 *
@@ -623,6 +638,9 @@ int16_t COTypePdoComIdWrite(CO_OBJ* obj, void *buf, uint32_t size);
 * \param obj
 *    Pointer to PDO transmission type object
 *
+* \param node
+*    reference to parent node
+*
 * \param buf
 *    Pointer to write data value
 *
@@ -634,7 +652,7 @@ int16_t COTypePdoComIdWrite(CO_OBJ* obj, void *buf, uint32_t size);
 *
 * \internal
 */
-int16_t COTypePdoComTypeWrite(CO_OBJ* obj, void *buf, uint32_t size);
+int16_t COTypePdoComTypeWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

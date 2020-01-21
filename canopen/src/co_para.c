@@ -18,8 +18,6 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "co_para.h"
-
 #include "co_core.h"
 
 /******************************************************************************
@@ -33,7 +31,7 @@
 * GLOBAL CONSTANTS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPara = { 0, 0, 0, 0, COTypeParaRead, COTypeParaWrite };
+const CO_OBJ_TYPE COTPara = { 0, 0, COTypeParaRead, COTypeParaWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -83,7 +81,7 @@ void COParaRestore(CO_PARA *pg, CO_NODE *node)
 /*
 * see function definition
 */
-int16_t COParaCheck(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     uint32_t signature;
     int16_t  result = CO_ERR_PARA_IDX;
@@ -97,7 +95,7 @@ int16_t COParaCheck(CO_OBJ* obj, void *buf, uint32_t size)
         return (CO_ERR_BAD_ARG);
     }
     
-    cod = obj->Type->Dir;
+    cod = &node->Dir;
 
     /* store parameter */
     if (CO_GET_IDX(obj->Key) == 0x1010) {
@@ -153,7 +151,7 @@ int16_t COParaCheck(CO_OBJ* obj, void *buf, uint32_t size)
 /*
 * see function definition
 */
-int16_t COTypeParaRead(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypeParaRead(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_PARA *pg;
 
@@ -178,7 +176,7 @@ int16_t COTypeParaRead(CO_OBJ* obj, void *buf, uint32_t size)
 /*
 * see function definition
 */
-int16_t COTypeParaWrite(CO_OBJ* obj, void *buf, uint32_t size)
+int16_t COTypeParaWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_DIR  *cod;
     CO_OBJ  *pwo;
@@ -189,11 +187,11 @@ int16_t COTypeParaWrite(CO_OBJ* obj, void *buf, uint32_t size)
     uint8_t  sub;
     
     /* check parameter and configuration */
-    select = COParaCheck(obj, buf, size);
+    select = COParaCheck(obj, node, buf, size);
     if (select != CO_ERR_NONE) {
         return (select);
     }
-    cod = obj->Type->Dir;
+    cod = &node->Dir;
     idx = CO_GET_IDX(obj->Key);
     sub = CO_GET_SUB(obj->Key);
     (void)CODirRdByte(cod, CO_DEV(idx,0), &num);
@@ -205,9 +203,9 @@ int16_t COTypeParaWrite(CO_OBJ* obj, void *buf, uint32_t size)
             if (pwo != 0) {
                 pg = (CO_PARA *)pwo->Data;
                 if (idx == 0x1011) {
-                    COParaRestore(pg, cod->Node);
+                    COParaRestore(pg, node);
                 } else {
-                    COParaStore(pg, cod->Node);
+                    COParaStore(pg, node);
                 }
             }
         }
@@ -215,9 +213,9 @@ int16_t COTypeParaWrite(CO_OBJ* obj, void *buf, uint32_t size)
         /* save addressed para group */
         pg = (CO_PARA *)obj->Data;
         if (idx == 0x1011) {
-            COParaRestore(pg, cod->Node);
+            COParaRestore(pg, node);
         } else {
-            COParaStore(pg, cod->Node);
+            COParaStore(pg, node);
         }
     }
     return (CO_ERR_NONE);

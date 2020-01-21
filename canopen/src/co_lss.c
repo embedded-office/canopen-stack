@@ -91,7 +91,7 @@ void COLssInit (CO_LSS *lss, CO_NODE *node)
             node->Error = CO_ERR_CFG_1018;
             break;
         } else {
-            size = COObjGetSize(obj, 0);
+            size = COObjGetSize(obj, node, 0);
             if (size != CO_LONG) {
                 lss->Mode = CO_LSS_EXIT;
                 node->Error = CO_ERR_CFG_1018;

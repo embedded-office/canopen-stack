@@ -86,13 +86,13 @@ int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val)
 
     obj = CODirFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, (uint32_t)CO_BYTE);
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_BYTE);
         if (sz != (uint32_t)CO_BYTE) {
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
             nodeid = cod->Node->NodeId;
-            result = COObjRdValue(obj, (void *)val, CO_BYTE, nodeid);
+            result = COObjRdValue(obj, cod->Node, (void *)val, CO_BYTE, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_READ;
             }
@@ -118,13 +118,13 @@ int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val)
 
     obj = CODirFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, (uint32_t)CO_WORD);
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_WORD);
         if (sz != (uint32_t)CO_WORD) {
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
             nodeid = cod->Node->NodeId;
-            result = COObjRdValue(obj, (void *)val, CO_WORD, nodeid);
+            result = COObjRdValue(obj, cod->Node, (void *)val, CO_WORD, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_READ;
             }
@@ -149,13 +149,13 @@ int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val)
     }
     obj = CODirFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, (uint32_t)CO_LONG);
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_LONG);
         if (sz != (uint32_t)CO_LONG) {
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
             nodeid = cod->Node->NodeId;
-            result = COObjRdValue(obj, (void *)val, CO_LONG, nodeid);
+            result = COObjRdValue(obj, cod->Node, (void *)val, CO_LONG, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_READ;
             }
@@ -180,13 +180,13 @@ int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val)
     }
     obj = CODirFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, (uint32_t)CO_BYTE);
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_BYTE);
         if (sz != (uint32_t)CO_BYTE) {
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
             nodeid = cod->Node->NodeId;
-            result = COObjWrValue(obj, (void *)&val, CO_BYTE, nodeid);
+            result = COObjWrValue(obj, cod->Node, (void *)&val, CO_BYTE, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_WRITE;
             }
@@ -212,13 +212,13 @@ int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val)
 
     obj = CODirFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, (uint32_t)CO_WORD);
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_WORD);
         if (sz != (uint32_t)CO_WORD) {
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
             nodeid = cod->Node->NodeId;
-            result = COObjWrValue(obj, (void *)&val, CO_WORD, nodeid);
+            result = COObjWrValue(obj, cod->Node, (void *)&val, CO_WORD, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_WRITE;
             }
@@ -244,13 +244,13 @@ int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val)
 
     obj = CODirFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, (uint32_t)CO_LONG);
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_LONG);
         if (sz != (uint32_t)CO_LONG) {
             cod->Node->Error = CO_ERR_OBJ_SIZE;
             result           = CO_ERR_OBJ_SIZE;
         } else {
             nodeid = cod->Node->NodeId;
-            result = COObjWrValue(obj, (void *)&val, CO_LONG, nodeid);
+            result = COObjWrValue(obj, cod->Node, (void *)&val, CO_LONG, nodeid);
             if (result != CO_ERR_NONE) {
                 cod->Node->Error = CO_ERR_OBJ_WRITE;
             }
@@ -274,7 +274,7 @@ int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
 
     obj = CODirFind(cod, key);
     if (obj != 0) {
-        result = COObjRdBufStart(obj, (void *)buf, (uint8_t)len);
+        result = COObjRdBufStart(obj, cod->Node, (void *)buf, (uint8_t)len);
         if (result != CO_ERR_NONE) {
             cod->Node->Error = CO_ERR_OBJ_READ;
         }
@@ -294,7 +294,7 @@ int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
 
     obj = CODirFind(cod, key);
     if (obj != 0) {
-        result = COObjWrBufStart(obj, (void *)buf, (uint8_t)len);
+        result = COObjWrBufStart(obj, cod->Node, (void *)buf, (uint8_t)len);
         if (result != CO_ERR_NONE) {
             cod->Node->Error = CO_ERR_OBJ_WRITE;
         }
@@ -321,9 +321,6 @@ int16_t CODirInit(CO_DIR *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
     }
     obj = root;
     while ((obj->Key != 0) && (num < max)) {
-        if (obj->Type != 0) {
-            obj->Type->Dir = cod;
-        }
         num++;
         obj++;
     }

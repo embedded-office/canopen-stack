@@ -25,7 +25,7 @@
 * GLOBAL CONSTANTS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTEmcy = { 0, 0, 0, 0, COTypeEmcyRead, COTypeEmcyWrite };
+const CO_OBJ_TYPE COTEmcy = { 0, 0, COTypeEmcyRead, COTypeEmcyWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -202,7 +202,7 @@ void COEmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
     if (obj == 0) {
         node->Error = CO_ERR_CFG_1014_0;
     } else {
-        size = COObjGetSize(obj, CO_LONG);
+        size = COObjGetSize(obj, node, CO_LONG);
         if (size == 0) {
             node->Error = CO_ERR_CFG_1014_0;
         }
@@ -211,7 +211,7 @@ void COEmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
     if (obj == 0) {
         node->Error = CO_ERR_CFG_1001_0;
     } else {
-        size = COObjGetSize(obj, CO_BYTE);
+        size = COObjGetSize(obj, node, CO_BYTE);
         if (size == 0) {
             node->Error = CO_ERR_CFG_1001_0;
         }
@@ -466,17 +466,15 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 /*
 * see function definition
 */
-int16_t COTypeEmcyRead(CO_OBJ *obj, void *buf, uint32_t len)
+int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
 {
-    CO_NODE *node;
     CO_DIR  *cod;
     CO_EMCY *emcy;
     int16_t  result = CO_ERR_NONE;
     uint8_t  sub;
     uint8_t  map;
 
-    cod  = obj->Type->Dir;
-    node = cod->Node;
+    cod  = &node->Dir;
     emcy = &node->Emcy;
     sub  = CO_GET_SUB(obj->Key);
 
@@ -501,18 +499,14 @@ int16_t COTypeEmcyRead(CO_OBJ *obj, void *buf, uint32_t len)
 /*
 * see function definition
 */
-int16_t COTypeEmcyWrite(CO_OBJ *obj, void *buf, uint32_t len)
+int16_t COTypeEmcyWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
 {
-    CO_NODE *node;
-    CO_DIR  *cod;
     CO_EMCY *emcy;
     int16_t  result = CO_ERR_TYPE_WR;
     uint8_t  val    = 0;
     uint8_t  sub;
 
     (void)len;
-    cod  = obj->Type->Dir;
-    node = cod->Node;
     emcy = &node->Emcy;
     sub  = CO_GET_SUB(obj->Key);
 
