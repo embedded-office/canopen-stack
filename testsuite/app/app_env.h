@@ -341,6 +341,10 @@ extern uint32_t  TS_TmrCallCnt;
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
+void    TS_CanIsr             (void);
+void    TS_CreateSpec         (CO_NODE *node, CO_NODE_SPEC *spec);
+void    TS_CreateNode         (CO_NODE *node);
+void    TS_CreateNodeAutoStart(CO_NODE *node);
 void    TS_ODAdd              (uint32_t key, CO_OBJ_TYPE *type, uint32_t data);
 void    TS_CreateMandatoryDir (void);
 void    TS_CreateTPdoCom      (uint8_t num, uint32_t *id, uint8_t *type, uint16_t *inhibit, uint16_t *evtimer);
@@ -352,16 +356,11 @@ void    TS_CreateDynTPdoMap   (uint8_t num, uint32_t *map, uint8_t *len);
 void    TS_CreateDynRPdoCom   (uint8_t num, uint32_t *id, uint8_t *type);
 void    TS_CreateDynRPdoMap   (uint8_t num, uint32_t *map, uint8_t *len);
 void    TS_CreateEmcyTable    (void);
-void    TS_CreateSpec         (CO_NODE *node, CO_NODE_SPEC *spec);
-void    TS_CreateNode         (CO_NODE *node);
-void    TS_CreateNodeAutoStart(CO_NODE *node);
-void    TS_ResetEmcyCodes     (void);
 void    TS_Wait               (CO_NODE *node, uint32_t millisec);
 void    TS_TmrFunc            (void *arg);
 void    TS_DomainReset        (CO_OBJ_DOM *dom);
 void    TS_DomainFill         (CO_OBJ_DOM *dom, uint8_t start);
 int16_t TS_DomainCheck        (CO_OBJ_DOM *dom, uint8_t start, uint8_t missing);
 void    TS_SendBlk            (uint32_t start, uint8_t segnum, uint8_t last, uint8_t seglost);
-char   *TS_FilenameFilter     (const char *filename);
 
 #endif
