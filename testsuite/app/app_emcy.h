@@ -27,16 +27,76 @@
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define EMCY_CODE_MAX     CO_EMCY_N
-#define EMCY_HIST_MAX     4
+/*---------------------------------------------------------------------------*/
+/*! \brief NUMBER OF EMERGENCY CODES
+*
+* \details The number of supported emergency codes.
+*/
+/*---------------------------------------------------------------------------*/
+#define EMCY_CODE_MAX   CO_EMCY_N
+
+/*---------------------------------------------------------------------------*/
+/*! \brief EMERGENCY HISTORY DEPTH
+*
+* \details The supported number of emergency history entries in object 0x1003.
+*/
+/*---------------------------------------------------------------------------*/
+#define EMCY_HIST_MAX   4
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-void         EmcyResetTable(void);
-CO_EMCY_TBL *EmcyGetTable  (void);
-uint32_t     EmcyAddCode   (int16_t code, uint8_t reg);
-void         EmcyObjDir    (uint32_t len);
+/*---------------------------------------------------------------------------*/
+/*! \brief CLEAR EMCY TABLE
+*
+* \details Clear the configuration table which mapps the supported emergency
+*          codes of the test environment to the error register code.
+*/
+/*---------------------------------------------------------------------------*/
+void EmcyResetTable(void);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief GET EMCY TABLE
+*
+* \details Retrieve the pointer to the emergency map table.
+*
+* \return  Pointer to the emergency map table
+*/
+/*---------------------------------------------------------------------------*/
+CO_EMCY_TBL *EmcyGetTable(void);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief ADD EMCY CODE TO EMCY TABLE
+*
+* \details Add a new mapping from an emergency error code to the
+*          corresponding error register information.
+*
+* \param   code
+*          The emergency error code
+*          (e.g. 'CO_EMCY_CODE_VOL_ERR + x' for a specific voltage error)
+*
+* \param   reg
+*          The error register information for this emergency error
+*          (e.g. 'CO_EMCY_REG_VOLTAGE' maps to the voltage bit in register)
+*
+* \return  Index of new entry in table, or EMCY_CODE_MAX if table is full.
+*/
+/*---------------------------------------------------------------------------*/
+uint32_t EmcyAddCode(int16_t code, uint8_t reg);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief SETUP OBJECT DICTIONARY FOR EMCY
+*
+* \details Add the mandatory object entries 0x1003 and 0x1014 for the
+*          emergency error handling to the test dynamic object dictionary.
+*          The emergency history entries in 0x1003 are appended with the
+*          given depth (0 means no history).
+*
+* \param   depth
+*          emergency history depth
+*/
+/*---------------------------------------------------------------------------*/
+void EmcyObjDir(uint8_t depth);
 
 #endif

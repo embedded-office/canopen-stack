@@ -25,15 +25,30 @@
 * PRIVATE VARIABLES
 ******************************************************************************/
 
-static CO_EMCY_TBL  EmcyCode[EMCY_CODE_MAX];
-static uint8_t      EmcyNum = 0;
-static uint32_t     EmcyHist[EMCY_HIST_MAX];
-static uint32_t     EmcyId = 0;
+/* allocate memory for the emergency code mapping table */
+static CO_EMCY_TBL EmcyCode[EMCY_CODE_MAX];
+
+/* object entry variable for 0x1003:0 (number of emergency errors) */
+static uint8_t EmcyNum = 0;
+
+/* object entry variables for 0x1003:1..x (the emergency history) */
+static uint32_t EmcyHist[EMCY_HIST_MAX];
+
+/* object entry variable for 0x1014:0 (COB-ID of EMCY message) */
+static uint32_t EmcyId = 0;
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
+/*---------------------------------------------------------------------------*/
+/*! \brief REQ-TEM-0100
+*
+* \details The test emergency code definition table is hold in RAM to get
+*          most flexibility for tests. We initialise all emergency object 
+*          variables with 0 to operate like a powerup with BSS clearing.
+*/
+/*---------------------------------------------------------------------------*/
 void EmcyResetTable(void)
 {
     uint32_t idx;
@@ -51,11 +66,24 @@ void EmcyResetTable(void)
     EmcyId  = 0;
 }
 
+/*---------------------------------------------------------------------------*/
+/*! \brief REQ-TEM-0110
+*
+* \details Return the pointer to the first entry of the emergency map table.
+*/
+/*---------------------------------------------------------------------------*/
 CO_EMCY_TBL *EmcyGetTable(void)
 {
     return (&EmcyCode[0]);
 }
 
+/*---------------------------------------------------------------------------*/
+/*! \brief REQ-TEM-0120
+*
+* \details Fill the emergency map table from start to end without sorting.
+*          If table is full, return the table size as indication.
+*/
+/*---------------------------------------------------------------------------*/
 uint32_t EmcyAddCode(int16_t code, uint8_t reg)
 {
     uint32_t n;
@@ -71,17 +99,32 @@ uint32_t EmcyAddCode(int16_t code, uint8_t reg)
     return (n);
 }
 
-void EmcyObjDir(uint32_t len)
+/*---------------------------------------------------------------------------*/
+/*! \brief REQ-TEM-0130
+*
+* \details Setup the object entries according to the standard. Note, that
+*          the given depth shall be limited to the maximum possible history
+*          entries EMCY_HIST_MAX.
+*/
+/*---------------------------------------------------------------------------*/
+void EmcyObjDir(uint8_t depth)
 {
     uint32_t n;
 
-    /* mandatory if emcy history is supported */
-    TS_ODAdd(CO_KEY(0x1003, 0, CO_UNSIGNED8 |CO_OBJ____RW), CO_TEMCY, (uint32_t)&EmcyNum);
-    for (n = 1; n <= len; n++) {
-        TS_ODAdd(CO_KEY(0x1003, n, CO_UNSIGNED32|CO_OBJ____R_), CO_TEMCY, (uint32_t)&EmcyHist[n]);
+    /* number of emergency errors is mandatory */
+    TS_ODAdd(CO_KEY(0x1003, 0, CO_UNSIGNED8|CO_OBJ____RW),
+                    CO_TEMCY, (uint32_t)&EmcyNum);
+                    
+    /* emergency error history up to the given depth */
+    for (n = 1; (n <= depth) && (n < EMCY_HIST_MAX); n++) {
+        TS_ODAdd(CO_KEY(0x1003, n, CO_UNSIGNED32|CO_OBJ____R_),
+                        CO_TEMCY, (uint32_t)&EmcyHist[n]);
     }
 
-    /* mandatory if emcy is supported */
-    TS_ODAdd(CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_RW), 0, (uint32_t)&EmcyId);
+    /* EMCY COB-ID is mandatory, if emcy is supported */
+    TS_ODAdd(CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_RW),
+             0, (uint32_t)&EmcyId);
+
+    /* set default COB-ID: 0x80 */
     EmcyId = 0x00000080;
 }
