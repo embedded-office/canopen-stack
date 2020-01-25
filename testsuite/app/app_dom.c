@@ -105,3 +105,25 @@ void DomClear(CO_OBJ_DOM *dom)
         size--;
     }
 }
+
+/*---------------------------------------------------------------------------*/
+/*! \brief REQ-TD-0130
+*
+* \details Fill the memory, which is configured in the domain management
+*          structure, with upcounting byte values starting at given start
+*          value.
+*/
+/*---------------------------------------------------------------------------*/
+void DomFill(CO_OBJ_DOM *dom, uint8_t start)
+{
+    uint32_t size = dom->Size;
+    uint8_t *ptr  = dom->Start;
+    uint8_t data  = start;
+
+    while (size > 0) {
+        *ptr = data;
+        ptr++;
+        data++;
+        size--;
+    }
+}

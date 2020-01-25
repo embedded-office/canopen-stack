@@ -35,14 +35,6 @@
 /*---------------------------------------------------------------------------*/
 #define EMCY_CODE_MAX   CO_EMCY_N
 
-/*---------------------------------------------------------------------------*/
-/*! \brief EMERGENCY HISTORY DEPTH
-*
-* \details The supported number of emergency history entries in object 0x1003.
-*/
-/*---------------------------------------------------------------------------*/
-#define EMCY_HIST_MAX   4
-
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -84,19 +76,5 @@ CO_EMCY_TBL *EmcyGetTable(void);
 */
 /*---------------------------------------------------------------------------*/
 uint32_t EmcyAddCode(int16_t code, uint8_t reg);
-
-/*---------------------------------------------------------------------------*/
-/*! \brief SETUP OBJECT DICTIONARY FOR EMCY
-*
-* \details Add the mandatory object entries 0x1003 and 0x1014 for the
-*          emergency error handling to the test dynamic object dictionary.
-*          The emergency history entries in 0x1003 are appended with the
-*          given depth (0 means no history).
-*
-* \param   depth
-*          emergency history depth
-*/
-/*---------------------------------------------------------------------------*/
-void EmcyObjDir(uint8_t depth);
 
 #endif

@@ -27,11 +27,12 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-/*------------------------------------------------------------------------------------------------*/
-/*!
-* \details This function collects and reports the environment identification information.
+/*---------------------------------------------------------------------------*/
+/*! \brief REQ-TST-0100
+*
+* \details collect and report the environment identification information
 */
-/*------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 static void TS_IdentEnv(void);
 static void TS_IdentEnv(void)
 {
@@ -50,7 +51,8 @@ static void TS_IdentEnv(void)
     TS_Printf("\n");
 
     /*--- Unit Under Test ---*/
-    TS_Printf("CANopen Stack V%d.%d.%d", CO_VER_MAJOR, CO_VER_MINOR, CO_VER_BUILD);
+    TS_Printf("CANopen Stack V%d.%d.%d",
+               CO_VER_MAJOR, CO_VER_MINOR, CO_VER_BUILD);
     TS_Printf("\n");
 }
 
@@ -58,13 +60,14 @@ static void TS_IdentEnv(void)
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-/*------------------------------------------------------------------------------------------------*/
-/*!
-* \details This function is the main entry function for the test application.
+/*---------------------------------------------------------------------------*/
+/*! \brief REQ-TST-0110
 *
-* \return  The function returns the number of failed tests.
+* \details main entry function for the test application
+*
+* \return  number of failed tests
 */
-/*------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 int main(void)
 {
     int result;
@@ -72,8 +75,6 @@ int main(void)
     TS_Init();
     TS_SetupAll(TS_IdentEnv, NULL);
  
-    /* here you can disable/enable groups and suites */
-    
     result = (int)TS_Start();
 
     return(result);

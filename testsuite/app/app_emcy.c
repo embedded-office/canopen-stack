@@ -28,15 +28,6 @@
 /* allocate memory for the emergency code mapping table */
 static CO_EMCY_TBL EmcyCode[EMCY_CODE_MAX];
 
-/* object entry variable for 0x1003:0 (number of emergency errors) */
-static uint8_t EmcyNum = 0;
-
-/* object entry variables for 0x1003:1..x (the emergency history) */
-static uint32_t EmcyHist[EMCY_HIST_MAX];
-
-/* object entry variable for 0x1014:0 (COB-ID of EMCY message) */
-static uint32_t EmcyId = 0;
-
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -57,13 +48,6 @@ void EmcyResetTable(void)
         EmcyCode[idx].Code = 0;
         EmcyCode[idx].Reg  = 0;
     }
-
-    for (idx = 0; idx < EMCY_HIST_MAX; idx++) {
-        EmcyHist[idx] = 0;
-    }
-
-    EmcyNum = 0;
-    EmcyId  = 0;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -97,34 +81,4 @@ uint32_t EmcyAddCode(int16_t code, uint8_t reg)
     }
 
     return (n);
-}
-
-/*---------------------------------------------------------------------------*/
-/*! \brief REQ-TEM-0130
-*
-* \details Setup the object entries according to the standard. Note, that
-*          the given depth shall be limited to the maximum possible history
-*          entries EMCY_HIST_MAX.
-*/
-/*---------------------------------------------------------------------------*/
-void EmcyObjDir(uint8_t depth)
-{
-    uint32_t n;
-
-    /* number of emergency errors is mandatory */
-    TS_ODAdd(CO_KEY(0x1003, 0, CO_UNSIGNED8|CO_OBJ____RW),
-                    CO_TEMCY, (uint32_t)&EmcyNum);
-                    
-    /* emergency error history up to the given depth */
-    for (n = 1; (n <= depth) && (n < EMCY_HIST_MAX); n++) {
-        TS_ODAdd(CO_KEY(0x1003, n, CO_UNSIGNED32|CO_OBJ____R_),
-                        CO_TEMCY, (uint32_t)&EmcyHist[n]);
-    }
-
-    /* EMCY COB-ID is mandatory, if emcy is supported */
-    TS_ODAdd(CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_RW),
-             0, (uint32_t)&EmcyId);
-
-    /* set default COB-ID: 0x80 */
-    EmcyId = 0x00000080;
 }

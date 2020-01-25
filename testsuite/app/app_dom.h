@@ -79,4 +79,13 @@ CO_OBJ_DOM *DomCreate(uint16_t idx, uint8_t sub, uint8_t access, uint32_t size);
 /*---------------------------------------------------------------------------*/
 void DomClear(CO_OBJ_DOM *dom);
 
+/*---------------------------------------------------------------------------*/
+/*! \brief FILL TEST DOMAIN
+*
+* \details The memory area of an object dictionary entry of type domain
+*          is filled with upcounting byte values, starting with given value.
+*/
+/*---------------------------------------------------------------------------*/
+void DomFill(CO_OBJ_DOM *dom, uint8_t start);
+
 #endif

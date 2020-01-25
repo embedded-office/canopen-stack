@@ -26,6 +26,7 @@
 #include "app_dir.h"
 #include "app_dom.h"
 #include "app_hooks.h"
+#include "app_stdobj.h"
 #include "ts_env.h"
 #include "drv_can.h"
 
@@ -341,26 +342,224 @@ extern uint32_t  TS_TmrCallCnt;
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-void    TS_CanIsr             (void);
-void    TS_CreateSpec         (CO_NODE *node, CO_NODE_SPEC *spec);
-void    TS_CreateNode         (CO_NODE *node);
-void    TS_CreateNodeAutoStart(CO_NODE *node);
-void    TS_ODAdd              (uint32_t key, CO_OBJ_TYPE *type, uint32_t data);
-void    TS_CreateMandatoryDir (void);
-void    TS_CreateTPdoCom      (uint8_t num, uint32_t *id, uint8_t *type, uint16_t *inhibit, uint16_t *evtimer);
-void    TS_CreateTPdoMap      (uint8_t num, uint32_t *map, uint8_t *len);
-void    TS_CreateRPdoCom      (uint8_t num, uint32_t *id, uint8_t *type);
-void    TS_CreateRPdoMap      (uint8_t num, uint32_t *map, uint8_t *len);
-void    TS_CreateDynTPdoCom   (uint8_t num, uint32_t *id, uint8_t *type, uint16_t *inhibit, uint16_t *evtimer);
-void    TS_CreateDynTPdoMap   (uint8_t num, uint32_t *map, uint8_t *len);
-void    TS_CreateDynRPdoCom   (uint8_t num, uint32_t *id, uint8_t *type);
-void    TS_CreateDynRPdoMap   (uint8_t num, uint32_t *map, uint8_t *len);
-void    TS_CreateEmcyTable    (void);
-void    TS_Wait               (CO_NODE *node, uint32_t millisec);
-void    TS_TmrFunc            (void *arg);
-void    TS_DomainReset        (CO_OBJ_DOM *dom);
-void    TS_DomainFill         (CO_OBJ_DOM *dom, uint8_t start);
-int16_t TS_DomainCheck        (CO_OBJ_DOM *dom, uint8_t start, uint8_t missing);
-void    TS_SendBlk            (uint32_t start, uint8_t segnum, uint8_t last, uint8_t seglost);
+/*---------------------------------------------------------------------------*/
+/*! \brief CAN INTERRUPT HANDLER
+*
+* \details Connect the CAN communication with the CANopen node for testing.
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CanIsr(void);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief CANOPEN NODE SPECIFICATION
+*
+* \details Create the CANopen node specification for testing.
+*
+* \param   node
+*          CANopen node for testing
+*
+* \param   spec
+*          Specification for CANopen node for testing
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief CREATE CANOPEN NODE
+*
+* \details Create the CANopen node instance for testing.
+*
+* \param   node
+*          CANopen node for testing
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateNode(CO_NODE *node);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief CREATE AND START CANOPEN NODE
+*
+* \details Create the CANopen node instance for testing and start the
+*          operational mode for this node.
+*
+* \param   node
+*          CANopen node for testing
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateNodeAutoStart(CO_NODE *node);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief ADD OBJECT ENTRY INTO OBJECT DICTIONARY FOR TESTING
+*
+* \details Append an object entry into the dynamic object dictionary of the
+*          CANopen node for testing.
+*
+* \param   key
+*          object entry key, generated with CO_KEY()
+*
+* \param   type
+*          object type reference according to user manual
+*
+* \param   data
+*          object entry data according to user manual
+*/
+/*---------------------------------------------------------------------------*/
+void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief SETUP THE MANDATORY OBJECT ENTRIES OF AN OBJECT DICTIONARY
+*
+* \details Append the mandatory object entries into an empty object
+*          dictionary for use in the CANopen node for testing.
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateMandatoryDir(void);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief ADD RPDO #N COMMUNICATION SETTINGS TO OBJECT DICTIONARY
+*
+* \details Append the object entries for RPDO communication settings.
+*
+* \param   num
+*          Number of RPDO (0..511)
+*
+* \param   id
+*          Reference to COB-ID for RPDO
+*
+* \param   type
+*          Reference to RPDO type variable
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateRPdoCom(uint8_t num, uint32_t *id, uint8_t *type);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief ADD RPDO #N APPLICATION OBJECT MAPPINGS
+*
+* \details Append the object entries for RPDO mapping settings.
+*
+* \param   num
+*          Number of RPDO (0..511)
+*
+* \param   map
+*          Reference to array of maximal possible mapping entries
+*
+* \param   len
+*          Reference to variable with length of array
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateRPdoMap(uint8_t num, uint32_t *map, uint8_t *len);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief ADD TPDO #N COMMUNICATION SETTINGS TO OBJECT DICTIONARY
+*
+* \details Append the object entries for TPDO communication settings.
+*
+* \param   num
+*          Number of TPDO (0..511)
+*
+* \param   id
+*          Reference to COB-ID for TPDO
+*
+* \param   type
+*          Reference to TPDO type variable
+*
+* \param   inhibit
+*          Reference to inhibit time (in 100us)
+*
+* \param   evtimer
+*          Reference to event timer (in 1ms)
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateTPdoCom(uint8_t   num,
+                      uint32_t *id,
+                      uint8_t  *type,
+                      uint16_t *inhibit,
+                      uint16_t *evtimer);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief ADD TPDO #N APPLICATION OBJECT MAPPINGS
+*
+* \details Append the object entries for TPDO mapping settings.
+*
+* \param   num
+*          Number of TPDO (0..511)
+*
+* \param   map
+*          Reference to array of maximal possible mapping entries
+*
+* \param   len
+*          Reference to variable with length of array
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateTPdoMap(uint8_t num, uint32_t *map, uint8_t *len);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief SIMULATE TIME
+*
+* \details Wait for the given amount of milliseconds
+*
+* \param   node
+*          Reference to the CANopen testing node
+*
+* \param   millisec
+*          Number of milliseconds the function shall wait
+*/
+/*---------------------------------------------------------------------------*/
+void TS_Wait(CO_NODE *node, uint32_t millisec);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief DEFAULT TIMER TEST CALLBACK
+*
+* \details This default callback function counts internally, how often the
+*          callback is activated. The checking macros CHK_TMR_CALL(n) will
+*          check for a given amount of calls and SET_TMR_CNT(n) will (re)set
+*          the internal counter value.
+*
+* \param   arg
+*          Reference to callback arguments (unused)
+*/
+/*---------------------------------------------------------------------------*/
+void TS_TmrFunc(void *arg);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief CHECK THE DOMAIN CONTENT
+*
+* \details This function checks the expected content of a domain. The
+*          expected content is given as start value and a missing limit.
+*          We expect, that the content up to the missing limit holds the
+*          value 0xff. After the missing value, the upcounting byte value
+*          is expected.
+*
+* \param   dom
+*          Reference to domain management structure
+*
+* \param   start
+*          Start value of the upcounting byte values
+*
+* \param   missing
+*          Limit value for missing values
+*/
+/*---------------------------------------------------------------------------*/
+int16_t TS_DomainCheck(CO_OBJ_DOM *dom, uint8_t start, uint8_t missing);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief SEND A BLOCK WITH SDO SEGMENTED TRANSFER
+*
+* \details This function simulates the procedure when a SDO segmented
+*          transfer is initiated by a SDO client.
+*
+* \param   start
+*          Start value of the upcounting byte counter
+*
+* \param   segnum
+*          Number of segments we want to send
+*
+* \param   last
+*          Set to 1 if this is the last segment
+*
+* \param   seglost
+*          Set to value >0 when sending shall skip the segment seglost
+*/
+/*---------------------------------------------------------------------------*/
+void TS_SendBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t seglost);
 
 #endif

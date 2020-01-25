@@ -1074,7 +1074,7 @@ TS_DEF_MAIN(TS_BlkWr_TwoDomains)
 
     CHK_DOM_FULL(dom1, 0);                            /* check content of domain                  */
     CHK_DOM_PART(dom2, 0, dom2->Size);                /* check content of domain                  */
-    TS_DomainReset(dom1);                             /* reset domain with default content (0xFF) */
+    DomClear    (dom1);                               /* reset domain with default content (0xFF) */
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 

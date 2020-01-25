@@ -93,7 +93,7 @@ TS_DEF_MAIN(TS_SegRd_42ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
  
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -147,7 +147,7 @@ TS_DEF_MAIN(TS_SegRd_43ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -202,7 +202,7 @@ TS_DEF_MAIN(TS_SegRd_41ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -488,7 +488,7 @@ TS_DEF_MAIN(TS_SegRd_Bad1stToggleBit)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/

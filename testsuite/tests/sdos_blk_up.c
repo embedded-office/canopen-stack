@@ -68,7 +68,7 @@ TS_DEF_MAIN(TS_BlkRd_42ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -119,7 +119,7 @@ TS_DEF_MAIN(TS_BlkRd_43ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -170,7 +170,7 @@ TS_DEF_MAIN(TS_BlkRd_41ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -221,7 +221,7 @@ TS_DEF_MAIN(TS_BlkRd_994ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -273,7 +273,7 @@ TS_DEF_MAIN(TS_BlkRd_995ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -325,7 +325,7 @@ TS_DEF_MAIN(TS_BlkRd_993ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -377,7 +377,7 @@ TS_DEF_MAIN(TS_BlkRd_890ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -429,7 +429,7 @@ TS_DEF_MAIN(TS_BlkRd_889ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -478,7 +478,7 @@ TS_DEF_MAIN(TS_BlkRd_888ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -529,7 +529,7 @@ TS_DEF_MAIN(TS_BlkRd_LostMiddleSeg)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -582,7 +582,7 @@ TS_DEF_MAIN(TS_BlkRd_LostFirstSeg)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -872,7 +872,7 @@ TS_DEF_MAIN(TS_BlkRd_LenTooLowAfterRestart)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -926,7 +926,7 @@ TS_DEF_MAIN(TS_BlkRd_LenTooHighAfterRestart)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -979,7 +979,7 @@ TS_DEF_MAIN(TS_BlkRd_BadSeqNbrAfterRestart)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_DomainFill(dom, 0);
+    DomFill(dom, 0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -1037,8 +1037,8 @@ TS_DEF_MAIN(TS_BlkRd_TwoDomains)
     TS_CreateMandatoryDir();
     dom1 = DomCreate(idx, sub1, CO_OBJ____RW, size1);
     dom2 = DomCreate(idx, sub2, CO_OBJ____RW, size2);
-    TS_DomainFill(dom1, 0);
-    TS_DomainFill(dom2, 0);
+    DomFill(dom1, 0);
+    DomFill(dom2, 0);
     TS_CreateNode(&node);
 
                                                       /*===== FIRST BLOCK UPLOAD =================*/
