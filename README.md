@@ -33,7 +33,7 @@ The CANopen stack implementation supports all mandatory services and many of the
 - Usable with or without an real-time operating system (RTOS)
 - Included high precision timer management
 
-*Note: the term 'unlimited' means, that the implementation introduces no additional limit. There are technical limits, described in the specification (for example: up to 127 possible TPDOs)*
+*Note: the term 'unlimited' means, that the implementation introduces no additional limit. There are technical limits, described in the specification (for example: up to 511 possible TPDOs)*
 
 
 ## Usage
