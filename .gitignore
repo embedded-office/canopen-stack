@@ -1,9 +1,58 @@
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+
+# Cache folders
+/VisualGDBCache/
+/Debug/
+/CodeDB/
+*.old
+prj_canopenstack*
+*.mak
+/Makefile
+/gcc_Debug.h
+/gcc_Release.h
+/nxp_lpc.xml
+/.vs/
+*.old00
+/.history
+/build
+/.vscode
+
 # General
 .DS_Store
 .AppleDouble
 .LSOverride
-
-
 
 # Thumbnails
 ._*
@@ -46,7 +95,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-
 *~
 
 # temporary files which can be created if a process still has a handle open of a deleted file
@@ -121,13 +169,6 @@ typings/
 .env
 
 
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-
-
 *.gem
 *.rbc
 /.config
@@ -140,24 +181,13 @@ typings/
 /test/version_tmp/
 /tmp/
 
-# Used by dotenv library to load environment variables.
-# .env
-
-## Specific to RubyMotion:
+# Specific to RubyMotion:
 .dat*
 .repl_history
 build/
 *.bridgesupport
 build-iPhoneOS/
 build-iPhoneSimulator/
-
-## Specific to RubyMotion (use of CocoaPods):
-#
-# We recommend against adding the Pods directory to your .gitignore. However
-# you should judge for yourself, the pros and cons are mentioned at:
-# https://guides.cocoapods.org/using/using-cocoapods.html#should-i-check-the-pods-directory-into-source-control
-#
-# vendor/Pods/
 
 ## Documentation cache and generated files:
 /.yardoc/
@@ -169,12 +199,6 @@ build-iPhoneSimulator/
 /.bundle/
 /vendor/bundle
 /lib/bundler/man/
-
-# for a library or gem, you might want to ignore these files since the code is
-# intended to run in multiple environments; otherwise, check them in:
-# Gemfile.lock
-# .ruby-version
-# .ruby-gemset
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
