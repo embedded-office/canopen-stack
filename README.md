@@ -11,7 +11,7 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 
 **General**
 
-- Usable with or without an real-time operating system (RTOS)
+- Usable with or without a real-time operating system (RTOS)
 - Software timer management
 
 **CiA 301 - CANopen application layer and communication profile**
@@ -95,7 +95,7 @@ const CO_OBJ MyDir[MY_DIR_LEN] = {
 
 #### Define Emergency Table
 
-The emergency code table mapps the detailed emergency codes to the corresponding bits in the mandatory error register.
+The emergency code table maps the application emergency codes to the corresponding bits in the mandatory error register.
 
 ~~~c
 const CO_EMCY MyEmcyTbl[MY_EMCY_TBL_LEN] = {
@@ -134,9 +134,20 @@ void foo(void)
 
 The first release of this CANopen stack is back in 2005. It is still used in many CANopen nodes from small startup companies up to big players in the automation market. Since Embedded Office sells an OEM license to Micrium to provide the CANopen stack as a part of the uC/ product line, we maintain the CANopen stack for the Flexible Safety RTOS and bare metal usage in parallel.
 
-Some years later, we are now in 2020 and we think it is time for a new way of software development of components where no product specific know-how is neccessary. Well, we try this with the CANopen stack and hope, that this way of software development is good for our customers, for us and for all potential users.
+Some years later, now in 2020, we think it is time for a new way of software development of components where no product specific know-how is neccessary. This project is the try with the hope, that this way of software development is good for existing customers, for Embedded Offic and for all potential new users.
 
-To avoid confusion, we think it is best to continue with the release version of 4.0.0 as first open-source release of the stack.
+## Roadmap
+
+To avoid confusion, it is the best to continue with the release version numbering with the semantic scheme 'major'.'minor'.'build'. The first stable release of the open-source variant of the CANopen Stack is:
+
+**V4.0.0** - working hard to get this done. When ready, the release will linked here.
+
+*Ideas for further development:*
+
+- remove all pre-compiler configuration defines to allow a single library for multiple projects with different needs
+- hardware independent collection of examples for demonstration purpose (exchange driver and re-compiler should be enought for usage on real target hardware)
+- improve documentation of single test cases within the testsuite
+- add the SDO client (rarely used, but nice to have)
 
 # License
 
@@ -144,17 +155,17 @@ The Apache 2.0 license is suitable for commercial usage, so we think this is the
 
 # Code of Conduct
 
-As everywhere in the world (especially in the internet) and at every time, we think a respectful and open minded communication is essential for peaceful and innovative developments. Please have a look in our [Code of Conduct](CODE_OF_CONDUCT.md) and think about your writing before submitting.
+As everywhere in the world (especially in the internet) and at every time, we think a respectful and open minded communication is essential for peaceful and innovative developments. Please have a look in our [Code of Conduct](.github/CODE_OF_CONDUCT.md) and think about your writing before submitting.
 
 # Contribution
 
-## CANopen Stack Development Environment
+## Development Environment
 
 The development environment for the CANopen stack takes place on our local windows machine with the free MSVC compiler and the hardware independent test framework.
 
 *Remember: For usage in embedded systems, the source code needs to get recompiled with the cross-compiler of your choice. Good practise is the generation, testing and release of a static library with your cross-compiler for usage in your project.*
 
-### Tools for CANopen Stack Development Environment
+### Required Tools
 
 Download and install these free tools:
 
