@@ -1,88 +1,89 @@
+# [TeXt Theme](https://github.com/kitian616/jekyll-TeXt-theme)
 
-# CANopen Stack
+[![license](https://img.shields.io/github/license/kitian616/jekyll-TeXt-theme.svg)](https://github.com/kitian616/jekyll-TeXt-theme/blob/master/LICENSE)
+[![Gem Version](https://img.shields.io/gem/v/jekyll-text-theme.svg)](https://github.com/kitian616/jekyll-TeXt-theme/releases)
+[![Travis](https://img.shields.io/travis/kitian616/jekyll-TeXt-theme.svg)](https://travis-ci.org/kitian616/jekyll-TeXt-theme)
+[![Tip Me via PayPal](https://img.shields.io/badge/PayPal-tip%20me-1462ab.svg?logo=paypal)](https://www.paypal.me/kitian616)
+[![Tip Me via Bitcoin](https://img.shields.io/badge/Bitcoin-tip%20me-f7931a.svg?logo=bitcoin)](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/docs/assets/images/3Fkufxcw2xd8HnaRJBNK4ccdtkUDyyNu4V.jpg)
 
-This is an implementation of the CANopen Specification CiA 301 version 4.2.0. The source code is compliant to C99 and you must cross-compile the source files within your project with your cross compiler of your choice.
+![TeXt Theme](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/TeXt-home.jpg)
 
-*Note: The hardware dependent part (the CAN driver) is not included. This part is most likely provided by the chip vendor of your device. We just need to integrate this drivers in small interface functions.*
+![TeXt Theme Details](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/TeXt-layouts.png)
 
+TeXt is a super customizable Jekyll theme for personal site, team site, blog, project, documentation, etc. Similar to iOS 11 style, it has large and prominent titles, round buttons and cards.
+
+**[Change Log](https://github.com/kitian616/jekyll-TeXt-theme/blob/master/CHANGELOG.md)** | **[中文](https://github.com/kitian616/jekyll-TeXt-theme/blob/master/README-zh.md)**
 
 ## Features
 
-The CANopen stack implementation supports all mandatory services and many of the optional services, too. Even very advanced features like multiple independent CANopen stacks on multiple CAN busses of a single device are possible.
+- Responsive
+- Semantic HTML
+- Skins
+- Highlight Theme
+- Internationalization
+- Search
+- Table of contents
+- Authors
+- Additional styles (alert, tag, image, icon, button, grid, etc)
+- Extensions (audios, videos, slides, demos)
+- Markdown enhancements ([MathJax](https://www.mathjax.org/), [mermaid](https://mermaidjs.github.io/), [chartjs](http://www.chartjs.org/))
+- Sharing ([AddToAny](https://www.addtoany.com/), [AddThis](https://www.addthis.com/))
+- Comments ([Disqus](https://disqus.com/), [Gitalk](https://gitalk.github.io/), [Valine](https://valine.js.org/en/))
+- Pageview ([LeanCloud](https://leancloud.cn/))
+- Analytics ([Google Analytics](https://analytics.google.com/analytics/web/))
+- RSS ([jekyll-feed](https://github.com/jekyll/jekyll-feed))
 
-- Unlimited number of SDO servers
-  - Expedited transfers
-  - Segmented transfers
-  - Block transfers
-- Unlimited number of TPDO and RPDOs
-  - Synchronized operation
-  - Asynchronous operation
-  - Manufacturer specific operation
-- Emergency producer and consumer
-  - Manufacturer specific extensions
-  - Unlimited error history
-- Heartbeat producer and consumer
-- Parameter storage
-  - Parameter groups
-  - Storage media read and write hooks
-- Network Management consumer
-- Unlimited number of entries in object dictionary
-  - Static or dynamic object dictionary
-  - Data types: signed/unsigned 8/16/32-Bit integer, string, domain and user-types
-- Extension: Layer Setting Services (CiA 305)
-- Usable with or without an real-time operating system (RTOS)
-- Included high precision timer management
+## Skins
 
-*Note: the term 'unlimited' means, that the implementation introduces no additional limit. There are technical limits, described in the specification (for example: up to 127 possible TPDOs)*
+TeXt has 6 built-in skins, you can also set up your own skin.
 
+| `default` | `dark` | `forest` |
+| --- |  --- | --- |
+| ![Default](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/skins_default.jpg) | ![Dark](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/skins_dark.jpg) | ![Forest](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/skins_forest.jpg) |
 
-## Usage
+| `ocean` | `chocolate` | `orange` |
+| --- |  --- | --- |
+| ![Ocean](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/skins_ocean.jpg) | ![Chocolate](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/skins_chocolate.jpg) | ![Orange](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/skins_orange.jpg) |
 
-### Integrate sourcecode in your project
+### Highlight Theme
 
-Get the repository and add the directory `/canopen/src` to your project sourcefiles and the directories `canopen/inc` and `canopen/cfg` to your include searchpath. You should be able to compile your project without an error.
+TeXt use [Tomorrow](https://github.com/chriskempson/tomorrow-theme) as the highlight theme.
 
-### Connect with CAN controller
+| `tomorrow` | `tomorrow-night` | `tomorrow-night-eighties` | `tomorrow-night-blue` | `tomorrow-night-bright` |
+| --- |  --- | --- | --- |  --- |
+| ![Tomorrow](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/highlight_tomorrow.png) | ![Tomorrow Night](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/highlight_tomorrow-night.png) | ![Tomorrow Night Eighties](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/highlight_tomorrow-night-eighties.png) | ![Tomorrow Night Blue](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/highlight_tomorrow-night-blue.png) | ![Tomorrow Night Bright](https://raw.githubusercontent.com/kitian616/jekyll-TeXt-theme/master/screenshots/highlight_tomorrow-night-bright.png) |
 
-You need to write 5 interface functions to get access to your CAN controller. There are a couple of interface functions existing. Just ask for support of your Mikrocontroller.
+## Documentation
 
-*TODO: Show how to use CMSIS drivers*
+### Start
 
-### Connect with hardware timer
+- [Quick Start](https://tianqi.name/jekyll-TeXt-theme/docs/en/quick-start)
+- [Update from 1.x to 2.x](https://tianqi.name/jekyll-TeXt-theme/docs/en/update-from-1-to-2)
 
-The high precision timer management needs a single hardware timer with a selected interrupt rate between 100us and 10ms. This is the accuracy of the measured and used timing. So keep in mind which interrupt rate makes sense in your project.
+### Customization
 
-*TODO: Show how to set this up with CMSIS*
+- [Configuration](https://tianqi.name/jekyll-TeXt-theme/docs/en/configuration)
+- [Navigation](https://tianqi.name/jekyll-TeXt-theme/docs/en/navigation)
+- [Layouts](https://tianqi.name/jekyll-TeXt-theme/docs/en/layouts)
+- [Logo and Favicon](https://tianqi.name/jekyll-TeXt-theme/docs/en/logo-and-favicon)
+- [Authors](https://tianqi.name/jekyll-TeXt-theme/docs/en/authors)
+- [Internationalization](https://tianqi.name/jekyll-TeXt-theme/docs/en/i18n)
 
-### Specify your CANopen device
+### Content
 
-The CANopen stack is configured with a specification structure and an object dictionary. Fill the specification structure with your configuration constants, memory areas and default values. Call the CANopen initialization function for setting up all the internal references and structures.
+- [Writing Posts](https://tianqi.name/jekyll-TeXt-theme/docs/en/writing-posts)
+- [Additional styles](https://tianqi.name/jekyll-TeXt-theme/docs/en/additional-styles)
+- [Extensions](https://tianqi.name/jekyll-TeXt-theme/docs/en/extensions)
+- [Markdown Enhancements](https://tianqi.name/jekyll-TeXt-theme/docs/en/markdown-enhancements)
 
+## Demo Pages
 
-# Contribution
+| Name | Description |
+| --- | --- |
+| [Home](https://tianqi.name/jekyll-TeXt-theme/test/) | Home page |
+| [Archive](https://tianqi.name/jekyll-TeXt-theme/archive.html) | Archive page |
+| [Layout Examples](https://tianqi.name/jekyll-TeXt-theme/samples.html) | Examples for different layouts |
 
-## CANopen Stack Development Environment
+## License
 
-The development environmnet for the CANopen stack library takes place on a windows machine with MSVC compiler and a hardware independent CANopen test environment.
-
-Remember: For usage in embedded systems, the source code needs to get recompiled with the cross-compiler of your choice. Good practise is the generation, testing and release of a static library with your cross-compiler for usage in your project.
-
-
-### Tools for CANopen Stack Development Environment
-
-- [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) - this is the free C compiler for Windows, which includes the build tools like `CMake`, `Ninja` and `Make`
-
-- [Visual Studio Code](https://code.visualstudio.com/download) - this is a highly flexible and Open Source editor for coding. You may use your prefered coding editor, too.
-
-- [Git for Windows](https://gitforwindows.org) - the popular version control management is required when you want to contribute.
-
-
-### Setting up the CANopen Stack Development Environment
-
-- [Tutorial](https://code.visualstudio.com/docs/cpp/config-msvc) for the setup of Visual Studio Code with MSVC. 
-
-- Recommended: A few Visual Studio Code Extensions can be installed using the extension marketplace of VS Code. Follow the recommended steps during the installation process of the tools.
-  - [CMake Tools](https://github.com/microsoft/vscode-cmake-tools): In order to give VS Code knowlegde about the language CMake, it's also recommended to install the "CMake language support for Visual Studio Code".  
-  - [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens) simplifies the handling of git-branches in Visual Studio Code.
-
-- Starting VS Code: To start VS Code with the correct environment settings simply navigate to your project folder in the "Developer Command Prompt for VS" and type `code .`. Note: Users of VS Code insiders need to type `code-insiders .`.
+TeXt Theme is [MIT licensed](https://github.com/kitian616/jekyll-TeXt-theme/blob/master/LICENSE).
