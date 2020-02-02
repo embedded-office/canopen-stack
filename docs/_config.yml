@@ -18,8 +18,8 @@
 ##############################
 text_skin: ocean # "default" (default), "dark", "forest", "ocean", "chocolate", "orange"
 highlight_theme: default # "default" (default), "tomorrow", "tomorrow-night", "tomorrow-night-eighties", "tomorrow-night-blue", "tomorrow-night-bright"
-url     : https://embedded-office.github.io # the base hostname & protocol for your site e.g. https://www.someone.com
-baseurl : /canopen-stack # does not include hostname
+url     : https://canopen-stack.org # the base hostname & protocol for your site e.g. https://www.someone.com
+baseurl : # does not include hostname
 title   : Free CANopen Stack Project Page
 description: > # this means to ignore newlines until "Language & timezone"
   This is the free CANopen Stack project page.
