@@ -1,50 +1,67 @@
 header:
-  - titles:
-      # @start locale config
-      en      : &EN       Archive
-      en-GB   : *EN
-      en-US   : *EN
-      en-CA   : *EN
-      en-AU   : *EN
-      zh-Hans : &ZH_HANS  归档
-      zh      : *ZH_HANS
-      zh-CN   : *ZH_HANS
-      zh-SG   : *ZH_HANS
-      zh-Hant : &ZH_HANT  歸檔
-      zh-TW   : *ZH_HANT
-      zh-HK   : *ZH_HANT
-      ko      : &KO       아카이브
-      ko-KR   : *KO
-      fr      : &FR       Archives
-      fr-BE   : *FR
-      fr-CA   : *FR
-      fr-CH   : *FR
-      fr-FR   : *FR
-      fr-LU   : *FR
-      # @end locale config
-    url: /archive.html
+  - title: Home
+    url: /
+  - title: Docs
+    url: /docs
+  - title: Examples
+    url: /examples
+  - title: GitHub
+    url: https://github.com/embedded-office/canopen-stack
 
-  - titles:
-      # @start locale config
-      en      : &EN       About
-      en-GB   : *EN
-      en-US   : *EN
-      en-CA   : *EN
-      en-AU   : *EN
-      zh-Hans : &ZH_HANS  关于
-      zh      : *ZH_HANS
-      zh-CN   : *ZH_HANS
-      zh-SG   : *ZH_HANS
-      zh-Hant : &ZH_HANT  關於
-      zh-TW   : *ZH_HANT
-      zh-HK   : *ZH_HANT
-      ko      : &KO       소개
-      ko-KR   : *KO
-      fr      : &KO       À propos
-      fr-BE   : *FR
-      fr-CA   : *FR
-      fr-CH   : *FR
-      fr-FR   : *FR
-      fr-LU   : *FR
-      # @end locale config
-    url: /about.html
+docs:
+  - title:      Start
+    children:
+      - title:  Installation
+        url:    /docs/start/installation
+      - title:  Quick Start
+        url:    /docs/start/quickstart
+      - title:  Structure
+        url:    /docs/start/structure
+  - title:      CANopen Usage
+    children:
+      - title:  Device Architecture
+        url:    /docs/usecase/architecture
+      - title:  CANopen Stack Overview
+        url:    /docs/usecase/overview
+      - title:  Controlling the Node
+        url:    /docs/usecase/control
+      - title:  Using Object Dictionary
+        url:    /docs/usecase/dictionary
+      - title:  Timed Actions
+        url:    /docs/usecase/actions
+      - title:  Triggering TPDO
+        url:    /docs/usecase/tpdo
+      - title:  Emergency Errors
+        url:    /docs/usecase/emergency
+      - title:  Callback Interface
+        url:    /docs/usecase/callbacks
+      - title:  Configuration
+        url:    /docs/usecase/configuration
+  - title:      API Functions
+    children:
+      - title:  CANopen Node
+        url:    /docs/api/node
+      - title:  Object Dictionary
+        url:    /docs/api/dictionary
+      - title:  Emergency
+        url:    /docs/api/emergency
+      - title:  Network Management
+        url:    /docs/api/nmt
+      - title:  Object Entry
+        url:    /docs/api/object
+      - title:  Parameter
+        url:    /docs/api/parameter
+      - title:  Software Timer
+        url:    /docs/api/timer
+      - title:  TPDO Event
+        url:    /docs/api/tpdo
+      - title:  Error Indication
+        url:    /docs/api/error
+  - title:      Hardware Connection
+    children:
+      - title:  CAN Interface
+        url:    /docs/hardware/interface
+      - title:  Hardware Timer
+        url:    /docs/hardware/timer
+      - title:  Storage Media
+        url:    /docs/hardware/storage

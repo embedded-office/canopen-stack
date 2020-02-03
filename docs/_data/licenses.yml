@@ -1,3 +1,7 @@
+Apache-2.0:
+  name: Apache 2.0
+  url: https://opensource.org/licenses/Apache-2.0
+  image: https://img.shields.io/badge/License-Apache%202.0-green.svg
 CC-BY-4.0:
   name: Attribution 4.0 International
   url: https://creativecommons.org/licenses/by/4.0/
