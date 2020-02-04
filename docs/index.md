@@ -1,6 +1,71 @@
 ---
-layout: page
-title: Home
+layout: landing
+title: CANopen Stack Project
+excerpt: The free and customizable CANopen Stack for embedded systems.
+header:
+  theme: ocean
+article_header:
+  type: overlay
+  align: center
+  theme: dark
+  background_color: '#203028'
+  background_image:
+    gradient: 'linear-gradient(135deg, rgba(34, 139, 87 , .4), rgba(139, 34, 139, .4))'
+    src: /assets/images/cover.jpg
+  height: 100vh
+  actions:
+    - text: Getting Started
+      type: error
+      url: /docs/start/quickstart
+    - text: Examples
+      type: outline-theme-dark
+      url: /examples
+data:
+  sections:
+    - title: Rock Solid
+      excerpt: This CANopen stack performs great on any device at any size!
+      theme: dark
+      is_row: true
+      full_width: true
+      style: "max-width: 200px;"
+      background_color: "#818181"
+    - title: Super Customizable
+      excerpt: Everything from the object entry types, included services, and more can be configured or set.
+      actions:
+        - text: See Examples
+          url: /examples
+        - text: Learn More
+          url: /docs/usecase/configuration
+    - title: Enhanced User Experience
+      children:
+        - title: Basic Services
+          excerpt: All basic CiA301 services for your CANopen slave.
+          actions:
+            - text: Learn More
+              url: /docs/usecase/overview
+        - title: Layer Setting Services
+          excerpt: Configure the CANopen node via network access.
+          actions:
+            - text: Learn More
+              url: /docs/usecase/configuration
+        - title: Parameter Storage
+          excerpt: Use any storage media in your device for parameter.
+          actions:
+            - text: Learn More
+              url: /docs/usecase/callbacks
+    - title: 100% Free
+      theme: dark
+      excerpt: Free to use however you want under the Apache 2.0 License. Clone it, fork it, customize it, whatever!
+      actions:
+        - text: '<i class="fab fa-github"></i> GitHub'
+          type: outline-theme-dark
+          url: https://github.com/embedded-office/canopen-stack
+      background_color: "#818181"
+    - title: Our Sponsors
+      children:
+        - image:
+            src: /assets/images/sponsor01.png
+            url: https://www.embedded-office.com
+            style: "max-width: 200px; max-height: 200px"
+            is_row: true
 ---
-
-This is my first page.
