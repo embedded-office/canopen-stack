@@ -1,7 +1,7 @@
 
-include_directories(inc)
-include_directories(cfg)
+include_directories(include)
+include_directories(config)
 
-file(GLOB_RECURSE SRC_FILES src/*.c)
+file(GLOB_RECURSE SRC_FILES source/*.c)
 
 add_library(${PROJECT_NAME} ${SRC_FILES})

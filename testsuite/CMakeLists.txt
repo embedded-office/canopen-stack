@@ -1,6 +1,6 @@
 
-include_directories(../canopen/cfg)
-include_directories(../canopen/inc)
+include_directories(../canopen/config)
+include_directories(../canopen/include)
 
 include_directories(app)
 include_directories(driver)

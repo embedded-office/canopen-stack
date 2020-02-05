@@ -17,7 +17,7 @@
 ## => Site Settings
 ##############################
 text_skin: ocean # "default" (default), "dark", "forest", "ocean", "chocolate", "orange"
-highlight_theme: default # "default" (default), "tomorrow", "tomorrow-night", "tomorrow-night-eighties", "tomorrow-night-blue", "tomorrow-night-bright"
+highlight_theme: tomorrow # "default" (default), "tomorrow", "tomorrow-night", "tomorrow-night-eighties", "tomorrow-night-blue", "tomorrow-night-bright"
 url     : https://canopen-stack.org # the base hostname & protocol for your site e.g. https://www.someone.com
 baseurl : # does not include hostname
 title   : CANopen Stack Project
@@ -78,7 +78,7 @@ license: Apache-2.0 # "CC-BY-NC-4.0", "CC-BY-4.0", "CC-BY-SA-4.0", "CC-BY-NC-4.0
 
 ## TOC
 toc:
-  selectors: # "h1,h2,h3" (default)
+  selectors: "h1,h2,h3,h4" # "h1,h2,h3" (default)
 
 
 ## => Markdown Enhancements
@@ -179,9 +179,9 @@ analytics:
 
 ## => Build
 ##############################
-markdown    : kramdown
-highlighter : rouge
-permalink   : date
+markdown: kramdown
+highlighter: rouge
+permalink: date
 
 exclude:
   - Gemfile
