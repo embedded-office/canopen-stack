@@ -96,8 +96,8 @@ chart: # false (default), true
 
 ## => Paginate
 ##############################
-# paginate: 8
-# paginate_path: /page:num # don't change this unless for special need
+paginate: 4
+paginate_path: /page:num # don't change this unless for special need
 
 
 ## => Sources
@@ -159,7 +159,7 @@ pageview:
 ## => Search
 ##############################
 search:
-  provider: default # "default" (default), false, "google", "custom"
+  provider: # "default" (default), false, "google", "custom"
 
   ## Google Custom Search Engine
   google:
@@ -187,12 +187,17 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - LICENSE
+  - CNAME
   - README.md
   - jekyll-text-theme.gemspec
   - package-lock.json
   - package.json
   - /node_modules
   - /vendor
+  
+collections:
+  examples:
+    output: true
 
 defaults:
   - scope:
