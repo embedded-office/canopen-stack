@@ -198,6 +198,26 @@ exclude:
 collections:
   examples:
     output: true
+  api_node:
+    output: true
+  api_dictionary:
+    output: true
+  api_emergency:
+    output: true
+  api_interface:
+    output: true
+  api_network:
+    output: true
+  api_object:
+    output: true
+  api_parameter:
+    output: true
+  api_timer:
+    output: true
+  api_tpdo:
+    output: true
+  api_version:
+    output: true
 
 defaults:
   - scope:

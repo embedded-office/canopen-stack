@@ -1,8 +1,10 @@
 ---
-layout: page
+layout: article
 title: Installation
 sidebar:
   nav: docs
+aside:
+  toc: true
 ---
 
 **Note: This project is not production ready!**

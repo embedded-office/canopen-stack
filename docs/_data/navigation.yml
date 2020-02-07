@@ -46,22 +46,16 @@ docs:
       - title:  Emergency
         url:    /docs/api/emergency
       - title:  Network Management
-        url:    /docs/api/nmt
+        url:    /docs/api/network
       - title:  Object Entry
         url:    /docs/api/object
-      - title:  Parameter
-        url:    /docs/api/parameter
-      - title:  Software Timer
-        url:    /docs/api/timer
       - title:  TPDO Event
         url:    /docs/api/tpdo
-      - title:  Error Indication
-        url:    /docs/api/error
   - title:      Hardware Connection
     children:
       - title:  CAN Interface
         url:    /docs/hardware/interface
       - title:  Hardware Timer
         url:    /docs/hardware/timer
-      - title:  Storage Media
-        url:    /docs/hardware/storage
+      - title:  Parameter Storage
+        url:    /docs/hardware/parameter
