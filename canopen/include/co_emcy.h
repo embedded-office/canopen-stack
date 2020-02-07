@@ -76,7 +76,7 @@
 /*! \brief EMCY REGISTER BITS
 *
 *    The following defines holds the bit-number within the error register
-*    object (1001h) in the object directory. These values can be used to
+*    object (1001h) in the object dictionary. These values can be used to
 *    specify a standard conform EMCY error code relation table.
 */
 #define CO_EMCY_REG_GENERAL        0   /*!< general (includes all classes)   */
@@ -107,7 +107,7 @@ struct CO_OBJ_T;
 /*! \brief EMCY HISTORY
 *
 *    This structure holds all data, which are needed for the EMCY history
-*    management within the object directory.
+*    management within the object dictionary.
 */
 typedef struct CO_EMCY_HIST_T {
     uint8_t Max;                 /*!< Total length of EMCY history           */
@@ -159,7 +159,7 @@ typedef struct CO_EMCY_T {
 /*! \brief SET EMCY ERROR
 *
 *    This function checks the current error state and updates the object
-*    directory. The EMCY message is transmitted, if the error is detected
+*    dictionary. The EMCY message is transmitted, if the error is detected
 *    for the first time. The given manufacturer specific fields are optional,
 *    e.g. the ptr may be 0 to set all manufacturer specific values to 0.
 *
@@ -177,7 +177,7 @@ void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
 /*! \brief CLEAR EMCY ERROR
 *
 *    This function checks the current error state and updates the object
-*    directory. The EMCY message is transmitted, if the error was previously
+*    dictionary. The EMCY message is transmitted, if the error was previously
 *    detected.
 *
 * \param emcy
@@ -232,7 +232,7 @@ void COEmcyReset(CO_EMCY *emcy, uint8_t silent);
 
 /*! \brief RESET EMCY HISTORY
 *
-*    This function clears the EMCY history in the object directory.
+*    This function clears the EMCY history in the object dictionary.
 *
 * \param emcy
 *    pointer to the EMCY object
@@ -350,7 +350,7 @@ void COEmcySend(CO_EMCY     *emcy,
 
 /*! \brief  UPDATE EMCY OBJECT ENTRIES
 *
-*    This function updates the EMCY object directory entries with the
+*    This function updates the EMCY object dictionary entries with the
 *    given error code change.
 *
 * \note

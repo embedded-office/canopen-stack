@@ -47,11 +47,11 @@ TS_DEF_MAIN(TS_RPdo_IdOnOff_PreOp)
     TS_CreateNode(&node);
 
     /* valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -73,11 +73,11 @@ TS_DEF_MAIN(TS_RPdo_IdOnOff_Op)
     TS_NMT_SEND(0x01, 1);                            /* set node-id 0x01 to operational          */
 
     /* valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -108,11 +108,11 @@ TS_DEF_MAIN(TS_TPdo_IdOnOff_PreOp)
     TS_CreateNode(&node);
 
     /* valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -136,11 +136,11 @@ TS_DEF_MAIN(TS_TPdo_IdOnOff_Op)
     TS_NMT_SEND(0x01, 1);                            /* set node-id 0x01 to operational          */
 
     /* valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -168,17 +168,17 @@ TS_DEF_MAIN(TS_RPdo_ExtId)
 
     /* extended COB-ID RPDO */
     /* valid to invalid */
-    CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     
     /* set extended flag */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xE0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xE0000201);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     /* invalid to valid */
-    CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
 
     /* direct access with extended cob-id */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xE0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xE0000201);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -201,17 +201,17 @@ TS_DEF_MAIN(TS_TPdo_ExtId)
 
     /* extended COB-ID TPDO */
     /* valid to invalid */
-    CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
 
     /* set extended flag */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xE0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xE0000181);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     /* invalid to valid */
-    CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000181);
+    CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000181);
 
     /* direct access with extended cob-id */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xE0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xE0000181);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -239,7 +239,7 @@ TS_DEF_MAIN(TS_RPdo_ChangeActiveId)
 
     /* COB-ID RPDO */
     /* valid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000211);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000211);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -262,7 +262,7 @@ TS_DEF_MAIN(TS_TPdo_ChangeActiveId)
 
     /* COB-ID TPDO */
     /* valid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000281);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000281);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -292,17 +292,17 @@ TS_DEF_MAIN(TS_TPdo_RemoteFrame)
 
     /* RTR COB-ID TPDO */
     /* valid to invalid */
-    CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
 
     /* clear RTR flag */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x80000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x80000181);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     /* invalid to valid */
-    CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000181);
+    CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000181);
 
     /* direct access with RTR cob-id */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x00000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x00000181);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -333,19 +333,19 @@ TS_DEF_MAIN(TS_RPdo_IdChange_PreOp)
 
     /* COB-ID RPDO */
     /* valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000211);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000211);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -368,19 +368,19 @@ TS_DEF_MAIN(TS_TPdo_IdChange_PreOp)
 
     /* COB-ID TPDO */
     /* valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000191);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000191);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -403,19 +403,19 @@ TS_DEF_MAIN(TS_RPdo_IdChange_Op)
 
     /* COB-ID RPDO */
     /* valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000211);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000211);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -440,19 +440,19 @@ TS_DEF_MAIN(TS_TPdo_IdChange_Op)
 
     /* COB-ID TPDO */
     /* valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000191);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000191);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -480,7 +480,7 @@ TS_DEF_MAIN(TS_RPdo_BadIdSubIdxCfg)
     TS_CreateNode(&node);
 
     /* no PDO COB-ID sub-index */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,3), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,3), 0xC0000201);
     TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -502,7 +502,7 @@ TS_DEF_MAIN(TS_TPdo_BadIdSubIdxCfg)
     TS_CreateTPdoMap(0, 0, &pdo_len);
     TS_CreateNode(&node);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,6), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,6), 0xC0000181);
     TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -530,7 +530,7 @@ TS_DEF_MAIN(TS_RPdo_BadIdIdxCfg)
     TS_CreateNode(&node);
 
     /* no PDO communication parameter index */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x2502,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x2502,1), 0xC0000201);
     TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -553,7 +553,7 @@ TS_DEF_MAIN(TS_TPdo_BadIdIdxCfg)
     TS_CreateNode(&node);
 
     /* no PDO communication parameter index */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x2501,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x2501,1), 0xC0000181);
     TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -585,26 +585,26 @@ TS_DEF_MAIN(TS_RPdo_MapNumChange)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x2);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -636,17 +636,17 @@ TS_DEF_MAIN(TS_RPdo_ChangeActiveMap)
     TS_CreateNode(&node);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x0);
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     /* write mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x2);
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -674,29 +674,29 @@ TS_DEF_MAIN(TS_RPdo_MapNumTooHigh)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 9 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x9);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x9);
     TS_ASSERT(CO_ERR_OBJ_MAP_LEN == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x2);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -725,33 +725,33 @@ TS_DEF_MAIN(TS_RPdo_MapLenTooHigh)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,3), CO_KEY(0x2500,13, CO_UNSIGNED8));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,3), CO_KEY(0x2500,13, CO_UNSIGNED8));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 3 (too many bytes) */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x3);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x3);
     TS_ASSERT(CO_ERR_OBJ_MAP_LEN == result);
 
     /* set mapping to 2 (valid number of bytes) */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x2);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                  /* check for expected error                 */
@@ -779,7 +779,7 @@ TS_DEF_MAIN(TS_RPdo_BadMapNumSubIdxCfg)
     TS_CreateNode(&node);
 
     /* no PDO mapping number sub-index */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600, 9), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600, 9), 0x0);
     TS_ASSERT(CO_ERR_TPDO_MAP_OBJ == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -802,7 +802,7 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumSubIdxCfg)
     TS_CreateNode(&node);
 
     /* no PDO mapping number sub-index */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1A00, 9), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1A00, 9), 0x0);
     TS_ASSERT(CO_ERR_TPDO_MAP_OBJ == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -831,7 +831,7 @@ TS_DEF_MAIN(TS_RPdo_BadMapNumIdxCfg)
     TS_CreateNode(&node);
 
     /* no PDO mapping index */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x2503, 0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x2503, 0), 0x0);
     TS_ASSERT(CO_ERR_TPDO_MAP_OBJ == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -854,7 +854,7 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumIdxCfg)
     TS_CreateNode(&node);
 
     /* no PDO mapping index */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x2504, 0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x2504, 0), 0x0);
     TS_ASSERT(CO_ERR_TPDO_MAP_OBJ == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -884,26 +884,26 @@ TS_DEF_MAIN(TS_TPdo_MapNumChange)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1A00,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1A00,0), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1A00,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1A00,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1A00,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1A00,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1A00,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1A00,0), 0x2);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -932,18 +932,18 @@ TS_DEF_MAIN(TS_TPdo_ChangeActiveMap)
     TS_CreateNode(&node);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1A00,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1A00,0), 0x0);
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     /* write mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1A00,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1A00,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1A00,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1A00,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1A00,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1A00,0), 0x2);
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -971,33 +971,33 @@ TS_DEF_MAIN(TS_RPdo_MapReadOnlyObj)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2501, 4, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2501, 4, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_MAP_TYPE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,2), CO_KEY(0x2501, 5, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2501, 5, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_MAP_TYPE == result);
 
     /* write correct mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x2);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -1026,33 +1026,33 @@ TS_DEF_MAIN(TS_TPdo_MapWriteOnlyObj)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0xC0000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xC0000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1A00,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1A00,0), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1A00,1), CO_KEY(0x2501, 6, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1A00,1), CO_KEY(0x2501, 6, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_MAP_TYPE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1A00,2), CO_KEY(0x2501, 7, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1A00,2), CO_KEY(0x2501, 7, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_MAP_TYPE == result);
 
     /* write correct mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1A00,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1A00,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1A00,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1A00,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1A00,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1A00,0), 0x2);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1800,1), 0x40000181);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000181);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -1080,30 +1080,30 @@ TS_DEF_MAIN(TS_RPdo_MapNotPdoMappableObj)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping not mapable */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2510, 3, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2510, 3, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_MAP_TYPE == result);
 
     /* write correct mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x2);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -1131,30 +1131,30 @@ TS_DEF_MAIN(TS_RPdo_MapObjNotExist)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 0 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping not found */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2700, 3, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2700, 3, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_OBJ_MAP_TYPE == result);
 
     /* write correct mapping */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 2 */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1600,0), 0x2);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x2);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -1182,15 +1182,15 @@ TS_DEF_MAIN(TS_RPdo_ComTypeChange)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write type */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1400,2), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1400,2), 0x0);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -1218,7 +1218,7 @@ TS_DEF_MAIN(TS_RPdo_ActiveComTypeChange)
     TS_CreateNode(&node);
 
     /* write type */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1400,2), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1400,2), 0x0);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                  /* check for expected error                 */
@@ -1246,15 +1246,15 @@ TS_DEF_MAIN(TS_RPdo_BadComTypeIdxCfg)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write type */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x2504, 2), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x2504, 2), 0x0);
     TS_ASSERT(CO_ERR_PARA_IDX == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -1282,15 +1282,15 @@ TS_DEF_MAIN(TS_RPdo_BadComTypeSubIdxCfg)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write type */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1400, 4), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1400, 4), 0x0);
     TS_ASSERT(CO_ERR_PARA_IDX == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1400,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
@@ -1318,15 +1318,15 @@ TS_DEF_MAIN(TS_RPdo_ComTypeNullPtr)
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1401,1), 0xC0000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1401,1), 0xC0000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write type */
-    result = CODirWrByte(&node.Dir, CO_DEV(0x1401,2), 0x0);
+    result = CODictWrByte(&node.Dict, CO_DEV(0x1401,2), 0x0);
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     /* PDO invalid to valid */
-    result = CODirWrLong(&node.Dir, CO_DEV(0x1401,1), 0x40000201);
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1401,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */

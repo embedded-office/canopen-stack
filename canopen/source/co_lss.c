@@ -85,7 +85,7 @@ void COLssInit (CO_LSS *lss, CO_NODE *node)
     lss->Step        = CO_LSS_SEL_VENDOR;
 
     for (subidx = 1; subidx <= 4; subidx++) {
-        obj = CODirFind(&node->Dir, CO_DEV(0x1018, subidx));
+        obj = CODictFind(&node->Dict, CO_DEV(0x1018, subidx));
         if (obj == 0) {
             lss->Mode   = CO_LSS_EXIT;
             node->Error = CO_ERR_CFG_1018;
@@ -148,7 +148,7 @@ int16_t COLssSwitchStateSelective_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
     lss->Step = CO_LSS_SEL_VENDOR;
 
     select    = CO_GET_LONG(frm, 1);
-    err       = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 1), &ident);
+    err       = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 1), &ident);
     if ((err == CO_ERR_NONE) && (select == ident)) {
         lss->Step = CO_LSS_SEL_PRODUCT;
     }
@@ -168,7 +168,7 @@ int16_t COLssSwitchStateSelective_Product(CO_LSS *lss, CO_IF_FRM *frm)
     }
 
     select = CO_GET_LONG(frm, 1);
-    err    = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 2), &ident);
+    err    = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 2), &ident);
     if ((err == CO_ERR_NONE) && (select == ident)) {
         lss->Step = CO_LSS_SEL_REVISION;
     }
@@ -188,7 +188,7 @@ int16_t COLssSwitchStateSelective_Revision(CO_LSS *lss, CO_IF_FRM *frm)
     }
 
     select = CO_GET_LONG(frm, 1);
-    err    = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 3), &ident);
+    err    = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 3), &ident);
     if ((err == CO_ERR_NONE) && (select == ident)) {
         lss->Step = CO_LSS_SEL_SERIAL;
     }
@@ -209,7 +209,7 @@ int16_t COLssSwitchStateSelective_Serial(CO_LSS *lss, CO_IF_FRM *frm)
     }
 
     select = CO_GET_LONG(frm, 1);
-    err    = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 4), &ident);
+    err    = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 4), &ident);
     if ((err == CO_ERR_NONE) && (select == ident)) {
         CO_SET_LONG (frm, 0L, 0);
         CO_SET_LONG (frm, 0L, 4);
@@ -320,7 +320,7 @@ int16_t COLssInquireAddress_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t ident = 0;
 
-    (void)CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 1), &ident);
+    (void)CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 1), &ident);
     CO_SET_LONG (frm, ident, 1);
     CO_SET_ID(frm, CO_LSS_TX_ID);
 
@@ -331,7 +331,7 @@ int16_t COLssInquireAddress_Product(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t ident = 0;
 
-    (void)CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 2), &ident);
+    (void)CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 2), &ident);
     CO_SET_LONG(frm, ident, 1);
     CO_SET_ID(frm, CO_LSS_TX_ID);
 
@@ -342,7 +342,7 @@ int16_t COLssInquireAddress_Revision(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t ident = 0;
 
-    (void)CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 3), &ident);
+    (void)CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 3), &ident);
     CO_SET_LONG(frm, ident, 1);
     CO_SET_ID(frm, CO_LSS_TX_ID);
 
@@ -353,7 +353,7 @@ int16_t COLssInquireAddress_Serial(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t ident = 0;
 
-    (void)CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 4), &ident);
+    (void)CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 4), &ident);
     CO_SET_LONG(frm, ident, 1);
     CO_SET_ID(frm, CO_LSS_TX_ID);
 
@@ -380,7 +380,7 @@ int16_t COLssIdentifyRemoteSlave_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
     lss->Step = CO_LSS_REM_VENDOR;
 
     select    = CO_GET_LONG(frm, 1);
-    err       = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 1), &ident);
+    err       = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 1), &ident);
     if ((err == CO_ERR_NONE) && (select == ident)) {
         lss->Step = CO_LSS_REM_PRODUCT;
     }
@@ -400,7 +400,7 @@ int16_t COLssIdentifyRemoteSlave_Product(CO_LSS *lss, CO_IF_FRM *frm)
     }
 
     select = CO_GET_LONG(frm, 1);
-    err = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 2), &ident);
+    err = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 2), &ident);
     if ((err == CO_ERR_NONE) && (select == ident)) {
         lss->Step = CO_LSS_REM_REVISION_MIN;
     }
@@ -419,7 +419,7 @@ int16_t COLssIdentifyRemoteSlave_RevMin(CO_LSS *lss, CO_IF_FRM *frm)
     }
 
     select = CO_GET_LONG(frm, 1);
-    err    = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 3), &ident);
+    err    = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 3), &ident);
     if ((err == CO_ERR_NONE) && (select <= ident)) {
         lss->Step = CO_LSS_REM_REVISION_MAX;
     }
@@ -438,7 +438,7 @@ int16_t COLssIdentifyRemoteSlave_RevMax(CO_LSS *lss, CO_IF_FRM *frm)
     }
 
     select = CO_GET_LONG(frm, 1);
-    err    = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 3), &ident);
+    err    = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 3), &ident);
     if ((err == CO_ERR_NONE) && (select >= ident)) {
         lss->Step = CO_LSS_REM_SERIAL_MIN;
     }
@@ -457,7 +457,7 @@ int16_t COLssIdentifyRemoteSlave_SerMin(CO_LSS *lss, CO_IF_FRM *frm)
     }
 
     select = CO_GET_LONG(frm, 1);
-    err    = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 4), &ident);
+    err    = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 4), &ident);
     if ((err == CO_ERR_NONE) && (select <= ident)) {
         lss->Step = CO_LSS_REM_SERIAL_MAX;
     }
@@ -477,7 +477,7 @@ int16_t COLssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm)
     }
 
     select = CO_GET_LONG(frm, 1);
-    err    = CODirRdLong(&lss->Node->Dir, CO_DEV(0x1018, 4), &ident);
+    err    = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 4), &ident);
     if ((err == CO_ERR_NONE) && (select >= ident)) {
         CO_SET_LONG(frm, 0L, 0);
         CO_SET_LONG(frm, 0L, 4);

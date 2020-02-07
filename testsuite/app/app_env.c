@@ -25,7 +25,7 @@
 * PRIVATE DEFINES
 ******************************************************************************/
 
-/* Maximal size of dynamic object directory */
+/* Maximal size of dynamic object dictionary */
 #define TS_OD_MAX   64
 
 /* Maximal depth of emergency history */
@@ -50,9 +50,9 @@ static CO_NODE *TS_TestNode;
 static uint8_t SdoBuf[TS_SDOS_N][CO_SDO_BUF_BYTE];
 /* allocate memory for highspeed timer */
 static CO_TMR_MEM TmrMem[TS_TMR_N];
-/* management structure for dynamic object directory */
+/* management structure for dynamic object dictionary */
 static OD_DYN TS_ODDyn;
-/* list of object entries for dynamic object directory */
+/* list of object entries for dynamic object dictionary */
 static CO_OBJ TS_ODList[TS_OD_MAX];
 /* object entry variable for 0x1001:0 (error register) */
 static uint8_t TS_Obj1001_0;
@@ -123,8 +123,8 @@ void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec)
     spec->Baudrate = 250000u;
     spec->CanDrv   = TS_CAN_BUSID;
 
-    spec->Dir      = ODGetDir(&TS_ODDyn);
-    spec->DirLen   = TS_OD_MAX;
+    spec->Dict      = ODGetDict(&TS_ODDyn);
+    spec->DictLen   = TS_OD_MAX;
 
     EmcyResetTable();
     EmcyAddCode(CO_EMCY_CODE_GEN_ERR,  CO_EMCY_REG_GENERAL);

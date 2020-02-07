@@ -44,7 +44,7 @@
 *
 *    This structure holds the informations of a parameter group. The
 *    parameter group is used within the special function parameter object in
-*    an object directory.
+*    an object dictionary.
 *
 * \note
 *    This structure may be placed into ROM to reduce RAM usage.
@@ -66,7 +66,7 @@ typedef struct CO_PARA_T {
 /*! \brief OBJECT TYPE PARAMETER
 *
 *    This object type specializes the general handling of objects for the
-*    object directory entries 0x1010 and 0x1011. These entries are designed
+*    object dictionary entries 0x1010 and 0x1011. These entries are designed
 *    to provide the store and restore feature of a configurable parameter
 *    group.
 */

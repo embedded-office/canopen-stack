@@ -39,7 +39,7 @@ typedef enum CO_ERR_T {
 
     CO_ERR_BAD_ARG = CO_ERR_BASE,/*!< invalid argument                       */
 
-    CO_ERR_OBJ_NOT_FOUND,        /*!< searched object not found in directory */
+    CO_ERR_OBJ_NOT_FOUND,        /*!< searched object not found in dictionary */
     CO_ERR_OBJ_READ,             /*!< error during reading a object entry    */
     CO_ERR_OBJ_WRITE,            /*!< error during writing a object entry    */
     CO_ERR_OBJ_SIZE,             /*!< read/write with wrong size to object   */

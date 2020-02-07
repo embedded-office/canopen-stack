@@ -24,7 +24,7 @@
 #include "co_types.h"
 #include "co_cfg.h"
 
-#include "co_dir.h"
+#include "co_dict.h"
 #include "co_if.h"
 #include "co_emcy.h"
 #include "co_nmt.h"
@@ -47,12 +47,12 @@
 *    CANopen node.
 */
 typedef struct CO_NODE_T {
-    struct CO_DIR_T        Dir;                  /*!< Object directory       */
+    struct CO_DICT_T       Dict;                 /*!< Object dictionary      */
     struct CO_IF_T         If;                   /*!< Can driver interface   */
     struct CO_EMCY_T       Emcy;                 /*!< Node error status      */
     struct CO_NMT_T        Nmt;                  /*!< Network management     */
     struct CO_TMR_T        Tmr;                  /*!< Timer manager          */
-    struct CO_SDO_T        Sdo[CO_SDOS_N];        /*!< SDO Server Array       */
+    struct CO_SDO_T        Sdo[CO_SDOS_N];       /*!< SDO Server Array       */
     uint8_t               *SdoBuf;               /*!< SDO Transfer Buffer    */
     struct CO_RPDO_T       RPdo[CO_RPDO_N];      /*!< RPDO Array             */
     struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */
@@ -73,8 +73,8 @@ typedef struct CO_NODE_T {
 typedef struct CO_NODE_SPEC_T {
     uint8_t                NodeId;       /*!< default Node-Id                */
     uint32_t               Baudrate;     /*!< default Baudrate               */
-    struct CO_OBJ_T       *Dir;          /*!< object directory               */
-    uint16_t               DirLen;       /*!< object directory (max) length  */
+    struct CO_OBJ_T       *Dict;         /*!< object dictionary               */
+    uint16_t               DictLen;      /*!< object dictionary (max) length  */
     struct CO_EMCY_TBL_T  *EmcyCode;     /*!< application EMCY info fields   */
     struct CO_TMR_MEM_T   *TmrMem;       /*!< timer memory blocks            */
     uint16_t               TmrNum;       /*!< number of timer memory blocks  */
@@ -163,7 +163,7 @@ void CONodeProcess(CO_NODE *node);
 *
 * \note
 *    This function considers all parameter groups, which are linked to the
-*    parameter store index (1010h) within the object directory. Every not
+*    parameter store index (1010h) within the object dictionary. Every not
 *    linked parameter group is not scope of this function and must be handled
 *    within the application.
 *

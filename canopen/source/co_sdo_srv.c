@@ -93,11 +93,11 @@ void COSdoEnable(CO_SDO *srv, uint8_t num)
     srvnum->TxId = CO_SDO_ID_OFF;
 
     node = srv->Node;
-    err  = CODirRdLong(&node->Dir, CO_DEV(0x1200 + num, 1), &rxId);
+    err  = CODictRdLong(&node->Dict, CO_DEV(0x1200 + num, 1), &rxId);
     if (err != CO_ERR_NONE) {
         return;
     }
-    err = CODirRdLong(&node->Dir, CO_DEV(0x1200 + num, 2), &txId);
+    err = CODictRdLong(&node->Dict, CO_DEV(0x1200 + num, 2), &txId);
     if (err != CO_ERR_NONE) {
         return;
     }
@@ -227,7 +227,7 @@ int16_t COSdoGetObject(CO_SDO *srv, uint16_t mode)
     int16_t  result = -1;
 
     key = CO_DEV(srv->Idx, srv->Sub);
-    obj = CODirFind(&srv->Node->Dir, key);
+    obj = CODictFind(&srv->Node->Dict, key);
     if (obj != 0) {
         if (mode == CO_SDO_RD) {
             if (CO_IS_READ(obj->Key) != 0) {
@@ -249,7 +249,7 @@ int16_t COSdoGetObject(CO_SDO *srv, uint16_t mode)
             COSdoAbort(srv, CO_SDO_ERR_OBJ);
         } else {
             key = CO_DEV(srv->Idx, 0);
-            obj = CODirFind(&srv->Node->Dir, key);
+            obj = CODictFind(&srv->Node->Dict, key);
             if (obj != 0) {
                 COSdoAbort(srv, CO_SDO_ERR_SUB);
             } else {

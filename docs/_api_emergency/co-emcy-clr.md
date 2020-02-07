@@ -5,7 +5,7 @@ sidebar:
   nav: docs
 ---
 
-This function checks the current error state and updates the object directory. 
+This function checks the current error state and updates the object dictionary. 
 
 <!--more-->
 

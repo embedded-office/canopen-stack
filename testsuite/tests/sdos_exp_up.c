@@ -26,8 +26,8 @@
 *   - para   : object is a parameter
 *   - var    : object is a variable
 *   - const  : object is a constant
-*   - badidx : index of the object is not existing in object directory
-*   - badsub : subindex of the object is not existing in object directory
+*   - badidx : index of the object is not existing in object dictionary
+*   - badsub : subindex of the object is not existing in object dictionary
 * + size: object entry size
 *   - byte   : object value is a byte
 *   - word   : object value is a word
@@ -76,13 +76,13 @@
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a parameter byte from object directory
+* \brief    Read a parameter byte from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED8/RW" parameter
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a parameter of type UNSIGNED8/RW.
+*           1. Prepare object dictionary including a parameter of type UNSIGNED8/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request
@@ -121,13 +121,13 @@ TS_DEF_MAIN(TS_ExpRd_1BytePara)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a parameter word from object directory
+* \brief    Read a parameter word from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED16/RW" parameter
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a parameter of type UNSIGNED16/RW.
+*           1. Prepare object dictionary including a parameter of type UNSIGNED16/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request
@@ -166,13 +166,13 @@ TS_DEF_MAIN(TS_ExpRd_2BytePara)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a parameter long from object directory
+* \brief    Read a parameter long from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED32/RW" parameter
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a parameter of type UNSIGNED32/RW.
+*           1. Prepare object dictionary including a parameter of type UNSIGNED32/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request
@@ -211,13 +211,13 @@ TS_DEF_MAIN(TS_ExpRd_4BytePara)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a variable byte from object directory
+* \brief    Read a variable byte from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED8/RW" variable
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a variable of type UNSIGNED8/RW.
+*           1. Prepare object dictionary including a variable of type UNSIGNED8/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request
@@ -256,13 +256,13 @@ TS_DEF_MAIN(TS_ExpRd_1ByteVar)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a variable word from object directory
+* \brief    Read a variable word from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED16/RW" variable
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a variable of type UNSIGNED16/RW.
+*           1. Prepare object dictionary including a variable of type UNSIGNED16/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request
@@ -300,13 +300,13 @@ TS_DEF_MAIN(TS_ExpRd_2ByteVar)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a variable long from object directory
+* \brief    Read a variable long from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED32/RW" variable
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a variable of type UNSIGNED32/RW.
+*           1. Prepare object dictionary including a variable of type UNSIGNED32/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request
@@ -345,13 +345,13 @@ TS_DEF_MAIN(TS_ExpRd_4ByteVar)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a constant long from object directory
+* \brief    Read a constant long from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED32/RO" constant
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a constant of type UNSIGNED32/RO.
+*           1. Prepare object dictionary including a constant of type UNSIGNED32/RO.
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request
@@ -389,13 +389,13 @@ TS_DEF_MAIN(TS_ExpRd_4ByteConst)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a constant long with property 'Node-ID' from object directory
+* \brief    Read a constant long with property 'Node-ID' from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED32/RO" constant
 *           with enabled property 'Node-ID' is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a constant of type UNSIGNED32/RO and
+*           1. Prepare object dictionary including a constant of type UNSIGNED32/RO and
 *              enabled property 'Node-ID'.
 *
 * ####      Test Steps
@@ -434,13 +434,13 @@ TS_DEF_MAIN(TS_ExpRd_4ByteConstNodeId)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Read a parameter word with property 'Node-ID' from object directory
+* \brief    Read a parameter word with property 'Node-ID' from object dictionary
 *
 * \details  This test checks, that the expedited Upload of "UNSIGNED16/RW" parameter
 *           with enabled property 'Node-ID' is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a constant of type UNSIGNED16/RW and
+*           1. Prepare object dictionary including a constant of type UNSIGNED16/RW and
 *              enabled property 'Node-ID'.
 *
 * ####      Test Steps
@@ -621,7 +621,7 @@ TS_DEF_MAIN(TS_ExpRd_SubIdxNotExist)
 *           (abort code 0x06010001) is sent to a SDO request addressing a write-only object.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a write-only object
+*           1. Prepare object dictionary including a write-only object
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request addressing a write-only object
@@ -667,7 +667,7 @@ TS_DEF_MAIN(TS_ExpRd_WriteOnly)
 *           object with a miss-configured data reference.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a miss-configured object (data reference is NULL)
+*           1. Prepare object dictionary including a miss-configured object (data reference is NULL)
 *
 * ####      Test Steps
 *           1. Send SDO expedited upload request addressing the miss-configured object

@@ -40,7 +40,7 @@ TS_DEF_MAIN(TS_Emcy_ErrRegOnSet)
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1001,0),&err_reg);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1001,0),&err_reg);
 
     TS_ASSERT(3 == err_reg);
 
@@ -64,7 +64,7 @@ TS_DEF_MAIN(TS_Emcy_ErrRegOnSetRepeat)
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2                        */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1001,0),&err_reg);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1001,0),&err_reg);
 
     TS_ASSERT(7 == err_reg);
 
@@ -90,7 +90,7 @@ TS_DEF_MAIN(TS_Emcy_ErrRegOnClr)
 
     COEmcyClr(&node.Emcy, 1);                         /* clear error #1                           */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1001,0),&err_reg);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1001,0),&err_reg);
 
     TS_ASSERT(5 == err_reg);
 
@@ -116,7 +116,7 @@ TS_DEF_MAIN(TS_Emcy_ErrRegOnReset)
 
     COEmcyReset(&node.Emcy, 0);                       /* reset error #1                           */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1001,0),&err_reg);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1001,0),&err_reg);
     TS_ASSERT(0 == err_reg);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */

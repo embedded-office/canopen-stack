@@ -85,7 +85,7 @@ int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t siz
 {
     uint32_t signature;
     int16_t  result = CO_ERR_PARA_IDX;
-    CO_DIR  *cod;
+    CO_DICT  *cod;
     int16_t  err;
     uint8_t  num;
     uint8_t  sub;
@@ -95,11 +95,11 @@ int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t siz
         return (CO_ERR_BAD_ARG);
     }
     
-    cod = &node->Dir;
+    cod = &node->Dict;
 
     /* store parameter */
     if (CO_GET_IDX(obj->Key) == 0x1010) {
-        err = CODirRdByte(cod, CO_DEV(0x1010,0), &num);
+        err = CODictRdByte(cod, CO_DEV(0x1010,0), &num);
         if (err != CO_ERR_NONE) {
             cod->Node->Error = CO_ERR_CFG_1010_0;
             return (err);
@@ -121,7 +121,7 @@ int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t siz
     
     /* restore parameters */
     if (CO_GET_IDX(obj->Key) == 0x1011) {
-        err = CODirRdByte(cod, CO_DEV(0x1011,0), &num);
+        err = CODictRdByte(cod, CO_DEV(0x1011,0), &num);
         if (err != CO_ERR_NONE) {
             cod->Node->Error = CO_ERR_CFG_1011_0;
             return (err);
@@ -178,7 +178,7 @@ int16_t COTypeParaRead(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t 
 */
 int16_t COTypeParaWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DIR  *cod;
+    CO_DICT  *cod;
     CO_OBJ  *pwo;
     CO_PARA *pg;
     int16_t  select;
@@ -191,15 +191,15 @@ int16_t COTypeParaWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t
     if (select != CO_ERR_NONE) {
         return (select);
     }
-    cod = &node->Dir;
+    cod = &node->Dict;
     idx = CO_GET_IDX(obj->Key);
     sub = CO_GET_SUB(obj->Key);
-    (void)CODirRdByte(cod, CO_DEV(idx,0), &num);
+    (void)CODictRdByte(cod, CO_DEV(idx,0), &num);
 
     /* all parameter groups */
     if ((sub == 1) && (num > 1)) {
         for (sub = 2; sub < num; sub++) {
-            pwo = CODirFind(cod, CO_DEV(idx, sub));
+            pwo = CODictFind(cod, CO_DEV(idx, sub));
             if (pwo != 0) {
                 pg = (CO_PARA *)pwo->Data;
                 if (idx == 0x1011) {

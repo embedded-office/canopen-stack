@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CO_SDO_H_
-#define CO_SDO_H_
+#ifndef CO_SDO_SRV_H_
+#define CO_SDO_SRV_H_
 
 /******************************************************************************
 * INCLUDES
@@ -35,10 +35,10 @@
 #define CO_SDO_ERR_SEQ_NUM      0x05040003    /*!< Invalid Sequence number                */
 #define CO_SDO_ERR_RD           0x06010001    /*!< Attempt to read a write only object    */
 #define CO_SDO_ERR_WR           0x06010002    /*!< Attempt to write a read only object    */
-#define CO_SDO_ERR_OBJ          0x06020000    /*!< Object doesn't exist in directory      */
+#define CO_SDO_ERR_OBJ          0x06020000    /*!< Object doesn't exist in dictionary      */
 #define CO_SDO_ERR_LEN_HIGH     0x06070012    /*!< Length of parameter too high           */
 #define CO_SDO_ERR_LEN_SMALL    0x06070013    /*!< Length of parameter too small          */
-#define CO_SDO_ERR_SUB          0x06090011    /*!< Subindex doesn't exist in directory    */
+#define CO_SDO_ERR_SUB          0x06090011    /*!< Subindex doesn't exist in dictionary    */
 #define CO_SDO_ERR_RANGE        0x06090030    /*!< Value range of parameter exceeded      */
 #define CO_SDO_ERR_TOS          0x08000020    /*!< Data can't be transfered or stored     */
 #define CO_SDO_ERR_TOS_STATE    0x08000022    /*!< Data can't be transfered or stored,    */
@@ -64,7 +64,7 @@
 /*! \brief OBJECT TYPE SDO IDENTIFIER
 *
 *    This object type specializes the general handling of objects for the
-*    object directory entries holding a SDO identifier. These entries are
+*    object dictionary entries holding a SDO identifier. These entries are
 *    designed to provide the feature of changing a SDO identifier.
 */
 extern const CO_OBJ_TYPE COTSdoId;
@@ -150,7 +150,7 @@ typedef struct CO_SDO_T {
 
 /*! \brief  INIT SDO SERVER
 *
-*    This function reads the content of the CANopen object directory with
+*    This function reads the content of the object dictionary with
 *    index 1200+[n] subindex 1 (for RX) and subindex 2 (for TX), where n
 *    is a counter from 0 to the maximal number of supported SDO servers
 *    (CO_SDO_N).
@@ -184,7 +184,7 @@ void COSdoReset(CO_SDO *srv, uint8_t num, struct CO_NODE_T *node);
 
 /*! \brief  ENABLE SDO SERVER
 *
-*    This function reads the content of the CANopen object directory for a
+*    This function reads the content of the object dictionary for a
 *    given SDO server number 'num' from the with index 1200+[num] subindex 1
 *    (for RX) and subindex 2 (for TX). The identifiers for request and
 *    response will be set acc. the CANopen rules. If everything is ok,
@@ -236,7 +236,7 @@ int16_t COSdoResponse(CO_SDO *srv);
 
 /*! \brief  GET ADDRESSED OBJECT
 *
-*    This function looks for the addressed object in the object directory
+*    This function looks for the addressed object in the object dictionary
 *    and generates several abort messages on bad addresses. If everything
 *    is fine, this function stores the corresponding object entry reference
 *    in the SDO server object and returns 0.
@@ -257,7 +257,7 @@ int16_t COSdoGetObject(CO_SDO *srv, uint16_t mode);
 /*! \brief  GET SIZE OF OBJECT
 *
 *    This function checks the given size acc. the addressed object size in
-*    the object directory and generates several abort messages on bad size
+*    the object dictionary and generates several abort messages on bad size
 *    informations. If everything is fine, this function returns the size of
 *    the object in byte.
 *

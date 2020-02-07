@@ -119,7 +119,7 @@ typedef struct CO_RPDO_T {
 /*! \brief OBJECT TYPE: ASYNCHRONOUS TRANSMIT PDO OBJECT
 *
 *    This object type specializes the general handling of objects for
-*    object directory entries, which triggers a TPDO event on changed values.
+*    object dictionary entries, which triggers a TPDO event on changed values.
 */
 extern const CO_OBJ_TYPE COTAsync;          /*!< Async Object Type           */
 
@@ -218,8 +218,8 @@ void COTPdoClear(CO_TPDO *pdo, struct CO_NODE_T *node);
 
 /*! \brief TPDO INITIALIZATION
 *
-*    This function checks the object directory and creates the PDO related
-*    configuration data from the object directory settings.
+*    This function checks the object dictionary and creates the PDO related
+*    configuration data from the object dictionary settings.
 *
 * \param pdo
 *    Pointer to start of TPDO array
@@ -233,7 +233,7 @@ void COTPdoInit(CO_TPDO *pdo, struct CO_NODE_T *node);
 
 /*! \brief RESET TPDO COMMUNICATION PROFILE
 *
-*    This function scans the object directory for the TPDO communication and
+*    This function scans the object dictionary for the TPDO communication and
 *    mapping profile. The function will fill the TPDO info structure with the
 *    corresponding informations.
 *
@@ -259,7 +259,7 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num);
 
 /*! \brief GET PDO MAPPING DATA
 *
-*    This function gets the PDO mapping datas out of the object directory and
+*    This function gets the PDO mapping datas out of the object dictionary and
 *    puts the pre-calculated values in the CAN message configuration.
 *
 *    The following list shows the considered mapping profile entries:
@@ -272,7 +272,7 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num);
 * \param num
 *    Number of TPDO (0..511)
 *
-* \retval  =0    Mapping successful parsed out of object directory
+* \retval  =0    Mapping successful parsed out of object dictionary
 * \retval  <0    At least one error is detected within the mapping
 *                configuration
 *
@@ -443,8 +443,8 @@ void CORPdoClear(CO_RPDO *pdo, struct CO_NODE_T *node);
 
 /*! \brief RPDO INITIALIZATION
 *
-*    This function checks the object directory and creates the PDO related
-*    configuration data from the object directory settings.
+*    This function checks the object dictionary and creates the PDO related
+*    configuration data from the object dictionary settings.
 *
 * \param pdo
 *    Pointer to start of RPDO array
@@ -458,7 +458,7 @@ void CORPdoInit(CO_RPDO *pdo, struct CO_NODE_T *node);
 
 /*! \brief RESET RPDO COMMUNICATION PROFILE
 *
-*    This function scans the object directory for the RPDO communication and
+*    This function scans the object dictionary for the RPDO communication and
 *    mapping profile. The function will fill the RPDO info structure with the
 *    corresponding informations.
 *
@@ -486,7 +486,7 @@ int16_t CORPdoReset(CO_RPDO *pdo, int16_t num);
 
 /*! \brief GET PDO MAPPING DATA
 *
-*    This function gets the PDO mapping datas out of the object directory
+*    This function gets the PDO mapping datas out of the object dictionary
 *    and puts the pre-calculated values in the CAN message configuration.
 *
 *    The following list shows the considered mapping profile entries:
@@ -499,7 +499,7 @@ int16_t CORPdoReset(CO_RPDO *pdo, int16_t num);
 * \param num
 *    Number of RPDO (0..511)
 *
-* \retval  =0    Mapping successful parsed out of object directory
+* \retval  =0    Mapping successful parsed out of object dictionary
 * \retval  <0    At least one error is detected within the mapping
 *                configuration
 *
@@ -528,7 +528,7 @@ int16_t CORPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm);
 /*! \brief RPDO RECEIVE
 *
 *    This function is responsible for the distribution of a RPDO into the
-*    corresponding signals within the object directory.
+*    corresponding signals within the object dictionary.
 *
 * \param pdo
 *    Pointer to RPDO element
@@ -546,7 +546,7 @@ void CORPdoRx(CO_RPDO *pdo, uint16_t num, CO_IF_FRM *frm);
 /*! \brief RPDO WRITE
 *
 *    This function is used to write the received CAN message data to the
-*    object directory.
+*    object dictionary.
 *
 * \param pdo
 *    Pointer to start of RPDO array
@@ -671,9 +671,9 @@ extern void COPdoTransmit(CO_IF_FRM *frm);
 /*! \brief  PDO RECEIVE CALLBACK
 *
 *    This function is called just before the PDO receiption will distribute
-*    the PDO message frame into the object directory. This callback function
+*    the PDO message frame into the object dictionary. This callback function
 *    is able to <i>consume</i> the PDO message frame, e.g. the distribution
-*    into the object directory will be skipped. Furthermore without
+*    into the object dictionary will be skipped. Furthermore without
 *    <i>consuming</i> the PDO message frame, this function could modify the
 *    recieved data before distribution takes place.
 *

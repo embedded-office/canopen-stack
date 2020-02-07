@@ -47,7 +47,7 @@
 /*! \brief OBJECT TYPE HEARTBEAT CONSUMER
 *
 *    This object type specializes the general handling of objects for the
-*    object directory entry 0x1016. This entries is designed to provide
+*    object dictionary entry 0x1016. This entries is designed to provide
 *    the heartbeat consumer monitor times.
 */
 extern const CO_OBJ_TYPE COTNmtHbCons;
@@ -55,7 +55,7 @@ extern const CO_OBJ_TYPE COTNmtHbCons;
 /*! \brief OBJECT TYPE HEARTBEAT PRODUCER
 *
 *    This object type specializes the general handling of objects for the
-*    object directory entry 0x1017. This entries is designed to provide
+*    object dictionary entry 0x1017. This entries is designed to provide
 *    the heartbeat producer cycle time.
 */
 extern const CO_OBJ_TYPE COTNmtHbProd;
@@ -109,7 +109,7 @@ typedef struct CO_NMT_T {
 /*! \brief HEARTBEAT CONSUMER STRUCTURE
 *
 *    This structure holds all data, which are needed for the heartbeat
-*    consumer handling within the object directory.
+*    consumer handling within the object dictionary.
 */
 typedef struct CO_HBCONS_T {
     struct CO_NODE_T   *Node;    /*!< Link to parent node                    */

@@ -71,7 +71,7 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node);
 /*! \brief SYNC MESSAGE HANDLER
 *
 *    This function is called on receiving a SYNC message and handles the
-*    synchronous PDOs as defined in the object directory.
+*    synchronous PDOs as defined in the object dictionary.
 *
 * \param sync
 *    Pointer to SYNC object

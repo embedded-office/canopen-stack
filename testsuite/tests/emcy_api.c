@@ -76,7 +76,7 @@ TS_DEF_MAIN(TS_Emcy_TxChangedId)
     TS_CreateMandatoryDir();
     TS_CreateNode(&node);
 
-    (void)CODirWrLong(&node.Dir,CO_DEV(0x1014,0),emcy_id);
+    (void)CODictWrLong(&node.Dict,CO_DEV(0x1014,0),emcy_id);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     RunSimCan(0, 0);                                  /* run simulated CAN                        */

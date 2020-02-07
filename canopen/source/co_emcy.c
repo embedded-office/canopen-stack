@@ -143,7 +143,7 @@ void COEmcyReset(CO_EMCY *emcy, uint8_t silent)
 void COEmcyHistReset(CO_EMCY *emcy)
 {
     CO_NODE    *node;
-    CO_DIR     *cod;
+    CO_DICT     *cod;
     CO_OBJ     *obj;
     uint32_t    val32;
     int16_t     chk;
@@ -155,10 +155,10 @@ void COEmcyHistReset(CO_EMCY *emcy)
         return;
     }
     node = emcy->Node;
-    cod  = &node->Dir;
+    cod  = &node->Dict;
 
     val08 = 0;
-    obj = CODirFind(cod, CO_DEV(0x1003, 0));
+    obj = CODictFind(cod, CO_DEV(0x1003, 0));
     if (obj == 0) {
         node->Error = CO_ERR_NONE;
         return;
@@ -167,7 +167,7 @@ void COEmcyHistReset(CO_EMCY *emcy)
 
     val32 = 0;
     for (sub = 1; sub <= emcy->Hist.Max; sub++) {
-        obj = CODirFind(cod, CO_DEV(0x1003, sub));
+        obj = CODictFind(cod, CO_DEV(0x1003, sub));
         (void)COObjWrDirect(obj, &val32, 4);
     }
 
@@ -198,7 +198,7 @@ void COEmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
     for (n=0; n < CO_EMCY_REG_NUM; n++) {
         emcy->Cnt[n] = 0;
     }
-    obj = CODirFind(&node->Dir, CO_DEV(0x1014,0));
+    obj = CODictFind(&node->Dict, CO_DEV(0x1014,0));
     if (obj == 0) {
         node->Error = CO_ERR_CFG_1014_0;
     } else {
@@ -207,7 +207,7 @@ void COEmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
             node->Error = CO_ERR_CFG_1014_0;
         }
     }
-    obj = CODirFind(&node->Dir, CO_DEV(0x1001,0));
+    obj = CODictFind(&node->Dict, CO_DEV(0x1001,0));
     if (obj == 0) {
         node->Error = CO_ERR_CFG_1001_0;
     } else {
@@ -309,7 +309,7 @@ void COEmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
 {
     CO_IF_FRM    frm; 
     CO_NODE     *node;
-    CO_DIR      *dir;
+    CO_DICT      *dir;
     CO_EMCY_TBL *data;
     uint8_t      n;
 
@@ -320,10 +320,10 @@ void COEmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
     if (err >= CO_EMCY_N) {
         err = CO_EMCY_N - 1;
     }
-    dir  = &node->Dir;
+    dir  = &node->Dict;
     data = &emcy->Root[err];
 
-    (void)CODirRdLong(dir, CO_DEV(0x1014,0),
+    (void)CODictRdLong(dir, CO_DEV(0x1014,0),
                       &frm.Identifier);
     frm.DLC = 8;
     if (state == 1) {
@@ -333,7 +333,7 @@ void COEmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
         frm.Data[0] = (uint8_t)0;
         frm.Data[1] = (uint8_t)0;
     }
-    (void)CODirRdByte(dir, CO_DEV(0x1001,0), &frm.Data[2]);
+    (void)CODictRdByte(dir, CO_DEV(0x1001,0), &frm.Data[2]);
     for (n=0; n<5; n++) {
         frm.Data[3+n] = 0;
     }
@@ -350,7 +350,7 @@ void COEmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
 */
 void COEmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
 {
-    CO_DIR  *dir;
+    CO_DICT  *dir;
     uint8_t  regbit;
     uint8_t  regmask;
     uint8_t  reg;
@@ -358,11 +358,11 @@ void COEmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
     if (err >= CO_EMCY_N) {
         err = CO_EMCY_N - 1;
     }
-    dir     = &emcy->Node->Dir;
+    dir     = &emcy->Node->Dict;
     regbit  =  emcy->Root[err].Reg;
     regmask =  (uint8_t)(1u << regbit);
 
-    (void)CODirRdByte(dir, CO_DEV(0x1001,0), &reg);
+    (void)CODictRdByte(dir, CO_DEV(0x1001,0), &reg);
 
     if (state != 0) { /* set error */
         if ((reg & regmask) == 0) {
@@ -384,7 +384,7 @@ void COEmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
             }
         }
     }
-    (void)CODirWrByte(dir, CO_DEV(0x1001,0), reg);
+    (void)CODictWrByte(dir, CO_DEV(0x1001,0), reg);
 }
 
 /*
@@ -393,7 +393,7 @@ void COEmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
 void COEmcyHistInit(CO_EMCY *emcy)
 {
     CO_NODE  *node;
-    CO_DIR   *cod;
+    CO_DICT   *cod;
     CO_OBJ   *obj;
     uint8_t   sub;
 
@@ -402,20 +402,20 @@ void COEmcyHistInit(CO_EMCY *emcy)
     emcy->Hist.Off = 0;
 
     node = emcy->Node;
-    cod  = &node->Dir;
-    obj  = CODirFind(cod, CO_DEV(0x1003, 0));
+    cod  = &node->Dict;
+    obj  = CODictFind(cod, CO_DEV(0x1003, 0));
     if (obj == 0) {
         node->Error = CO_ERR_NONE;
         return;
     }
-    obj  = CODirFind(cod, CO_DEV(0x1003, 1));
+    obj  = CODictFind(cod, CO_DEV(0x1003, 1));
     if (obj == 0) {
         node->Error = CO_ERR_CFG_1003_1;
         return;
     }
     sub = 2;
     while (obj != 0) {
-        obj = CODirFind(cod, CO_DEV(0x1003, sub));
+        obj = CODictFind(cod, CO_DEV(0x1003, sub));
         if (obj != 0) {
             sub++;
         }
@@ -432,7 +432,7 @@ void COEmcyHistInit(CO_EMCY *emcy)
 void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 {
     CO_NODE *node;
-    CO_DIR  *cod;
+    CO_DICT  *cod;
     CO_OBJ  *obj;
     uint32_t val = 0;
     uint8_t  sub;
@@ -441,7 +441,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
         return;
     }
     node = emcy->Node;
-    cod  = &node->Dir;
+    cod  = &node->Dict;
     emcy->Hist.Off++;
     if (emcy->Hist.Off > emcy->Hist.Max) {
         emcy->Hist.Off = 1;
@@ -451,14 +451,14 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
     if (usr != 0) {
         val |= (((uint32_t)usr->Hist) << 16);
     }
-    obj = CODirFind(cod, CO_DEV(0x1003, sub));
+    obj = CODictFind(cod, CO_DEV(0x1003, sub));
     COObjWrDirect(obj, &val, 4);
 
     emcy->Hist.Num++;
     if (emcy->Hist.Num > emcy->Hist.Max) {
         emcy->Hist.Num = emcy->Hist.Max;
     } else {
-        obj = CODirFind(cod, CO_DEV(0x1003, 0));
+        obj = CODictFind(cod, CO_DEV(0x1003, 0));
         COObjWrDirect(obj, &(emcy->Hist.Num), 1);
     }
 }
@@ -468,13 +468,13 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 */
 int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
 {
-    CO_DIR  *cod;
+    CO_DICT  *cod;
     CO_EMCY *emcy;
     int16_t  result = CO_ERR_NONE;
     uint8_t  sub;
     uint8_t  map;
 
-    cod  = &node->Dir;
+    cod  = &node->Dict;
     emcy = &node->Emcy;
     sub  = CO_GET_SUB(obj->Key);
 
@@ -488,7 +488,7 @@ int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t 
                 map = (emcy->Hist.Max - (sub - 1)) +
                        emcy->Hist.Off;
             }
-            obj = CODirFind(cod, CO_DEV(0x1003, map));
+            obj = CODictFind(cod, CO_DEV(0x1003, map));
             result = COObjRdDirect(obj, buf, len);
         }
     }

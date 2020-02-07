@@ -77,9 +77,9 @@
 
 #define CO_CTRL_SET_OFF  1       /*!< Set read/write offset for next access  */
 
-/*! \brief OBJECT DIRECTORY ENDMARKER
+/*! \brief OBJECT DICTIONARY ENDMARKER
 *
-*    This define may be used in object directory definitions. It marks the
+*    This define may be used in object dictionary definitions. It marks the
 *    first unused object entry.
 */
 #define CO_OBJ_DIR_ENDMARK   { (uint32_t)0, (CO_OBJ_TYPE *)0, (uintptr_t)0 }
@@ -244,8 +244,8 @@
 * PUBLIC TYPES
 ******************************************************************************/
 
-struct CO_OBJ_TYPE_T;            /* Declaration of object type structure     */
-struct CO_DIR_T;                 /* Declaration of object directory structure*/
+struct CO_OBJ_TYPE_T;          /* Declaration of object type structure       */
+struct CO_DICT_T;              /* Declaration of object dictionary structure */
 
 /*! \brief OBJECT ENTRY
 *
@@ -293,7 +293,7 @@ typedef struct CO_OBJ_TYPE_T {
 /*! \brief DOMAIN MANAGEMENT STRUCTURE
 *
 *    This structure holds all data, which are needed for the domain object
-*    management within the object directory.
+*    management within the object dictionary.
 */
 typedef struct CO_OBJ_DOM_T {
     uint32_t  Offset;                  /*!< Internal offset information      */
@@ -305,7 +305,7 @@ typedef struct CO_OBJ_DOM_T {
 /*! \brief STRING MANAGEMENT STRUCTURE
 *
 *    This structure holds all data, which are needed for the string object
-*    management within the object directory.
+*    management within the object dictionary.
 */
 typedef struct CO_OBJ_STR_T {
     uint32_t  Offset;                  /*!< Internal offset information      */
@@ -347,10 +347,10 @@ extern const CO_OBJ_TYPE COTDomain;
 
 /*! \brief  GET SIZE OF OBJECT ENTRY
 *
-*    This function returns the size of the given object directory entry.
+*    This function returns the size of the given object dictionary entry.
 *
 * \param obj
-*    pointer to the CANopen directory entry
+*    pointer to the dictionary entry
 *
 * \param node
 *    reference to parent node
@@ -365,10 +365,10 @@ uint32_t COObjGetSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 
 /*! \brief  READ VALUE FROM OBJECT ENTRY
 *
-*    This function reads a value from the given object directory entry.
+*    This function reads a value from the given object dictionary entry.
 *
 * \param obj
-*    pointer to the CANopen directory entry
+*    pointer to the dictionary entry
 *
 * \param node
 *    reference to parent node
@@ -390,10 +390,10 @@ int16_t COObjRdValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t w
 
 /*! \brief  WRITE VALUE TO OBJECT ENTRY
 *
-*    This function writes a value to the given object directory entry.
+*    This function writes a value to the given object dictionary entry.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param node
 *    reference to parent node
@@ -416,11 +416,11 @@ int16_t COObjWrValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t w
 /*! \brief  START READ BUFFER FROM OBJECT ENTRY
 *
 *    This function starts the read operation at the beginning of the byte
-*    stream from the given object directory entry into the given destination
+*    stream from the given object dictionary entry into the given destination
 *    buffer.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param node
 *    reference to parent node
@@ -439,11 +439,11 @@ int16_t COObjRdBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, ui
 /*! \brief  CONTINUE READ BUFFER FROM OBJECT ENTRY
 *
 *    This function continues the read operation at the current offset of
-*    the byte stream from the given object directory entry into the given
+*    the byte stream from the given object dictionary entry into the given
 *    destination buffer.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param node
 *    reference to parent node
@@ -462,10 +462,10 @@ int16_t COObjRdBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uin
 /*! \brief  START WRITE BUFFER TO OBJECT ENTRY
 *
 *    This function starts the write operation at the beginning of the
-*    given object directory entry from the given source buffer.
+*    given object dictionary entry from the given source buffer.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param node
 *    reference to parent node
@@ -484,11 +484,11 @@ int16_t COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, ui
 /*! \brief  CONTINUE WRITE BUFFER TO OBJECT ENTRY
 *
 *    This function continues the write operation at the current offset of
-*    the byte stream from the given source buffer to the object directory
+*    the byte stream from the given source buffer to the object dictionary
 *    entry.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param node
 *    reference to parent node
@@ -520,10 +520,10 @@ void COObjInit(CO_OBJ *obj);
 /*! \brief  COMPARE GIVEN VALUE WITH OBJECT ENTRY VALUE
 *
 *    This function compares the given value with the currently stored value
-*    within the object directory.
+*    within the object dictionary.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param val
 *    new value, (casted to 32bit value)
@@ -542,7 +542,7 @@ int16_t COObjCmp(CO_OBJ *obj, void *val);
 *    and get the value from that address.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param val
 *    pointer to the result memory
@@ -563,7 +563,7 @@ int16_t COObjRdDirect(CO_OBJ *obj, void *val, uint32_t len);
 *    to that address.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param val
 *    pointer to the source memory
@@ -582,7 +582,7 @@ int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 *    type-functions.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param node
 *    reference to parent node
@@ -610,7 +610,7 @@ int16_t COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len
 *    type-functions.
 *
 * \param obj
-*    pointer to the CANopen object directory entry
+*    pointer to the object dictionary entry
 *
 * \param node
 *    reference to parent node

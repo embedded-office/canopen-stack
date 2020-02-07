@@ -26,8 +26,8 @@
 *   - para   : object is a parameter
 *   - var    : object is a variable
 *   - const  : object is a constant
-*   - badidx : index of the object is not existing in object directory
-*   - badsub : subindex of the object is not existing in object directory
+*   - badidx : index of the object is not existing in object dictionary
+*   - badsub : subindex of the object is not existing in object dictionary
 * + size: object entry size
 *   - byte   : object value is a byte
 *   - word   : object value is a word
@@ -77,20 +77,20 @@
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Write a parameter byte to object directory
+* \brief    Write a parameter byte to object dictionary
 *
 * \details  This test checks, that the expedited download of "UNSIGNED8/RW" parameter
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a parameter of type UNSIGNED8/RW.
+*           1. Prepare object dictionary including a parameter of type UNSIGNED8/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request
 *
 * ####      Test Checks
 *           1. Check, that SDO server response is correct
-*           2. Check, that value is written in object directory
+*           2. Check, that value is written in object dictionary
 *           3. Check, that CANopen stack executes this error free
 */
 /*------------------------------------------------------------------------------------------------*/
@@ -119,20 +119,20 @@ TS_DEF_MAIN(TS_ExpWr_1BytePara)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Write a parameter word to object directory
+* \brief    Write a parameter word to object dictionary
 *
 * \details  This test checks, that the expedited download of "UNSIGNED16/RW" parameter
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a parameter of type UNSIGNED16/RW.
+*           1. Prepare object dictionary including a parameter of type UNSIGNED16/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request
 *
 * ####      Test Checks
 *           1. Check, that SDO server response is correct
-*           2. Check, that value is written in object directory
+*           2. Check, that value is written in object dictionary
 *           3. Check, that CANopen stack executes this error free
 */
 /*------------------------------------------------------------------------------------------------*/
@@ -161,20 +161,20 @@ TS_DEF_MAIN(TS_ExpWr_2BytePara)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Write a parameter long to object directory
+* \brief    Write a parameter long to object dictionary
 *
 * \details  This test checks, that the expedited download of "UNSIGNED32/RW" parameter
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a parameter of type UNSIGNED32/RW.
+*           1. Prepare object dictionary including a parameter of type UNSIGNED32/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request
 *
 * ####      Test Checks
 *           1. Check, that SDO server response is correct
-*           2. Check, that value is written in object directory
+*           2. Check, that value is written in object dictionary
 *           3. Check, that CANopen stack executes this error free
 */
 /*------------------------------------------------------------------------------------------------*/
@@ -203,20 +203,20 @@ TS_DEF_MAIN(TS_ExpWr_4BytePara)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Write a variable byte to object directory
+* \brief    Write a variable byte to object dictionary
 *
 * \details  This test checks, that the expedited download of "UNSIGNED8/RW" variable
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a variable of type UNSIGNED8/RW.
+*           1. Prepare object dictionary including a variable of type UNSIGNED8/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request
 *
 * ####      Test Checks
 *           1. Check, that SDO server response is correct
-*           2. Check, that value is written in object directory
+*           2. Check, that value is written in object dictionary
 *           3. Check, that CANopen stack executes this error free
 */
 /*------------------------------------------------------------------------------------------------*/
@@ -245,20 +245,20 @@ TS_DEF_MAIN(TS_ExpWr_1ByteVar)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Write a variable word to object directory
+* \brief    Write a variable word to object dictionary
 *
 * \details  This test checks, that the expedited download of "UNSIGNED16/RW" variable
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a variable of type UNSIGNED16/RW.
+*           1. Prepare object dictionary including a variable of type UNSIGNED16/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request
 *
 * ####      Test Checks
 *           1. Check, that SDO server response is correct
-*           2. Check, that value is written in object directory
+*           2. Check, that value is written in object dictionary
 *           3. Check, that CANopen stack executes this error free
 */
 /*------------------------------------------------------------------------------------------------*/
@@ -287,20 +287,20 @@ TS_DEF_MAIN(TS_ExpWr_2ByteVar)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Write a variable long to object directory
+* \brief    Write a variable long to object dictionary
 *
 * \details  This test checks, that the expedited download of "UNSIGNED32/RW" variable
 *           is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a variable of type UNSIGNED32/RW.
+*           1. Prepare object dictionary including a variable of type UNSIGNED32/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request
 *
 * ####      Test Checks
 *           1. Check, that SDO server response is correct
-*           2. Check, that value is written in object directory
+*           2. Check, that value is written in object dictionary
 *           3. Check, that CANopen stack executes this error free
 */
 /*------------------------------------------------------------------------------------------------*/
@@ -329,20 +329,20 @@ TS_DEF_MAIN(TS_ExpWr_4ByteVar)
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
-* \brief    Write a variable word to object directory
+* \brief    Write a variable word to object dictionary
 *
 * \details  This test checks, that the expedited download of "UNSIGNED16/RW" variable
 *           (download size not indicated) is working.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a variable of type UNSIGNED16/RW.
+*           1. Prepare object dictionary including a variable of type UNSIGNED16/RW.
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request without download size indication
 *
 * ####      Test Checks
 *           1. Check, that SDO server response is correct
-*           2. Check, that value is written in object directory
+*           2. Check, that value is written in object dictionary
 *           3. Check, that CANopen stack executes this error free
 */
 /*------------------------------------------------------------------------------------------------*/
@@ -497,7 +497,7 @@ TS_DEF_MAIN(TS_ExpWr_SubIdxNotExist)
 *           (abort code 0x06010002) is sent to a SDO request addressing a read-only object.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a read-only object
+*           1. Prepare object dictionary including a read-only object
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request addressing a read-only object
@@ -615,7 +615,7 @@ TS_DEF_MAIN(TS_ExpWr_LenTooLow)
 *           object with a miss-configured data reference.
 *
 * ####      Test Preparation
-*           1. Prepare object directory including a miss-configured object (data reference is NULL)
+*           1. Prepare object dictionary including a miss-configured object (data reference is NULL)
 *
 * ####      Test Steps
 *           1. Send SDO expedited download request addressing the miss-configured object

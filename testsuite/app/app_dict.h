@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _APP_DIR_H_
-#define _APP_DIR_H_
+#ifndef _APP_DICT_H_
+#define _APP_DICT_H_
 
 /******************************************************************************
 * INCLUDES
@@ -85,10 +85,10 @@ void ODAdd(OD_DYN *self, uint32_t key, CO_OBJ_TYPE *type, uint32_t data);
 * \details Use this function, when the start address of the object dictionary
 *          is needed.
 *
-* \return  Pointer to the first element of the dynamic object directory
+* \return  Pointer to the first element of the dynamic object dictionary
 */
 /*---------------------------------------------------------------------------*/
-CO_OBJ *ODGetDir(OD_DYN *self);
+CO_OBJ *ODGetDict(OD_DYN *self);
 
 /*---------------------------------------------------------------------------*/
 /*! \brief GET SIZE OF DYNAMIC OBJECT DICTIONARY
@@ -96,7 +96,7 @@ CO_OBJ *ODGetDir(OD_DYN *self);
 * \details Use this function, when the maximum possible size (including the
 *          mandatory end-marker) of the object dictionary is needed.
 *
-* \return  Size of the object array for this dynamic object directory
+* \return  Size of the object array for this dynamic object dictionary
 */
 /*---------------------------------------------------------------------------*/
 uint32_t ODGetSize(OD_DYN *self);

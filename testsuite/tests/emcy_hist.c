@@ -41,7 +41,7 @@ TS_DEF_MAIN(TS_Emcy_HistNumOnSet)
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1003,0),&hist_num);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1003,0),&hist_num);
     TS_ASSERT(1 == hist_num);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -64,7 +64,7 @@ TS_DEF_MAIN(TS_Emcy_HistNumOnSetRepeat)
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1003,0),&hist_num);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1003,0),&hist_num);
     TS_ASSERT(1 == hist_num);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -87,7 +87,7 @@ TS_DEF_MAIN(TS_Emcy_HistNumOnSetMulti)
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #1                        */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1003,0),&hist_num);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1003,0),&hist_num);
     TS_ASSERT(2 == hist_num);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -112,7 +112,7 @@ TS_DEF_MAIN(TS_Emcy_HistNumOnClr)
 
     COEmcyClr(&node.Emcy, 2);                         /* clear error #1                           */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1003,0),&hist_num);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1003,0),&hist_num);
     TS_ASSERT(2 == hist_num);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -137,7 +137,7 @@ TS_DEF_MAIN(TS_Emcy_HistNumOnReset)
 
     COEmcyReset(&node.Emcy, 0);                       /* reset errors                             */
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1003,0),&hist_num);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1003,0),&hist_num);
     TS_ASSERT(2 == hist_num);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -159,7 +159,7 @@ TS_DEF_MAIN(TS_Emcy_HistObjOnSet)
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,1),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,1),&hist);
     TS_ASSERT(0x2000 == hist);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -182,7 +182,7 @@ TS_DEF_MAIN(TS_Emcy_HistObjOnSetRepeat)
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,2),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,2),&hist);
     TS_ASSERT(0 == hist);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -205,10 +205,10 @@ TS_DEF_MAIN(TS_Emcy_HistObjOnSetMulti)
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2                        */
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,1),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,1),&hist);
     TS_ASSERT(0x3000 == hist);
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,2),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,2),&hist);
     TS_ASSERT(0x2000 == hist);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -233,10 +233,10 @@ TS_DEF_MAIN(TS_Emcy_HistObjOnClr)
 
     COEmcyClr(&node.Emcy, 2);                         /* clear error #1                           */
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,1),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,1),&hist);
     TS_ASSERT(0x3000 == hist);
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,2),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,2),&hist);
     TS_ASSERT(0x2000 == hist);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -261,10 +261,10 @@ TS_DEF_MAIN(TS_Emcy_HistObjOnReset)
 
     COEmcyReset(&node.Emcy, 0);                       /* reset errors                             */
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,1),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,1),&hist);
     TS_ASSERT(0x3000 == hist);
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,2),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,2),&hist);
     TS_ASSERT(0x2000 == hist);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -290,13 +290,13 @@ TS_DEF_MAIN(TS_Emcy_HistClearOk)
 
     TS_SDO_SEND (0x2F, 0x1003, 0, 0x00);
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1003,0),&hist_num);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1003,0),&hist_num);
     TS_ASSERT(0 == hist_num);
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,1),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,1),&hist);
     TS_ASSERT(0 == hist);
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,2),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,2),&hist);
     TS_ASSERT(0 == hist);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -323,13 +323,13 @@ TS_DEF_MAIN(TS_Emcy_HistClearBad)
 
     TS_SDO_SEND (0x2F, 0x1003, 0, 0x01);
 
-    (void)CODirRdByte(&node.Dir,CO_DEV(0x1003,0),&hist_num);
+    (void)CODictRdByte(&node.Dict,CO_DEV(0x1003,0),&hist_num);
     TS_ASSERT(2 == hist_num);
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,1),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,1),&hist);
     TS_ASSERT(0x3000 == hist);
 
-    (void)CODirRdLong(&node.Dir,CO_DEV(0x1003,2),&hist);
+    (void)CODictRdLong(&node.Dict,CO_DEV(0x1003,2),&hist);
     TS_ASSERT(0x2000 == hist);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */

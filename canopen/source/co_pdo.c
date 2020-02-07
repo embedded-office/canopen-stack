@@ -122,7 +122,7 @@ void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
         for (on = 0; on < 8; on++) {
             pdo[num].Map[on] = 0;
         }
-        err = CODirRdByte(&node->Dir, CO_DEV(0x1800 + num,0),&tnum);
+        err = CODictRdByte(&node->Dict, CO_DEV(0x1800 + num,0),&tnum);
         if (err == CO_ERR_NONE) {
             COTPdoReset(pdo, num);
         } else {
@@ -137,7 +137,7 @@ void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
 void COTPdoReset(CO_TPDO *pdo, uint16_t num)
 {
     CO_TPDO  *wp;
-    CO_DIR   *cod;
+    CO_DICT   *cod;
     uint32_t  id      = CO_TPDO_COBID_OFF;
     uint16_t  inhibit = 0;
     uint16_t  timer   = 0;
@@ -145,7 +145,7 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
     uint8_t   type    = 0;
 
     wp  = &pdo[num];
-    cod = &wp->Node->Dir;
+    cod = &wp->Node->Dict;
     if (wp->EvTmr >= 0) {
         (void)COTmrDelete(&wp->Node->Tmr, wp->EvTmr);
         wp->EvTmr = -1;
@@ -160,12 +160,12 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
     wp->Flags = 0;
     
     /* pdo communication settings */
-    err = CODirRdByte(cod, CO_DEV(0x1800 + num, 2), &type);
+    err = CODictRdByte(cod, CO_DEV(0x1800 + num, 2), &type);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_TPDO_COM_OBJ;
         return;
     }
-    err = CODirRdWord(cod, CO_DEV(0x1800 + num, 3), &inhibit);
+    err = CODictRdWord(cod, CO_DEV(0x1800 + num, 3), &inhibit);
     if (err != CO_ERR_NONE) {
         err = (int16_t)CO_ERR_NONE;
         pdo->Node->Error = CO_ERR_NONE;
@@ -182,7 +182,7 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
     pdo[num].Inhibit = CO_TPDO_MS(inhibit);
 
     if ((type == 254) || (type == 255)) {
-        err = CODirRdWord(cod, CO_DEV(0x1800 + num, 5), &timer);
+        err = CODictRdWord(cod, CO_DEV(0x1800 + num, 5), &timer);
         if (err != CO_ERR_NONE) {
             err = (int16_t)CO_ERR_NONE;
             pdo->Node->Error = CO_ERR_NONE;
@@ -196,7 +196,7 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
         }
     }
     
-    err = CODirRdLong(cod, CO_DEV(0x1800 + num, 1), &id);
+    err = CODictRdLong(cod, CO_DEV(0x1800 + num, 1), &id);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_TPDO_COM_OBJ;
         return;
@@ -243,7 +243,7 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
 */
 int16_t COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
 {
-    CO_DIR   *cod;
+    CO_DICT   *cod;
     CO_OBJ   *obj;
     uint32_t  mapping;
     uint16_t  idx;
@@ -252,9 +252,9 @@ int16_t COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
     uint8_t   mapnum;
     uint8_t   dlc;
 
-    cod = &pdo[num].Node->Dir;
+    cod = &pdo[num].Node->Dict;
     idx = 0x1A00 + num;
-    err = CODirRdByte(cod, CO_DEV(idx, 0), &mapnum);
+    err = CODictRdByte(cod, CO_DEV(idx, 0), &mapnum);
     if (err != CO_ERR_NONE) {
         return (-1);
     }
@@ -262,7 +262,7 @@ int16_t COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
     /* build mapping table */
     dlc = 0;
     for (on=0; on < mapnum; on++) {
-        err = CODirRdLong(cod, CO_DEV(idx, 1+on), &mapping);
+        err = CODictRdLong(cod, CO_DEV(idx, 1+on), &mapping);
         if (err != CO_ERR_NONE) {
             return (-1);
         }
@@ -271,7 +271,7 @@ int16_t COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
         if (dlc > 8) {
             return (-1);
         }
-        obj = CODirFind(&pdo->Node->Dir, mapping);
+        obj = CODictFind(&pdo->Node->Dict, mapping);
         if (obj == 0) {
             return (-1);
         } else {
@@ -459,7 +459,7 @@ int16_t COTypeAsyncCtrl (CO_OBJ* obj, struct CO_NODE_T *node, uint16_t func, uin
 */
 int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DIR   *cod;
+    CO_DICT   *cod;
     CO_NMT   *nmt;
     CO_TPDO  *pdo;
     uint32_t  cobid = 0;
@@ -472,7 +472,7 @@ int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_
     if (err != CO_ERR_NONE) {
         return (-1);
     }
-    cod     = &node->Dir;
+    cod     = &node->Dict;
     nmt     = &node->Nmt;
     num     = CO_GET_IDX(obj->Key);
     num    &= 0x1FF;
@@ -504,7 +504,7 @@ int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_
         }
     }
 
-    (void)CODirRdLong(cod, CO_DEV(0x1800+num, 1), &cobid);
+    (void)CODictRdLong(cod, CO_DEV(0x1800+num, 1), &cobid);
     if (((cobid & CO_TPDO_COBID_OFF) == 0) &&
         (pdo->Event > 0)                   &&
         (nmt->Mode == CO_OPERATIONAL)) {
@@ -555,7 +555,7 @@ void CORPdoInit(CO_RPDO *pdo, CO_NODE *node)
         pdo[num].Node       = node;
         pdo[num].Identifier = 0;
         pdo[num].ObjNum     = 0;
-        err = CODirRdByte(&node->Dir, CO_DEV(0x1400 + num, 0), &rnum);
+        err = CODictRdByte(&node->Dict, CO_DEV(0x1400 + num, 0), &rnum);
         if (err == CO_ERR_NONE) {
             CORPdoReset(pdo, num);
         } else {
@@ -570,14 +570,14 @@ void CORPdoInit(CO_RPDO *pdo, CO_NODE *node)
 int16_t CORPdoReset(CO_RPDO *pdo, int16_t num)
 {
     CO_RPDO *wp;
-    CO_DIR  *cod;
+    CO_DICT  *cod;
     uint32_t id = CO_RPDO_COBID_OFF;
     int16_t  err;
     uint8_t  on;
     uint8_t  type = 0;
 
     wp             = &pdo[num];
-    cod            = &wp->Node->Dir;
+    cod            = &wp->Node->Dict;
     wp->Identifier = 0;
     wp->ObjNum     = 0;
     for (on = 0; on < 8; on++) {
@@ -590,12 +590,12 @@ int16_t CORPdoReset(CO_RPDO *pdo, int16_t num)
     wp->Flag = 0;
     
     /* communication */
-    err = CODirRdByte(cod, CO_DEV(0x1400 + num, 2), &type);
+    err = CODictRdByte(cod, CO_DEV(0x1400 + num, 2), &type);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
         return (-1);
     }
-    err = CODirRdLong(cod, CO_DEV(0x1400 + num, 1), &id);
+    err = CODictRdLong(cod, CO_DEV(0x1400 + num, 1), &id);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
         return (-1);
@@ -638,7 +638,7 @@ int16_t CORPdoReset(CO_RPDO *pdo, int16_t num)
 */
 int16_t CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
 {
-    CO_DIR   *cod;
+    CO_DICT   *cod;
     CO_OBJ   *obj;
     uint32_t  mapping;
     uint16_t  idx;
@@ -649,16 +649,16 @@ int16_t CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
     uint8_t   dlc;
     uint8_t   dummy = 0;
 
-    cod = &pdo[num].Node->Dir;
+    cod = &pdo[num].Node->Dict;
     idx = 0x1600 + num;
-    err = CODirRdByte(cod, CO_DEV(idx, 0), &mapnum);
+    err = CODictRdByte(cod, CO_DEV(idx, 0), &mapnum);
     if (err != CO_ERR_NONE) {
         return (-1);
     }
 
     dlc = 0;
     for (on = 0; on < mapnum; on++) {
-        err = CODirRdLong(cod, CO_DEV(idx, 1 + on), &mapping);
+        err = CODictRdLong(cod, CO_DEV(idx, 1 + on), &mapping);
         if (err != CO_ERR_NONE) {
             return (-1);
         }
@@ -686,7 +686,7 @@ int16_t CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
             pdo[num].Map[on + dummy] = 0;
             dummy++;
         } else {
-            obj = CODirFind(&pdo->Node->Dir, mapping);
+            obj = CODictFind(&pdo->Node->Dict, mapping);
             if (obj == 0) {
                 return (-1);
             } else {
@@ -777,7 +777,7 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
 */
 int16_t COTypePdoMapNumWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DIR   *cod;
+    CO_DICT   *cod;
     uint32_t  id;
     uint32_t  mapentry;
     int16_t   result = CO_ERR_NONE;
@@ -798,7 +798,7 @@ int16_t COTypePdoMapNumWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uin
         return (CO_ERR_OBJ_MAP_LEN);
     }
 
-    cod     = &node->Dir;
+    cod     = &node->Dict;
     pmapidx = CO_GET_IDX(obj->Key);
     if ((pmapidx >= 0x1600) && (pmapidx <= 0x17FF)) {
     } else if ((pmapidx >= 0x1A00) && (pmapidx <= 0x1BFF)) {
@@ -807,13 +807,13 @@ int16_t COTypePdoMapNumWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uin
     }
 
     pcomidx = pmapidx - 0x200;
-    (void)CODirRdLong(cod, CO_DEV(pcomidx, 1), &id);
+    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
     if ((id & CO_TPDO_COBID_OFF) == 0) {
         result = CO_ERR_OBJ_ACC;
     } else {
         mapbytes = 0;
         for (i = 1; i <= mapnum; i++) {
-            result = CODirRdLong(cod, CO_DEV(pmapidx, i), &mapentry);
+            result = CODictRdLong(cod, CO_DEV(pmapidx, i), &mapentry);
             if (result != CO_ERR_NONE) {
                 return (CO_ERR_OBJ_MAP_TYPE);
             }
@@ -835,7 +835,7 @@ int16_t COTypePdoMapNumWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uin
 */
 int16_t COTypePdoMapWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DIR  *cod;
+    CO_DICT  *cod;
     CO_OBJ  *objm;
     uint32_t map;
     uint32_t id;
@@ -853,7 +853,7 @@ int16_t COTypePdoMapWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32
         return (CO_ERR_TPDO_MAP_OBJ);
     }
 
-    cod     = &node->Dir;
+    cod     = &node->Dict;
     pmapidx = CO_GET_IDX(obj->Key);
     if ((pmapidx >= 0x1600) && (pmapidx <= 0x17FF)) {
     } else if ((pmapidx >= 0x1A00) && (pmapidx <= 0x1BFF)) {
@@ -863,16 +863,16 @@ int16_t COTypePdoMapWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32
 
     pcomidx = pmapidx - 0x200;
     map     = *(uint32_t*)buf;
-    (void)CODirRdLong(cod, CO_DEV(pcomidx, 1), &id);
+    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
     if ((id & CO_TPDO_COBID_OFF) == 0) {
         result = CO_ERR_OBJ_ACC;
     } else {
-        (void)CODirRdByte(cod, CO_DEV(pmapidx, 0), &mapn);
+        (void)CODictRdByte(cod, CO_DEV(pmapidx, 0), &mapn);
         if (mapn != 0) {
             return (CO_ERR_OBJ_ACC);
         }
 
-        objm = CODirFind(cod, map);
+        objm = CODictFind(cod, map);
         if (objm == (CO_OBJ*)0) {
             return (CO_ERR_OBJ_MAP_TYPE);
         }
@@ -905,7 +905,7 @@ int16_t COTypePdoMapWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32
 */
 int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DIR   *cod;
+    CO_DICT   *cod;
     CO_NMT   *nmt;
     CO_TPDO  *tpdo = 0;
     CO_RPDO  *rpdo = 0;
@@ -928,7 +928,7 @@ int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint
         return (CO_ERR_OBJ_RANGE);
     }
 
-    cod     = &node->Dir;
+    cod     = &node->Dict;
     nmt     = &node->Nmt;
     pcomidx = CO_GET_IDX(obj->Key);
     if ((pcomidx >= 0x1400) && (pcomidx <= 0x15FF)) {
@@ -983,7 +983,7 @@ int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint
 */
 int16_t COTypePdoComTypeWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DIR   *cod;
+    CO_DICT   *cod;
     uint8_t   type;
     uint32_t  id;
     int16_t   result = CO_ERR_NONE;
@@ -997,7 +997,7 @@ int16_t COTypePdoComTypeWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, ui
     }
 
     type    = *(uint8_t*)buf;
-    cod     = &node->Dir;
+    cod     = &node->Dict;
     pcomidx = CO_GET_IDX(obj->Key);
     if ((pcomidx >= 0x1400) && (pcomidx <= 0x15FF)) {
     } else if ((pcomidx >= 0x1800) && (pcomidx <= 0x19FF)) {
@@ -1005,7 +1005,7 @@ int16_t COTypePdoComTypeWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, ui
         return (CO_ERR_PARA_IDX);
     }
 
-    (void)CODirRdLong(cod, CO_DEV(pcomidx, 1), &id);
+    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
     if ((id & CO_TPDO_COBID_OFF) == 0) {
         result = CO_ERR_OBJ_RANGE;
     } else {

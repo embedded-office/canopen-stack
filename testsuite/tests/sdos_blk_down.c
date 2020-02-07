@@ -1358,7 +1358,7 @@ TS_DEF_MAIN(TS_BlkWr_ExpWrAfter43ByteDomain)
     CHK_MLTPX(frm, idx2, sub2);                       /* check multiplexer                        */
     CHK_DATA (frm, 0x00000000);                       /* check data area                          */
                                                       /*------------------------------------------*/
-    TS_ASSERT(0x44434241 == val);                     /* check parameter in object directory      */
+    TS_ASSERT(0x44434241 == val);                     /* check parameter in object dictionary      */
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }

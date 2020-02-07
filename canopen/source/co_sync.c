@@ -48,7 +48,7 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
     for (i = 0; i < CO_RPDO_N; i++) {
         sync->RPdo[i]  = (CO_RPDO *)0;
     }
-    err = CODirRdLong(&node->Dir, CO_DEV(0x1005, 0), &sync->CobId);
+    err = CODictRdLong(&node->Dict, CO_DEV(0x1005, 0), &sync->CobId);
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_CFG_1005_0;
         sync->CobId = 0;

@@ -18,7 +18,7 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "co_dir.h"
+#include "co_dict.h"
 
 #include "co_obj.h"
 #include "co_core.h"
@@ -30,7 +30,7 @@
 /*
 * see function definition
 */
-CO_OBJ *CODirFind(CO_DIR *cod, uint32_t key)
+CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key)
 {
     CO_OBJ  *result = 0;
     CO_OBJ  *obj    = 0;
@@ -73,7 +73,7 @@ CO_OBJ *CODirFind(CO_DIR *cod, uint32_t key)
 /*
 * see function definition
 */
-int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val)
+int16_t CODictRdByte(CO_DICT *cod, uint32_t key, uint8_t *val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
@@ -84,7 +84,7 @@ int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val)
         return (CO_ERR_BAD_ARG);
     }
 
-    obj = CODirFind(cod, key);
+    obj = CODictFind(cod, key);
     if (obj != 0) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_BYTE);
         if (sz != (uint32_t)CO_BYTE) {
@@ -105,7 +105,7 @@ int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val)
 /*
 * see function definition
 */
-int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val)
+int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
@@ -116,7 +116,7 @@ int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val)
         return (CO_ERR_BAD_ARG);
     }
 
-    obj = CODirFind(cod, key);
+    obj = CODictFind(cod, key);
     if (obj != 0) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_WORD);
         if (sz != (uint32_t)CO_WORD) {
@@ -137,7 +137,7 @@ int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val)
 /*
 * see function definition
 */
-int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val)
+int16_t CODictRdLong(CO_DICT *cod, uint32_t key, uint32_t *val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
@@ -147,7 +147,7 @@ int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val)
     if ((cod == 0) || (val == 0)) {
         return (CO_ERR_BAD_ARG);
     }
-    obj = CODirFind(cod, key);
+    obj = CODictFind(cod, key);
     if (obj != 0) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_LONG);
         if (sz != (uint32_t)CO_LONG) {
@@ -168,7 +168,7 @@ int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val)
 /*
 * see function definition
 */
-int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val)
+int16_t CODictWrByte(CO_DICT *cod, uint32_t key, uint8_t val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
@@ -178,7 +178,7 @@ int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val)
     if (cod == 0) {
         return (CO_ERR_BAD_ARG);
     }
-    obj = CODirFind(cod, key);
+    obj = CODictFind(cod, key);
     if (obj != 0) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_BYTE);
         if (sz != (uint32_t)CO_BYTE) {
@@ -199,7 +199,7 @@ int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val)
 /*
 * see function definition
 */
-int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val)
+int16_t CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
@@ -210,7 +210,7 @@ int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val)
         return (CO_ERR_BAD_ARG);
     }
 
-    obj = CODirFind(cod, key);
+    obj = CODictFind(cod, key);
     if (obj != 0) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_WORD);
         if (sz != (uint32_t)CO_WORD) {
@@ -231,7 +231,7 @@ int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val)
 /*
 * see function definition
 */
-int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val)
+int16_t CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t val)
 {
     uint32_t sz;
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
@@ -242,7 +242,7 @@ int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val)
         return (CO_ERR_BAD_ARG);
     }
 
-    obj = CODirFind(cod, key);
+    obj = CODictFind(cod, key);
     if (obj != 0) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_LONG);
         if (sz != (uint32_t)CO_LONG) {
@@ -263,7 +263,7 @@ int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val)
 /*
 * see function definition
 */
-int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
+int16_t CODictRdBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len)
 {
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
     CO_OBJ  *obj;
@@ -272,7 +272,7 @@ int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
         return (CO_ERR_BAD_ARG);
     }
 
-    obj = CODirFind(cod, key);
+    obj = CODictFind(cod, key);
     if (obj != 0) {
         result = COObjRdBufStart(obj, cod->Node, (void *)buf, (uint8_t)len);
         if (result != CO_ERR_NONE) {
@@ -283,7 +283,7 @@ int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
     return(result);
 }
 
-int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
+int16_t CODictWrBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len)
 {
     int16_t  result = CO_ERR_OBJ_NOT_FOUND;
     CO_OBJ  *obj;
@@ -292,7 +292,7 @@ int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
         return (CO_ERR_BAD_ARG);
     }
 
-    obj = CODirFind(cod, key);
+    obj = CODictFind(cod, key);
     if (obj != 0) {
         result = COObjWrBufStart(obj, cod->Node, (void *)buf, (uint8_t)len);
         if (result != CO_ERR_NONE) {
@@ -306,7 +306,7 @@ int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len)
 /*
 * see function definition
 */
-int16_t CODirInit(CO_DIR *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
+int16_t CODictInit(CO_DICT *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
 {
     CO_OBJ   *obj;
     uint16_t  num = 0;

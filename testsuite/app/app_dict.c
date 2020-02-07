@@ -18,7 +18,7 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "app_dir.h"
+#include "app_dict.h"
 
 /******************************************************************************
 * PRIVATE MACROS
@@ -127,7 +127,7 @@ void ODAdd(OD_DYN *self, uint32_t key, CO_OBJ_TYPE *type, uintptr_t data)
 *          of the dynamic object dictionary.
 */
 /*---------------------------------------------------------------------------*/
-CO_OBJ *ODGetDir(OD_DYN *self)
+CO_OBJ *ODGetDict(OD_DYN *self)
 {
     return (self->Root);
 }

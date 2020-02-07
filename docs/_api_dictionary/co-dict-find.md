@@ -1,11 +1,11 @@
 ---
 layout: article
-title: COObjFind()
+title: CODictFind()
 sidebar:
   nav: docs
 ---
 
-This function searches the given key within the given object directory.
+This function searches the given key within the given object dictionary.
 
 <!--more-->
 
@@ -16,7 +16,7 @@ The function is often called from the application to get an object entry. If an 
 #### Prototype
 
 ```c
-CO_OBJ *COObjFind(CO_DIR *cod, uint32_t key);
+CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key);
 ```
 
 #### Arguments
@@ -33,12 +33,12 @@ CO_OBJ *COObjFind(CO_DIR *cod, uint32_t key);
 
 ### Example
 
-The following example checks the existence of the mandatory object entry "[1017:00] - Heartbeat" within the object directory of the CANopen node AppNode.
+The following example checks the existence of the mandatory object entry "[1017:00] - Heartbeat" within the object dictionary of the CANopen node AppNode.
 
 ```c
     CO_OBJ *obj;
     :
-    obj = CODirFind (&(AppNode.Dir), CO_DEV(0x1017, 0x00));
+    obj = CODictFind (&(Appnode.Dict), CO_DEV(0x1017, 0x00));
     if (obj == 0) {
         /* object [1017:00] is missing */
     } else {

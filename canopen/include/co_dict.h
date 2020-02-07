@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CO_DIR_H_
-#define CO_DIR_H_
+#ifndef CO_DICT_H__
+#define CO_DICT_H__
 
 /******************************************************************************
 * INCLUDES
@@ -30,29 +30,29 @@
 struct CO_NODE_T;
 struct CO_OBJ_T;
     
-/*! \brief OBJECT DIRECTORY
+/*! \brief OBJECT dictionary
 *
 *    This data structure holds all informations, which represents the
-*    object directory.
+*    object dictionary.
 */
-typedef struct CO_DIR_T {
-    struct CO_NODE_T *Node;      /*!< Ptr to parent CANopen node info        */
-    struct CO_OBJ_T  *Root;      /*!< Ptr to root object of directory        */
-    uint16_t          Num;       /*!< Current number of objects in directory */
-    uint16_t          Max;       /*!< Maximal number of objects in directory */
+typedef struct CO_DICT_T {
+    struct CO_NODE_T *Node;     /*!< Ptr to parent CANopen node info         */
+    struct CO_OBJ_T  *Root;     /*!< Ptr to root object of dictionary        */
+    uint16_t          Num;      /*!< Current number of objects in dictionary */
+    uint16_t          Max;      /*!< Maximal number of objects in dictionary */
 
-} CO_DIR;
+} CO_DICT;
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-/*! \brief  FIND OBJECT ENTRY IN DIRECTORY
+/*! \brief  FIND OBJECT ENTRY IN DICTIONARY
 *
-*    This function searches the given key within the given object directory.
+*    This function searches the given key within the given object dictionary.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -60,16 +60,16 @@ typedef struct CO_DIR_T {
 * \retval  >0    The pointer to the identified object entry
 * \retval  =0    Addressed object was not found
 */
-struct CO_OBJ_T *CODirFind(CO_DIR *cod, uint32_t key);
+struct CO_OBJ_T *CODictFind(CO_DICT *cod, uint32_t key);
 
-/*! \brief  READ BYTE FROM OBJECT DIRECTORY
+/*! \brief  READ BYTE FROM OBJECT DICTIONARY
 *
-*    This function reads a 8bit value from the given object directory. The
+*    This function reads a 8bit value from the given object dictionary. The
 *    object entry is addressed with the given key and the value will be
 *    written to the given destination pointer.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -80,16 +80,16 @@ struct CO_OBJ_T *CODirFind(CO_DIR *cod, uint32_t key);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val);
+int16_t CODictRdByte(CO_DICT *cod, uint32_t key, uint8_t *val);
 
-/*! \brief  READ WORD FROM OBJECT DIRECTORY
+/*! \brief  READ WORD FROM OBJECT DICTIONARY
 *
-*    This function reads a 16bit value from the given object directory. The
+*    This function reads a 16bit value from the given object dictionary. The
 *    object entry is addressed with the given key and the value will be
 *    written to the given destination pointer.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -100,16 +100,16 @@ int16_t CODirRdByte(CO_DIR *cod, uint32_t key, uint8_t *val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val);
+int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val);
 
-/*! \brief  READ LONG FROM OBJECT DIRECTORY
+/*! \brief  READ LONG FROM OBJECT DICTIONARY
 *
-*    This function reads a 32bit value from the given object directory.
+*    This function reads a 32bit value from the given object dictionary.
 *    The object entry is addressed with the given key and the value will
 *    be written to the given destination pointer.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -120,16 +120,16 @@ int16_t CODirRdWord(CO_DIR *cod, uint32_t key, uint16_t *val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val);
+int16_t CODictRdLong(CO_DICT *cod, uint32_t key, uint32_t *val);
 
-/*! \brief  WRITE BYTE TO OBJECT DIRECTORY
+/*! \brief  WRITE BYTE TO OBJECT DICTIONARY
 *
-*    This function writes a 8bit value to the given object directory. The
+*    This function writes a 8bit value to the given object dictionary. The
 *    object entry is addressed with the given key and the value will be read
 *    from the given source pointer.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -140,16 +140,16 @@ int16_t CODirRdLong(CO_DIR *cod, uint32_t key, uint32_t *val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val);
+int16_t CODictWrByte(CO_DICT *cod, uint32_t key, uint8_t val);
 
-/*! \brief  WRITE WORD TO OBJECT DIRECTORY
+/*! \brief  WRITE WORD TO OBJECT DICTIONARY
 *
-*    This function writes a 16bit value to the given object directory. The
+*    This function writes a 16bit value to the given object dictionary. The
 *    object entry is addressed with the given key and the value will be read
 *    from the given source pointer.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -160,16 +160,16 @@ int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val);
+int16_t CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val);
 
-/*! \brief  WRITE LONG TO OBJECT DIRECTORY
+/*! \brief  WRITE LONG TO OBJECT DICTIONARY
 *
-*    This function writes a 32bit value to the given object directory. The
+*    This function writes a 32bit value to the given object dictionary. The
 *    object entry is addressed with the given key and the value will be read
 *    from the given source pointer.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -180,17 +180,17 @@ int16_t CODirWrWord(CO_DIR *cod, uint32_t key, uint16_t val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val);
+int16_t CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t val);
 
-/*! \brief  READ BUFFER FROM OBJECT DIRECTORY
+/*! \brief  READ BUFFER FROM OBJECT DICTIONARY
 *
 *    This function reads a buffer byte stream from the given object
-*    directory. The object entry is addressed with the given key and the
+*    dictionary. The object entry is addressed with the given key and the
 *    bytes will be read from the given destination buffer of the given
 *    length.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -204,16 +204,16 @@ int16_t CODirWrLong(CO_DIR *cod, uint32_t key, uint32_t val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len);
+int16_t CODictRdBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len);
 
-/*! \brief  WRITE BUFFER TO OBJECT DIRECTORY
+/*! \brief  WRITE BUFFER TO OBJECT DICTIONARY
 *
-*    This function writes a buffer byte stream to the given object directory.
+*    This function writes a buffer byte stream to the given object dictionary.
 *    The object entry is addressed with the given key and the bytes will be
 *    read from to the given source buffer of the given length.
 *
 * \param cod
-*    pointer to the CANopen object directory
+*    pointer to the object dictionary
 *
 * \param key
 *    object entry key; should be generated with the macro CO_DEV()
@@ -227,24 +227,24 @@ int16_t CODirRdBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len);
+int16_t CODictWrBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len);
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-/*! \brief  INIT OBJECT DIRECTORY
+/*! \brief  INIT OBJECT DICTIONARY
 *
 *    This function identifies the number of already configured object
-*    directory entries within the given object entry array, starting at the
+*    dictionary entries within the given object entry array, starting at the
 *    given address (root) with the given length (max).
 *
-*    The internal object directory information structure will be updated
+*    The internal object dictionary information structure will be updated
 *    with the identified results and linked to the given node information
 *    structure.
 *
 * \param cod
-*    pointer to object directory which must be initialized
+*    pointer to object dictionary which must be initialized
 *
 * \param node
 *    pointer to the CANopen device node information structure
@@ -256,12 +256,12 @@ int16_t CODirWrBuffer(CO_DIR *cod, uint32_t key, uint8_t *buf, uint32_t len);
 *    the length of the object entry array
 *
 * \retval   <0    An argument error is detected.
-* \retval  >=0    identified number of already configured object directory
+* \retval  >=0    identified number of already configured object dictionary
 *                 entries
 */
-int16_t CODirInit(CO_DIR *cod,
+int16_t CODictInit(CO_DICT *cod,
                   struct CO_NODE_T *node,
                   struct CO_OBJ_T *root,
                   uint16_t max);
 
-#endif  /* #ifndef CO_DIR_H_ */
+#endif  /* #ifndef co_dict.h_ */

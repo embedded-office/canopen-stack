@@ -23,7 +23,7 @@
 
 #include "app.h"
 #include "app_emcy.h"
-#include "app_dir.h"
+#include "app_dict.h"
 #include "app_dom.h"
 #include "app_hooks.h"
 #include "app_stdobj.h"
@@ -212,7 +212,7 @@
                              TS_ASSERT((d) == (f).DLC)
 
 #define CHK_EMCY(f)          { uint32_t id;                                  \
-                               CODirRdLong(&node.Dir, CO_DEV(0x1014,0), &id);  \
+                               CODictRdLong(&node.Dict, CO_DEV(0x1014,0), &id);  \
                                TS_ASSERT(id == (f).Identifier);                \
                                TS_ASSERT(8  == (f).DLC);                       \
                              }
@@ -251,37 +251,37 @@
                              TS_ASSERT(0   == BYTE(f,7))
 
 #define SET_OBJ08(i,s,v)     { int16_t num;                                   \
-                               num = CODirWrByte(&node.Dir,CO_DEV((i),(s)),(v)); \
+                               num = CODictWrByte(&node.Dict,CO_DEV((i),(s)),(v)); \
                                TS_ASSERT(CO_ERR_NONE == num);                    \
                              }
 
 #define CHK_OBJ08(i,s,v)     { uint8_t para;                                    \
                                int16_t num;                                     \
-                               num = CODirRdByte(&node.Dir,CO_DEV((i),(s)),&para); \
+                               num = CODictRdByte(&node.Dict,CO_DEV((i),(s)),&para); \
                                TS_ASSERT(CO_ERR_NONE == num);                      \
                                TS_ASSERT((v)         == para);                     \
                              }
 
 #define SET_OBJ16(i,s,v)     { int16_t num;                                    \
-                               num = CODirWrWord(&node.Dir,CO_DEV((i),(s)),(v));  \
+                               num = CODictWrWord(&node.Dict,CO_DEV((i),(s)),(v));  \
                                TS_ASSERT(CO_ERR_NONE == num);                     \
                              }
 
 #define CHK_OBJ16(i,s,v)     { uint16_t para;                                    \
                                int16_t num;                                     \
-                               num = CODirRdWord(&node.Dir,CO_DEV((i),(s)),&para); \
+                               num = CODictRdWord(&node.Dict,CO_DEV((i),(s)),&para); \
                                TS_ASSERT(CO_ERR_NONE == num);                      \
                                TS_ASSERT((v)         == para);                     \
                              }
 
 #define SET_OBJ32(i,s,v)     { int16_t num;                                   \
-                               num = CODirWrLong(&node.Dir,CO_DEV((i),(s)),(v)); \
+                               num = CODictWrLong(&node.Dict,CO_DEV((i),(s)),(v)); \
                                TS_ASSERT(CO_ERR_NONE == num);                    \
                              }
 
 #define CHK_OBJ32(i,s,v)     { uint32_t para;                                    \
                                int16_t num;                                     \
-                               num = CODirRdLong(&node.Dir,CO_DEV((i),(s)),&para); \
+                               num = CODictRdLong(&node.Dict,CO_DEV((i),(s)),&para); \
                                TS_ASSERT(CO_ERR_NONE == num);                      \
                                TS_ASSERT((v)         == para);                     \
                              }

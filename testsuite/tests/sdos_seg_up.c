@@ -24,8 +24,8 @@
 *
 * + obj: object entry type
 *   - dom    : object is a domain
-*   - badidx : index of the object is not existing in object directory
-*   - badsub : subindex of the object is not existing in object directory
+*   - badidx : index of the object is not existing in object dictionary
+*   - badsub : subindex of the object is not existing in object dictionary
 * + size: object entry size
 *   - 6seg   : object value contains 6 segments (=6 x 7 bytes)
 *   - 6seg+1 : object value contains 6 segments plus 1 byte (=6 x 7 + 1 bytes)

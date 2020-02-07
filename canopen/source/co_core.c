@@ -45,7 +45,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum);
     COIfInit(&node->If, node);
     COIfEnable(&node->If, node->Baudrate);
-    err = CODirInit(&node->Dir, node, spec->Dir, spec->DirLen);
+    err = CODictInit(&node->Dict, node, spec->Dict, spec->DictLen);
     if (err < 0) {
         return;
     }
@@ -103,7 +103,7 @@ CO_ERR CONodeGetErr(CO_NODE *node)
 */
 int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
 {
-    CO_DIR  *cod;
+    CO_DICT  *cod;
     CO_OBJ  *obj;
     CO_PARA *pg;
     int16_t  err;
@@ -111,15 +111,15 @@ int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
     uint8_t  num    = 0;
     uint8_t  sub;
 
-    cod = &node->Dir;
-    err = CODirRdByte(cod, CO_DEV(0x1010, 0), &num);
+    cod = &node->Dict;
+    err = CODictRdByte(cod, CO_DEV(0x1010, 0), &num);
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_NONE;
         return (result);
     }
 
     for (sub = 1; sub <= num; sub++) {
-        obj = CODirFind(cod, CO_DEV(0x1010, sub));
+        obj = CODictFind(cod, CO_DEV(0x1010, sub));
         if (obj != 0) {
             pg = (CO_PARA *)obj->Data;
             if (pg->Type == type) {

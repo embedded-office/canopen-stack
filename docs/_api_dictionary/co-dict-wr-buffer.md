@@ -1,6 +1,6 @@
 ---
 layout: article
-title: COObjWrBuffer()
+title: CODictWrBuffer()
 sidebar:
   nav: docs
 ---
@@ -16,10 +16,10 @@ The object entry is addressed with the given key and the bytes will be read from
 #### Prototype
 
 ```c
-int16_t CODirWrBuffer(CO_DIR   *cod,
-                      uint32_t  key,
-                      uint8_t  *buffer,
-                      uint32_t  len);
+int16_t CODictWrBuffer(CO_DICT   *cod,
+                       uint32_t  key,
+                       uint8_t  *buffer,
+                       uint32_t  len);
 ```
 
 #### Arguments
@@ -44,7 +44,7 @@ The following example writes the value to the hypothetical application specific 
     int16_t  err;
     uint8_t  buffer[10] = { 'a','b','c','d','e','f','g','h','i', 0 };
     :
-    err = CODirWrBuffer (&(AppNode.Dir), CO_DEV(0x1234, 0x56), buffer, 10);
+    err = CODictWrBuffer (&(Appnode.Dict), CO_DEV(0x1234, 0x56), buffer, 10);
     if (err != CO_ERR_NONE) {
         /* object [1234:56] is missing or error during writing */
     }

@@ -377,7 +377,7 @@ TS_DEF_MAIN(TS_TPdo_Type254ViaObj)
         CHK_NOCAN(&frm);                              /* check for no CAN frame                   */
     }
 
-    obj = CODirFind(&node.Dir, CO_DEV(0x2500,0x0B));  /* trigger PDO via object reference         */
+    obj = CODictFind(&node.Dict, CO_DEV(0x2500,0x0B));  /* trigger PDO via object reference         */
     COTPdoTrigObj(node.TPdo, obj);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
@@ -421,7 +421,7 @@ TS_DEF_MAIN(TS_TPdo_Type255ViaObj)
         CHK_NOCAN(&frm);                              /* check for no CAN frame                   */
     }
 
-    obj = CODirFind(&node.Dir, CO_DEV(0x2500,0x0B));  /* trigger PDO via object reference         */
+    obj = CODictFind(&node.Dict, CO_DEV(0x2500,0x0B));  /* trigger PDO via object reference         */
     COTPdoTrigObj(node.TPdo, obj);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
@@ -876,7 +876,7 @@ TS_DEF_MAIN(TS_TPdo_Async)
     TS_ODAdd(CO_KEY(0x2500, 0x2A, CO_UNSIGNED32|CO_OBJ___PRW),         0, (uint32_t)&data[1]);
     TS_CreateNodeAutoStart(&node);
 
-    CODirWrLong(&node.Dir,CO_DEV(0x2500,0x29),0L);    /* write to asynchronous object entry       */
+    CODictWrLong(&node.Dict,CO_DEV(0x2500,0x29),0L);  /* write to asynchronous object entry       */
     RunSimCan(0, 0);                                  /* run simulated CAN                        */
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */

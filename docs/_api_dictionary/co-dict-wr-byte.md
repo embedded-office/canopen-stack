@@ -1,6 +1,6 @@
 ---
 layout: article
-title: COObjWrByte()
+title: CODictWrByte()
 sidebar:
   nav: docs
 ---
@@ -16,7 +16,7 @@ The object entry is addressed with the given key.
 #### Prototype
 
 ```c
-int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val);
+int16_t CODictWrByte(CO_DICT *cod, uint32_t key, uint8_t val);
 ```
 
 #### Arguments
@@ -34,13 +34,13 @@ int16_t CODirWrByte(CO_DIR *cod, uint32_t key, uint8_t val);
 
 ### Example
 
-The following example writes the value to the hypothetical application specific object entry "[1234:56]" within the object directory of the CANopen node AppNode.
+The following example writes the value to the hypothetical application specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
 
 ```c
     int16_t  err;
     uint8_t  value = 0x30;
     :
-    err = CODirWrByte (&(AppNode.Dir), CO_DEV(0x1234, 0x56), value);
+    err = CODictWrByte (&(Appnode.Dict), CO_DEV(0x1234, 0x56), value);
     if (err != CO_ERR_NONE) {
         /* object [1234:56] is missing or error during writing */
     }
@@ -48,4 +48,4 @@ The following example writes the value to the hypothetical application specific 
 
 ```
 
-Note: This function uses CODirFind() on each function call. To improve access performance for multiple accesses to a single object entry, the application may use CODirFind() once and COObjWrValue() multiple times.
+Note: This function uses CODictFind() on each function call. To improve access performance for multiple accesses to a single object entry, the application may use CODictFind() once and COObjWrValue() multiple times.

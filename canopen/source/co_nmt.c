@@ -291,7 +291,7 @@ void CONmtHbConsInit(CO_NMT *nmt)
     nmt->HbCons = 0;
 
     node = nmt->Node;
-    obj  = CODirFind(&node->Dir, CO_DEV(0x1016, 0));
+    obj  = CODictFind(&node->Dict, CO_DEV(0x1016, 0));
     if (obj == 0) {
         node->Error = CO_ERR_NONE;
         return;
@@ -302,7 +302,7 @@ void CONmtHbConsInit(CO_NMT *nmt)
         return;
     }
     while (num > 0) {
-        obj = CODirFind(&node->Dir, CO_DEV(0x1016, num));
+        obj = CODictFind(&node->Dict, CO_DEV(0x1016, num));
         if (obj == 0) {
             node->Error = CO_ERR_CFG_1016;
             break;
@@ -467,14 +467,14 @@ void CONmtHbConsMonitor(void *parg)
 */
 int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DIR     *cod;
+    CO_DICT     *cod;
     CO_HBCONS  *hbc;
     int16_t     result = CO_ERR_TYPE_WR;
     uint32_t    value  = 0;
     uint16_t    time;
     uint8_t     nodeid;
 
-    cod  = &node->Dir;
+    cod  = &node->Dict;
     hbc  = (CO_HBCONS *)obj->Data;
     if (hbc == 0) {
         node->Error = CO_ERR_CFG_1016;
@@ -535,7 +535,7 @@ void CONmtHbProdInit(CO_NMT *nmt)
         return;
     }
     node = nmt->Node;
-    err = CODirRdWord(&node->Dir, CO_DEV(0x1017, 0), &cycTime);
+    err = CODictRdWord(&node->Dict, CO_DEV(0x1017, 0), &cycTime);
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_CFG_1017_0;
     }

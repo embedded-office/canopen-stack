@@ -44,7 +44,7 @@ TS_DEF_MAIN(TS_HBCons_RdEntry)
     TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
-    CODirRdLong(&node.Dir, CO_DEV(0x1016, 1), &value);
+    CODictRdLong(&node.Dict, CO_DEV(0x1016, 1), &value);
     TS_ASSERT(0x000A0032 == value);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
@@ -407,7 +407,7 @@ TS_DEF_MAIN(TS_HBCons_WrEntry)
     TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uint32_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
-    CODirWrLong(&node.Dir, CO_DEV(0x1016, 1), value);
+    CODictWrLong(&node.Dict, CO_DEV(0x1016, 1), value);
     TS_ASSERT(10 == data.NodeId);
     TS_ASSERT(50 == data.Time);
 
@@ -435,7 +435,7 @@ TS_DEF_MAIN(TS_HBCons_DynEvent)
     TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uint32_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
-    CODirWrLong(&node.Dir, CO_DEV(0x1016, 1), value);
+    CODictWrLong(&node.Dict, CO_DEV(0x1016, 1), value);
 
     TS_HB_SEND(10, 5);
     TS_Wait(&node, 60);
