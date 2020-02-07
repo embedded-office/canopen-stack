@@ -46,5 +46,3 @@ void HardwareTimerISR (void)
     }
 }
 ```
-
-Note: The hardware timer is configured with 1 tick equal to 1ms.
