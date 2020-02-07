@@ -27,7 +27,7 @@ articles:
   | Tmr | `CO_TMR` | timer manager object |
   | Nmt | `CO_NMT` | node network management object |
   | Sdo | `CO_SDO` | SDO server object array |
-  | SdoBuf | `uint8_t *` | pointer to SDO transfer buffer |
+  | SdoBuf | `uint8_t*` | pointer to SDO transfer buffer |
   | RPdo[] | `CO_RPDO` | receive PDO object array |
   | TPdo[] | `CO_TPDO` | transmit PDO object array |
   | TMap[] | `CO_TPDO_LINK` | transmit PDO mapping link array |

@@ -21,8 +21,8 @@ articles:
 
   | Data Member | Type | Description |
   | --- | --- | --- |
-  | Node | `CO_NODE *` | pointer to parent node |
-  | Root | `CO_EMCY_TBL *` | pointer to application emergency table |
+  | Node | `CO_NODE*` | pointer to parent node |
+  | Root | `CO_EMCY_TBL*` | pointer to application emergency table |
   | Hist | `CO_EMCY_HIST` | emergency history management object |
   | Cnt[] | `uint8_t` | error register object entry bit counters |
   | Err[] | `uint8_t` | individual emergency status storage |

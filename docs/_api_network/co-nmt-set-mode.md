@@ -11,7 +11,7 @@ This function sets the requested NMT state machine mode.
 
 ### Description
 
-The possible values of the reset type CO_MODE are:
+The possible values of the device mode CO_MODE are:
 
 | Value | Description |
 | --- | --- |

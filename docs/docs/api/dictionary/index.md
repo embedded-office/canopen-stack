@@ -21,8 +21,8 @@ articles:
 
   | Data Member | Type | Description |
   | --- | --- | --- |
-  | Node | `CO_NODE *` | pointer to parent node |
-  | Root | `CO_OBJ *` | pointer to first object in object dictionary |
+  | Node | `CO_NODE*` | pointer to parent node |
+  | Root | `CO_OBJ*` | pointer to first object in object dictionary |
   | Num | `uint16_t` | current number of objects in dictionary |
   | Max | `uint16_t` | maximum number of objects in dictionary |
 

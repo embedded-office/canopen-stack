@@ -21,7 +21,7 @@ articles:
 
   | Data Member | Type | Description |
   | --- | --- | --- |
-  | Node | `CO_NODE *` | pointer to parent node |
+  | Node | `CO_NODE*` | pointer to parent node |
   | Mode | `CO_MODE` | current NMT mode |
   | Tmr | `int16_t` | heartpeat producer timer identifier |
   | Allowed | `uint8_t` | encoding of allowed CAN messages |
