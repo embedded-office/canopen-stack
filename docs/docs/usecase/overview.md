@@ -7,11 +7,14 @@ aside:
   toc: true
 ---
 
+## CANopen stack actions
+
 In the architecture we see, that the CANopen stack is the connection between the CAN network and the application. The central information store is the object dictionary which is used to control the behavior of the device, transmit and receive process data or configure runtime parameters.
 
 In principle, all of these activities can initiated by external devices in the CAN network, or the internal CANopen application. The following chapters gives an overall of the possible scenarios.
 
-## Autonomous external request
+
+### Autonomous external request
 
 An *autonomous external request* is initiated by external device and is handled by the CANopen stack according to the standard. No interaction with the application is neccessary.
 
@@ -29,7 +32,7 @@ sequenceDiagram
 Therefore, there is nothing to do within the application. It is important to know the CANopen standard CiA-301 to know how to configure the CANopen stack responses within the object dictionary.
 
 
-## External request
+### External request
 
 An *external request* is similar to the autonomous external request with the difference that the application ineeds to provide a callback function which realizes the application specific behavior.
 
@@ -48,7 +51,8 @@ sequenceDiagram
 
 A list of all callback functions is documented in the [Callback Interface](/docs/usecase/callbacks).
 
-## Internal request
+
+### Internal request
 
 An *internal request* is an API function call initiated by the application.
 
