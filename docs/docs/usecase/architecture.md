@@ -11,7 +11,7 @@ aside:
 
 The architecture of a CANopen device is standardized and shown in the following figure:
 
-![CANopen architecture](/assets/images/architecture.png "Standardized CANopen Architecture")
+![CANopen architecture](/assets/images/standard-architecture.svg "Standardized CANopen Architecture")
 
 ### Object Dictionary
 
@@ -45,7 +45,7 @@ The *Communication Unit (CU)* uses the OD to set and get configuration settings,
 
 The *Network Management State Machine (NMT)* of all CANopen devices within a CANopen network is controlled by the CANopen network master. The following state machine is specified:
 
-![NMT States](/assets/images/nmt-states.png "NMT States")
+![NMT States](/assets/images/nmt-statemachine.svg "NMT States")
 
 Within this state machine, the state transitions with a number (e.g. [129]) will be activated with a network management command equal to this number. If no transition criteria is stated, the transition will be activated after finished state operations automatically. The following table summarizes the network management commands:
 
@@ -59,14 +59,14 @@ Within this state machine, the state transitions with a number (e.g. [129]) will
 
 These NMT commands used by the CANopen network boot-up master to control the network. During the different states, the listed communication services are allowed:
 
-|                   | Initializing | Pre-Op. | Operational | Stop |
-| ----------------- |:------------:|:-------:|:-----------:|:----:|
-| PDO Transfer      |              |         | X           |      |
-| SDO Transfer      |              | X       | X           |      |
-| SYNC Object       |              | X       | X           |      |
-| Time Stamp Object |              | X       | X           |      |
-| Emergency Object  |              | X       | X           |      |
-| Boot-Up Object    | X            |         |             |      |
-| NMT Object        |              | X       | X           | X    |
+|                   | Init | Pre-Op. | Operational | Stop |
+| ----------------- |:----:|:-------:|:-----------:|:----:|
+| Boot-Up Object    | X    |         |             |      |
+| NMT Object        |      | X       | X           | X    |
+| SDO Transfer      |      | X       | X           |      |
+| SYNC Object       |      | X       | X           |      |
+| Time Stamp Object |      | X       | X           |      |
+| Emergency Object  |      | X       | X           |      |
+| PDO Transfer      |      |         | X           |      |
 
 Note: The Boot-Up message is sent only once during the transition from *Initialization* to *Pre-Operational*.
