@@ -1,7 +1,35 @@
+#---
+# define the canopen stack library
+#
+add_library(Canopen)
 
-include_directories(include)
-include_directories(config)
+#---
+# define interface
+#
+target_include_directories(Canopen
+  PUBLIC
+    config
+    include
+  PRIVATE
+    source
+)
 
-file(GLOB_RECURSE SRC_FILES source/*.c)
-
-add_library(${PROJECT_NAME} ${SRC_FILES})
+#---
+# specify the implementation files
+#
+target_sources(Canopen
+  PRIVATE
+    source/co_core.c
+    source/co_dict.c
+    source/co_emcy.c
+#    source/co_if.c  # this is just a interface template file
+    source/co_lss.c 
+    source/co_nmt.c
+    source/co_obj.c
+    source/co_para.c
+    source/co_pdo.c
+    source/co_sdo_srv.c
+    source/co_sync.c
+    source/co_tmr.c
+    source/co_ver.c
+)
