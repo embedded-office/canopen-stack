@@ -57,7 +57,7 @@ The write function is called, when the CAN network writes to the related object 
 int16_t CalWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
   /* indicate an write error */
-  return -1;
+  return CO_ERR_TYPE_WR;
 }
 ```
 
@@ -69,18 +69,19 @@ Now we want to change this function to enable the write access for the calibrati
 int16_t CalWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
   uint32_t value  = *((uint32_t *)buf);
-  int16_t  result = -1;
+  CO_ERR   result = CO_ERR_TYPE_WR;
   uint8_t  subidx = CO_GET_SUB(obj->Key);
 
   if (subidx == 1u) {
     if (value == CAL_KEY) {
       calWriteAllowed = 1u;
-      result = 0u;
     } else {
       calWriteAllowed = 0u;
     }
-  } else if (subidx > 1u) {
-    if (calWriteAllowed == 1u) {
+    result = 0u;
+  } else {
+    if ((subidx          != 0u) &&
+        (calWriteAllowed == 1u)) {
       *(int32_t *)obj->Data = value;
       result = 0u;
     }
