@@ -24,7 +24,7 @@ We define some manufacturer specific entries in the object dictionary:
 | ----- | -------- | ---------- | ---------- | -------- | ------------------ |
 | 1018h | 4        | UNSIGNED32 | Const      | FFFFFFFF | Serial No.         |
 
-The key to get the wanted functionality is the object type for the entry at subindex 4. This object type accepts a write access if the current value is `0xFFFFFFFF`.
+The key to get the wanted functionality is the object type for the entry at subindex 4. This object type accepts a single permanent write access if the current value is `0xFFFFFFFF`.
 
 ## Implement Object Type
 
