@@ -41,7 +41,7 @@ The key to get the wanted functionality is the entry at subindex 1. This object 
 
 ## Implement Object Type
 
-Lets implement the calibration user type as shown in the [CANopen Usage: User Object](/usecase/dictionary#user-objects):
+Lets implement the calibration user type as shown in the [CANopen Usage: User Object](/docs/usecase/dictionary#user-objects):
 
 ```c
 uint8_t calWriteAllowed = 0u;
