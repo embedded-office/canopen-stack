@@ -140,7 +140,7 @@ Some years later, now in 2020, we think it is time for a new way of software dev
 
 To avoid confusion, it is the best to continue with the release version numbering with the semantic scheme 'major'.'minor'.'build'. The first stable release of the open-source variant of the CANopen Stack is:
 
-**V4.0.0** - working hard to get this done. When ready, the release will linked here.
+**V4.0.0** - First open source release.
 
 *Ideas for further development:*
 
@@ -148,6 +148,7 @@ To avoid confusion, it is the best to continue with the release version numberin
 - hardware independent collection of examples for demonstration purpose (exchange driver and re-compiler should be enought for usage on real target hardware)
 - improve documentation of single test cases within the testsuite
 - add the SDO client (rarely used, but nice to have)
+Feel free to add issues with further ideas or needs!
 
 # License
 

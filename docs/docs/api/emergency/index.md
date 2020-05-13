@@ -27,6 +27,6 @@ articles:
   | Cnt[] | `uint8_t` | error register object entry bit counters |
   | Err[] | `uint8_t` | individual emergency status storage |
 
-  Note: The data within this structure must never be manipulated without the corresponding class member   functions. This can lead to unpredictable behavior of the node.
+  Note: The data within this structure must never be manipulated without the corresponding class member functions. This can lead to unpredictable behavior of the node.
 
 </div>

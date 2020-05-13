@@ -26,6 +26,6 @@ articles:
   | Tmr | `int16_t` | heartpeat producer timer identifier |
   | Allowed | `uint8_t` | encoding of allowed CAN messages |
 
-  Note: The data within this structure must never be manipulated without the corresponding class member   functions. This can lead to unpredictable behavior of the node.
+  Note: The data within this structure must never be manipulated without the corresponding class member functions. This can lead to unpredictable behavior of the node.
 
 </div>
