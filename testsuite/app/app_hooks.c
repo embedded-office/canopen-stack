@@ -78,6 +78,9 @@ void TS_CallbackInit(TS_CALLBACK *cb)
     cb->LssLoad_Return = CO_ERR_NONE;
 
     cb->ParaLoad_Called = 0;
+
+    cb->PdoSyncUpdate_ArgPdo = 0;
+    cb->PdoSyncUpdate_Called = 0;
 }
 
 void TS_CallbackDeInit(void)
@@ -244,4 +247,12 @@ int16_t COParaDefault(CO_PARA *pg)
     }
 
     return (result);
+}
+
+void COPdoSyncUpdate(CO_RPDO *pdo)
+{
+    if (TsCallbacks != 0) {
+        TsCallbacks->PdoSyncUpdate_ArgPdo = pdo;
+        TsCallbacks->PdoSyncUpdate_Called++;
+    }
 }

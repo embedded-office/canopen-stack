@@ -204,7 +204,7 @@ This function is called just before the PDO transmission will send the PDO messa
 
 ### PDO Receiption
 
-This function is called just before the PDO receiption will distribute the PDO message frame into the object dictionary. This callback function is able to *consume* the PDO message frame, e.g. the distribution into the object dictionary will be skipped. Furthermore without *consuming* the PDO message frame, this function could modify the recieved data before distribution takes place.
+This function is called just before the PDO receiption will distribute the PDO message frame into the object dictionary. This callback function is able to *consume* the PDO message frame, e.g. the distribution into the object dictionary will be skipped. Furthermore without *consuming* the PDO message frame, this function could modify the received data before distribution takes place.
 
 ```c
   int16_t COPdoReceive(CO_IF_FRM *frm);
@@ -214,12 +214,27 @@ This function is called just before the PDO receiption will distribute the PDO m
 
 | Parameter | Description |
 | --- | --- |
-| frm | Pointer to PDO message frame |
+| frm | Pointer to received PDO message frame |
 
 **Returned Value**
 
 - `=0` : CAN message frame is not consumed
 - `>0` : CAN message frame is consumed
+
+
+### PDO Synchron Update
+
+This function is called after a synchronized PDO is received and the data is distributed into the object dictionary.
+
+```c
+  void COPdoSyncUpdate(CO_RPDO *pdo);
+```
+
+**Arguments**
+
+| Parameter | Description |
+| --- | --- |
+| pdo | Pointer to received and synchron processed RPDO |
 
 
 ### Timer Locks
