@@ -476,7 +476,7 @@ TS_DEF_MAIN(TS_RPdo_BadIdSubIdxCfg)
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, 0, &pdo_len);
-    TS_ODAdd(CO_KEY(0x1400, 3, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (uint32_t)&pdo_id);
+    TS_ODAdd(CO_KEY(0x1400, 3, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (uintptr_t)&pdo_id);
     TS_CreateNode(&node);
 
     /* no PDO COB-ID sub-index */
@@ -498,7 +498,7 @@ TS_DEF_MAIN(TS_TPdo_BadIdSubIdxCfg)
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
-    TS_ODAdd(CO_KEY(0x1800, 6, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (uint32_t)&pdo_id);
+    TS_ODAdd(CO_KEY(0x1800, 6, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (uintptr_t)&pdo_id);
     TS_CreateTPdoMap(0, 0, &pdo_len);
     TS_CreateNode(&node);
 
@@ -526,7 +526,7 @@ TS_DEF_MAIN(TS_RPdo_BadIdIdxCfg)
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, 0, &pdo_len);
-    TS_ODAdd(CO_KEY(0x2502, 1, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (uint32_t)&pdo_id);
+    TS_ODAdd(CO_KEY(0x2502, 1, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (uintptr_t)&pdo_id);
     TS_CreateNode(&node);
 
     /* no PDO communication parameter index */
@@ -548,7 +548,7 @@ TS_DEF_MAIN(TS_TPdo_BadIdIdxCfg)
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
-    TS_ODAdd(CO_KEY(0x2501, 1, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (uint32_t)&pdo_id);
+    TS_ODAdd(CO_KEY(0x2501, 1, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (uintptr_t)&pdo_id);
     TS_CreateTPdoMap(0, 0, &pdo_len);
     TS_CreateNode(&node);
 
@@ -580,8 +580,8 @@ TS_DEF_MAIN(TS_RPdo_MapNumChange)
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, &pdo_map[0], &pdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 31, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 32, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 31, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 32, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[1]);
     TS_CreateNode(&node);
 
     /* PDO valid to invalid */
@@ -631,8 +631,8 @@ TS_DEF_MAIN(TS_RPdo_ChangeActiveMap)
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, &pdo_map[0], &pdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 31, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 32, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 31, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 32, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[1]);
     TS_CreateNode(&node);
 
     /* set mapping to 0 */
@@ -798,7 +798,7 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumSubIdxCfg)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
     TS_CreateTPdoMap(0, 0, &pdo_len);
-    TS_ODAdd(CO_KEY(0x1A00, 9, CO_UNSIGNED8 |CO_OBJ____RW), CO_TPDONUM, (uint32_t)&pdo_len);
+    TS_ODAdd(CO_KEY(0x1A00, 9, CO_UNSIGNED8 |CO_OBJ____RW), CO_TPDONUM, (uintptr_t)&pdo_len);
     TS_CreateNode(&node);
 
     /* no PDO mapping number sub-index */
@@ -827,7 +827,7 @@ TS_DEF_MAIN(TS_RPdo_BadMapNumIdxCfg)
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, &pdo_map[0], &pdo_len);
-    TS_ODAdd(CO_KEY(0x2503, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TPDONUM, (uint32_t)&pdo_len);
+    TS_ODAdd(CO_KEY(0x2503, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TPDONUM, (uintptr_t)&pdo_len);
     TS_CreateNode(&node);
 
     /* no PDO mapping index */
@@ -850,7 +850,7 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumIdxCfg)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
     TS_CreateTPdoMap(0, 0, &pdo_len);
-    TS_ODAdd(CO_KEY(0x2504, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TPDONUM, (uint32_t)&pdo_len);
+    TS_ODAdd(CO_KEY(0x2504, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TPDONUM, (uintptr_t)&pdo_len);
     TS_CreateNode(&node);
 
     /* no PDO mapping index */

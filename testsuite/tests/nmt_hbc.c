@@ -40,8 +40,8 @@ TS_DEF_MAIN(TS_HBCons_RdEntry)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     CODictRdLong(&node.Dict, CO_DEV(0x1016, 1), &value);
@@ -69,8 +69,8 @@ TS_DEF_MAIN(TS_HBCons_WaitForHb)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_Wait(&node, 200);
@@ -100,8 +100,8 @@ TS_DEF_MAIN(TS_HBCons_CheckState)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
@@ -131,8 +131,8 @@ TS_DEF_MAIN(TS_HBCons_SingleEvent)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
@@ -163,8 +163,8 @@ TS_DEF_MAIN(TS_HBCons_MultiEvent)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
@@ -195,8 +195,8 @@ TS_DEF_MAIN(TS_HBCons_NoEvent)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
@@ -228,8 +228,8 @@ TS_DEF_MAIN(TS_HBCons_Jitter)
     data.Time   = 60;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
@@ -265,8 +265,8 @@ TS_DEF_MAIN(TS_HBCons_MasterId)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(0, 5);
@@ -326,8 +326,8 @@ TS_DEF_MAIN(TS_HBCons_OtherConsumer)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
@@ -365,9 +365,9 @@ TS_DEF_MAIN(TS_HBCons_MultiConsumer)
     data2.Time   = 70;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)2);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data1);
-    TS_ODAdd(CO_KEY(0x1016, 2, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uint32_t)&data2);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)2);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data1);
+    TS_ODAdd(CO_KEY(0x1016, 2, CO_UNSIGNED32|CO_OBJ____R_), CO_THB_CONS, (uintptr_t)&data2);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
@@ -403,8 +403,8 @@ TS_DEF_MAIN(TS_HBCons_WrEntry)
     uint32_t     value = 0x000A0032;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     CODictWrLong(&node.Dict, CO_DEV(0x1016, 1), value);
@@ -431,8 +431,8 @@ TS_DEF_MAIN(TS_HBCons_DynEvent)
     int16_t     events;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     CODictWrLong(&node.Dict, CO_DEV(0x1016, 1), value);
@@ -463,8 +463,8 @@ TS_DEF_MAIN(TS_HBCons_DynSdoError)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
@@ -500,8 +500,8 @@ TS_DEF_MAIN(TS_HBCons_DynSdoDisable)
     data.Time   = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uint32_t)1);
-    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uint32_t)&data);
+    TS_ODAdd(CO_KEY(0x1016, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, (uintptr_t)1);
+    TS_ODAdd(CO_KEY(0x1016, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_THB_CONS, (uintptr_t)&data);
     TS_CreateNode(&node);
                                                       /*------------------------------------------*/
     TS_HB_SEND(10, 5);
