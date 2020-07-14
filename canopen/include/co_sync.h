@@ -24,6 +24,7 @@
 #include "co_types.h"
 #include "co_cfg.h"
 #include "co_if.h"
+#include "co_pdo.h"
 
 /******************************************************************************
 * PUBLIC DEFINES
@@ -147,5 +148,19 @@ int16_t COSyncUpdate(CO_SYNC *sync, CO_IF_FRM *frm);
 *    Pointer to SYNC object
 */
 void COSyncRestart(CO_SYNC *sync);
+
+/******************************************************************************
+* CALLBACK FUNCTIONS
+******************************************************************************/
+
+/*! \brief  SYNC UPDATE
+*
+*    This function is called just after the synchronized RPDO is written to
+*    the object dictionary.
+*
+* \param pdo
+*    Pointer to received RPDO
+*/
+extern void COPdoSyncUpdate(CO_RPDO *pdo);
 
 #endif  /* #ifndef CO_SYNC_H_ */

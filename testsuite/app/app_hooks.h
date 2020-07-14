@@ -98,6 +98,10 @@ typedef struct TS_CALLBACK_T {
     CO_PARA    *ParaDefault_ArgParaGrp;
     uint32_t    ParaDefault_Called;
     int16_t     ParaDefault_Return;
+
+    CO_RPDO    *PdoSyncUpdate_ArgPdo;
+    uint32_t    PdoSyncUpdate_Called;
+
 } TS_CALLBACK;
 
 /******************************************************************************
