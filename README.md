@@ -136,11 +136,19 @@ The first release of this CANopen stack is back in 2005. It is still used in man
 
 Some years later, now in 2020, we think it is time for a new way of software development of components where no product specific know-how is neccessary. This project is the try with the hope, that this way of software development is good for existing customers, for Embedded Offic and for all potential new users.
 
+## Change Log
+
+**V4.0.1**
+- fix: version number in source code
+- fix: prepare testsuite for 64bit machines
+- add: callback after synchronized RPDO distribution into object dictionary
+
+**V4.0.0**
+- First open source release.
+
 ## Roadmap
 
-To avoid confusion, it is the best to continue with the release version numbering with the semantic scheme 'major'.'minor'.'build'. The first stable release of the open-source variant of the CANopen Stack is:
-
-**V4.0.0** - First open source release.
+To avoid confusion, it is the best to continue with the release version numbering with the semantic scheme 'major'.'minor'.'build'. The first stable release of the open-source variant of the CANopen Stack is: **V4.0.0**
 
 *Ideas for further development:*
 
@@ -159,6 +167,10 @@ The Apache 2.0 license is suitable for commercial usage, so we think this is the
 As everywhere in the world (especially in the internet) and at every time, we think a respectful and open minded communication is essential for peaceful and innovative developments. Please have a look in our [Code of Conduct](.github/CODE_OF_CONDUCT.md) and think about your writing before submitting.
 
 # Contribution
+
+## Issues and Questions
+
+Feel free to write bug reports, questions or and feedback as issue within this github repository.
 
 ## Development Environment
 
