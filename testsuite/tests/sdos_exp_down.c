@@ -103,7 +103,7 @@ TS_DEF_MAIN(TS_ExpWr_1BytePara)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -145,7 +145,7 @@ TS_DEF_MAIN(TS_ExpWr_2BytePara)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -187,7 +187,7 @@ TS_DEF_MAIN(TS_ExpWr_4BytePara)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -229,7 +229,7 @@ TS_DEF_MAIN(TS_ExpWr_1ByteVar)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ___PRW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ___PRW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -271,7 +271,7 @@ TS_DEF_MAIN(TS_ExpWr_2ByteVar)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -313,7 +313,7 @@ TS_DEF_MAIN(TS_ExpWr_4ByteVar)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -355,7 +355,7 @@ TS_DEF_MAIN(TS_ExpWr_2ByteVar_NoLen)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ___PRW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ___PRW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -396,7 +396,7 @@ TS_DEF_MAIN(TS_ExpWr_BadCmd)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -436,7 +436,7 @@ TS_DEF_MAIN(TS_ExpWr_ObjNotExist)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -476,7 +476,7 @@ TS_DEF_MAIN(TS_ExpWr_SubIdxNotExist)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -516,7 +516,7 @@ TS_DEF_MAIN(TS_ExpWr_ReadOnly)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____R_), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____R_), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -555,7 +555,7 @@ TS_DEF_MAIN(TS_ExpWr_LenTooHigh)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -594,7 +594,7 @@ TS_DEF_MAIN(TS_ExpWr_LenTooLow)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
     /* -- TEST -- */
@@ -633,7 +633,7 @@ TS_DEF_MAIN(TS_ExpWr_DataNullPtr)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uint32_t)0);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)0);
     TS_CreateNode(&node);
 
     /* -- TEST -- */

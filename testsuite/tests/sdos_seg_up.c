@@ -451,7 +451,7 @@ TS_DEF_MAIN(TS_SegRd_DomainNullPtr)
     uint8_t     sub  = 9;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (uint32_t)0);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)0);
     TS_CreateNode(&node);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
