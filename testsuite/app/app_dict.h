@@ -77,7 +77,7 @@ void ODInit(OD_DYN *self, CO_OBJ *root, uint32_t len);
 * \note    You should generate the key with the macro CO_KEY()
 */
 /*---------------------------------------------------------------------------*/
-void ODAdd(OD_DYN *self, uint32_t key, CO_OBJ_TYPE *type, uint32_t data);
+void ODAdd(OD_DYN *self, uint32_t key, CO_OBJ_TYPE *type, uintptr_t data);
 
 /*---------------------------------------------------------------------------*/
 /*! \brief GET DYNAMIC OBJECT DICTIONARY

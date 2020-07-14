@@ -47,14 +47,14 @@ TS_DEF_MAIN(TS_TPdo_8x1Byte)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map[0], &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 0x0C, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[1]);
-    TS_ODAdd(CO_KEY(0x2500, 0x0D, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[2]);
-    TS_ODAdd(CO_KEY(0x2500, 0x0E, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[3]);
-    TS_ODAdd(CO_KEY(0x2500, 0x0F, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[4]);
-    TS_ODAdd(CO_KEY(0x2500, 0x10, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[5]);
-    TS_ODAdd(CO_KEY(0x2500, 0x11, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[6]);
-    TS_ODAdd(CO_KEY(0x2500, 0x12, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data[7]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0C, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0D, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[2]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0E, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[3]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0F, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[4]);
+    TS_ODAdd(CO_KEY(0x2500, 0x10, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[5]);
+    TS_ODAdd(CO_KEY(0x2500, 0x11, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[6]);
+    TS_ODAdd(CO_KEY(0x2500, 0x12, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data[7]);
     TS_CreateNodeAutoStart(&node);
 
     TS_SYNC_SEND();
@@ -95,10 +95,10 @@ TS_DEF_MAIN(TS_TPdo_4x2Byte)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map[0], &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uint32_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 0x16, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uint32_t)&data[1]);
-    TS_ODAdd(CO_KEY(0x2500, 0x17, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uint32_t)&data[2]);
-    TS_ODAdd(CO_KEY(0x2500, 0x18, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uint32_t)&data[3]);
+    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uintptr_t)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 0x16, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uintptr_t)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 0x17, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uintptr_t)&data[2]);
+    TS_ODAdd(CO_KEY(0x2500, 0x18, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uintptr_t)&data[3]);
     TS_CreateNodeAutoStart(&node);
 
     TS_SYNC_SEND();
@@ -135,8 +135,8 @@ TS_DEF_MAIN(TS_TPdo_2x4Byte)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map[0], &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x1F, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uint32_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 0x20, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uint32_t)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 0x1F, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uintptr_t)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 0x20, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uintptr_t)&data[1]);
     TS_CreateNodeAutoStart(&node);
 
     TS_SYNC_SEND();
@@ -173,9 +173,9 @@ TS_DEF_MAIN(TS_TPdo_1_2_4Byte)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map[0], &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
-    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uint32_t)&data16);
-    TS_ODAdd(CO_KEY(0x2500, 0x1F, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uint32_t)&data32);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uintptr_t)&data16);
+    TS_ODAdd(CO_KEY(0x2500, 0x1F, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uintptr_t)&data32);
     TS_CreateNodeAutoStart(&node);
 
     TS_SYNC_SEND();
@@ -241,7 +241,7 @@ TS_DEF_MAIN(TS_TPdo_After3Sync)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     TS_SYNC_SEND();
@@ -283,7 +283,7 @@ TS_DEF_MAIN(TS_TPdo_OnChangeAfterSync)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     TS_SYNC_SEND();
@@ -326,7 +326,7 @@ TS_DEF_MAIN(TS_TPdo_After240Sync)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     for (n=0; n < 239; n++) {
@@ -368,7 +368,7 @@ TS_DEF_MAIN(TS_TPdo_Type254ViaObj)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     for (n = 0; n < 256; n++) {
@@ -412,7 +412,7 @@ TS_DEF_MAIN(TS_TPdo_Type255ViaObj)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     for (n = 0; n < 256; n++) {
@@ -454,7 +454,7 @@ TS_DEF_MAIN(TS_TPdo_Type254ViaNum)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     for (n = 0; n < 256; n++) {
@@ -495,7 +495,7 @@ TS_DEF_MAIN(TS_TPdo_Type255ViaNum)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     for (n = 0; n < 256; n++) {
@@ -534,7 +534,7 @@ TS_DEF_MAIN(TS_TPdo_Tmr)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNode(&node);
 
                                                       /* wait more than 1 event timer time        */
@@ -580,7 +580,7 @@ TS_DEF_MAIN(TS_TPdo_TmrAndNum)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     TS_Wait(&node, 200);                              /* wait 200ms                               */
@@ -639,7 +639,7 @@ TS_DEF_MAIN(TS_TPdo_Inhibit)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     TS_Wait(&node, 200);                              /* wait 200ms                               */
@@ -700,7 +700,7 @@ TS_DEF_MAIN(TS_TPdo_TmrAndInhibit)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     TS_Wait(&node, 70);                               /* wait 70ms                                */
@@ -756,7 +756,7 @@ TS_DEF_MAIN(TS_TPdo_ChangeTmr)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNode(&node);
 
     TS_SDO_SEND (0x22, 0x1800, 5, 200);
@@ -807,7 +807,7 @@ TS_DEF_MAIN(TS_TPdo_TmrFastest)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uint32_t)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
     TS_CreateNodeAutoStart(&node);
 
     TS_Wait(&node, 210);                              /* wait 210ms                               */
@@ -872,8 +872,8 @@ TS_DEF_MAIN(TS_TPdo_Async)
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map[0], &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x29, CO_UNSIGNED32|CO_OBJ___PRW), CO_TASYNC, (uint32_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 0x2A, CO_UNSIGNED32|CO_OBJ___PRW),         0, (uint32_t)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 0x29, CO_UNSIGNED32|CO_OBJ___PRW), CO_TASYNC, (uintptr_t)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 0x2A, CO_UNSIGNED32|CO_OBJ___PRW),         0, (uintptr_t)&data[1]);
     TS_CreateNodeAutoStart(&node);
 
     CODictWrLong(&node.Dict,CO_DEV(0x2500,0x29),0L);  /* write to asynchronous object entry       */

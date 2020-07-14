@@ -1323,7 +1323,7 @@ TS_DEF_MAIN(TS_BlkWr_ExpWrAfter43ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_ODAdd(CO_KEY(idx2, sub2, CO_UNSIGNED32|CO_OBJ____RW), 0, (uint32_t)&val);
+    TS_ODAdd(CO_KEY(idx2, sub2, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
     TS_CreateNode(&node);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
