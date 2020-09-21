@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.15)
-project (CanopenStack VERSION 3.3.0)
+project (CanopenStack VERSION 4.0.2)
 
 add_subdirectory(canopen)
 add_subdirectory(testsuite)
