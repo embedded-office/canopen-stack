@@ -22,7 +22,8 @@
 ******************************************************************************/
 
 #if defined(__STDC__) && (__STDC_VERSION__ >= 199901L) ||       /* ANSI C99 */\
-    defined(_MSC_VER)
+    defined(_MSC_VER) || \
+    defined(__cplusplus)
 
 #include <stddef.h>
 #include <stdbool.h>

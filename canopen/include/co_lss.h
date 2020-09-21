@@ -17,6 +17,10 @@
 #ifndef CO_LSS_H_
 #define CO_LSS_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -181,5 +185,9 @@ extern int16_t COLssStore(uint32_t baudrate, uint8_t nodeId);
 * \retval !=CO_ERR_NONE   error is detected
 */
 extern int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_LSS_H_ */

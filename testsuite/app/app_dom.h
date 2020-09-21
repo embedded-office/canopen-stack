@@ -17,6 +17,10 @@
 #ifndef _APP_DOM_H_
 #define _APP_DOM_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -87,5 +91,9 @@ void DomClear(CO_OBJ_DOM *dom);
 */
 /*---------------------------------------------------------------------------*/
 void DomFill(CO_OBJ_DOM *dom, uint8_t start);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif

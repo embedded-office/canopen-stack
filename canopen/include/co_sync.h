@@ -17,6 +17,10 @@
 #ifndef CO_SYNC_H_
 #define CO_SYNC_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -162,5 +166,9 @@ void COSyncRestart(CO_SYNC *sync);
 *    Pointer to received RPDO
 */
 extern void COPdoSyncUpdate(CO_RPDO *pdo);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_SYNC_H_ */

@@ -29,11 +29,15 @@
 
 #define CO_VER_MAJOR          4
 #define CO_VER_MINOR          0
-#define CO_VER_BUILD          1
+#define CO_VER_BUILD          2
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
 
 /*! \brief  GET MAJOR VERSION VALUE
 *
@@ -95,5 +99,9 @@ uint32_t COVersion(void);
 *    version object.
 */
 void CO_VerInit(void);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif /* ifndef CO_VER_H_ */

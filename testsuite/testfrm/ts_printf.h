@@ -20,6 +20,10 @@
 #ifndef TS_PRINTF_H_
 #define TS_PRINTF_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -69,10 +73,6 @@ typedef void(*TS_OUT_FUNC)(void *argument, char character);
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
-
 /*------------------------------------------------------------------------------------------------*/
 /*!
 * \details This function initializes the callback interface from the printf parser to the output
@@ -109,7 +109,7 @@ TS_OUT_FUNC TS_PrintfInit (void *arg, TS_OUT_FUNC function);
 /*------------------------------------------------------------------------------------------------*/
 void TS_Printf (char *fmt, ...);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 

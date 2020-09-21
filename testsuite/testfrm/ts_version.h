@@ -17,6 +17,10 @@
 #ifndef TS_VERSION_H_
 #define TS_VERSION_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -140,10 +144,6 @@
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
-
 /*------------------------------------------------------------------------------------------------*/
 /*!
 * \details This function prints the given value as a version string with a given format definition
@@ -174,7 +174,7 @@ void TS_PrintVersion(const uint32_t version,
                      const char *   format,
                      const uint8_t  base);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 

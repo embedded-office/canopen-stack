@@ -17,6 +17,10 @@
 #ifndef _APP_H_
 #define _APP_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -41,5 +45,9 @@
 */
 /*---------------------------------------------------------------------------*/
 int main(void);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif

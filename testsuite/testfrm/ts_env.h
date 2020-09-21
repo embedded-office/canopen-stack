@@ -17,6 +17,10 @@
 #ifndef TS_ENV_H_
 #define TS_ENV_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -532,7 +536,7 @@ void TS_DisableSuite(uint8_t group, uint8_t suite);
 /*------------------------------------------------------------------------------------------------*/
 int32_t TS_Start(void);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 

@@ -17,14 +17,13 @@
 #ifndef TS_OUTPUT_H_
 #define TS_OUTPUT_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
-
-
-#ifdef  __cplusplus
-extern "C" {
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
@@ -39,7 +38,7 @@ extern "C" {
 /*------------------------------------------------------------------------------------------------*/
 void TS_PutChar(void *arg, char character);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 

@@ -17,6 +17,10 @@
 #ifndef TS_LOCK_H_
 #define TS_LOCK_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -113,5 +117,9 @@ TS_LOCK_SR TS_Lock(TS_LOCK *lock);
 */
 /*------------------------------------------------------------------------------------------------*/
 void TS_Unlock(TS_LOCK *lock, TS_LOCK_SR state);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif /* TS_LOCK_H_ */

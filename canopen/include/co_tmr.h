@@ -17,6 +17,10 @@
 #ifndef CO_TMR_H_
 #define CO_TMR_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -325,5 +329,9 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action);
 * \internal
 */
 void COTmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_TMR_H_ */
