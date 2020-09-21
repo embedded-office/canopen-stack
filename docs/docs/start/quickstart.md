@@ -30,9 +30,12 @@ Create a file `clock_obj.c` and add the following lines as a starting point into
 ```c
 #include "co_core.h"
 
+/* allocate global variables for runtime value of objects */
+/* -> place here the coming global variables */
+
 /* define the static object dictionary */
 const CO_OBJ ClockOD[] = {
-    /* place here the coming object entry lines */
+    /* -> place here the coming object entry lines */
 };
 /* set number of object entries */
 const uint16_t ClockODLen = sizeof(ClockOD)/sizeof(CO_OBJ);
@@ -46,22 +49,36 @@ The object dictionary must hold at least the following mandatory object entries:
 | ----- | -------- | ---------- | ---------- | ----- | ------------------ |
 | 1000h | 0        | UNSIGNED32 | Const      | 0     | Device Type        |
 | 1001h | 0        | UNSIGNED8  | Read Only  | 0     | Error Register     |
+| 1005h | 0        | UNSIGNED32 | Const      | 0x80  | COB-ID SYNC        |
 | 1017h | 0        | UNSIGNED16 | Const      | 0     | Heartbeat Producer |
 | 1018h | 0        | UNSIGNED8  | Const      | 1     | *Identity Object*  |
 | 1018h | 1        | UNSIGNED32 | Const      | 0     | - Vendor ID        |
+| 1018h | 2        | UNSIGNED32 | Const      | 0     | - Product code     |
+| 1018h | 3        | UNSIGNED32 | Const      | 0     | - Revision number  |
+| 1018h | 4        | UNSIGNED32 | Const      | 0     | - Serial number    |
 
-*Note: For complex object entries (like the 1018h), the subindex 0 holds the highest subindex in this object. The shown vendor ID is only a dummy value. The correct value is managed by CiA, because each registered company will get a worldwide unique value.*
+*Note: For complex object entries (like the 1018h), the subindex 0 holds the highest subindex in this object. The shown values are only dummy values. The correct value for vendor ID is managed by CiA, because each registered company will get a worldwide unique value.*
 
 Add the following lines into the object dictionary:
 
 ```c
   :
-    {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, 0},
-    {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, &Obj1001_00_08},
-    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, 0},
-    {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 1},
-    {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, 0},
+    {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
+    {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (uintptr_t)&Obj1001_00_08},
+    {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x80},
+    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)0},
+    {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},
+    {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
+    {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
+    {CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
+    {CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
   :
+```
+
+and add a variable for the runtime value of the error register object (1001h,00h) as global variable:
+
+```c
+uint8_t Obj1001_00_08 = 0;
 ```
 
 #### SDO Server
@@ -80,9 +97,9 @@ Add the following lines into the object dictionary:
 
 ```c
   :
-    {CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 2},
-    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, 0x600},
-    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, 0x580},
+    {CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
+    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (uintptr_t)0x600},
+    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (uintptr_t)0x580},
   :
 ```
 
@@ -103,11 +120,19 @@ Add the following lines into the object dictionary:
 
 ```c
   :
-    {CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 3},
-    {CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, &Obj2100_01_20},
-    {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, &Obj2100_02_08},
-    {CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), 0, &Obj2100_03_08},
+    {CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)3},
+    {CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, (uintptr_t)&Obj2100_01_20},
+    {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&Obj2100_02_08},
+    {CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&Obj2100_03_08},
   :
+```
+
+and add the variables for the runtime values of the clock object as global variables:
+
+```c
+uint32_t Obj2100_01_20 = 0;
+uint8_t  Obj2100_02_08 = 0;
+uint8_t  Obj2100_03_08 = 0;
 ```
 
 #### TPDO Communication
@@ -126,9 +151,9 @@ Add the following lines into the object dictionary:
 
 ```c
   :
-    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 2},
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, 0x40000180},
-    {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 254},
+    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
+    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x40000180},
+    {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)254},
   :
 ```
 
@@ -149,10 +174,10 @@ Add the following lines into the object dictionary:
 
 ```c
   :
-    {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 3},
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, 0x21000120},
-    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, 0x21000208},
-    {CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, 0x21000308},
+    {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)3},
+    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x21000120},
+    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x21000208},
+    {CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x21000308},
   :
 ```
 
@@ -192,7 +217,7 @@ uint8_t SdoSrvMem[CO_SDOS_N][CO_SDO_BUF_BYTE];
  */
 const CO_NODE_SPEC AppSpec = {
     APP_NODE_ID,         /* default Node-Id                */
-    ABB_BAUDRATE,        /* default Baudrate               */
+    APP_BAUDRATE,        /* default Baudrate               */
     &ClockOD[0],         /* pointer to object dictionary   */
     ClockODLen,          /* object dictionary length       */
     NULL,                /* no EMCY info fields (unused)   */
