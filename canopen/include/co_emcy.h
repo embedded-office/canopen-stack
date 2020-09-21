@@ -17,6 +17,10 @@
 #ifndef CO_EMCY_H_
 #define CO_EMCY_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -473,5 +477,9 @@ int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t 
 * \internal
 */
 int16_t COTypeEmcyWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_EMCY_H_ */

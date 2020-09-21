@@ -17,6 +17,10 @@
 #ifndef TS_PIPE_H_
 #define TS_PIPE_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -40,10 +44,6 @@
 *           content of local variables with mixed size in one pipe as well.
 * @{
 */
-
-#ifdef  __cplusplus
-extern "C" {
-#endif
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
@@ -187,7 +187,7 @@ uint32_t TS_PipeGetSize(char *name);
 /*------------------------------------------------------------------------------------------------*/
 uint32_t TS_PipeMemUsed(void);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 

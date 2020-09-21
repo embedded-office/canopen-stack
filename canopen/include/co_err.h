@@ -17,6 +17,10 @@
 #ifndef CO_ERR_H_
 #define CO_ERR_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -117,5 +121,9 @@ typedef enum CO_ERR_T {
     CO_ERR_TYPE_WR               /*!< error during writing type              */
 
 } CO_ERR;
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_ERR_H_ */

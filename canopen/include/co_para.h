@@ -17,6 +17,10 @@
 #ifndef CO_PARA_H_
 #define CO_PARA_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -238,5 +242,9 @@ extern int16_t COParaSave(CO_PARA *pg);
 * \retval  <0    error is detected and function aborted
 */
 extern int16_t COParaDefault(CO_PARA *pg);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_PARA_H_ */

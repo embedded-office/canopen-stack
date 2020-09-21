@@ -17,6 +17,10 @@
 #ifndef _APP_ENV_H_
 #define _APP_ENV_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -561,5 +565,9 @@ int16_t TS_DomainCheck(CO_OBJ_DOM *dom, uint8_t start, uint8_t missing);
 */
 /*---------------------------------------------------------------------------*/
 void TS_SendBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t seglost);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif

@@ -17,6 +17,10 @@
 #ifndef CO_DICT_H__
 #define CO_DICT_H__
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -263,5 +267,9 @@ int16_t CODictInit(CO_DICT *cod,
                   struct CO_NODE_T *node,
                   struct CO_OBJ_T *root,
                   uint16_t max);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef co_dict.h_ */

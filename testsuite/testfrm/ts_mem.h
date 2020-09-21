@@ -20,6 +20,10 @@
 #ifndef TS_MEM_H_
 #define TS_MEM_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -137,10 +141,6 @@ typedef struct TS_MEM_CTRL_T {
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
-    
 /*------------------------------------------------------------------------------------------------*/
 /*!
 * \details This function setups the lock and unlock function for the memory management.
@@ -227,6 +227,10 @@ void TS_MemClear (void *start, uint32_t size);
 */
 /*------------------------------------------------------------------------------------------------*/
 void TS_MemInfo (TS_MEM_CTRL *mem, TS_MEM_INFO *info);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif /* TS_MEM_H_ */
 /*! @} */

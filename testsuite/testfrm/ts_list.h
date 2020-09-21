@@ -17,6 +17,10 @@
 #ifndef TS_LIST_H_
 #define TS_LIST_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -306,10 +310,6 @@ typedef struct TS_LIST_ITEM_T {
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /*------------------------------------------------------------------------------------------------*/
 /*!
 * \details This function setups the lock and unlock function for the list management.
@@ -409,7 +409,7 @@ TS_LIST_ITEM *TS_ListFetchTail(TS_LIST_ITEM *head);
 /*------------------------------------------------------------------------------------------------*/
 bool TS_ListContains(TS_LIST_ITEM *head, TS_LIST_ITEM *item);
 
-#ifdef __cplusplus
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
 }  /* extern "C" */
 #endif
 

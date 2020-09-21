@@ -17,6 +17,10 @@
 #ifndef _APP_HOOKS_H_
 #define _APP_HOOKS_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -110,5 +114,9 @@ typedef struct TS_CALLBACK_T {
 
 void TS_CallbackInit  (TS_CALLBACK *cb);
 void TS_CallbackDeInit(void);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif

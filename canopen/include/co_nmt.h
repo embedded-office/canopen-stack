@@ -17,6 +17,10 @@
 #ifndef CO_NMT_H_
 #define CO_NMT_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -496,5 +500,9 @@ extern void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
 *    The new received node state of the monitored node
 */
 extern void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_NMT_H_ */

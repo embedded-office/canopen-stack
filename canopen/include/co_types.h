@@ -18,7 +18,8 @@
 #define CO_TYPES_H_
 
 #if defined(__STDC__) && (__STDC_VERSION__ >= 199901L) ||       /* ANSI C99 */\
-    defined(_MSC_VER)
+    defined(_MSC_VER) || \
+    defined(__cplusplus)
 
 /******************************************************************************
 * INCLUDES

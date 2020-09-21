@@ -17,6 +17,10 @@
 #ifndef _APP_STDOBJ_H_
 #define _APP_STDOBJ_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -404,5 +408,10 @@
 #define OBJ1AXX_N(num,map,ref)                                 \
     CO_KEY(0x1A00 + (num), (map), CO_UNSIGNED32|CO_OBJ____RW), \
     CO_TPDOMAP, (uintptr_t)(ref)
+
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif

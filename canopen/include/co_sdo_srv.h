@@ -17,6 +17,10 @@
 #ifndef CO_SDO_SRV_H_
 #define CO_SDO_SRV_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -648,5 +652,9 @@ void COSdoAbortReq(CO_SDO *srv);
 * \internal
 */
 int16_t COTypeSdoIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_SDO_H_ */

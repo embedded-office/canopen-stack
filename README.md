@@ -138,6 +138,11 @@ Some years later, now in 2020, we think it is time for a new way of software dev
 
 ## Change Log
 
+**V4.0.2**
+- add: make headers compatible with C++
+- fix: NMT state machine image in docs
+- fix: improve quickstart example docs
+
 **V4.0.1**
 - fix: version number in source code
 - fix: prepare testsuite for 64bit machines

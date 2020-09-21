@@ -17,6 +17,10 @@
 #ifndef _APP_EMCY_H_
 #define _APP_EMCY_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -76,5 +80,9 @@ CO_EMCY_TBL *EmcyGetTable(void);
 */
 /*---------------------------------------------------------------------------*/
 uint32_t EmcyAddCode(int16_t code, uint8_t reg);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif

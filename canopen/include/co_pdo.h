@@ -17,6 +17,9 @@
 #ifndef CO_PDO_H_
 #define CO_PDO_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
 
 /******************************************************************************
 * INCLUDES
@@ -684,5 +687,9 @@ extern void COPdoTransmit(CO_IF_FRM *frm);
 * \retval   >0    CAN message frame is consumed
 */
 extern int16_t COPdoReceive(CO_IF_FRM *frm);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_TPDO_H_ */

@@ -17,6 +17,10 @@
 #ifndef _APP_DICT_H_
 #define _APP_DICT_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -100,5 +104,9 @@ CO_OBJ *ODGetDict(OD_DYN *self);
 */
 /*---------------------------------------------------------------------------*/
 uint32_t ODGetSize(OD_DYN *self);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif

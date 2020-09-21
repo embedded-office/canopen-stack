@@ -17,6 +17,10 @@
 #ifndef CO_IF_H_
 #define CO_IF_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -293,5 +297,9 @@ void COIfEnable(CO_IF *cif, uint32_t baudrate);
 *    The received CAN frame
 */
 extern void COIfReceive(CO_IF_FRM *frm);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif /* CO_IF_H_ */

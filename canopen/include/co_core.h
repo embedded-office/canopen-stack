@@ -17,6 +17,10 @@
 #ifndef CO_CORE_H_
 #define CO_CORE_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -190,5 +194,9 @@ int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type);
 *    and setting the device in a safe state.
 */
 extern void CONodeFatalError(void);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif  /* #ifndef CO_CORE_H_ */

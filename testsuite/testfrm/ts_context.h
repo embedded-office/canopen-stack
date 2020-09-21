@@ -17,6 +17,10 @@
 #ifndef TS_CONTEXT_H_
 #define TS_CONTEXT_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -65,10 +69,6 @@ typedef jmp_buf TS_CONTEXT;
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-#ifdef  __cplusplus
-extern "C" {
-#endif
-
 /*------------------------------------------------------------------------------------------------*/
 /*!
 * \details This function saves registers, additional to the common context. This may be useful
@@ -85,7 +85,7 @@ void TS_SaveMachineRegs(void);
 /*------------------------------------------------------------------------------------------------*/
 void TS_RestoreMachineRegs(void);
 
-#ifdef  __cplusplus
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 

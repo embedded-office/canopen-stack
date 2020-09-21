@@ -17,6 +17,10 @@
 #ifndef _DRV_CAN_H_
 #define _DRV_CAN_H_
 
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+extern "C" {
+#endif
+
 /******************************************************************************
 * INCLUDES
 ******************************************************************************/
@@ -82,5 +86,9 @@ uint32_t    CanDiagnosticOff(int16_t busId);
 uint32_t    CanDiagnosticOn (int16_t busId);
 void        CanDiagnosticSet(int16_t busId, uint32_t diag);
 int16_t     CanDiagnosticGet(int16_t busId);
+
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
+}
+#endif
 
 #endif
