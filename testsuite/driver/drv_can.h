@@ -85,7 +85,7 @@ int16_t     SimCanFlush     (int16_t busId);
 uint32_t    CanDiagnosticOff(int16_t busId);
 uint32_t    CanDiagnosticOn (int16_t busId);
 void        CanDiagnosticSet(int16_t busId, uint32_t diag);
-int16_t     CanDiagnosticGet(int16_t busId);
+uint32_t    CanDiagnosticGet(int16_t busId);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

@@ -48,126 +48,181 @@ extern "C" {
                               (uint32_t)((f).Data[(p)+1]) << 8  | \
                               (uint32_t)((f).Data[(p)]))
 
-#define TS_SYNC_SEND()       SetRxFrm(0, 10, 0x080, 0,  \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0));       \
-                             RunSimCan(0, 0)
+#define TS_SYNC_SEND()        \
+  do {                        \
+    SetRxFrm(0, 10, 0x080, 0, \
+             (uint8_t)(0),    \
+             (uint8_t)(0),    \
+             (uint8_t)(0),    \
+             (uint8_t)(0),    \
+             (uint8_t)(0),    \
+             (uint8_t)(0),    \
+             (uint8_t)(0),    \
+             (uint8_t)(0));   \
+    RunSimCan(0, 0);          \
+  } while(0)
 
-#define TS_NMT_SEND(c,n)     SetRxFrm(0, 0, 0x000, 2,  \
-                               (uint8_t)(c),        \
-                               (uint8_t)(n),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0));       \
-                             RunSimCan(0, 0)
+#define TS_NMT_SEND(c,n)     \
+  do {                       \
+    SetRxFrm(0, 0, 0x000, 2, \
+             (uint8_t)(c),   \
+             (uint8_t)(n),   \
+             (uint8_t)(0),   \
+             (uint8_t)(0),   \
+             (uint8_t)(0),   \
+             (uint8_t)(0),   \
+             (uint8_t)(0),   \
+             (uint8_t)(0));  \
+    RunSimCan(0, 0);         \
+  } while(0)
 
-#define TS_SDO_SEND(c,i,s,d) SetRxFrm(0, 0, 0x601, 8,              \
-                               (uint8_t)(c),                    \
-                               (uint8_t)(i),                    \
-                               (uint8_t)(((uint16_t)i)>>8),   \
-                               (uint8_t)(s),                    \
-                               (uint8_t)(d),                    \
-                               (uint8_t)(((uint32_t)d)>>8),   \
-                               (uint8_t)(((uint32_t)d)>>16),  \
-                               (uint8_t)(((uint32_t)d)>>24)); \
-                             RunSimCan(0, 0)
+#define TS_SDO_SEND(_c,_i,_s,_d)            \
+  do {                                      \
+    uint8_t  c=(uint8_t)(_c);               \
+    uint16_t i=(uint16_t)(_i);              \
+    uint8_t  s=(uint8_t)(_s);               \
+    uint32_t d=(uint32_t)(_d);              \
+    SetRxFrm(0, 0, 0x601, 8,                \
+             (uint8_t)(c),                  \
+             (uint8_t)(i),                  \
+             (uint8_t)(((uint32_t)i)>>8),   \
+             (uint8_t)(s),                  \
+             (uint8_t)(d),                  \
+             (uint8_t)(((uint32_t)d)>>8),   \
+             (uint8_t)(((uint32_t)d)>>16),  \
+             (uint8_t)(((uint32_t)d)>>24)); \
+    RunSimCan(0, 0);                        \
+  } while(0)
 
-#define TS_EBLK_SEND(c,d)    SetRxFrm(0, 0, 0x601, 8,              \
-                               (uint8_t)(c),                    \
-                               (uint8_t)(d),                    \
-                               (uint8_t)(((uint32_t)d)>>8),   \
-                               (uint8_t)(((uint32_t)d)>>16),  \
-                               (uint8_t)(((uint32_t)d)>>24),  \
-                               (uint8_t)(0),                    \
-                               (uint8_t)(0),                    \
-                               (uint8_t)(0));                   \
-                             RunSimCan(0, 0)
+#define TS_EBLK_SEND(_c,_d)                \
+  do {                                     \
+    uint8_t  c=(uint8_t)(_c);              \
+    uint32_t d=(uint32_t)(_d);             \
+    SetRxFrm(0, 0, 0x601, 8,               \
+             (uint8_t)(c),                 \
+             (uint8_t)(d),                 \
+             (uint8_t)(((uint32_t)d)>>8),  \
+             (uint8_t)(((uint32_t)d)>>16), \
+             (uint8_t)(((uint32_t)d)>>24), \
+             (uint8_t)(0),                 \
+             (uint8_t)(0),                 \
+             (uint8_t)(0));                \
+    RunSimCan(0, 0);                       \
+  } while(0)
 
-#define TS_ACKBLK_SEND(c,a,s) SetRxFrm(0, 0, 0x601, 8, \
-                               (uint8_t)(c),        \
-                               (uint8_t)(a),        \
-                               (uint8_t)(s),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0));       \
-                             RunSimCan(0, 0)
+#define TS_ACKBLK_SEND(_c,_a,_s) \
+  do {                           \
+    uint8_t c=(uint8_t)(_c);     \
+    uint8_t a=(uint8_t)(_a);     \
+    uint8_t s=(uint8_t)(_s);     \
+    SetRxFrm(0, 0, 0x601, 8,     \
+             (uint8_t)(c),       \
+             (uint8_t)(a),       \
+             (uint8_t)(s),       \
+             (uint8_t)(0),       \
+             (uint8_t)(0),       \
+             (uint8_t)(0),       \
+             (uint8_t)(0),       \
+             (uint8_t)(0));      \
+    RunSimCan(0, 0);             \
+  } while(0)
 
-#define TS_SEG_SEND(s,a)     SetRxFrm(0, 0, 0x601, 8,  \
-                               (uint8_t)(s),        \
-                               (uint8_t)(a+0),      \
-                               (uint8_t)(a+1),      \
-                               (uint8_t)(a+2),      \
-                               (uint8_t)(a+3),      \
-                               (uint8_t)(a+4),      \
-                               (uint8_t)(a+5),      \
-                               (uint8_t)(a+6));     \
-                             RunSimCan(0, 0)
+#define TS_SEG_SEND(_s,_a)    \
+  do {                        \
+    uint8_t s=(uint8_t)(_s);  \
+    uint8_t a=(uint8_t)(_a);  \
+    SetRxFrm(0, 0, 0x601, 8,  \
+             (uint8_t)(s),    \
+             (uint8_t)(a+0),  \
+             (uint8_t)(a+1),  \
+             (uint8_t)(a+2),  \
+             (uint8_t)(a+3),  \
+             (uint8_t)(a+4),  \
+             (uint8_t)(a+5),  \
+             (uint8_t)(a+6)); \
+    RunSimCan(0, 0);          \
+  } while(0)
 
-#define TS_HB_SEND(n,s)      SetRxFrm(0, 0, 1792+n, 1, \
-                               (uint8_t)(s),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0),        \
-                               (uint8_t)(0));       \
-                             RunSimCan(0, 0)
+#define TS_HB_SEND(_n,_s)       \
+  do {                          \
+    uint32_t n=(uint32_t)(_n);  \
+    uint8_t  s=(uint8_t)(_s);   \
+    SetRxFrm(0, 0, 1792+(n), 1, \
+      (uint8_t)(s),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0));            \
+    RunSimCan(0, 0);            \
+  } while(0)
 
-#define TS_PDO_SEND(i,a)    SetRxFrm(0, 0, (i), 8,   \
-                               (uint8_t)((a)+0),  \
-                               (uint8_t)((a)+1),  \
-                               (uint8_t)((a)+2),  \
-                               (uint8_t)((a)+3),  \
-                               (uint8_t)((a)+4),  \
-                               (uint8_t)((a)+5),  \
-                               (uint8_t)((a)+6),  \
-                               (uint8_t)((a)+7)); \
-                            RunSimCan(0, 0)
+#define TS_PDO_SEND(_i,_a)      \
+  do {                          \
+    uint32_t i=(uint32_t)(_i);  \
+    uint8_t  a=(uint8_t)(_a);   \
+    SetRxFrm(0, 0, (i), 8,      \
+             (uint8_t)((a)+0),  \
+             (uint8_t)((a)+1),  \
+             (uint8_t)((a)+2),  \
+             (uint8_t)((a)+3),  \
+             (uint8_t)((a)+4),  \
+             (uint8_t)((a)+5),  \
+             (uint8_t)((a)+6),  \
+             (uint8_t)((a)+7)); \
+    RunSimCan(0, 0);            \
+  } while(0)
 
-#define TS_LSS_SEND(c,d1,d2) SetRxFrm(0, 0, 2021, 8,\
-                               (uint8_t)(c),   \
-                               (uint8_t)(d1),  \
-                               (uint8_t)(d2),  \
-                               (uint8_t)(0),   \
-                               (uint8_t)(0),   \
-                               (uint8_t)(0),   \
-                               (uint8_t)(0),   \
-                               (uint8_t)(0));  \
-                             RunSimCan(0, 0)
+#define TS_LSS_SEND(_c,_d1,_d2) \
+  do {                          \
+    uint8_t c=(uint8_t)(_c);    \
+    uint8_t d1=(uint8_t)(_d1);  \
+    uint8_t d2=(uint8_t)(_d2);  \
+    SetRxFrm(0, 0, 2021, 8,     \
+      (uint8_t)(c),             \
+      (uint8_t)(d1),            \
+      (uint8_t)(d2),            \
+      (uint8_t)(0),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0),             \
+      (uint8_t)(0));            \
+    RunSimCan(0, 0);            \
+  } while(0)
 
-#define TS_LSS_SEND_W(c,d) SetRxFrm(0, 0, 2021, 8,                 \
-                               (uint8_t)(c),                    \
-                               (uint8_t)(d),                    \
-                               (uint8_t)(((uint16_t)d)>>8),   \
-                               (uint8_t)(0),                    \
-                               (uint8_t)(0),                    \
-                               (uint8_t)(0),                    \
-                               (uint8_t)(0),                    \
-                               (uint8_t)(0));                   \
-                             RunSimCan(0, 0)
+#define TS_LSS_SEND_W(_c,_d)       \
+  do {                             \
+    uint8_t  c=(uint8_t)(_c);      \
+    uint16_t d=(uint16_t)(_d);     \
+    SetRxFrm(0, 0, 2021, 8,        \
+      (uint8_t)(c),                \
+      (uint8_t)(d),                \
+      (uint8_t)(((uint16_t)d)>>8), \
+      (uint8_t)(0),                \
+      (uint8_t)(0),                \
+      (uint8_t)(0),                \
+      (uint8_t)(0),                \
+      (uint8_t)(0));               \
+    RunSimCan(0, 0);               \
+  } while(0)
 
-#define TS_LSS_SEND_L(c,d) SetRxFrm(0, 0, 2021, 8,                 \
-                               (uint8_t)(c),                    \
-                               (uint8_t)(d),                    \
-                               (uint8_t)(((uint32_t)d)>>8),   \
-                               (uint8_t)(((uint32_t)d)>>16),  \
-                               (uint8_t)(((uint32_t)d)>>24),  \
-                               (uint8_t)(0),                    \
-                               (uint8_t)(0),                    \
-                               (uint8_t)(0));                   \
-                             RunSimCan(0, 0)
+#define TS_LSS_SEND_L(_c,_d)         \
+  do {                               \
+    uint8_t  c=(uint8_t)(_c);        \
+    uint32_t d=(uint32_t)(_d);       \
+    SetRxFrm(0, 0, 2021, 8,          \
+      (uint8_t)(c),                  \
+      (uint8_t)(d),                  \
+      (uint8_t)(((uint32_t)d)>>8),   \
+      (uint8_t)(((uint32_t)d)>>16),  \
+      (uint8_t)(((uint32_t)d)>>24),  \
+      (uint8_t)(0),                  \
+      (uint8_t)(0),                  \
+      (uint8_t)(0));                 \
+    RunSimCan(0, 0);                 \
+  } while(0)
 
 #define CHK_NO_ERR(n)        TS_ASSERT(CO_ERR_NONE == CONodeGetErr(n))
 
@@ -240,7 +295,7 @@ extern "C" {
 #define CHK_MLTPX(f,i,s)     TS_ASSERT((i) == WORD(f,1)); \
                              TS_ASSERT((s) == BYTE(f,3))
 
-#define CHK_DATA(f,d)        TS_ASSERT((d) == LONG(f,4))
+#define CHK_DATA(f,d)        TS_ASSERT((uint32_t)(d) == LONG(f,4))
 
 #define CHK_ACKSEQ(f,s)      TS_ASSERT((s) == BYTE(f,1))
 
@@ -294,37 +349,21 @@ extern "C" {
                              TS_ASSERT(0 == BYTE(f,3)); \
                              TS_ASSERT(0 == LONG(f,4))
 
-#define CHK_SEG(f,a,n)       TS_ASSERT(((uint8_t)(a) & 0xFF) == BYTE(f,1));          \
-                             if (n > 1) {                                               \
-                                 TS_ASSERT(((uint8_t)(a + 1) & 0xFF) == BYTE(f, 2)); \
-                             } else {                                                   \
-                                 TS_ASSERT(0 == BYTE(f, 2));                            \
-                             }                                                          \
-                             if (n > 2) {                                               \
-                                 TS_ASSERT(((uint8_t)(a + 2) & 0xFF) == BYTE(f, 3)); \
-                             } else {                                                   \
-                                 TS_ASSERT(0 == BYTE(f, 3));                            \
-                             }                                                          \
-                             if (n > 3) {                                               \
-                                 TS_ASSERT(((uint8_t)(a + 3) & 0xFF) == BYTE(f, 4)); \
-                             } else {                                                   \
-                                 TS_ASSERT(0 == BYTE(f, 4));                            \
-                             }                                                          \
-                             if (n > 4) {                                               \
-                                 TS_ASSERT(((uint8_t)(a + 4) & 0xFF) == BYTE(f, 5)); \
-                             } else {                                                   \
-                                 TS_ASSERT(0 == BYTE(f, 5));                            \
-                             }                                                          \
-                             if (n > 5) {                                               \
-                                 TS_ASSERT(((uint8_t)(a + 5) & 0xFF) == BYTE(f, 6)); \
-                             } else {                                                   \
-                                 TS_ASSERT(0 == BYTE(f, 6));                            \
-                             }                                                          \
-                             if (n > 6) {                                               \
-                                 TS_ASSERT(((uint8_t)(a + 6) & 0xFF) == BYTE(f, 7)); \
-                             } else {                                                   \
-                                 TS_ASSERT(0 == BYTE(f, 7));                            \
-                             }
+#define CHK_SEG(f,_a,_n)                                 \
+  do {                                                   \
+    uint8_t   a=(uint8_t)_a;                             \
+    uint8_t   n=(uint8_t)_n;                             \
+    uint8_t   b=(uint8_t)1;                              \
+    while (b <= n) {                                     \
+      TS_ASSERT(((uint8_t)(a) & 0xFF) == BYTE(f,b));     \
+      a++;                                               \
+      b++;                                               \
+    }                                                    \
+    while (b <= 7) {                                     \
+      TS_ASSERT(0 == BYTE(f,b));                         \
+      b++;                                               \
+    }                                                    \
+  } while(0)
 
 #define CHK_DOM_FULL(d,s)    TS_ASSERT(0 == TS_DomainCheck((d),(s),0))
 

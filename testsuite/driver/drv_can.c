@@ -369,13 +369,13 @@ void CanDiagnosticSet(int16_t busId, uint32_t diag)
 }
 
 
-int16_t CanDiagnosticGet(int16_t busId)
+uint32_t CanDiagnosticGet(int16_t busId)
 {
     uint32_t diag;
 
     if ((busId < 0) ||                                /* busId out of range?                      */
         (busId >= (int16_t)SIM_CAN_BUS_N)) {
-        return (-1);
+        return (0);
     }
 
     diag = SimCanDiag & SIM_CAN_STAT_DIAGNOSTIC;

@@ -28,12 +28,12 @@
 ******************************************************************************/
 
 typedef struct TS_PARAM_T {
-    char           LeadingZeros:1;                    /*!< Leading zeros                          */
-    char           Alternate:1;                       /*!< alternate form                         */
-    char           UpperCase:1;                       /*!< Upper case (for base16 only)           */
-    char           AlignLeft:1;                       /*!< align right(0, default)/left(1)        */
+    unsigned       LeadingZeros:1;                    /*!< Leading zeros                          */
+    unsigned       Alternate:1;                       /*!< alternate form                         */
+    unsigned       UpperCase:1;                       /*!< Upper case (for base16 only)           */
+    unsigned       AlignLeft:1;                       /*!< align right(0, default)/left(1)        */
     unsigned int   FieldWidth;                        /*!< field width                            */
-    char           Sign;                              /*!< The sign to display (if any)           */
+    unsigned       Sign;                              /*!< The sign to display (if any)           */
     unsigned int   Base;                              /*!< number base (e.g.: 8, 10, 16)          */
     char          *Buffer;                            /*!< Buffer to output                       */
 } TS_PARAM;
@@ -62,7 +62,7 @@ static void ulli2a(unsigned long long int num, TS_PARAM *p)
         num %= d;
         d /= p->Base;
         if (n || dgt > 0 || d == 0) {
-            *bf++ = dgt + (dgt < 10 ? '0' : (p->UpperCase ? 'A' : 'a') - 10);
+            *bf++ = (char)(dgt + (dgt < 10 ? '0' : (p->UpperCase ? 'A' : 'a') - 10));
             ++n;
         }
     }
@@ -90,7 +90,7 @@ static void uli2a(unsigned long int num, TS_PARAM *p)
         num %= d;
         d /= p->Base;
         if (n || dgt > 0 || d == 0) {
-            *bf++ = dgt + (dgt < 10 ? '0' : (p->UpperCase ? 'A' : 'a') - 10);
+            *bf++ = (char)(dgt + (dgt < 10 ? '0' : (p->UpperCase ? 'A' : 'a') - 10));
             ++n;
         }
     }
@@ -118,7 +118,7 @@ static void ui2a(unsigned int num, TS_PARAM *p)
         num %= d;
         d /= p->Base;
         if (n || dgt > 0 || d == 0) {
-            *bf++ = dgt + (dgt < 10 ? '0' : (p->UpperCase ? 'A' : 'a') - 10);
+            *bf++ = (char)(dgt + (dgt < 10 ? '0' : (p->UpperCase ? 'A' : 'a') - 10));
             ++n;
         }
     }
@@ -186,7 +186,7 @@ static void putchw(void *arg, TS_OUT_FUNC func, TS_PARAM *p)
 
     /* print sign */
     if (p->Sign)
-        func(arg, p->Sign);
+        func(arg, (char)(p->Sign));
 
     /* Alternate */
     if (p->Alternate && p->Base == 16) {

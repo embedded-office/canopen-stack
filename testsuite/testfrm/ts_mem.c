@@ -61,7 +61,7 @@ void TS_MemInit (TS_MEM_CTRL *mem, void *start, uint32_t size)
     }
 
     mem->Start     = (TS_BLOCK *)start;
-    mem->NumBlocks = (size / sizeof(TS_BLOCK));
+    mem->NumBlocks = (uint16_t)(size / sizeof(TS_BLOCK));
 
     TS_MemClear(mem->Start, size);              /* clear whole memory area      */
 
@@ -115,7 +115,7 @@ void *TS_MemGet (TS_MEM_CTRL *mem, uint32_t size)
         blocks = 1;
     } else {
         size  -= (1 + (sizeof(((TS_BLOCK *)0)->Body)));
-        blocks = (2 + size/(sizeof(TS_BLOCK)));
+        blocks = (uint16_t)(2 + size/(sizeof(TS_BLOCK)));
     }
 
     /*
@@ -205,7 +205,7 @@ void TS_MemPut (TS_MEM_CTRL *mem, void *ptr)
 
     /* Figure out which block we're in. Note the use of truncated division... */
 
-    c = (((char *)ptr)-(char *)(&(mem->Start[0])))/sizeof(TS_BLOCK);
+    c = (uint16_t)((((char *)ptr)-(char *)(&(mem->Start[0])))/sizeof(TS_BLOCK));
 
     /* Now let's assimilate this block with the next one if possible. */
 
