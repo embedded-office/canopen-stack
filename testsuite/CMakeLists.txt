@@ -85,3 +85,12 @@ target_include_directories(CanopenTests
 # specify the dependencies for this application
 #
 target_link_libraries(CanopenTests Canopen)
+
+#---
+# specify the warning level for this application
+#
+if(MSVC)
+  target_compile_options(CanopenTests PRIVATE /W4 /WX)
+else()
+  target_compile_options(CanopenTests PRIVATE -Wall -Wextra -pedantic -Werror)
+endif()
