@@ -504,6 +504,7 @@ int16_t COTypeNmtHbConsRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint
     uint8_t   *dst;
     uint32_t   num;
 
+    (void)node;
     hbc    = (CO_HBCONS *)(obj->Data);
     value  = (uint32_t)(hbc->Time);
     value |= ((uint32_t)(hbc->NodeId)) << 16;

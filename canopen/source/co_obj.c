@@ -446,6 +446,7 @@ uint32_t COTypeStringSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width)
     CO_OBJ_STR *str;
     uint8_t    *ptr;
 
+    (void)node;
     (void)width;
     str = (CO_OBJ_STR *)(obj->Data);
     ptr = str->Start;
@@ -465,6 +466,7 @@ int16_t COTypeStringCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uin
     int16_t     result = CO_ERR_TYPE_CTRL;
     CO_OBJ_STR *str;
 
+    (void)node;
     str = (CO_OBJ_STR *)(obj->Data);
     if (func == CO_CTRL_SET_OFF) {
         str->Offset = para;
@@ -485,6 +487,7 @@ int16_t COTypeStringRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_
     uint8_t    *ptr;
     uint8_t    *dst;
 
+    (void)node;
     str    = (CO_OBJ_STR *)(obj->Data);
     offset = str->Offset;
     ptr    = (uint8_t *)(str->Start) + offset;
@@ -509,6 +512,7 @@ uint32_t COTypeDomainSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width)
     CO_OBJ_DOM *dom;
     uint32_t    result = 0;
 
+    (void)node;
     if (obj->Data == 0) {
         return (result);
     }
@@ -530,6 +534,7 @@ int16_t COTypeDomainCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uin
     CO_OBJ_DOM *dom;
     int16_t     result = CO_ERR_TYPE_CTRL;
 
+    (void)node;
     dom = (CO_OBJ_DOM *)(obj->Data);
     if (func == CO_CTRL_SET_OFF) {
         dom->Offset = para;
@@ -550,6 +555,7 @@ int16_t COTypeDomainRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_
     uint8_t    *dst;
     uint32_t    num;
 
+    (void)node;
     dom = (CO_OBJ_DOM *)(obj->Data);
     src = (uint8_t *)(dom->Start + dom->Offset);
     num = dom->Size - dom->Offset;
@@ -577,6 +583,7 @@ int16_t COTypeDomainWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32
     uint8_t    *dst;
     uint32_t    num;
 
+    (void)node;
     dom = (CO_OBJ_DOM *)(obj->Data);
     dst = (uint8_t *)(dom->Start + dom->Offset);
     num = dom->Size - dom->Offset;
