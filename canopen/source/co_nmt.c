@@ -467,14 +467,12 @@ void CONmtHbConsMonitor(void *parg)
 */
 int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DICT     *cod;
     CO_HBCONS  *hbc;
     int16_t     result = CO_ERR_TYPE_WR;
     uint32_t    value  = 0;
     uint16_t    time;
     uint8_t     nodeid;
 
-    cod  = &node->Dict;
     hbc  = (CO_HBCONS *)obj->Data;
     if (hbc == 0) {
         node->Error = CO_ERR_CFG_1016;

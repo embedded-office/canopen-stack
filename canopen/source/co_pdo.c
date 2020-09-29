@@ -905,7 +905,6 @@ int16_t COTypePdoMapWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32
 */
 int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DICT   *cod;
     CO_NMT   *nmt;
     CO_TPDO  *tpdo = 0;
     CO_RPDO  *rpdo = 0;
@@ -928,7 +927,6 @@ int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint
         return (CO_ERR_OBJ_RANGE);
     }
 
-    cod     = &node->Dict;
     nmt     = &node->Nmt;
     pcomidx = CO_GET_IDX(obj->Key);
     if ((pcomidx >= 0x1400) && (pcomidx <= 0x15FF)) {
