@@ -33,12 +33,3 @@ target_sources(Canopen
     source/co_tmr.c
     source/co_ver.c
 )
-
-#---
-# specify the warning level for this application
-#
-if(MSVC)
-  target_compile_options(Canopen PRIVATE /W4 /WX)
-else()
-  target_compile_options(Canopen PRIVATE -Wall -Wextra -pedantic -Werror)
-endif()
