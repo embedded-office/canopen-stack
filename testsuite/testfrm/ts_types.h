@@ -54,10 +54,10 @@ typedef unsigned int        uintptr_t;
 
 #endif
 
-#ifdef _MSC_VER
-#define TEST_SECTION_PRE
+#if defined ( _MSC_VER )          /* ========================= MSVC ============================= */
+#define TEST_SECTION_PRE                              __declspec(allocate(".test$u")) 
 #define TEST_SECTION_DEF                              __pragma(section(".test$u", read))
-#define TEST_SECTION_SUF                              __declspec(allocate(".test$u")) 
+#define TEST_SECTION_SUF
 #define TEST_SECTION_START                            __start_test
 #define TEST_SECTION_END                              __stop_test
 #define TEST_SECTION_START_DEF                        __pragma(section(".test$a", read))
@@ -66,6 +66,20 @@ typedef unsigned int        uintptr_t;
 #define TEST_SECTION_END_ALLOC(TEST_SECTION_START)    __declspec(allocate(".test$z")) const TS_INFOFUNC TEST_SECTION_END   = (TS_INFOFUNC)0;
 #define STRUCT_PACKED_PRE                             __pragma(pack(push, 1))
 #define STRUCT_PACKED_SUF                             __pragma(pack(pop))
+#elif defined ( __ICCARM__ )      /* ========================= IAR ============================== */
+#include <intrinsics.h>                               /* Compiler extensions                      */
+#define TEST_GET_SECTION(sym,var)                     extern void *sym; static uint32_t var = (uint32_t)&sym
+#define TEST_SECTION_PRE                              __root
+#define TEST_SECTION_DEF                              _Pragma("location=\"test\"")
+#define TEST_SECTION_SUF
+#define TEST_SECTION_START                            __start_test
+#define TEST_SECTION_END                              __stop_test
+#define TEST_SECTION_START_DEF                        TEST_GET_SECTION(test$$Base, __start_test);
+#define TEST_SECTION_START_ALLOC(x)
+#define TEST_SECTION_END_DEF                          TEST_GET_SECTION(test$$Limit, __stop_test)-1;
+#define TEST_SECTION_END_ALLOC(x)
+#define STRUCT_PACKED_PRE                             __packed
+#define STRUCT_PACKED_SUF
 #else
 #error "Adjust some compiler specific settings in ts.types.h"
 #endif
