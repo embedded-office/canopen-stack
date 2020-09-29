@@ -268,6 +268,7 @@ TS_DEF_MAIN(TS_TPdo_After3Sync)
 *          - PDO #0 (transmission on change after a SYNC messages (type = 0))
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_TPdo_OnChangeAfterSync)
 {
     CO_IF_FRM frm;
@@ -302,6 +303,7 @@ TS_DEF_MAIN(TS_TPdo_OnChangeAfterSync)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC8

@@ -568,6 +568,7 @@ TS_DEF_MAIN(TS_BlkWr_1000ByteDomain_NoLen)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLE
 TS_DEF_MAIN(TS_BlkWr_LostSeg)
 {
     CO_IF_FRM frm;
@@ -615,6 +616,7 @@ TS_DEF_MAIN(TS_BlkWr_LostSeg)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
@@ -962,6 +964,7 @@ TS_DEF_MAIN(TS_BlkWr_ReadOnly)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_BlkWr_LenTooHigh)
 {
     CO_IF_FRM frm;
@@ -985,6 +988,7 @@ TS_DEF_MAIN(TS_BlkWr_LenTooHigh)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
@@ -1230,6 +1234,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_35Byte)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte)
 {
     CO_IF_FRM frm;
@@ -1253,7 +1258,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
@@ -1265,6 +1270,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte_NoLen)
 {
     CO_IF_FRM frm;
@@ -1295,7 +1301,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte_NoLen)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*!

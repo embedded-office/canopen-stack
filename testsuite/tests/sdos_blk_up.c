@@ -518,6 +518,7 @@ TS_DEF_MAIN(TS_BlkRd_888ByteDomain)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_BlkRd_LostMiddleSeg)
 {
     CO_IF_FRM frm;
@@ -559,6 +560,7 @@ TS_DEF_MAIN(TS_BlkRd_LostMiddleSeg)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
