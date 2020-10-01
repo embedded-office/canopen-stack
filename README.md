@@ -138,6 +138,11 @@ Some years later, now in 2020, we think it is time for a new way of software dev
 
 ## Change Log
 
+**V4.0.3**
+- add: make timer tick rate configurable
+- fix: compiles warning free in IAR, GCC and Keil
+- fix: minor improvements in documentation
+
 **V4.0.2**
 - add: make headers compatible with C++
 - fix: NMT state machine image in docs
