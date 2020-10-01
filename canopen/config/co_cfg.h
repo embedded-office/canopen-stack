@@ -54,4 +54,13 @@
 #endif
 
 
+/*! \brief DEFAULT TIMER TICK RATE
+*
+*    This configuration define specifies in which frequency (in Hz) the timer
+*    service function is called.
+*/
+#ifndef CO_TMR_TICKS_PER_SEC
+#define CO_TMR_TICKS_PER_SEC    100
+#endif
+
 #endif  /* #ifndef CO_CFG_H_ */
