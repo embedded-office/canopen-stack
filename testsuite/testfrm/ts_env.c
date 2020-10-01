@@ -519,8 +519,8 @@ int32_t TS_Start (void)
 
     TS_SummaryInit();                                 /* reset summary statistic                  */
     
-    test = &TEST_SECTION_START;
-    while (test < &TEST_SECTION_END) {
+    test = (TS_INFOFUNC *)&TEST_SECTION_START;
+    while (test < (TS_INFOFUNC *)&TEST_SECTION_END) {
         if (*test) {
             (*test)(&Info);                           /* get test suite info data                 */
             if (TS_IsEnabled(Info.Group, Info.Suite)) {

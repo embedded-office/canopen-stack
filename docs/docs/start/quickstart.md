@@ -51,7 +51,7 @@ The object dictionary must hold at least the following mandatory object entries:
 | 1001h | 0        | UNSIGNED8  | Read Only  | 0     | Error Register     |
 | 1005h | 0        | UNSIGNED32 | Const      | 0x80  | COB-ID SYNC        |
 | 1017h | 0        | UNSIGNED16 | Const      | 0     | Heartbeat Producer |
-| 1018h | 0        | UNSIGNED8  | Const      | 1     | *Identity Object*  |
+| 1018h | 0        | UNSIGNED8  | Const      | 4     | *Identity Object*  |
 | 1018h | 1        | UNSIGNED32 | Const      | 0     | - Vendor ID        |
 | 1018h | 2        | UNSIGNED32 | Const      | 0     | - Product code     |
 | 1018h | 3        | UNSIGNED32 | Const      | 0     | - Revision number  |
@@ -346,7 +346,7 @@ void    COIfInit  (CO_IF *cif, struct CO_NODE_T *node);
 void    COIfEnable(CO_IF *cif, uint32_t baudrate);
 ```
 
-Furthermore, setup a hardware timer interrupt with your low-level layer (I call it Board Support Package) and configure a cyclic interrupt with a frequency of `CO_TMR_TICK_PER_SEC`. The timer interrupt service handler should look like:
+Furthermore, setup a hardware timer interrupt with your low-level layer (I call it Board Support Package) and configure a cyclic interrupt with a frequency of `CO_TMR_TICKS_PER_SEC`. The timer interrupt service handler should look like:
 
 ```c
 #include "co_core.h"

@@ -288,7 +288,7 @@ typedef void(*TS_INFOFUNC)(TS_INFO *);
         info->Runner = TestSuiteRunner;                                       \
     }                                                                         \
     TEST_SECTION_DEF                                                          \
-    static TEST_SECTION_SUF TS_INFOFUNC Ptr = TestSuiteInfo TEST_SECTION_PRE; \
+    static TEST_SECTION_PRE TS_INFOFUNC Ptr = TestSuiteInfo TEST_SECTION_SUF; \
     static void TestSuiteRunner(void)
 
 /*------------------------------------------------------------------------------------------------*/

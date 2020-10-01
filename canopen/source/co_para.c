@@ -155,6 +155,7 @@ int16_t COTypeParaRead(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t 
 {
     CO_PARA *pg;
 
+    (void)node;
     /* argument checks */
     if ((obj == 0) || (buf == 0)) {
         return (CO_ERR_BAD_ARG);

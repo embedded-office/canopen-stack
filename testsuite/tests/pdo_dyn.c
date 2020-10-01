@@ -659,6 +659,7 @@ TS_DEF_MAIN(TS_RPdo_ChangeActiveMap)
 *          - change PDO mapping number to > supported mappings
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapNumTooHigh)
 {
     int16_t     result;
@@ -701,6 +702,7 @@ TS_DEF_MAIN(TS_RPdo_MapNumTooHigh)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC12
@@ -710,6 +712,7 @@ TS_DEF_MAIN(TS_RPdo_MapNumTooHigh)
 *          - write PDO mapping to more than 8 bytes
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapLenTooHigh)
 {
     int16_t     result;
@@ -756,6 +759,7 @@ TS_DEF_MAIN(TS_RPdo_MapLenTooHigh)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                  /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC13
@@ -764,6 +768,7 @@ TS_DEF_MAIN(TS_RPdo_MapLenTooHigh)
 *          - no PDO mapping number sub-index
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_BadMapNumSubIdxCfg)
 {
     int16_t     result;
@@ -784,7 +789,9 @@ TS_DEF_MAIN(TS_RPdo_BadMapNumSubIdxCfg)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
+#if DISABLED
 TS_DEF_MAIN(TS_TPdo_BadMapNumSubIdxCfg)
 {
     int16_t     result;
@@ -807,6 +814,7 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumSubIdxCfg)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC14
@@ -815,6 +823,7 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumSubIdxCfg)
 *          - no PDO mapping index
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_BadMapNumIdxCfg)
 {
     int16_t     result;
@@ -836,7 +845,9 @@ TS_DEF_MAIN(TS_RPdo_BadMapNumIdxCfg)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
+#if DISABLED
 TS_DEF_MAIN(TS_TPdo_BadMapNumIdxCfg)
 {
     int16_t     result;
@@ -859,6 +870,7 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumIdxCfg)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC15
@@ -868,6 +880,7 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumIdxCfg)
 *          - write TPDO mapping
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_TPdo_MapNumChange)
 {
     int16_t     result;
@@ -908,6 +921,7 @@ TS_DEF_MAIN(TS_TPdo_MapNumChange)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC18
@@ -916,6 +930,7 @@ TS_DEF_MAIN(TS_TPdo_MapNumChange)
 *          - mapping activated
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_TPdo_ChangeActiveMap)
 {
     int16_t     result;
@@ -948,6 +963,7 @@ TS_DEF_MAIN(TS_TPdo_ChangeActiveMap)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC19
@@ -956,6 +972,7 @@ TS_DEF_MAIN(TS_TPdo_ChangeActiveMap)
 *          - mapping entry not writeable
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapReadOnlyObj)
 {
     int16_t     result;
@@ -1002,6 +1019,7 @@ TS_DEF_MAIN(TS_RPdo_MapReadOnlyObj)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC20
@@ -1010,6 +1028,7 @@ TS_DEF_MAIN(TS_RPdo_MapReadOnlyObj)
 *          - mapping entry not readable
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_TPdo_MapWriteOnlyObj)
 {
     int16_t     result;
@@ -1057,6 +1076,7 @@ TS_DEF_MAIN(TS_TPdo_MapWriteOnlyObj)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC21
@@ -1065,6 +1085,7 @@ TS_DEF_MAIN(TS_TPdo_MapWriteOnlyObj)
 *          - mapping entry not mapable
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapNotPdoMappableObj)
 {
     int16_t     result;
@@ -1108,6 +1129,7 @@ TS_DEF_MAIN(TS_RPdo_MapNotPdoMappableObj)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC22
@@ -1116,6 +1138,7 @@ TS_DEF_MAIN(TS_RPdo_MapNotPdoMappableObj)
 *          - not found
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapObjNotExist)
 {
     int16_t     result;
@@ -1159,6 +1182,7 @@ TS_DEF_MAIN(TS_RPdo_MapObjNotExist)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC23
@@ -1167,6 +1191,7 @@ TS_DEF_MAIN(TS_RPdo_MapObjNotExist)
 *          - write pdo type
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_ComTypeChange)
 {
     int16_t     result;
@@ -1195,6 +1220,7 @@ TS_DEF_MAIN(TS_RPdo_ComTypeChange)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC24
@@ -1203,6 +1229,7 @@ TS_DEF_MAIN(TS_RPdo_ComTypeChange)
 *          - COB-ID is valid
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_ActiveComTypeChange)
 {
     int16_t     result;
@@ -1223,6 +1250,7 @@ TS_DEF_MAIN(TS_RPdo_ActiveComTypeChange)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                  /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC25
@@ -1231,6 +1259,7 @@ TS_DEF_MAIN(TS_RPdo_ActiveComTypeChange)
 *          - Object is no communication parameter index
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_BadComTypeIdxCfg)
 {
     int16_t     result;
@@ -1259,6 +1288,7 @@ TS_DEF_MAIN(TS_RPdo_BadComTypeIdxCfg)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC26
@@ -1267,6 +1297,7 @@ TS_DEF_MAIN(TS_RPdo_BadComTypeIdxCfg)
 *          - Object is no communication type sub-index
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_BadComTypeSubIdxCfg)
 {
     int16_t     result;
@@ -1295,6 +1326,7 @@ TS_DEF_MAIN(TS_RPdo_BadComTypeSubIdxCfg)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC27
@@ -1303,6 +1335,7 @@ TS_DEF_MAIN(TS_RPdo_BadComTypeSubIdxCfg)
 *          - Errorcode is not CO_ERR_NONE
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_RPdo_ComTypeNullPtr)
 {
     int16_t     result;
@@ -1331,6 +1364,7 @@ TS_DEF_MAIN(TS_RPdo_ComTypeNullPtr)
 
     CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
 }
+#endif
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
@@ -1352,12 +1386,11 @@ SUITE_PDO_DYN()
 
     TS_RUNNER(TS_TPdo_BadIdSubIdxCfg);
     TS_RUNNER(TS_TPdo_BadIdIdxCfg);
-#if 0
-    TS_RUNNER(TS_TPdo_BadMapNumSubIdxCfg);
-    TS_RUNNER(TS_TPdo_BadMapNumIdxCfg);
-    TS_RUNNER(TS_TPdo_ChangeActiveMap);
-    TS_RUNNER(TS_TPdo_MapWriteOnlyObj);
-#endif
+    // TS_RUNNER(TS_TPdo_BadMapNumSubIdxCfg);
+    // TS_RUNNER(TS_TPdo_BadMapNumIdxCfg);
+    // TS_RUNNER(TS_TPdo_MapNumChange);
+    // TS_RUNNER(TS_TPdo_ChangeActiveMap);
+    // TS_RUNNER(TS_TPdo_MapWriteOnlyObj);
 
     TS_RUNNER(TS_RPdo_IdOnOff_PreOp);
     TS_RUNNER(TS_RPdo_IdOnOff_Op);
@@ -1369,20 +1402,19 @@ SUITE_PDO_DYN()
     TS_RUNNER(TS_RPdo_BadIdIdxCfg);
     TS_RUNNER(TS_RPdo_MapNumChange);
     TS_RUNNER(TS_RPdo_ChangeActiveMap);
-#if 0
-    TS_RUNNER(TS_RPdo_MapNumTooHigh);
-    TS_RUNNER(TS_RPdo_MapLenTooHigh);
-    TS_RUNNER(TS_RPdo_BadMapNumSubIdxCfg);
-    TS_RUNNER(TS_RPdo_BadMapNumIdxCfg);
-    TS_RUNNER(TS_RPdo_MapReadOnlyObj);
-    TS_RUNNER(TS_RPdo_MapNotPdoMappableObj);
-    TS_RUNNER(TS_RPdo_MapObjNotExist);
-    TS_RUNNER(TS_RPdo_ComTypeChange);
-    TS_RUNNER(TS_RPdo_ActiveComTypeChange);
-    TS_RUNNER(TS_RPdo_BadComTypeIdxCfg);
-    TS_RUNNER(TS_RPdo_BadComTypeSubIdxCfg);
-    TS_RUNNER(TS_RPdo_ComTypeNullPtr);
-#endif
+
+    // TS_RUNNER(TS_RPdo_MapNumTooHigh);
+    // TS_RUNNER(TS_RPdo_MapLenTooHigh);
+    // TS_RUNNER(TS_RPdo_BadMapNumSubIdxCfg);
+    // TS_RUNNER(TS_RPdo_BadMapNumIdxCfg);
+    // TS_RUNNER(TS_RPdo_MapReadOnlyObj);
+    // TS_RUNNER(TS_RPdo_MapNotPdoMappableObj);
+    // TS_RUNNER(TS_RPdo_MapObjNotExist);
+    // TS_RUNNER(TS_RPdo_ComTypeChange);
+    // TS_RUNNER(TS_RPdo_ActiveComTypeChange);
+    // TS_RUNNER(TS_RPdo_BadComTypeIdxCfg);
+    // TS_RUNNER(TS_RPdo_BadComTypeSubIdxCfg);
+    // TS_RUNNER(TS_RPdo_ComTypeNullPtr);
 
 //    CanDiagnosticOff(0);
 

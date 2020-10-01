@@ -191,11 +191,11 @@ extern "C" {
 * \details Linked list item.
 */
 /*------------------------------------------------------------------------------------------------*/
-typedef struct TS_LIST_ITEM_T TS_LIST_ITEM;
+struct TS_LIST_ITEM_T;
 
 typedef struct TS_LIST_ITEM_T {
-    TS_LIST_ITEM *Prev;                               /*!< Pointer to previous item               */
-    TS_LIST_ITEM *Next;                               /*!< Pointer to next item                   */
+    struct TS_LIST_ITEM_T *Prev;                      /*!< Pointer to previous item               */
+    struct TS_LIST_ITEM_T *Next;                      /*!< Pointer to next item                   */
 } TS_LIST_ITEM;
 
 /******************************************************************************

@@ -453,6 +453,7 @@ TS_DEF_MAIN(TS_SegWr_LenTooHigh)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
+#if DISABLED
 TS_DEF_MAIN(TS_SegWr_LenTooLow)
 {
     CO_NODE        node;
@@ -472,6 +473,7 @@ TS_DEF_MAIN(TS_SegWr_LenTooLow)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
+#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION

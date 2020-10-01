@@ -36,10 +36,14 @@ When using the CANopen Stack, you just need the `canopen` directory tree. All ot
 This directory tree contains the embedded source code of the CANopen Stack. The intended purpose is to create a library with your cross-compiler with all source files in the directory `source` and a specific configuration, defined in the file `co_cfg.h`:
 
 ```
-  - CO_SDOS_N   : maximum number of possible SDO servers (default: 1)
-  - CO_TPDO_N   : maximum number of possible TPDOs (default: 4)
-  - CO_RPDO_N   : maximum number of possible RPDOs (default: 4)
-  - CO_EMCY_N   : maximum number of possible emergency codes (default: 32)
+  mandatory settings
+  - CO_SDOS_N            : maximum number of possible SDO servers (default: 1)
+  - CO_TPDO_N            : maximum number of possible TPDOs (default: 4)
+  - CO_RPDO_N            : maximum number of possible RPDOs (default: 4)
+  - CO_EMCY_N            : maximum number of possible emergency codes (default: 32)
+
+  optional settings
+  - CO_TMR_TICKS_PER_SEC : timer tick rate in frequency (default: 100)
 ```
 
 ### Directory: docs

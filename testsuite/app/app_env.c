@@ -346,6 +346,7 @@ void TS_CreateTPdoMap(uint8_t num, uint32_t *map, uint8_t *len)
 void TS_Wait(CO_NODE *node, uint32_t millisec)
 {
     uint32_t time = 0;
+    uint32_t frac = 0;
     int16_t  elabsed;
 
     while (millisec > time) {               /* wait for given amount of time */
@@ -353,7 +354,19 @@ void TS_Wait(CO_NODE *node, uint32_t millisec)
         if (elabsed > 0) {
             COTmrProcess(&node->Tmr);       /* process elapsed timer actions */
         }
-        time += (1000 / CO_TMR_TICKS_PER_SEC);
+        if (CO_TMR_TICKS_PER_SEC <= 1000) {
+            time += (1000 / CO_TMR_TICKS_PER_SEC);
+        } else {
+            if (frac == 0) {
+                frac = CO_TMR_TICKS_PER_SEC / 1000;
+            }
+            if (frac > 0) {
+                frac--;
+                if (frac == 0) {
+                    time++;
+                }
+            }
+        }
     }
 }
 

@@ -248,6 +248,7 @@ extern "C" {
 * PUBLIC TYPES
 ******************************************************************************/
 
+struct CO_NODE_T;              /* Declaration of canopen node structure      */
 struct CO_OBJ_TYPE_T;          /* Declaration of object type structure       */
 struct CO_DICT_T;              /* Declaration of object dictionary structure */
 

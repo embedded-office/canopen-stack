@@ -244,13 +244,16 @@ TS_DEF_MAIN(TS_SegRd_41ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegRd_23ByteString)
 {
-    CO_IF_FRM frm;
-    uint8_t     tgl;
-    CO_NODE        node;
-    uint32_t     size = 23;
-    uint16_t     idx  = 0x2530;
-    uint8_t     sub  = 2;
-    CO_OBJ_STR  Str23 = { 0, "abcdefghijklmnopqrstuvw" };
+    CO_IF_FRM  frm;
+    uint8_t    tgl;
+    CO_NODE    node;
+    uint32_t   size = 23;
+    uint16_t   idx  = 0x2530;
+    uint8_t    sub  = 2;
+    CO_OBJ_STR Str23;
+    char      *strPtr = "abcdefghijklmnopqrstuvw";
+    Str23.Offset = 0;
+    Str23.Start  = (uint8_t *)strPtr;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_STRING|CO_OBJ____R_), CO_TSTRING, (uintptr_t)&Str23);
@@ -524,13 +527,16 @@ TS_DEF_MAIN(TS_SegRd_Bad1stToggleBit)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegRd_Bad2ndToggleBit)
 {
-    CO_IF_FRM frm;
-    uint8_t     tgl;
-    CO_NODE        node;
-    uint32_t     size = 23;
-    uint16_t     idx  = 0x2530;
-    uint8_t     sub  = 2;
-    CO_OBJ_STR  Str23 = { 0, "abcdefghijklmnopqrstuvw" };
+    CO_IF_FRM  frm;
+    uint8_t    tgl;
+    CO_NODE    node;
+    uint32_t   size   = 23;
+    uint16_t   idx    = 0x2530;
+    uint8_t    sub    = 2;
+    CO_OBJ_STR Str23;
+    char      *strPtr = "abcdefghijklmnopqrstuvw";
+    Str23.Offset = 0;
+    Str23.Start  = (uint8_t *)strPtr;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_STRING|CO_OBJ____R_), CO_TSTRING, (uintptr_t)&Str23);

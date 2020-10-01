@@ -33,6 +33,10 @@
 /*------------------------------------------------------------------------------------------------*/
 void TS_PutChar(void *arg, char character)
 {
+#if defined ( _MSC_VER )
     (void)arg;
     putchar((int)character);
+#else
+// no output function defined, connect testsuite to a serial port here.
+#endif
 }

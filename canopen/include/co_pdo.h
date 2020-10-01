@@ -27,6 +27,7 @@ extern "C" {
 
 #include "co_obj.h"
 #include "co_if.h"
+#include "co_tmr.h"
 
 /******************************************************************************
 * PUBLIC DEFINES
@@ -54,10 +55,12 @@ extern "C" {
 #define CO_TPDO_ASYNC       1    /*!< Ctrl function code: asynchronous TPDO  */
 #define CO_RPDO_ASYNC       1    /*!< Ctrl function code: asynchronous RPDO  */
 
+#if (CO_TMR_TICKS_PER_SEC < 1000)
 #define CO_TPDO_TMR_MIN  (1000/CO_TMR_TICKS_PER_SEC)  /*!< timer granularity */
-
+#else
+#define CO_TPDO_TMR_MIN  (1)                          /*!< timer granularity */
+#endif
 #define CO_TPDO_ROUND(x,d)  (((x)/(d))*(d))
-
 #define CO_TPDO_MS(x)       ((((uint32_t)(x))*CO_TMR_TICKS_PER_SEC)/1000)
 
 #define CO_TASYNC   ((CO_OBJ_TYPE *)&COTAsync)   /*!< Asynchronous TPDO      */
