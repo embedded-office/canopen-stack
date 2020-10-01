@@ -17,7 +17,7 @@
 #ifndef CO_TMR_H_
 #define CO_TMR_H_
 
-#ifdef __cplusplus               /* for compatibility with C++ environments  */               /* for compatibility with C++ environments  */
+#ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
 #endif
 
