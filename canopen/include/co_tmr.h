@@ -32,7 +32,9 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TMR_TICKS_PER_SEC     100
+#ifndef CO_TMR_TICKS_PER_SEC
+#define CO_TMR_TICKS_PER_SEC     100             /* default tick rate: 100Hz */
+#endif
 
 /******************************************************************************
 * PUBLIC MACROS
@@ -42,7 +44,11 @@ extern "C" {
 *
 *    This macro calculates the number of ticks for a given time in ms.
 */
+#if (CO_TMR_TICKS_PER_SEC <= 1000)
 #define CO_TMR_TICKS(ms)         ((ms)/(1000/CO_TMR_TICKS_PER_SEC))
+#else
+#define CO_TMR_TICKS(ms)         ((ms)*(CO_TMR_TICKS_PER_SEC/1000))
+#endif
 
 /******************************************************************************
 * PRIVATE MACROS
@@ -223,7 +229,7 @@ int16_t COTmrDelete(CO_TMR *tmr, int16_t actId);
 * \retval  <0    an error is detected
 */
 int16_t COTmrService(CO_TMR *tmr);
-    
+
 /*! \brief PROCESS ELAPSED TIMER ACTIONS
 *
 *    This function handles all actions after an event timer is elapsed. The
