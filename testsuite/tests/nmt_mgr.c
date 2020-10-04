@@ -221,7 +221,7 @@ TS_DEF_MAIN(TS_Nmt_NoEmcyInInit)
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 }
 
 /*------------------------------------------------------------------------------------------------*/

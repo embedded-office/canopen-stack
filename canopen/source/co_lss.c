@@ -229,8 +229,8 @@ void CO_LssActivateBitTiming_SwitchDelay (void *arg)
     lss = (CO_LSS *)arg;
 
     if (lss->Step == 1) {
-        COIfInit(&lss->Node->If, lss->Node);
-        COIfEnable(&lss->Node->If, lss->CfgBaudrate);
+        COIfCanInit(&lss->Node->If, lss->Node);
+        COIfCanEnable(&lss->Node->If, lss->CfgBaudrate);
         lss->Step = 2;
     } else {
         CONmtSetMode(&lss->Node->Nmt, CO_PREOP);
@@ -247,7 +247,7 @@ int16_t COLssActivateBitTiming(CO_LSS *lss, CO_IF_FRM *frm)
     delay = CO_GET_WORD(frm, 1);
 
     CONmtSetMode(&lss->Node->Nmt, CO_INIT);
-    COIfClose(&lss->Node->If);
+    COIfCanClose(&lss->Node->If);
 
     lss->Step = 1;
     lss->Tmr  = COTmrCreate(&lss->Node->Tmr,

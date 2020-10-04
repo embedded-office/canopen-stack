@@ -28,7 +28,7 @@ extern "C" {
 #include "co_types.h"
 
 /******************************************************************************
-* PUBLIC MACROS
+* PUBLIC CAN MACROS
 ******************************************************************************/
 
 /*! \brief GET IDENTIFIER
@@ -172,14 +172,8 @@ extern "C" {
       (f)->Data[((p)+2)&0x7] = (uint8_t)(((uint32_t)(n)) >> 16); \
       (f)->Data[((p)+3)&0x7] = (uint8_t)(((uint32_t)(n)) >> 24); }
 
-/*! \brief CAN DRIVER IDENTIFIER
-*
-*    The driver specific bus identifier type.
-*/
-#define CO_IF_DRV    int
-
 /******************************************************************************
-* PUBLIC TYPES
+* PUBLIC CAN TYPES
 ******************************************************************************/
 
 struct CO_NODE_T;
@@ -188,17 +182,45 @@ typedef struct CO_IF_FRM_T {         /*!< Type, which represents a CAN frame */
     uint32_t  Identifier;            /*!< CAN message identifier             */
     uint8_t   Data[8];               /*!< CAN message Data (payload)         */
     uint8_t   DLC;                   /*!< CAN message data length code (DLC) */
-
 } CO_IF_FRM;
+
+/*! CAN init function prototype */
+typedef int16_t (*CO_IF_CAN_INIT_FUNC)(void);
+/*! CAN enable function prototype */
+typedef int16_t (*CO_IF_CAN_ENABLE_FUNC)(uint32_t);
+/*! CAN read function prototype */
+typedef int16_t (*CO_IF_CAN_READ_FUNC)(CO_IF_FRM *);
+/*! CAN send function prototype */
+typedef int16_t (*CO_IF_CAN_SEND_FUNC)(CO_IF_FRM *);
+/*! CAN reset function prototype */
+typedef int16_t (*CO_IF_CAN_RESET_FUNC)(void);
+/*! CAN close function prototype */
+typedef int16_t (*CO_IF_CAN_CLOSE_FUNC)(void);
+
+typedef struct CO_IF_CAN_DRV_T {
+    CO_IF_CAN_INIT_FUNC   Init;
+    CO_IF_CAN_ENABLE_FUNC Enable;
+    CO_IF_CAN_READ_FUNC   Read;
+    CO_IF_CAN_SEND_FUNC   Send;
+    CO_IF_CAN_RESET_FUNC  Reset;
+    CO_IF_CAN_CLOSE_FUNC  Close;
+} CO_IF_CAN_DRV;
+
+/******************************************************************************
+* PUBLIC INTERFACE TYPES
+******************************************************************************/
+
+typedef struct CO_IF_DRV_T {         /*!< Type, which links driver functions */
+    const CO_IF_CAN_DRV *Can;        /*!< Link to CAN driver functions       */
+} CO_IF_DRV;
 
 typedef struct CO_IF_T {          /*!< Driver interface structure            */
     struct CO_NODE_T *Node;       /*!< Link to parent node                   */
-    CO_IF_DRV         Drv;        /*!< Specific bus identifier of CAN driver */
-
+    CO_IF_DRV         Drv;        /*!< Link to hardware driver functions     */
 } CO_IF;
 
 /******************************************************************************
-* PUBLIC FUNCTIONS
+* PUBLIC CAN INTERFACE FUNCTIONS
 ******************************************************************************/
 
 /*! \brief  READ CAN FRAME
@@ -214,9 +236,9 @@ typedef struct CO_IF_T {          /*!< Driver interface structure            */
 *    pointer to the receive frame buffer
 *
 * \retval  >0    the size of CO_IF_FRM on success
-* \retval  <0    the internal CanBus error code
+* \retval  <0    the CAN driver error code
 */
-int16_t COIfRead(CO_IF *cif, CO_IF_FRM *frm);
+int16_t COIfCanRead(CO_IF *cif, CO_IF_FRM *frm);
 
 /*! \brief  SEND CAN FRAME
 *
@@ -231,7 +253,7 @@ int16_t COIfRead(CO_IF *cif, CO_IF_FRM *frm);
 * \retval  >0    the size of CO_IF_FRM on success
 * \retval  <0    the internal CanBus error code
 */
-int16_t COIfSend(CO_IF *cif, CO_IF_FRM *frm);
+int16_t COIfCanSend(CO_IF *cif, CO_IF_FRM *frm);
 
 /*! \brief  RESET CAN INTERFACE
 *
@@ -241,7 +263,7 @@ int16_t COIfSend(CO_IF *cif, CO_IF_FRM *frm);
 * \param cif
 *    pointer to the interface structure
 */
-void COIfReset(CO_IF *cif);
+void COIfCanReset(CO_IF *cif);
 
 /*! \brief  CLOSE CAN INTERFACE
 *
@@ -250,11 +272,7 @@ void COIfReset(CO_IF *cif);
 * \param cif
 *    pointer to the interface structure
 */
-void COIfClose(CO_IF *cif);
-
-/******************************************************************************
-* PRIVATE FUNCTIONS
-******************************************************************************/
+void COIfCanClose(CO_IF *cif);
 
 /*! \brief  INITIALIZE CAN INTERFACE
 *
@@ -266,7 +284,7 @@ void COIfClose(CO_IF *cif);
 * \param node
 *    pointer to the parent node
 */
-void COIfInit(CO_IF *cif, struct CO_NODE_T *node);
+void COIfCanInit(CO_IF *cif, struct CO_NODE_T *node);
 
 /*! \brief  ENABLE CAN INTERFACE
 *
@@ -278,7 +296,7 @@ void COIfInit(CO_IF *cif, struct CO_NODE_T *node);
 * \param baudrate
 *    baudrate, if set to 0 the default baudrate is used
 */
-void COIfEnable(CO_IF *cif, uint32_t baudrate);
+void COIfCanEnable(CO_IF *cif, uint32_t baudrate);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

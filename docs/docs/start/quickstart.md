@@ -338,12 +338,12 @@ void AppClock(void *p_arg)
 For the hardware connection, you need to add a CAN driver which implements the following interface functions:
 
 ```c
-int16_t COIfRead  (CO_IF *cif, CO_IF_FRM *frm);
-int16_t COIfSend  (CO_IF *cif, CO_IF_FRM *frm);
-void    COIfReset (CO_IF *cif);
-void    COIfClose (CO_IF *cif);
-void    COIfInit  (CO_IF *cif, struct CO_NODE_T *node);
-void    COIfEnable(CO_IF *cif, uint32_t baudrate);
+int16_t COIfCanRead  (CO_IF *cif, CO_IF_FRM *frm);
+int16_t COIfCanSend  (CO_IF *cif, CO_IF_FRM *frm);
+void    COIfCanReset (CO_IF *cif);
+void    COIfCanClose (CO_IF *cif);
+void    COIfCanInit  (CO_IF *cif, struct CO_NODE_T *node);
+void    COIfCanEnable(CO_IF *cif, uint32_t baudrate);
 ```
 
 Furthermore, setup a hardware timer interrupt with your low-level layer (I call it Board Support Package) and configure a cyclic interrupt with a frequency of `CO_TMR_TICKS_PER_SEC`. The timer interrupt service handler should look like:

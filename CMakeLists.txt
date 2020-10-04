@@ -1,5 +1,9 @@
 cmake_minimum_required (VERSION 3.15)
-project (CanopenStack VERSION 4.0.3)
+project (CanopenStack VERSION 4.1.0)
 
+# Make CANopen library
 add_subdirectory(canopen)
+add_subdirectory(driver)
+
+# Make application
 add_subdirectory(testsuite)

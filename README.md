@@ -48,7 +48,9 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 ### Integrate sourcecode in your project
 
 Get the project repository and add:
+- `driver/source` to your project source files
 - `canopen/source` to your project source files
+- `driver/include` to your include search path 
 - `canopen/include` to your include search path 
 - `canopen/config` to your include search path
 
@@ -56,13 +58,31 @@ Get the project repository and add:
 
 ### Connection to the hardware
 
+#### Driver for CAN controller
+
+The project contains a driver layer for the required hardware interfaces.
+- `driver/can/co_can_<device-name>.h` defines the CAN controller driver interface
+- `driver/can/co_can_<device-name>.c` is the implementation of the specific CAN controller
+
+The main CAN controller driver interface is a global variable, which holds pointers to the driver functions:
+- `const CO_IF_DRV_CAN <DeviceName>CanDriver;`
+
+| device name | file names        | variable name  | comment                             |
+| ----------- | ----------------- | -------------- | ----------------------------------- |
+| dummy       | co_can_dummy.c/h  | DummyCanDriver | Template for CAN driver development |
+| sim         | co_can_sim.c/h    | SimCanDriver   | Simulated CAN controller for tests  |
+
 #### Connect with CAN controller
 
-The project contains a template for the CAN interface driver:
-- `canopen/include/co_if.h` defines the required interface functions
-- `canopen/source/co_if.c` is the template for your specific driver implementation
+Which CAN driver is used within the project is selected by including the corresponding header file and with a simple variable:
 
-*Note: there are multiple drivers on my desk. The goal for these drivers are separate projects, which may achieve the overal goal of a CANopen library for a specific microcontroller - so stay tuned.*
+```c
+#include "co_can_<device-name>.h"
+
+const CO_IF_DRV MyDriver = {
+  <DeviceName>CanDriver
+};
+```
 
 #### Connect with hardware timer
 
@@ -118,7 +138,7 @@ void foo(void)
 
     spec.NodeId   = 1u;
     spec.Baudrate = 250000u;
-    spec.CanDrv   = 0u;
+    spec.Drv      = &MyDriver;
     spec.Dir      = &MyDir;
     spec.DirLen   = MY_DIR_LEN;
     spec.EmcyCode = &MyEmcyTbl;

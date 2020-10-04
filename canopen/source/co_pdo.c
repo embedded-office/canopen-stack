@@ -375,7 +375,7 @@ void COTPdoTx (CO_TPDO *pdo)
     }
 
     COPdoTransmit(&frm);
-    (void)COIfSend(&pdo->Node->If, &frm);
+    (void)COIfCanSend(&pdo->Node->If, &frm);
 }
 
 /*

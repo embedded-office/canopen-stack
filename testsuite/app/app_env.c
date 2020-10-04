@@ -34,9 +34,6 @@
 /* Maximal number of timers in tests */
 #define TS_TMR_N   16
 
-/* Select simulated CAN bus identifier */
-#define TS_CAN_BUSID   0
-
 /* Maximal number of SDO servers */
 #define TS_SDOS_N   1
 
@@ -68,6 +65,10 @@ static uint32_t TS_Obj12xx_2[TS_SDOS_N];
 static uint32_t TS_Obj1014_0;
 /* object entry variable for 0x1017:0 (producer heartbeat time) */
 static uint16_t TS_Obj1017_0;
+/* select test drivers for simulated hardware modules */
+static CO_IF_DRV TS_Driver = {
+    &SimCanDriver
+};
 
 /******************************************************************************
 * PUBLIC VARIABLES
@@ -100,7 +101,7 @@ void TS_CanIsr(void)
 *          **constant settings:**
 *          - node-id: 1
 *          - baudrate: 250k
-*          - can-driver: use TS_CAN_BUSID and link the node to this bus
+*          - can-driver: link the node to simulated CAN bus
 *
 *          **managed in dynamic application modules:**
 *          - object dictionary: module 'app_dir' with size TS_OD_MAX
@@ -117,11 +118,11 @@ void TS_CanIsr(void)
 /*---------------------------------------------------------------------------*/
 void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec)
 {
-    TS_TestNode    = node;                /* link parent node */
+    TS_TestNode    = node;                               /* link parent node */
 
-    spec->NodeId   = 1u;                  /* setup node specification */
+    spec->NodeId   = 1u;                         /* setup node specification */
     spec->Baudrate = 250000u;
-    spec->CanDrv   = TS_CAN_BUSID;
+    spec->Drv      = TS_Driver;
 
     spec->Dict      = ODGetDict(&TS_ODDyn);
     spec->DictLen   = TS_OD_MAX;
@@ -137,7 +138,7 @@ void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec)
     spec->TmrNum   = TS_TMR_N;
     spec->SdoBuf   = &SdoBuf[0][0];
 
-    SetCanIsr(TS_CAN_BUSID, TS_CanIsr);   /* connect to test can interface */
+    SimCanSetIsr(TS_CanIsr);                /* connect to test can interface */
 }
 
 /*---------------------------------------------------------------------------*/
@@ -159,7 +160,7 @@ void TS_CreateNode(CO_NODE *node)
     CONodeInit(node, &spec);
     CONodeStart(node);
 
-    SimCanFlush(TS_CAN_BUSID);
+    SimCanFlush();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -444,7 +445,7 @@ void TS_SendBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t seglost)
         } else {
             TS_SDO_SEND(0, 0, 0, 0);                     /* send SDO request */
         }
-        RunSimCan(0, 0);                                /* run simulated CAN */
+        SimCanRun();
         idx += 7;
         seg  = (seg + 1) & 0x7F;           /* calculate next segment counter */
     }

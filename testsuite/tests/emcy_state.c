@@ -39,7 +39,7 @@ TS_DEF_MAIN(TS_Emcy_TxOnSet)
     TS_CreateNode(&node);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_EMCY (frm);                                   /* check EMCY (Id and DLC)                  */
@@ -71,11 +71,11 @@ TS_DEF_MAIN(TS_Emcy_NoTxOnSetRepeat)
     TS_CreateNode(&node);
 
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
-    SimCanFlush(0);                                   /* remove all simulated CAN messages        */
+    SimCanRun();
+    SimCanFlush();                                    /* remove all simulated CAN messages        */
 
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2 a second time          */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_NOCAN(&frm);                                  /* check for no CAN frame                   */
 
@@ -97,11 +97,11 @@ TS_DEF_MAIN(TS_Emcy_TxOnClr)
     TS_CreateNode(&node);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
-    SimCanFlush(0);                                   /* remove all simulated CAN messages        */
+    SimCanRun();
+    SimCanFlush();                                    /* remove all simulated CAN messages        */
 
     COEmcyClr(&node.Emcy, 1);                         /* clear error #1                           */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_EMCY (frm);                                   /* check EMCY (Id and DLC)                  */
@@ -131,7 +131,7 @@ TS_DEF_MAIN(TS_Emcy_NoTxOnClrRepeat)
     TS_CreateNode(&node);
 
     COEmcyClr(&node.Emcy, 2);                         /* clear not existing error #2              */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_NOCAN(&frm);                                  /* check for no CAN frame                   */
 
@@ -153,11 +153,11 @@ TS_DEF_MAIN(TS_Emcy_TxOnReset)
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     COEmcySet(&node.Emcy, 3, 0);                      /* register error #3 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
-    SimCanFlush(0);                                   /* remove all simulated CAN messages        */
+    SimCanRun();
+    SimCanFlush();                                    /* remove all simulated CAN messages        */
 
     COEmcyReset(&node.Emcy, 0);                       /* reset all errors                         */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for 1st CAN frame                  */
     CHK_EMCY (frm);                                   /* check EMCY (Id and DLC)                  */
@@ -196,7 +196,7 @@ TS_DEF_MAIN(TS_Emcy_NoTxOnResetRepeat)
     TS_CreateNode(&node);
 
     COEmcyReset(&node.Emcy, 0);                       /* reset all errors                         */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_NOCAN(&frm);                                  /* check for no CAN frame                   */
 

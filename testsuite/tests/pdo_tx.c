@@ -879,7 +879,7 @@ TS_DEF_MAIN(TS_TPdo_Async)
     TS_CreateNodeAutoStart(&node);
 
     CODictWrLong(&node.Dict,CO_DEV(0x2500,0x29),0L);  /* write to asynchronous object entry       */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_PDO0 (frm, 0x181, 8);                         /* check PDO #0 (Id and DLC)                */

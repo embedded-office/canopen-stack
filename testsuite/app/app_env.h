@@ -32,7 +32,8 @@ extern "C" {
 #include "app_hooks.h"
 #include "app_stdobj.h"
 #include "ts_env.h"
-#include "drv_can.h"
+                                                           /* select drivers */
+#include "co_can_sim.h"
 
 /******************************************************************************
 * PUBLIC MACROS
@@ -40,7 +41,7 @@ extern "C" {
 
 #define BYTE(f,p)            (uint8_t)((f).Data[(p)])
 
-#define WORD(f,p)            ((uint16_t)((f).Data[(p)+1]) << 8 | \
+#define WORD(f,p)            ((uint16_t)((f).Data[(p)+1]) << 8  | \
                               (uint16_t)((f).Data[(p)]))
 
 #define LONG(f,p)            ((uint32_t)((f).Data[(p)+3]) << 24 | \
@@ -48,32 +49,34 @@ extern "C" {
                               (uint32_t)((f).Data[(p)+1]) << 8  | \
                               (uint32_t)((f).Data[(p)]))
 
-#define TS_SYNC_SEND()        \
-  do {                        \
-    SetRxFrm(0, 10, 0x080, 0, \
-             (uint8_t)(0),    \
-             (uint8_t)(0),    \
-             (uint8_t)(0),    \
-             (uint8_t)(0),    \
-             (uint8_t)(0),    \
-             (uint8_t)(0),    \
-             (uint8_t)(0),    \
-             (uint8_t)(0));   \
-    RunSimCan(0, 0);          \
+#define TS_SYNC_SEND()                      \
+  do {                                      \
+    SimCanSetFrm(0x080, 0,                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0));                 \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_NMT_SEND(c,n)     \
-  do {                       \
-    SetRxFrm(0, 0, 0x000, 2, \
-             (uint8_t)(c),   \
-             (uint8_t)(n),   \
-             (uint8_t)(0),   \
-             (uint8_t)(0),   \
-             (uint8_t)(0),   \
-             (uint8_t)(0),   \
-             (uint8_t)(0),   \
-             (uint8_t)(0));  \
-    RunSimCan(0, 0);         \
+#define TS_NMT_SEND(_c,_n)                  \
+  do {                                      \
+    uint8_t c=(uint8_t)(_c);                \
+    uint8_t n=(uint8_t)(_n);                \
+    SimCanSetFrm(0x000, 2,                  \
+             (uint8_t)(c),                  \
+             (uint8_t)(n),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0));                 \
+    SimCanRun();                            \
   } while(0)
 
 #define TS_SDO_SEND(_c,_i,_s,_d)            \
@@ -82,7 +85,7 @@ extern "C" {
     uint16_t i=(uint16_t)(_i);              \
     uint8_t  s=(uint8_t)(_s);               \
     uint32_t d=(uint32_t)(_d);              \
-    SetRxFrm(0, 0, 0x601, 8,                \
+    SimCanSetFrm(0x601, 8,                  \
              (uint8_t)(c),                  \
              (uint8_t)(i),                  \
              (uint8_t)(((uint32_t)i)>>8),   \
@@ -91,146 +94,146 @@ extern "C" {
              (uint8_t)(((uint32_t)d)>>8),   \
              (uint8_t)(((uint32_t)d)>>16),  \
              (uint8_t)(((uint32_t)d)>>24)); \
-    RunSimCan(0, 0);                        \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_EBLK_SEND(_c,_d)                \
-  do {                                     \
-    uint8_t  c=(uint8_t)(_c);              \
-    uint32_t d=(uint32_t)(_d);             \
-    SetRxFrm(0, 0, 0x601, 8,               \
-             (uint8_t)(c),                 \
-             (uint8_t)(d),                 \
-             (uint8_t)(((uint32_t)d)>>8),  \
-             (uint8_t)(((uint32_t)d)>>16), \
-             (uint8_t)(((uint32_t)d)>>24), \
-             (uint8_t)(0),                 \
-             (uint8_t)(0),                 \
-             (uint8_t)(0));                \
-    RunSimCan(0, 0);                       \
+#define TS_EBLK_SEND(_c,_d)                 \
+  do {                                      \
+    uint8_t  c=(uint8_t)(_c);               \
+    uint32_t d=(uint32_t)(_d);              \
+    SimCanSetFrm(0x601, 8,                  \
+             (uint8_t)(c),                  \
+             (uint8_t)(d),                  \
+             (uint8_t)(((uint32_t)d)>>8),   \
+             (uint8_t)(((uint32_t)d)>>16),  \
+             (uint8_t)(((uint32_t)d)>>24),  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0));                 \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_ACKBLK_SEND(_c,_a,_s) \
-  do {                           \
-    uint8_t c=(uint8_t)(_c);     \
-    uint8_t a=(uint8_t)(_a);     \
-    uint8_t s=(uint8_t)(_s);     \
-    SetRxFrm(0, 0, 0x601, 8,     \
-             (uint8_t)(c),       \
-             (uint8_t)(a),       \
-             (uint8_t)(s),       \
-             (uint8_t)(0),       \
-             (uint8_t)(0),       \
-             (uint8_t)(0),       \
-             (uint8_t)(0),       \
-             (uint8_t)(0));      \
-    RunSimCan(0, 0);             \
+#define TS_ACKBLK_SEND(_c,_a,_s)            \
+  do {                                      \
+    uint8_t c=(uint8_t)(_c);                \
+    uint8_t a=(uint8_t)(_a);                \
+    uint8_t s=(uint8_t)(_s);                \
+    SimCanSetFrm(0x601, 8,                  \
+             (uint8_t)(c),                  \
+             (uint8_t)(a),                  \
+             (uint8_t)(s),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0),                  \
+             (uint8_t)(0));                 \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_SEG_SEND(_s,_a)    \
-  do {                        \
-    uint8_t s=(uint8_t)(_s);  \
-    uint8_t a=(uint8_t)(_a);  \
-    SetRxFrm(0, 0, 0x601, 8,  \
-             (uint8_t)(s),    \
-             (uint8_t)(a+0),  \
-             (uint8_t)(a+1),  \
-             (uint8_t)(a+2),  \
-             (uint8_t)(a+3),  \
-             (uint8_t)(a+4),  \
-             (uint8_t)(a+5),  \
-             (uint8_t)(a+6)); \
-    RunSimCan(0, 0);          \
+#define TS_SEG_SEND(_s,_a)                  \
+  do {                                      \
+    uint8_t s=(uint8_t)(_s);                \
+    uint8_t a=(uint8_t)(_a);                \
+    SimCanSetFrm(0x601, 8,                  \
+             (uint8_t)(s),                  \
+             (uint8_t)(a+0),                \
+             (uint8_t)(a+1),                \
+             (uint8_t)(a+2),                \
+             (uint8_t)(a+3),                \
+             (uint8_t)(a+4),                \
+             (uint8_t)(a+5),                \
+             (uint8_t)(a+6));               \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_HB_SEND(_n,_s)       \
-  do {                          \
-    uint32_t n=(uint32_t)(_n);  \
-    uint8_t  s=(uint8_t)(_s);   \
-    SetRxFrm(0, 0, 1792+(n), 1, \
-      (uint8_t)(s),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0));            \
-    RunSimCan(0, 0);            \
+#define TS_HB_SEND(_n,_s)                   \
+  do {                                      \
+    uint32_t n=(uint32_t)(_n);              \
+    uint8_t  s=(uint8_t)(_s);               \
+    SimCanSetFrm(1792+(n), 1,               \
+      (uint8_t)(s),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0));                        \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_PDO_SEND(_i,_a)      \
-  do {                          \
-    uint32_t i=(uint32_t)(_i);  \
-    uint8_t  a=(uint8_t)(_a);   \
-    SetRxFrm(0, 0, (i), 8,      \
-             (uint8_t)((a)+0),  \
-             (uint8_t)((a)+1),  \
-             (uint8_t)((a)+2),  \
-             (uint8_t)((a)+3),  \
-             (uint8_t)((a)+4),  \
-             (uint8_t)((a)+5),  \
-             (uint8_t)((a)+6),  \
-             (uint8_t)((a)+7)); \
-    RunSimCan(0, 0);            \
+#define TS_PDO_SEND(_i,_a)                  \
+  do {                                      \
+    uint32_t i=(uint32_t)(_i);              \
+    uint8_t  a=(uint8_t)(_a);               \
+    SimCanSetFrm((i), 8,                    \
+             (uint8_t)((a)+0),              \
+             (uint8_t)((a)+1),              \
+             (uint8_t)((a)+2),              \
+             (uint8_t)((a)+3),              \
+             (uint8_t)((a)+4),              \
+             (uint8_t)((a)+5),              \
+             (uint8_t)((a)+6),              \
+             (uint8_t)((a)+7));             \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_LSS_SEND(_c,_d1,_d2) \
-  do {                          \
-    uint8_t c=(uint8_t)(_c);    \
-    uint8_t d1=(uint8_t)(_d1);  \
-    uint8_t d2=(uint8_t)(_d2);  \
-    SetRxFrm(0, 0, 2021, 8,     \
-      (uint8_t)(c),             \
-      (uint8_t)(d1),            \
-      (uint8_t)(d2),            \
-      (uint8_t)(0),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0),             \
-      (uint8_t)(0));            \
-    RunSimCan(0, 0);            \
+#define TS_LSS_SEND(_c,_d1,_d2)             \
+  do {                                      \
+    uint8_t c=(uint8_t)(_c);                \
+    uint8_t d1=(uint8_t)(_d1);              \
+    uint8_t d2=(uint8_t)(_d2);              \
+    SimCanSetFrm(2021, 8,                   \
+      (uint8_t)(c),                         \
+      (uint8_t)(d1),                        \
+      (uint8_t)(d2),                        \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0));                        \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_LSS_SEND_W(_c,_d)       \
-  do {                             \
-    uint8_t  c=(uint8_t)(_c);      \
-    uint16_t d=(uint16_t)(_d);     \
-    SetRxFrm(0, 0, 2021, 8,        \
-      (uint8_t)(c),                \
-      (uint8_t)(d),                \
-      (uint8_t)(((uint16_t)d)>>8), \
-      (uint8_t)(0),                \
-      (uint8_t)(0),                \
-      (uint8_t)(0),                \
-      (uint8_t)(0),                \
-      (uint8_t)(0));               \
-    RunSimCan(0, 0);               \
+#define TS_LSS_SEND_W(_c,_d)                \
+  do {                                      \
+    uint8_t  c=(uint8_t)(_c);               \
+    uint16_t d=(uint16_t)(_d);              \
+    SimCanSetFrm(2021, 8,                   \
+      (uint8_t)(c),                         \
+      (uint8_t)(d),                         \
+      (uint8_t)(((uint16_t)d)>>8),          \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0));                        \
+    SimCanRun();                            \
   } while(0)
 
-#define TS_LSS_SEND_L(_c,_d)         \
-  do {                               \
-    uint8_t  c=(uint8_t)(_c);        \
-    uint32_t d=(uint32_t)(_d);       \
-    SetRxFrm(0, 0, 2021, 8,          \
-      (uint8_t)(c),                  \
-      (uint8_t)(d),                  \
-      (uint8_t)(((uint32_t)d)>>8),   \
-      (uint8_t)(((uint32_t)d)>>16),  \
-      (uint8_t)(((uint32_t)d)>>24),  \
-      (uint8_t)(0),                  \
-      (uint8_t)(0),                  \
-      (uint8_t)(0));                 \
-    RunSimCan(0, 0);                 \
+#define TS_LSS_SEND_L(_c,_d)                \
+  do {                                      \
+    uint8_t  c=(uint8_t)(_c);               \
+    uint32_t d=(uint32_t)(_d);              \
+    SimCanSetFrm(2021, 8,                   \
+      (uint8_t)(c),                         \
+      (uint8_t)(d),                         \
+      (uint8_t)(((uint32_t)d)>>8),          \
+      (uint8_t)(((uint32_t)d)>>16),         \
+      (uint8_t)(((uint32_t)d)>>24),         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0),                         \
+      (uint8_t)(0));                        \
+    SimCanRun();                            \
   } while(0)
 
 #define CHK_NO_ERR(n)        TS_ASSERT(CO_ERR_NONE == CONodeGetErr(n))
 
 #define CHK_ERR(n,e)         TS_ASSERT(e == CONodeGetErr(n))
 
-#define CHK_CAN(f)           TS_ASSERT(1 == GetFrm(0,(uint8_t*)(f),sizeof(CO_IF_FRM)))
+#define CHK_CAN(f)           TS_ASSERT(1 == SimCanGetFrm((uint8_t*)(f),sizeof(CO_IF_FRM)))
 
-#define CHK_NOCAN(f)         TS_ASSERT(0 == GetFrm(0,(uint8_t*)(f),sizeof(CO_IF_FRM)))
+#define CHK_NOCAN(f)         TS_ASSERT(0 == SimCanGetFrm((uint8_t*)(f),sizeof(CO_IF_FRM)))
 
 #define CHK_BOOTUP(f,n)      TS_ASSERT((1792+(n)) == (f).Identifier); \
                              TS_ASSERT(1          == (f).DLC);        \
@@ -246,44 +249,44 @@ extern "C" {
                              TS_ASSERT(8     == (f).DLC);        \
                              TS_ASSERT((c)   == BYTE((f),0))
 
-#define CHK_SDO0_OK(i,s)     { CO_IF_FRM f;                                                      \
-                               TS_ASSERT(1     == GetFrm(0,(uint8_t*)(&f),sizeof(CO_IF_FRM)));\
-                               TS_ASSERT(0x581 == (f).Identifier);                                    \
-                               TS_ASSERT(8     == (f).DLC);                                           \
-                               TS_ASSERT(0x60  == BYTE(f,0));                                         \
-                               TS_ASSERT((i)   == WORD(f,1));                                         \
-                               TS_ASSERT((s)   == BYTE(f,3));                                         \
-                               TS_ASSERT(0     == LONG(f,4));                                         \
+#define CHK_SDO0_OK(i,s)     { CO_IF_FRM f;                                                 \
+                               TS_ASSERT(1     == SimCanGetFrm((uint8_t*)(&f),sizeof(CO_IF_FRM)));\
+                               TS_ASSERT(0x581 == (f).Identifier);                          \
+                               TS_ASSERT(8     == (f).DLC);                                 \
+                               TS_ASSERT(0x60  == BYTE(f,0));                               \
+                               TS_ASSERT((i)   == WORD(f,1));                               \
+                               TS_ASSERT((s)   == BYTE(f,3));                               \
+                               TS_ASSERT(0     == LONG(f,4));                               \
                              }
 
 
-#define CHK_SDO0_ERR(i,s,e)  { CO_IF_FRM f;                                                      \
-                               TS_ASSERT(1     == GetFrm(0,(uint8_t*)(&f),sizeof(CO_IF_FRM)));\
-                               TS_ASSERT(0x581 == (f).Identifier);                                    \
-                               TS_ASSERT(8     == (f).DLC);                                           \
-                               TS_ASSERT(0x80  == BYTE(f,0));                                         \
-                               TS_ASSERT((i)   == WORD(f,1));                                         \
-                               TS_ASSERT((s)   == BYTE(f,3));                                         \
-                               TS_ASSERT((e)   == LONG(f,4));                                         \
+#define CHK_SDO0_ERR(i,s,e)  { CO_IF_FRM f;                                                 \
+                               TS_ASSERT(1     == SimCanGetFrm((uint8_t*)(&f),sizeof(CO_IF_FRM)));\
+                               TS_ASSERT(0x581 == (f).Identifier);                          \
+                               TS_ASSERT(8     == (f).DLC);                                 \
+                               TS_ASSERT(0x80  == BYTE(f,0));                               \
+                               TS_ASSERT((i)   == WORD(f,1));                               \
+                               TS_ASSERT((s)   == BYTE(f,3));                               \
+                               TS_ASSERT((e)   == LONG(f,4));                               \
                              }
 
 #define CHK_PDO0(f,i,d)      TS_ASSERT((i) == (f).Identifier); \
                              TS_ASSERT((d) == (f).DLC)
 
-#define CHK_EMCY(f)          { uint32_t id;                                  \
+#define CHK_EMCY(f)          { uint32_t id;                                      \
                                CODictRdLong(&node.Dict, CO_DEV(0x1014,0), &id);  \
-                               TS_ASSERT(id == (f).Identifier);                \
-                               TS_ASSERT(8  == (f).DLC);                       \
+                               TS_ASSERT(id == (f).Identifier);                  \
+                               TS_ASSERT(8  == (f).DLC);                         \
                              }
 
-#define CHK_LSS_OK(c)        { CO_IF_FRM f;                                                     \
-                               TS_ASSERT(1    == GetFrm(0,(uint8_t*)(&f),sizeof(CO_IF_FRM)));\
-                               TS_ASSERT(2020 == (f).Identifier);                                    \
-                               TS_ASSERT(8    == (f).DLC);                                           \
-                               TS_ASSERT((c)  == BYTE(f,0));                                         \
-                               TS_ASSERT(0    == WORD(f,1));                                         \
-                               TS_ASSERT(0    == BYTE(f,3));                                         \
-                               TS_ASSERT(0    == LONG(f,4));                                         \
+#define CHK_LSS_OK(c)        { CO_IF_FRM f;                                                \
+                               TS_ASSERT(1    == SimCanGetFrm((uint8_t*)(&f),sizeof(CO_IF_FRM)));\
+                               TS_ASSERT(2020 == (f).Identifier);                          \
+                               TS_ASSERT(8    == (f).DLC);                                 \
+                               TS_ASSERT((c)  == BYTE(f,0));                               \
+                               TS_ASSERT(0    == WORD(f,1));                               \
+                               TS_ASSERT(0    == BYTE(f,3));                               \
+                               TS_ASSERT(0    == LONG(f,4));                               \
                              }
 
 #define CHK_BYTE(f,p,v)      TS_ASSERT((uint8_t)(v & 0xFF) == BYTE((f),(p)))
@@ -309,60 +312,60 @@ extern "C" {
                              TS_ASSERT(0   == BYTE(f,6)); \
                              TS_ASSERT(0   == BYTE(f,7))
 
-#define SET_OBJ08(i,s,v)     { int16_t num;                                   \
+#define SET_OBJ08(i,s,v)     { int16_t num;                                        \
                                num = CODictWrByte(&node.Dict,CO_DEV((i),(s)),(v)); \
-                               TS_ASSERT(CO_ERR_NONE == num);                    \
+                               TS_ASSERT(CO_ERR_NONE == num);                      \
                              }
 
-#define CHK_OBJ08(i,s,v)     { uint8_t para;                                    \
-                               int16_t num;                                     \
+#define CHK_OBJ08(i,s,v)     { uint8_t para;                                         \
+                               int16_t num;                                          \
                                num = CODictRdByte(&node.Dict,CO_DEV((i),(s)),&para); \
-                               TS_ASSERT(CO_ERR_NONE == num);                      \
-                               TS_ASSERT((v)         == para);                     \
+                               TS_ASSERT(CO_ERR_NONE == num);                        \
+                               TS_ASSERT((v)         == para);                       \
                              }
 
-#define SET_OBJ16(i,s,v)     { int16_t num;                                    \
+#define SET_OBJ16(i,s,v)     { int16_t num;                                         \
                                num = CODictWrWord(&node.Dict,CO_DEV((i),(s)),(v));  \
-                               TS_ASSERT(CO_ERR_NONE == num);                     \
+                               TS_ASSERT(CO_ERR_NONE == num);                       \
                              }
 
-#define CHK_OBJ16(i,s,v)     { uint16_t para;                                    \
-                               int16_t num;                                     \
+#define CHK_OBJ16(i,s,v)     { uint16_t para;                                        \
+                               int16_t num;                                          \
                                num = CODictRdWord(&node.Dict,CO_DEV((i),(s)),&para); \
-                               TS_ASSERT(CO_ERR_NONE == num);                      \
-                               TS_ASSERT((v)         == para);                     \
+                               TS_ASSERT(CO_ERR_NONE == num);                        \
+                               TS_ASSERT((v)         == para);                       \
                              }
 
-#define SET_OBJ32(i,s,v)     { int16_t num;                                   \
+#define SET_OBJ32(i,s,v)     { int16_t num;                                        \
                                num = CODictWrLong(&node.Dict,CO_DEV((i),(s)),(v)); \
-                               TS_ASSERT(CO_ERR_NONE == num);                    \
+                               TS_ASSERT(CO_ERR_NONE == num);                      \
                              }
 
-#define CHK_OBJ32(i,s,v)     { uint32_t para;                                    \
-                               int16_t num;                                     \
+#define CHK_OBJ32(i,s,v)     { uint32_t para;                                        \
+                               int16_t num;                                          \
                                num = CODictRdLong(&node.Dict,CO_DEV((i),(s)),&para); \
-                               TS_ASSERT(CO_ERR_NONE == num);                      \
-                               TS_ASSERT((v)         == para);                     \
+                               TS_ASSERT(CO_ERR_NONE == num);                        \
+                               TS_ASSERT((v)         == para);                       \
                              }
 
 #define CHK_ZERO(f)          TS_ASSERT(0 == WORD(f,1)); \
                              TS_ASSERT(0 == BYTE(f,3)); \
                              TS_ASSERT(0 == LONG(f,4))
 
-#define CHK_SEG(f,_a,_n)                                 \
-  do {                                                   \
-    uint8_t   a=(uint8_t)_a;                             \
-    uint8_t   n=(uint8_t)_n;                             \
-    uint8_t   b=(uint8_t)1;                              \
-    while (b <= n) {                                     \
-      TS_ASSERT(((uint8_t)(a) & 0xFF) == BYTE(f,b));     \
-      a++;                                               \
-      b++;                                               \
-    }                                                    \
-    while (b <= 7) {                                     \
-      TS_ASSERT(0 == BYTE(f,b));                         \
-      b++;                                               \
-    }                                                    \
+#define CHK_SEG(f,_a,_n)                             \
+  do {                                               \
+    uint8_t a=(uint8_t)_a;                           \
+    uint8_t n=(uint8_t)_n;                           \
+    uint8_t b=(uint8_t)1;                            \
+    while (b <= n) {                                 \
+      TS_ASSERT(((uint8_t)(a) & 0xFF) == BYTE(f,b)); \
+      a++;                                           \
+      b++;                                           \
+    }                                                \
+    while (b <= 7) {                                 \
+      TS_ASSERT(0 == BYTE(f,b));                     \
+      b++;                                           \
+    }                                                \
   } while(0)
 
 #define CHK_DOM_FULL(d,s)    TS_ASSERT(0 == TS_DomainCheck((d),(s),0))

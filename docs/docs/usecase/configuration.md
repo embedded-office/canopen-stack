@@ -377,7 +377,7 @@ Example:
     (CO_EMCY_TBL *)&AppEmcyCode, /* start of emergency code table  */
     (CO_TMR_MEM  *)&AppTmrMem,   /* start of timer manager memory  */
     (uint16_t     ) APP_TMR_N,   /* max. number of timers/actions  */
-    (CO_IF_DRV    )&AppCanDrv,   /* start of CAN driver interface  */
+    (CO_IF_DRV    )&AppDrv,      /* hardware interface drivers     */
     (uint8_t     *)&AppSdoBuf    /* start of SDO transfer buffer   */
 };
 ```

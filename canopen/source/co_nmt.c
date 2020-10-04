@@ -108,7 +108,7 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
         COTmrClear(&nmt->Node->Tmr);
         CONmtInit(nmt, nmt->Node);
         COSdoInit(nmt->Node->Sdo, nmt->Node);
-        COIfReset(&nmt->Node->If);
+        COIfCanReset(&nmt->Node->If);
         COEmcyReset(&nmt->Node->Emcy, 1);
         COSyncInit(&nmt->Node->Sync, nmt->Node);
         if (nobootup == 0) {
@@ -579,7 +579,7 @@ void CONmtHbProdSend(void *parg)
     CO_SET_DLC(&frm, 1);
     CO_SET_BYTE(&frm, state, 0);
 
-    (void)COIfSend(&nmt->Node->If, &frm);
+    (void)COIfCanSend(&nmt->Node->If, &frm);
 }
 
 /*
@@ -611,7 +611,7 @@ void CONmtBootup(CO_NMT *nmt)
         CO_SET_DLC  (&frm, 1);
         CO_SET_BYTE (&frm, 0, 0);
 
-        (void)COIfSend(&nmt->Node->If, &frm);
+        (void)COIfCanSend(&nmt->Node->If, &frm);
     }
 }
 

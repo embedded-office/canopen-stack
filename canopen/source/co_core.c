@@ -31,7 +31,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 {
     int16_t  err;
 
-    node->If.Drv   = spec->CanDrv;
+    node->If.Drv   = spec->Drv;
     node->SdoBuf   = spec->SdoBuf;
     node->Baudrate = spec->Baudrate;
     node->NodeId   = spec->NodeId;
@@ -43,8 +43,8 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
         return;
     }
     COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum);
-    COIfInit(&node->If, node);
-    COIfEnable(&node->If, node->Baudrate);
+    COIfCanInit(&node->If, node);
+    COIfCanEnable(&node->If, node->Baudrate);
     err = CODictInit(&node->Dict, node, spec->Dict, spec->DictLen);
     if (err < 0) {
         return;
@@ -82,7 +82,7 @@ void CONodeStop(CO_NODE *node)
 {
     COTmrClear(&node->Tmr);
     CONmtSetMode(&node->Nmt, CO_INVALID);
-    COIfClose(&node->If);
+    COIfCanClose(&node->If);
 }
 
 /*
@@ -146,7 +146,7 @@ void CONodeProcess(CO_NODE *node)
     uint8_t   allowed;
     int16_t   num;
 
-    err = COIfRead(&node->If, &frm);
+    err = COIfCanRead(&node->If, &frm);
     if (err < 0) {
         allowed = 0;
     } else {
@@ -156,7 +156,7 @@ void CONodeProcess(CO_NODE *node)
     err = COLssCheck(&node->Lss, &frm);
     if (err != 0) {
         if (err > 0) {
-            (void)COIfSend(&node->If, &frm);
+            (void)COIfCanSend(&node->If, &frm);
         }
         allowed = 0;
     }
@@ -166,7 +166,7 @@ void CONodeProcess(CO_NODE *node)
         if (srv != 0) {
             err = COSdoResponse(srv);
             if (err >= -1) {
-                (void)COIfSend(&node->If, &frm);
+                (void)COIfCanSend(&node->If, &frm);
             }
             allowed = 0;
         }

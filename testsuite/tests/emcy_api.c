@@ -45,7 +45,7 @@ TS_DEF_MAIN(TS_Emcy_TxUserData)
     usr.Emcy[4] = 0x15;
 
     COEmcySet(&node.Emcy, 1, &usr);                   /* register error #1 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_EMCY (frm);                                   /* check EMCY (Id and DLC)                  */
@@ -79,7 +79,7 @@ TS_DEF_MAIN(TS_Emcy_TxChangedId)
     (void)CODictWrLong(&node.Dict,CO_DEV(0x1014,0),emcy_id);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     TS_ASSERT(0x101 == frm.Identifier);

@@ -27,40 +27,42 @@
 /*
 * see function definition
 */
-int16_t COIfRead (CO_IF *cif, CO_IF_FRM *frm)
+int16_t COIfCanRead (CO_IF *cif, CO_IF_FRM *frm)
 {
-    int16_t err = -1;
+    int16_t err;
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
 
-    /* insert your code here */
-
+    err = can->Read(frm);
+    if (err < 0u) {
+        cif->Node->Error = CO_ERR_IF_READ;
+    }
     return (err);
 }
 
 /*
 * see function definition
 */
-int16_t COIfSend(CO_IF *cif, CO_IF_FRM *frm)
+int16_t COIfCanSend(CO_IF *cif, CO_IF_FRM *frm)
 {
-    int16_t err = -1;
+    int16_t err;
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
 
-    /* insert your code here */
-
-    if (err < 0) {
+    err = can->Send(frm);
+    if (err < 0u) {
         cif->Node->Error = CO_ERR_IF_SEND;
     }
-
     return (err);
 }
 
 /*
 * see function definition
 */
-void COIfReset(CO_IF *cif)
+void COIfCanReset(CO_IF *cif)
 {
-    int16_t err = -1;
+    int16_t err;
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
 
-    /* insert your code here */
-    
+    err = can->Reset();    
     if (err < 0) {
         cif->Node->Error = CO_ERR_IF_RESET;
     }
@@ -69,12 +71,12 @@ void COIfReset(CO_IF *cif)
 /*
 * see function definition
 */
-void COIfClose(CO_IF *cif)
+void COIfCanClose(CO_IF *cif)
 {
-    int16_t err = -1;
+    int16_t err;
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
 
-    /* insert your code here */
-    
+    err = can->Close(); 
     if (err < 0) {
         cif->Node->Error = CO_ERR_IF_CLOSE;
     }
@@ -83,30 +85,32 @@ void COIfClose(CO_IF *cif)
 /*
 * see function definition
 */
-void COIfInit(CO_IF *cif, struct CO_NODE_T *node)
+void COIfCanInit(CO_IF *cif, struct CO_NODE_T *node)
 {
-    int16_t err = -1;
+    int16_t err;
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
 
-    /* insert your code here */
-    
+    err = can->Init(); 
     if (err < 0) {
         node->Error = CO_ERR_IF_INIT;
+    } else {
+        cif->Node = node;
     }
 }
 
 /*
 * see function definition
 */
-void COIfEnable(CO_IF *cif, uint32_t baudrate)
+void COIfCanEnable(CO_IF *cif, uint32_t baudrate)
 {
-    int16_t err = -1;
+    int16_t err;
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
 
     if (baudrate == 0) {
     	baudrate = cif->Node->Baudrate;
     }
 
-    /* insert your code here */
-
+    err = can->Enable(baudrate);
     if (err < 0) {
         cif->Node->Error = CO_ERR_IF_ENABLE;
     } else {

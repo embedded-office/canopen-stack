@@ -1,6 +1,6 @@
 ---
 layout: article
-title: COIfReset()
+title: COIfCanReset()
 sidebar:
   nav: docs
 ---
@@ -16,7 +16,7 @@ This function resets the interface ONLY. Be careful in calling this function for
 #### Prototype
 
 ```c
-void COIfReset(CO_IF *cif);
+void COIfCanReset(CO_IF *cif);
 ```
 
 #### Arguments
@@ -35,6 +35,6 @@ The following example shows how to reset the interface of the CANopen node AppNo
 
 ```c
     :
-    COIfReset (&(AppNode.If));
+    COIfCanReset (&(AppNode.If));
     :
 ```

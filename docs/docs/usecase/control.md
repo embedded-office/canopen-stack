@@ -31,7 +31,7 @@ The same naming convention is realized with several modules. The following table
 | ------------- | ---------- | -------------------------------------------- |
 | CODir…()      | &demo.Dir  | `CODirFind(&demo.Dir, CO_DEV(0x1234,0x56));` |
 | COEmcy…()     | &demo.Emcy | `COEmcyCnt(&demo.Emcy);`                     |
-| COIf…()       | &demo.If   | `COIfSend(&demo.If, &frm);`                  |
+| COIf…()       | &demo.If   | `COIfCanSend(&demo.If, &frm);`                  |
 | CONmt…()      | &demo.Nmt  | `CONmtGetMode(&demo.Nmt);`                   |
 | CONode…()     | &demo      | `CONodeGetErr(&demo);`                       |
 | COTmr…()      | &demo.Tmr  | `COTmrCreate(&demo.Tmr, 0, 10, MyFunc, 0);`  |
@@ -53,7 +53,7 @@ The following source lines show a typical node specification:
     (CO_EMCY_TBL *)&AppEmcyCode, /* start of emergency code table  */
     (CO_TMR_MEM  *)&AppTmrMem,   /* start of timer manager memory  */
     (uint16_t     ) APP_TMR_N,   /* max. number of timers/actions  */
-    (CO_IF_DRV    )&AppCanDrv,   /* start of CAN driver interface  */
+    (CO_IF_DRV    )&AppDrv,      /* hardware interface drivers     */
     (uint8_t     *)&AppSdoBuf    /* start of SDO transfer buffer   */
 };
 ```
@@ -165,7 +165,7 @@ sequenceDiagram
     end
     N->>+S: load parameters in [1000h to 1FFFh]
     S-->>-N: ok
-    N->>+I: COIfReset()
+    N->>+I: COIfCanReset()
     I-->>-N: ok
     N-->>-A: ok
 ```

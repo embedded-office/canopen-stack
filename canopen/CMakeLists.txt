@@ -22,7 +22,7 @@ target_sources(Canopen
     source/co_core.c
     source/co_dict.c
     source/co_emcy.c
-#    source/co_if.c  # this is just a interface template file
+    source/co_if.c
     source/co_lss.c 
     source/co_nmt.c
     source/co_obj.c

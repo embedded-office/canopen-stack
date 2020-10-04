@@ -1,12 +1,12 @@
 #---
 # define the test application executable
 #
-add_executable(CanopenTests)
+add_executable(CanopenTest)
 
 #---
 # test application with test runner and supporting functions
 #
-target_sources(CanopenTests
+target_sources(CanopenTest
   PRIVATE
     app/app_dict.c
     app/app_dom.c
@@ -15,27 +15,15 @@ target_sources(CanopenTests
     app/app_hooks.c
     app/app.c
 )
-target_include_directories(CanopenTests
+target_include_directories(CanopenTest
   PRIVATE
     app
 )
 
 #---
-# interface driver for test
-#
-target_sources(CanopenTests
-  PRIVATE
-    driver/drv_can.c
-)
-target_include_directories(CanopenTests
-  PRIVATE
-    driver
-)
-
-#---
 # add the test framework
 #
-target_sources(CanopenTests
+target_sources(CanopenTest
   PRIVATE
     testfrm/ts_context.c
     testfrm/ts_env.c
@@ -47,7 +35,7 @@ target_sources(CanopenTests
     testfrm/ts_printf.c
     testfrm/ts_version.c
 )
-target_include_directories(CanopenTests
+target_include_directories(CanopenTest
   PRIVATE
     testfrm
 )
@@ -55,7 +43,7 @@ target_include_directories(CanopenTests
 #---
 # select the test-suite files
 #
-target_sources(CanopenTests
+target_sources(CanopenTest
   PRIVATE
     tests/core_tmr.c
     tests/emcy_api.c
@@ -76,7 +64,7 @@ target_sources(CanopenTests
     tests/sdos_seg_down.c
     tests/sdos_seg_up.c
 )
-target_include_directories(CanopenTests
+target_include_directories(CanopenTest
   PRIVATE
     tests
 )
@@ -84,4 +72,4 @@ target_include_directories(CanopenTests
 #---
 # specify the dependencies for this application
 #
-target_link_libraries(CanopenTests Canopen)
+target_link_libraries(CanopenTest Canopen CanopenDriver)

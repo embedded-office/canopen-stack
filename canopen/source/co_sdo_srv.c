@@ -852,7 +852,7 @@ int16_t COSdoUploadBlock(CO_SDO *srv)
         for (i = (uint8_t)len; i < 7; i++) {
             CO_SET_BYTE(srv->Frm, 0, 1 + i);
         }
-        (void)COIfSend(&srv->Node->If, srv->Frm);
+        (void)COIfCanSend(&srv->Node->If, srv->Frm);
     }
 
     return (result);

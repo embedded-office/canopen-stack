@@ -1,6 +1,6 @@
 ---
 layout: article
-title: COIfSend()
+title: COIfCanSend()
 sidebar:
   nav: docs
 ---
@@ -16,7 +16,7 @@ The send function may be used within the application to transmit additional mess
 #### Prototype
 
 ```c
-int16_t COIfSend(CO_IF *cif, CO_IF_FRM *frm);
+int16_t COIfCanSend(CO_IF *cif, CO_IF_FRM *frm);
 ```
 
 #### Arguments
@@ -49,7 +49,7 @@ The following example show how to call the transmit function for the interface o
     frame.Data[5]    = 0x67;
     frame.Data[6]    = 0x78;
     frame.Data[7]    = 0x89;
-    err = COIfSend (&(AppNode.If), &frame);
+    err = COIfCanSend (&(AppNode.If), &frame);
     if (err < 0) {
         /* error in interface layer */
     }

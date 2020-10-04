@@ -286,7 +286,7 @@ TS_DEF_MAIN(TS_Emcy_HistClearOk)
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     TS_SDO_SEND (0x2F, 0x1003, 0, 0x00);
 
@@ -319,7 +319,7 @@ TS_DEF_MAIN(TS_Emcy_HistClearBad)
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     TS_SDO_SEND (0x2F, 0x1003, 0, 0x01);
 
