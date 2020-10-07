@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _CO_CAN_TEST_H_
-#define _CO_CAN_TEST_H_
+#ifndef _CO_CAN_SIM_H_
+#define _CO_CAN_SIM_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {

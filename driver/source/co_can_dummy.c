@@ -19,7 +19,7 @@
 ******************************************************************************/
 
 /* TODO: rename the include file name to match the naming convention: 
- *   co_can_<device-name>.h
+ *   co_can_<device>.h
  */
 #include "co_can_dummy.h"
 
@@ -33,19 +33,19 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static int16_t DrvCanInit   (void);
-static int16_t DrvCanEnable (uint32_t baudrate);
+static void    DrvCanInit   (void);
+static void    DrvCanEnable (uint32_t baudrate);
 static int16_t DrvCanSend   (CO_IF_FRM *frm);
 static int16_t DrvCanRead   (CO_IF_FRM *frm);
-static int16_t DrvCanReset  (void);
-static int16_t DrvCanClose  (void);
+static void    DrvCanReset  (void);
+static void    DrvCanClose  (void);
 
 /******************************************************************************
 * PUBLIC VARIABLE
 ******************************************************************************/
 
 /* TODO: rename the variable to match the naming convention: 
- *   <device-name>CanDriver
+ *   <device>CanDriver
  */
 const CO_IF_CAN_DRV DummyCanDriver = {
     DrvCanInit,
@@ -60,38 +60,34 @@ const CO_IF_CAN_DRV DummyCanDriver = {
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static int16_t DrvCanInit(void)
+static void DrvCanInit(void)
 {
     /* TODO: initialize the CAN controller (don't enable communication) */
-    return (-1u);
 }
 
-static int16_t DrvCanEnable(uint32_t baudrate)
+static void DrvCanEnable(uint32_t baudrate)
 {
     /* TODO: set the given baudrate to the CAN controller */
-    return (-1u);
 }
 
 static int16_t DrvCanSend(CO_IF_FRM *frm)
 {
     /* TODO: wait for free CAN message slot and send the given CAN frame */
-    return (-1u);
+    return (0u);
 }
 
 static int16_t DrvCanRead (CO_IF_FRM *frm)
 {
     /* TODO: wait for a CAN frame and read CAN frame from the CAN controller */
-    return (-1u);
+    return (0u);
 }
 
-static int16_t DrvCanReset(void)
+static void DrvCanReset(void)
 {
     /* TODO: reset CAN controller while keeping baudrate */
-    return (-1u);
 }
 
-static int16_t DrvCanClose(void)
+static void DrvCanClose(void)
 {
     /* TODO: remove CAN controller from CAN network */
-    return (-1u);
 }

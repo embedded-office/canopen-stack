@@ -54,39 +54,39 @@ typedef struct SIM_CAN_BUS_T {
 * PRIVATE VARIABLES
 ******************************************************************************/
 
-static SIM_CAN_BUS SimCan = { 0u };
+static SIM_CAN_BUS CanBus = { 0u };
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static int16_t SimCanInit   (void);
-static int16_t SimCanEnable (uint32_t baudrate);
-static int16_t SimCanSend   (CO_IF_FRM *frm);
-static int16_t SimCanRead   (CO_IF_FRM *frm);
-static int16_t SimCanReset  (void);
-static int16_t SimCanClose  (void);
+static void    DrvCanInit   (void);
+static void    DrvCanEnable (uint32_t baudrate);
+static int16_t DrvCanSend   (CO_IF_FRM *frm);
+static int16_t DrvCanRead   (CO_IF_FRM *frm);
+static void    DrvCanReset  (void);
+static void    DrvCanClose  (void);
 
 /******************************************************************************
 * PUBLIC VARIABLE
 ******************************************************************************/
 
 const CO_IF_CAN_DRV SimCanDriver = {
-    SimCanInit,
-    SimCanEnable,
-    SimCanRead,
-    SimCanSend,
-    SimCanReset,
-    SimCanClose
+    DrvCanInit,
+    DrvCanEnable,
+    DrvCanRead,
+    DrvCanSend,
+    DrvCanReset,
+    DrvCanClose
 };
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static int16_t SimCanInit(void)
+static void DrvCanInit(void)
 {
-    SIM_CAN_BUS *bus = &SimCan;
+    SIM_CAN_BUS *bus = &CanBus;
 
     if (bus->Addr == bus) {                           /* reset init state    */
         bus->Status = SIM_CAN_STAT_INIT; 
@@ -101,24 +101,20 @@ static int16_t SimCanInit(void)
     bus->RxRd     = &bus->RxQ[0u];
     bus->TxWr     = &bus->TxQ[0u];
     bus->TxRd     = &bus->TxQ[0u];
-
-    return (0u);
 }
 
-static int16_t SimCanEnable(uint32_t baudrate)
+static void DrvCanEnable(uint32_t baudrate)
 {
-    SIM_CAN_BUS *bus = &SimCan;
+    SIM_CAN_BUS *bus = &CanBus;
 
     bus->Status   |= SIM_CAN_STAT_ACTIVE;
     bus->Baudrate  = baudrate;
-
-    return (0u);
 }
 
-static int16_t SimCanSend(CO_IF_FRM *frm)
+static int16_t DrvCanSend(CO_IF_FRM *frm)
 {
     int16_t       result = 0u;
-    SIM_CAN_BUS  *bus    = &SimCan;;
+    SIM_CAN_BUS  *bus    = &CanBus;;
     CO_IF_FRM    *tx;
     uint8_t       byte;
     
@@ -149,10 +145,10 @@ static int16_t SimCanSend(CO_IF_FRM *frm)
     return (result);
 }
 
-static int16_t SimCanRead (CO_IF_FRM *frm)
+static int16_t DrvCanRead (CO_IF_FRM *frm)
 {
     int16_t       result = 0u;
-    SIM_CAN_BUS  *bus    = &SimCan;
+    SIM_CAN_BUS  *bus    = &CanBus;
     CO_IF_FRM    *rx;
     uint8_t       byte;
 
@@ -181,24 +177,20 @@ static int16_t SimCanRead (CO_IF_FRM *frm)
     return (result);
 }
 
-static int16_t SimCanReset(void)
+static void DrvCanReset(void)
 {
-    SIM_CAN_BUS *bus      = &SimCan;
+    SIM_CAN_BUS *bus      = &CanBus;
     uint32_t     baudrate = bus->Baudrate;
 
-    SimCanInit();
-    SimCanEnable(baudrate);
-
-    return (0u);
+    DrvCanInit();
+    DrvCanEnable(baudrate);
 }
 
-static int16_t SimCanClose(void)
+static void DrvCanClose(void)
 {
-    SIM_CAN_BUS *bus = &SimCan;
+    SIM_CAN_BUS *bus = &CanBus;
 
     bus->Status &= ~SIM_CAN_STAT_ACTIVE;
-
-    return (0u);
 }
 
 /******************************************************************************
@@ -208,7 +200,7 @@ static int16_t SimCanClose(void)
 int16_t SimCanGetFrm(uint8_t *buf, uint16_t size)
 {
     int16_t         result = 0u;
-    SIM_CAN_BUS    *bus    = &SimCan;
+    SIM_CAN_BUS    *bus    = &CanBus;
     CO_IF_FRM      *tx;
     CO_IF_FRM      *frm;
 
@@ -249,7 +241,7 @@ int16_t SimCanSetFrm (uint32_t Identifier, uint8_t DLC,
                   uint8_t Byte4, uint8_t Byte5, uint8_t Byte6, uint8_t Byte7)
 {
     int16_t       result = 0u;
-    SIM_CAN_BUS  *bus    = &SimCan;
+    SIM_CAN_BUS  *bus    = &CanBus;
     CO_IF_FRM    *rx;
 
     rx = bus->RxWr;
@@ -279,14 +271,14 @@ int16_t SimCanSetFrm (uint32_t Identifier, uint8_t DLC,
 
 void SimCanSetIsr(SIM_CAN_IRQ handler)
 {
-    SIM_CAN_BUS *bus = &SimCan;
+    SIM_CAN_BUS *bus = &CanBus;
 
     bus->Handler = handler;
 }
 
 void SimCanRun(void)
 {
-    SIM_CAN_BUS *bus = &SimCan;
+    SIM_CAN_BUS *bus = &CanBus;
 
     while (bus->RxRd != bus->RxWr) {
         bus->Handler();
@@ -295,7 +287,7 @@ void SimCanRun(void)
 
 void SimCanFlush (void)
 {
-    SIM_CAN_BUS *bus = &SimCan;
+    SIM_CAN_BUS *bus = &CanBus;
 
     bus->RxWr  = &bus->RxQ[0u];
     bus->RxRd  = &bus->RxQ[0u];
