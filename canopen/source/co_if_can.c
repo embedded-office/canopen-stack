@@ -43,7 +43,7 @@ int16_t COIfCanRead (CO_IF *cif, CO_IF_FRM *frm)
 
     err = can->Read(frm);
     if (err < 0u) {
-        cif->Node->Error = CO_ERR_IF_READ;
+        cif->Node->Error = CO_ERR_IF_CAN_READ;
     }
     return (err);
 }
@@ -58,7 +58,7 @@ int16_t COIfCanSend(CO_IF *cif, CO_IF_FRM *frm)
 
     err = can->Send(frm);
     if (err < 0u) {
-        cif->Node->Error = CO_ERR_IF_SEND;
+        cif->Node->Error = CO_ERR_IF_CAN_SEND;
     }
     return (err);
 }

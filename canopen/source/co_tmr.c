@@ -198,35 +198,34 @@ int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
 */
 int16_t COTmrService(CO_TMR *tmr)
 {
-    CO_TMR_TIME *tn;
-    int16_t      result = 0;
+    CO_TMR_TIME         *tn;
+    CO_IF               *cif;
+    int16_t              result = 0;
+    int16_t              elapsed;
 
     if (tmr == 0) {
         CONodeFatalError();
         return -1;
     }
-
+    cif = &tmr->Node->If;
     COTmrLock();
-    if (tmr->Delay > 0) {
-        CO_TMR_UPDATE(tmr);
-        if (tmr->Delay == 0) {
-            /* timer is elapsed */
-            tn       = tmr->Use;
-            tmr->Use = tn->Next;
-            tn->Next = 0;
-            if (tmr->Use != 0) {
-                CO_TMR_RELOAD(tmr, tmr->Use->Delta);
-            } else {
-                CO_TMR_STOP(tmr);
-            }
-            if (tmr->Elapsed == 0) {
-                tmr->Elapsed = tn;
-            } else {
-                tn->Next     = tmr->Elapsed;
-                tmr->Elapsed = tn;
-            }
-            result = 1;
+    elapsed = COIfTimerUpdate(cif);
+    if (elapsed > 0) {
+        tn       = tmr->Use;
+        tmr->Use = tn->Next;
+        tn->Next = 0;
+        if (tmr->Use != 0) {
+            COIfTimerReload(cif, tmr->Use->Delta);
+        } else {
+            COIfTimerStop(cif);
         }
+        if (tmr->Elapsed == 0) {
+            tmr->Elapsed = tn;
+        } else {
+            tn->Next     = tmr->Elapsed;
+            tmr->Elapsed = tn;
+        }
+        result = 1;
     }
     COTmrUnlock();
 
@@ -313,7 +312,6 @@ void COTmrReset(CO_TMR *tmr)
     uint16_t       blk;
 
     COTmrLock();
-    tmr->Delay   = 0;
     tmr->Use     = 0;
     tmr->Elapsed = 0;
     tmr->Free    = tmr->TPool;
@@ -387,13 +385,11 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
     uint32_t     dTx;
     CO_TMR_TIME *tx;
     CO_TMR_TIME *tn = 0;
+    CO_IF       *cif;
 
-    /* get remaining delta time to next event */
-    dTx = CO_TMR_DELAY(tmr); 
-    
+    cif = &tmr->Node->If;
     tx  = tmr->Use;
-    if (tx == 0) {
-        /* first used timer */
+    if (tx == 0) {                                       /* first used timer */
         tn            = tmr->Free;
         tmr->Free     = tn->Next;
         tn->Delta     = dTnew;
@@ -401,11 +397,11 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
         tn->ActionEnd = action;
         tn->Next      = 0;
         tmr->Use      = tn;
-
-        CO_TMR_RELOAD(tmr, tn->Delta);
-        CO_TMR_START(tmr);
-
+        COIfTimerReload(cif, tn->Delta);
+        COIfTimerStart(cif);
     } else {
+        /* get remaining delta time to next event */
+        dTx = COIfTimerDelay(cif);
         while ((dTnew > dTx) && (tn == 0)) {
             /* behind last timer */
             if (tx->Next == 0) {
@@ -416,7 +412,6 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
                 tn->ActionEnd = action;
                 tn->Next      = 0;
                 tx->Next      = tn;
-
             } else {
                 /* between two timers */
                 dTx += tx->Next->Delta;
@@ -441,7 +436,6 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
                 tx->ActionEnd->Next = action;
                 tx->ActionEnd       = action;
                 tn                  = tx;
-
             } else if (dTnew < dTx) {
                 /* before first timer */
                 tn            = tmr->Free;
@@ -452,12 +446,10 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
                 tn->Next      = tx;
                 tmr->Use      = tn;
                 tx->Delta     = dTx - dTnew;
-
-                CO_TMR_RELOAD(tmr, tn->Delta);
+                COIfTimerReload(cif, tn->Delta);
             }
         }
     }
-
     return tn;
 }
 
@@ -467,18 +459,20 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
 void COTmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx)
 {
     CO_TMR_TIME *tn;
+    CO_IF       *cif;
 
+    cif = &tmr->Node->If;
     if (tx != 0) {
         if (tmr->Use == tx) {
             if (tx->Next == 0) {
                 /* last entry */
-                CO_TMR_STOP(tmr);
+                COIfTimerStop(cif);
                 tmr->Use = tx->Next;
             } else {
                 /* first entry */
-                tx->Next->Delta += tmr->Delay;
+                tx->Next->Delta += COIfTimerDelay(cif);
                 tmr->Use = tx->Next;
-                CO_TMR_RELOAD(tmr, tmr->Use->Delta);
+                COIfTimerReload(cif, tmr->Use->Delta);
             }
             tx->Next  = tmr->Free;
             tmr->Free = tx;

@@ -22,6 +22,9 @@ target_sources(Canopen
     source/co_core.c
     source/co_dict.c
     source/co_emcy.c
+    source/co_if_can.c
+    source/co_if_nvm.c
+    source/co_if_timer.c
     source/co_if.c
     source/co_lss.c 
     source/co_nmt.c

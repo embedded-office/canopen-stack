@@ -157,8 +157,6 @@ typedef struct CO_TMR_T {
     struct CO_TMR_TIME_T   *Free;      /*!< Timer event free list            */
     struct CO_TMR_TIME_T   *Use;       /*!< Timer event used list            */
     struct CO_TMR_TIME_T   *Elapsed;   /*!< Timer event elapsed list         */
-    uint32_t                Time;      /*!< Ticks of next event since create */
-    uint32_t                Delay;     /*!< Ticks of next event from now     */
 
 } CO_TMR;
 

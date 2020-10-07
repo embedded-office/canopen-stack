@@ -100,14 +100,25 @@ typedef enum CO_ERR_T {
 
     CO_ERR_SYNC_MSG,             /*!< error during receive synchronous PDO   */
 
-    CO_ERR_IF_INIT,              /*!< error during initialization            */
-    CO_ERR_IF_ENABLE,            /*!< error during enabling the interface    */
-    CO_ERR_IF_FLUSH_RX,          /*!< error during flushing RX interface     */
-    CO_ERR_IF_FLUSH_TX,          /*!< error during flushing TX interface     */
-    CO_ERR_IF_RESET,             /*!< error during resetting interface       */
-    CO_ERR_IF_CLOSE,             /*!< error during closing the interface     */
-    CO_ERR_IF_READ,              /*!< error during reading from interface    */
-    CO_ERR_IF_SEND,              /*!< error during sending to interface      */
+    CO_ERR_IF_CAN_INIT,          /*!< error during initialization            */
+    CO_ERR_IF_CAN_ENABLE,        /*!< error during enabling CAN interface    */
+    CO_ERR_IF_CAN_FLUSH_RX,      /*!< error during flushing CAN RX interface */
+    CO_ERR_IF_CAN_FLUSH_TX,      /*!< error during flushing CAN TX interface */
+    CO_ERR_IF_CAN_RESET,         /*!< error during resetting CAN interface   */
+    CO_ERR_IF_CAN_CLOSE,         /*!< error during closing the CAN interface */
+    CO_ERR_IF_CAN_READ,          /*!< error during reading from CAN interface*/
+    CO_ERR_IF_CAN_SEND,          /*!< error during sending to CAN interface  */
+
+    CO_ERR_IF_TIMER_INIT,        /*!< error during initializing timer        */
+    CO_ERR_IF_TIMER_UPDATE,      /*!< error during updating timer            */
+    CO_ERR_IF_TIMER_RELOAD,      /*!< error during reloading timer           */
+    CO_ERR_IF_TIMER_DELAY,       /*!< error during getting remaining ticks   */
+    CO_ERR_IF_TIMER_STOP,        /*!< error during stopping timer            */
+    CO_ERR_IF_TIMER_START,       /*!< error during starting timer            */
+
+    CO_ERR_IF_NVM_INIT,          /*!< error during initializing NVM          */
+    CO_ERR_IF_NVM_READ,          /*!< error during reading NVM               */
+    CO_ERR_IF_NVM_WRITE,         /*!< error during writing NVM               */
 
     CO_ERR_SIG_INIT,             /*!< error during initializing CAN signals  */
     CO_ERR_SIG_CREATE,           /*!< error during creating a needed signal  */

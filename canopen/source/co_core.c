@@ -42,9 +42,8 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
         node->Error = CO_ERR_LSS_LOAD;
         return;
     }
+    COIfInit(&node->If, node);
     COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum);
-    COIfCanInit(&node->If, node);
-    COIfCanEnable(&node->If, node->Baudrate);
     err = CODictInit(&node->Dict, node, spec->Dict, spec->DictLen);
     if (err < 0) {
         return;
@@ -60,6 +59,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     }
     COSyncInit(&node->Sync, node);
     COLssInit(&node->Lss, node);
+    COIfCanEnable(&node->If, node->Baudrate);
 }
 
 /*

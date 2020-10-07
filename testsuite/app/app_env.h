@@ -34,6 +34,8 @@ extern "C" {
 #include "ts_env.h"
                                                            /* select drivers */
 #include "co_can_sim.h"
+#include "co_timer_sim.h"
+#include "co_nvm_sim.h"
 
 /******************************************************************************
 * PUBLIC MACROS

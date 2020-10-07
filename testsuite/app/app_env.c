@@ -67,7 +67,9 @@ static uint32_t TS_Obj1014_0;
 static uint16_t TS_Obj1017_0;
 /* select test drivers for simulated hardware modules */
 static CO_IF_DRV TS_Driver = {
-    &SimCanDriver
+    &SimCanDriver,
+    &SimTimerDriver,
+    &SimNvmDriver
 };
 
 /******************************************************************************
