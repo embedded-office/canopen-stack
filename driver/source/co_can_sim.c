@@ -119,7 +119,7 @@ static int16_t DrvCanSend(CO_IF_FRM *frm)
     uint8_t       byte;
     
     if ((bus->Status & SIM_CAN_STAT_ACTIVE) == 0u) {   /* CAN bus is passive */
-        return (-1u);
+        return ((int16_t)-1u);
     }
 
     tx = bus->TxWr;
@@ -153,7 +153,7 @@ static int16_t DrvCanRead (CO_IF_FRM *frm)
     uint8_t       byte;
 
     if ((bus->Status & SIM_CAN_STAT_ACTIVE) == 0u) {   /* CAN bus is passive */
-        return (-1u);
+        return ((int16_t)-1u);
     }
 
     if (bus->RxRd != bus->RxWr) {                  /* CAN frame is available */
@@ -205,10 +205,10 @@ int16_t SimCanGetFrm(uint8_t *buf, uint16_t size)
     CO_IF_FRM      *frm;
 
     if (size != sizeof(CO_IF_FRM)) {
-        return (-1u);
+        return ((int16_t)-1u);
     }
     if (buf == NULL) {
-        return (-1u);
+        return ((int16_t)-1u);
     }
 
     if (bus->TxRd != bus->TxWr) {
