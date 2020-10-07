@@ -45,61 +45,61 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 
 ## Usage
 
-### Integrate sourcecode in your project
+### Integrate sourcecode to your project
 
-Get the project repository and add:
-- `driver/source` to your project source files
-- `canopen/source` to your project source files
-- `driver/include` to your include search path 
-- `canopen/include` to your include search path 
-- `canopen/config` to your include search path
+Get the project repository and add to your include search path:
+- `canopen/config`
+- `canopen/include` 
+- `driver/include` 
 
-*Note: in future versions, we want to remove the pre-compiler configuration file. The corresponding configuration will be possible in a more flexible way. The main goal is to get a CANopen library for a specific microcontroller, with no application specific configuration included and therefore usable in all applications.*
+and to your source path:
+- `canopen/source`
+- `driver/source`
 
-### Connection to the hardware
+*Note: in future versions, we want to remove the pre-compiler configuration file in `canopen/config`. The corresponding configuration will be possible in a more flexible way. The main goal is to get a CANopen library for a specific microcontroller, with no application specific configuration included and therefore usable in all applications.*
 
-#### Driver for CAN controller
+### Hardware interfaces
 
-The project contains a driver layer for the required hardware interfaces.
-- `driver/can/co_can_<device-name>.h` defines the CAN controller driver interface
-- `driver/can/co_can_<device-name>.c` is the implementation of the specific CAN controller
+The project contains a driver layer for required hardware interfaces. In this repository no real hardware specific drivers are included. The repository contains a template device (`dummy`) as a starting point for your own drivers and a driver for simulated device (`sim`) for the test suite.
 
-The main CAN controller driver interface is a global variable, which holds pointers to the driver functions:
-- `const CO_IF_DRV_CAN <DeviceName>CanDriver;`
+| Interface | Component                                   |
+| --------- | ------------------------------------------- |
+| can       | CAN contoller communication channel         |
+| timer     | Hardware timer or cyclic interrupt source   |
+| nvm       | Non-volatile memory storage media           |
 
-| device name | file names        | variable name  | comment                             |
-| ----------- | ----------------- | -------------- | ----------------------------------- |
-| dummy       | co_can_dummy.c/h  | DummyCanDriver | Template for CAN driver development |
-| sim         | co_can_sim.c/h    | SimCanDriver   | Simulated CAN controller for tests  |
+#### Connect hardware drivers
 
-#### Connect with CAN controller
-
-Which CAN driver is used within the project is selected by including the corresponding header file and with a simple variable:
+For selecting the hardware interfaces you need to include the header file of one specific driver module and use the matching global interface variable. The naming convention for the include file is `co_<interface>_<device>.c/h` and for the matching interface variable `<Device><Interface>Driver`. Therefore, connecting the simulation devices (`sim`) for all interfaces leads us to:
 
 ```c
-#include "co_can_<device-name>.h"
+#include "co_can_sim.h"
+#include "co_timer_sim.h"
+#include "co_nvm_sim.h"
 
 const CO_IF_DRV MyDriver = {
-  <DeviceName>CanDriver
+  SimCanDriver,
+  SimTimerDriver,
+  SimNvmDriver
 };
 ```
 
-#### Connect with hardware timer
+#### Integrate timer service
 
-The software timer management needs one hardware timer with a configured interrupt rate.
-- call `COTmrService()` in the timer interrupt service handler
-- call `COTmrProcess()` where you want to process the timed functions. This execution can take place in the interrupt service handler, or within a task of your RTOS.
+The timer management needs a hardware timer interrupt or another periodic interrupt source. Which method is used depends on the timer driver and is explained in the corresponding documentation. The service function of the timer management checks if a timer event is elapsed and coordinates the CANopen software timers.
+- call the function `COTmrService()` at the documented location
 
-#### Connect your storage media
+The processing of all actions related to a timer event is performed with the process function of the timer management. This execution can take place within the timer interrupt service handler, or within a task of your RTOS.
+- call the function `COTmrProcess()` where you want to process the timed actions
 
-Some parameter should be stored in non-volatile memory. For this feature the application needs callback functions:
-- provide `COParaSave()` to store the parameter in non-volatile memory
-- provide `COParaLoad()` to load the parameter from the non-voltile memory
-- provide `COParaDefault()` to return the factory default values for the parameter
+#### Integrate storage media
+
+Most likely some parameter should be stored in non-volatile memory. For the factory default values the CANopen stack needs a callback function.
+- provide `COParaDefault()` to set the factory default values for the object dictionary parameters
 
 ### Setup your CANopen node
 
-The CANopen node is configured with some global data structures:
+The CANopen node is configured with global data structures:
 
 #### Define CANopen Dictionary
 
@@ -183,7 +183,7 @@ To avoid confusion, it is the best to continue with the release version numberin
 *Ideas for further development:*
 
 - remove all pre-compiler configuration defines to allow a single library for multiple projects with different needs
-- hardware independent collection of examples for demonstration purpose (exchange driver and re-compiler should be enought for usage on real target hardware)
+- hardware independent collection of examples for demonstration purpose (exchange driver and re-compile should be enought for usage on real target hardware)
 - improve documentation of single test cases within the testsuite
 - add the SDO client (rarely used, but nice to have)
 Feel free to add issues with further ideas or needs!

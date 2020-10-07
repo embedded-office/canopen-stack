@@ -48,6 +48,7 @@ Example:
 
 ```c
 static const CO_PARA AllParaObj = {
+    0L,                            /* placement in non-volatile memory */
     sizeof(ALL_PARA_MEM),
     (uint8_t *)&Para,
     (uint8_t *)&ParaDef,
@@ -56,21 +57,23 @@ static const CO_PARA AllParaObj = {
     CO_PARA___E
 };
 
-static const CO_PARA AppParaObj = {
-    sizeof(APP_PARA_MEM),
-    (uint8_t *)&Para.App,
-    (uint8_t *)&ParaDef.App,
-    CO_RESET_NODE,
-    (void *)"app.txt",
-    CO_PARA___E
-};
-
 static const CO_PARA ComParaObj = {
+    0L,                            /* placement in non-volatile memory */
     sizeof(COM_PARA_MEM),
     (uint8_t *)&Para.Com,
     (uint8_t *)&ParaDef.Com,
     CO_RESET_COM,
     (void *)"com.txt",
+    CO_PARA___E
+};
+
+static const CO_PARA AppParaObj = {
+    sizeof(COM_PARA_MEM),          /* placement in non-volatile memory */
+    sizeof(APP_PARA_MEM),
+    (uint8_t *)&Para.App,
+    (uint8_t *)&ParaDef.App,
+    CO_RESET_NODE,
+    (void *)"app.txt",
     CO_PARA___E
 };
 ```

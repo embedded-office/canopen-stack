@@ -76,12 +76,13 @@ The parameter group object holds all necessary information, which are needed for
 
 ```c
   const CO_PARA {
-      sizeof(struct DEMO_PARA_T),    /* size of parameter memory        */
-      &DemoParaMem,                  /* start address of parameter mem  */
-      &DemoParaDef,                  /* start address of default para.  */
-      CO_RESET_NODE,                 /* reset type for reload parameter */
-      (void*)"DemoParaId",           /* user parameter identification   */
-      CO_PARA___E                    /* enable parameter storage on cmd */
+      0L,                            /* placement in non-volatile memory */
+      sizeof(struct DEMO_PARA_T),    /* size of parameter memory         */
+      &DemoParaMem,                  /* start address of parameter mem   */
+      &DemoParaDef,                  /* start address of default para.   */
+      CO_RESET_NODE,                 /* reset type for reload parameter  */
+      (void*)"DemoParaId",           /* user parameter identification    */
+      CO_PARA___E                    /* enable parameter storage on cmd  */
   } DemoParaObj;
 ```
 
