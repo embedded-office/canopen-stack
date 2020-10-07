@@ -34,7 +34,7 @@ extern "C" {
 * PUBLIC TYPES
 ******************************************************************************/
 
-struct CO_NODE_T;
+struct CO_NODE_T;              /* Declaration of canopen node structure      */
 
 typedef struct CO_IF_DRV_T {         /*!< Type, which links driver functions */
     const CO_IF_CAN_DRV    *Can;     /*!< Link to CAN driver functions       */

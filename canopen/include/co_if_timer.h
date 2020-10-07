@@ -31,7 +31,7 @@ extern "C" {
 * PUBLIC TYPES
 ******************************************************************************/
 
-struct CO_IF_T;
+struct CO_IF_T;                /* Declaration of interface structure         */
 
 /*! Timer init function prototype */
 typedef void (*CO_IF_TIMER_INIT)(void);

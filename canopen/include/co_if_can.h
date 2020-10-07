@@ -176,7 +176,8 @@ extern "C" {
 * PUBLIC TYPES
 ******************************************************************************/
 
-struct CO_IF_T;
+struct CO_IF_T;                /* Declaration of interface structure         */
+struct CO_NODE_T;              /* Declaration of canopen node structure      */
 
 typedef struct CO_IF_FRM_T {         /*!< Type, which represents a CAN frame */
     uint32_t  Identifier;            /*!< CAN message identifier             */

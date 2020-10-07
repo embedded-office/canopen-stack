@@ -67,7 +67,7 @@ extern "C" {
 * PUBLIC TYPES
 ******************************************************************************/
 
-struct CO_NODE_T;
+struct CO_NODE_T;              /* Declaration of canopen node structure      */
 
 /*! \brief LSS SLAVE HANDLING
 *
