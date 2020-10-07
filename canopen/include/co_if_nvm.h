@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CO_IF_H_
-#define CO_IF_H_
+#ifndef CO_IF_NVM_H_
+#define CO_IF_NVM_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -26,45 +26,76 @@ extern "C" {
 ******************************************************************************/
 
 #include "co_types.h"
-#include "co_if_can.h"
-#include "co_if_timer.h"
-#include "co_if_nvm.h"
 
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
 
-struct CO_NODE_T;
+struct CO_IF_T;
 
-typedef struct CO_IF_DRV_T {         /*!< Type, which links driver functions */
-    const CO_IF_CAN_DRV    *Can;     /*!< Link to CAN driver functions       */
-    const CO_IF_TIMER_DRV  *Timer;   /*!< Link to Timer driver functions     */
-    const CO_IF_NVM_DRV    *Nvm;     /*!< Link to NVM driver functions       */
-} CO_IF_DRV;
+/*! NVM init function prototype */
+typedef void (*CO_IF_NVM_INIT)(void);
+/*! NVM read function prototype */
+typedef uint32_t (*CO_IF_NVM_READ)(uint32_t, uint8_t *, uint32_t);
+/*! NVM write function prototype */
+typedef uint32_t (*CO_IF_NVM_WRITE)(uint32_t, uint8_t *, uint32_t);
 
-typedef struct CO_IF_T {          /*!< Driver interface structure            */
-    struct CO_NODE_T *Node;       /*!< Link to parent node                   */
-    CO_IF_DRV         Drv;        /*!< Link to hardware driver functions     */
-} CO_IF;
+typedef struct CO_IF_NVM_DRV_T {
+    CO_IF_NVM_INIT   Init;
+    CO_IF_NVM_READ   Read;
+    CO_IF_NVM_WRITE  Write;
+} CO_IF_NVM_DRV;
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-/*! \brief  INITIALIZE INTERFACES
+/*! \brief  READ NVM CONTENT
 *
-*    This function initialize all hardware interfaces.
+*    This function reads the content of the non-volatile memory from the
+*    given address into the given buffer.
 *
 * \param cif
 *    pointer to the interface structure
 *
-* \param node
-*    pointer to the parent node
+* \param start
+*    start address in non-volatile memory
+*
+* \param buffer
+*    pointer to destination buffer
+*
+* \param size
+*    size of data in bytes
+*
+* \return
+*    number of read bytes
 */
-void COIfInit(CO_IF *cif, struct CO_NODE_T *node);
+uint32_t COIfNvmRead(struct CO_IF_T *cif, uint32_t start, uint8_t *buffer, uint32_t size);
+
+/*! \brief  WRITE NVM CONTENT
+*
+*    This function writes the content of the buffer to the non-volatile memory
+*    at the given address.
+*
+* \param cif
+*    pointer to the interface structure
+*
+* \param start
+*    start address in non-volatile memory
+*
+* \param buffer
+*    pointer to source buffer
+*
+* \param size
+*    size of data in bytes
+*
+* \return
+*    number of written bytes
+*/
+uint32_t COIfNvmWrite(struct CO_IF_T *cif, uint32_t start, uint8_t *buffer, uint32_t size);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 
-#endif /* CO_IF_H_ */
+#endif /* CO_IF_NVM_H_ */

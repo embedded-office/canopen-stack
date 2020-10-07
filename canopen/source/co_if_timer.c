@@ -27,14 +27,46 @@
 /*
 * see function definition
 */
-void COIfInit(CO_IF *cif, struct CO_NODE_T *node)
+void COIfTimerReload(CO_IF *cif, uint32_t reload)
 {
-    const CO_IF_CAN_DRV   *can = cif->Drv.Can;
     const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
-    const CO_IF_NVM_DRV   *nvm = cif->Drv.Nvm;
+    tmr->Reload(reload);    
+}
 
-    nvm->Init();
-    tmr->Init();
-    can->Init();
-    cif->Node = node;
+/*
+* see function definition
+*/
+uint32_t COIfTimerDelay(CO_IF *cif)
+{
+    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
+    uint32_t delay             = tmr->Delay();    
+    return (delay);
+}
+
+/*
+* see function definition
+*/
+void COIfTimerStop(CO_IF *cif)
+{
+    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
+    tmr->Stop();
+}
+
+/*
+* see function definition
+*/
+void COIfTimerStart(CO_IF *cif)
+{
+    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
+    tmr->Start();
+}
+
+/*
+* see function definition
+*/
+uint8_t COIfTimerUpdate(CO_IF *cif)
+{
+    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
+    uint8_t result             = tmr->Update();
+    return (result);
 }

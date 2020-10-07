@@ -27,14 +27,72 @@
 /*
 * see function definition
 */
-void COIfInit(CO_IF *cif, struct CO_NODE_T *node)
+void COIfCanInit(CO_IF *cif, struct CO_NODE_T *node)
 {
-    const CO_IF_CAN_DRV   *can = cif->Drv.Can;
-    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
-    const CO_IF_NVM_DRV   *nvm = cif->Drv.Nvm;
-
-    nvm->Init();
-    tmr->Init();
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
     can->Init();
-    cif->Node = node;
+}
+
+/*
+* see function definition
+*/
+int16_t COIfCanRead (CO_IF *cif, CO_IF_FRM *frm)
+{
+    int16_t err;
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
+
+    err = can->Read(frm);
+    if (err < 0u) {
+        cif->Node->Error = CO_ERR_IF_READ;
+    }
+    return (err);
+}
+
+/*
+* see function definition
+*/
+int16_t COIfCanSend(CO_IF *cif, CO_IF_FRM *frm)
+{
+    int16_t err;
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
+
+    err = can->Send(frm);
+    if (err < 0u) {
+        cif->Node->Error = CO_ERR_IF_SEND;
+    }
+    return (err);
+}
+
+/*
+* see function definition
+*/
+void COIfCanReset(CO_IF *cif)
+{
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
+    can->Reset();    
+}
+
+/*
+* see function definition
+*/
+void COIfCanClose(CO_IF *cif)
+{
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
+    can->Close(); 
+}
+
+/*
+* see function definition
+*/
+void COIfCanEnable(CO_IF *cif, uint32_t baudrate)
+{
+    const CO_IF_CAN_DRV *can = cif->Drv.Can;
+
+    if (baudrate == 0) {
+    	baudrate = cif->Node->Baudrate;
+    } else {
+      	cif->Node->Baudrate = baudrate;
+    }
+
+    can->Enable(baudrate);
 }
