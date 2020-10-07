@@ -42,17 +42,18 @@ const CO_OBJ_TYPE COTPara = { 0, 0, COTypeParaRead, COTypeParaWrite };
 */
 void COParaStore(CO_PARA *pg, CO_NODE *node)
 {
-    int16_t err;
+    const CO_IF_NVM_DRV *nvm = node->If.Drv.Nvm;
+    uint32_t bytes;
 
     /* argument chekcs */
     if ((pg == 0) || (node == 0)) {
         return;
     }
-    /* call save callback function */
+    /* call nvm write driver function */
     if ((pg->Value & CO_PARA___E) != 0) {
-        err = COParaSave(pg);
-        if (err != CO_ERR_NONE) {
-            node->Error = CO_ERR_PARA_STORE;
+        bytes = nvm->Write(pg->Offset, pg->Start, pg->Size);
+        if (bytes != pg->Size) {
+            node->Error = CO_ERR_IF_NVM_WRITE;
         }
     }
 }

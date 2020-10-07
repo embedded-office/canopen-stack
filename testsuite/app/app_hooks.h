@@ -91,14 +91,6 @@ typedef struct TS_CALLBACK_T {
     uint32_t    LssLoad_Called;
     int16_t     LssLoad_Return;
 
-    CO_PARA    *ParaLoad_ArgParaGrp;
-    uint32_t    ParaLoad_Called;
-    int16_t     ParaLoad_Return;
-
-    CO_PARA    *ParaSave_ArgParaGrp;
-    uint32_t    ParaSave_Called;
-    int16_t     ParaSave_Return;
-
     CO_PARA    *ParaDefault_ArgParaGrp;
     uint32_t    ParaDefault_Called;
     int16_t     ParaDefault_Return;

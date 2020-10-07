@@ -127,46 +127,6 @@ This function is called when a heartbeat consumer monitor detects a state change
 | mode | The new received node state of the monitored node |
 
 
-### Parameter Load Values
-
-This callback function will be called during reset and powerup events. The function is responsible for loading the parameter from NVM into the parameter group memory. The parameter group info pointer is checked to be valid before the CANopen stack calls this function.
-
-```c
-  int16_t COParaLoad(CO_PARA *pg);
-```
-
-**Arguments**
-
-| Parameter | Description |
-| --- | --- |
-| pg | Ptr to parameter group info |
-
-**Returned Value**
-
-- `=0` : parameter loading successful
-- `<0` : error is detected and function aborted
-
-
-### Parameter Save Values
-
-This callback function will be called during storing a parameter group. The function is responsible for saving the current parameter group memory into NVM. The parameter group info pointer is checked to be valid before the CANopen stack calls this function.
-
-```c
-  int16_t COParaSave(CO_PARA *pg);
-```
-
-**Arguments**
-
-| Parameter | Description |
-| --- | --- |
-| pg | Ptr to parameter group info |
-
-**Returned Value**
-
-- `=0` : parameter loading successful
-- `<0` : error is detected and function aborted
-
-
 ### Parameter Default Values
 
 This callback function will be called during restoring the default values of a parameter group. The function is responsible for setting the factory defaults in the current parameter group memory. The parameter group info pointer is checked to be valid before the CANopen stack calls this function.

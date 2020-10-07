@@ -18,7 +18,7 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "co_timer_sim.h"
+#include "co_timer_swcycle.h"
 
 /******************************************************************************
 * PRIVATE VARIABLES
@@ -30,18 +30,18 @@ static uint32_t TimerCounter = 0u;
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void    DrvTimerInit   (void);
-static void    DrvTimerStart  (void);
-static uint8_t DrvTimerUpdate (void);
-static uint32_t DrvTimerDelay (void);
-static void    DrvTimerReload (uint32_t reload);
-static void    DrvTimerStop   (void);
+static void     DrvTimerInit   (void);
+static void     DrvTimerStart  (void);
+static uint8_t  DrvTimerUpdate (void);
+static uint32_t DrvTimerDelay  (void);
+static void     DrvTimerReload (uint32_t reload);
+static void     DrvTimerStop   (void);
 
 /******************************************************************************
 * PUBLIC VARIABLE
 ******************************************************************************/
 
-const CO_IF_TIMER_DRV SimTimerDriver = {
+const CO_IF_TIMER_DRV SwCycleTimerDriver = {
     DrvTimerInit,
     DrvTimerReload,
     DrvTimerDelay,

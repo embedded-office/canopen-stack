@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _CO_TIMER_SIM_H_
-#define _CO_TIMER_SIM_H_
+#ifndef _CO_TIMER_SWCYCLE_H_
+#define _CO_TIMER_SWCYCLE_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -31,7 +31,7 @@ extern "C" {
 * PUBLIC SYMBOLS
 ******************************************************************************/
 
-extern const CO_IF_TIMER_DRV SimTimerDriver;
+extern const CO_IF_TIMER_DRV SwCycleTimerDriver;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

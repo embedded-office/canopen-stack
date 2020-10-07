@@ -29,8 +29,8 @@
 */
 void COIfTimerReload(CO_IF *cif, uint32_t reload)
 {
-    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
-    tmr->Reload(reload);    
+    const CO_IF_TIMER_DRV *timer = cif->Drv.Timer;
+    timer->Reload(reload);    
 }
 
 /*
@@ -38,8 +38,8 @@ void COIfTimerReload(CO_IF *cif, uint32_t reload)
 */
 uint32_t COIfTimerDelay(CO_IF *cif)
 {
-    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
-    uint32_t delay             = tmr->Delay();    
+    const CO_IF_TIMER_DRV *timer = cif->Drv.Timer;
+    uint32_t delay               = timer->Delay();    
     return (delay);
 }
 
@@ -48,8 +48,8 @@ uint32_t COIfTimerDelay(CO_IF *cif)
 */
 void COIfTimerStop(CO_IF *cif)
 {
-    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
-    tmr->Stop();
+    const CO_IF_TIMER_DRV *timer = cif->Drv.Timer;
+    timer->Stop();
 }
 
 /*
@@ -57,8 +57,8 @@ void COIfTimerStop(CO_IF *cif)
 */
 void COIfTimerStart(CO_IF *cif)
 {
-    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
-    tmr->Start();
+    const CO_IF_TIMER_DRV *timer = cif->Drv.Timer;
+    timer->Start();
 }
 
 /*
@@ -66,7 +66,7 @@ void COIfTimerStart(CO_IF *cif)
 */
 uint8_t COIfTimerUpdate(CO_IF *cif)
 {
-    const CO_IF_TIMER_DRV *tmr = cif->Drv.Timer;
-    uint8_t result             = tmr->Update();
+    const CO_IF_TIMER_DRV *timer = cif->Drv.Timer;
+    uint8_t result               = timer->Update();
     return (result);
 }

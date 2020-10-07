@@ -185,18 +185,12 @@ typedef struct CO_IF_FRM_T {         /*!< Type, which represents a CAN frame */
     uint8_t   DLC;                   /*!< CAN message data length code (DLC) */
 } CO_IF_FRM;
 
-/*! CAN init function prototype */
-typedef void (*CO_IF_CAN_INIT_FUNC)(void);
-/*! CAN enable function prototype */
-typedef void (*CO_IF_CAN_ENABLE_FUNC)(uint32_t);
-/*! CAN read function prototype */
-typedef int16_t (*CO_IF_CAN_READ_FUNC)(CO_IF_FRM *);
-/*! CAN send function prototype */
-typedef int16_t (*CO_IF_CAN_SEND_FUNC)(CO_IF_FRM *);
-/*! CAN reset function prototype */
-typedef void (*CO_IF_CAN_RESET_FUNC)(void);
-/*! CAN close function prototype */
-typedef void (*CO_IF_CAN_CLOSE_FUNC)(void);
+typedef void    (*CO_IF_CAN_INIT_FUNC  )(void);
+typedef void    (*CO_IF_CAN_ENABLE_FUNC)(uint32_t);
+typedef int16_t (*CO_IF_CAN_READ_FUNC  )(CO_IF_FRM *);
+typedef int16_t (*CO_IF_CAN_SEND_FUNC  )(CO_IF_FRM *);
+typedef void    (*CO_IF_CAN_RESET_FUNC )(void);
+typedef void    (*CO_IF_CAN_CLOSE_FUNC )(void);
 
 typedef struct CO_IF_CAN_DRV_T {
     CO_IF_CAN_INIT_FUNC   Init;

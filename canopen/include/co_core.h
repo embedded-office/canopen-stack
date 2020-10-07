@@ -163,7 +163,7 @@ void CONodeProcess(CO_NODE *node);
 *
 *    This function is responsible for the loading of all parameter groups
 *    with the given type. The single parameter group(s) will be loaded from
-*    NVM by calling the user application callback function \ref CO_ParaLoad().
+*    NVM by calling the nvm driver function for reading data.
 *
 * \note
 *    This function considers all parameter groups, which are linked to the

@@ -51,48 +51,6 @@ extern "C" {
 #endif
 
 /******************************************************************************
-* PRIVATE MACROS
-******************************************************************************/
-
-/*! \brief RELOAD TIMER
-*
-*    This macro reloads the timer value to the next delay.
-*
-* \internal
-*/
-#define CO_TMR_RELOAD(tmr,x)     do { tmr->Delay=x; tmr->Time+=x; } while(0)
-
-/*! \brief GET TIMER VALUE
-*
-*    This macro reads the timer value.
-*
-* \internal
-*/
-#define CO_TMR_DELAY(tmr)        tmr->Delay
-
-/*! \brief STOP TIMER
-*
-*    This macro stops the timer.
-*
-* \internal
-*/
-#define CO_TMR_STOP(tmr)         do { tmr->Delay=0; tmr->Time=0; } while(0)
-
-/*! \brief START TIMER
-*
-*    This macro (re-)starts the timer.
-*/
-#define CO_TMR_START(tmr)
-
-/*! \brief UPDATE TIMER
-*
-*    This macro updates the timer value.
-*
-* \internal
-*/
-#define CO_TMR_UPDATE(tmr)       do { tmr->Delay--; } while(0)
-
-/******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
 

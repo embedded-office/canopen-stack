@@ -54,6 +54,7 @@ extern "C" {
 *    This structure may be placed into ROM to reduce RAM usage.
 */
 typedef struct CO_PARA_T {
+    uint32_t             Offset;   /*!< Offset in non-volatile memory area   */
     uint32_t             Size;     /*!< Size of parameter memory block       */
     uint8_t             *Start;    /*!< Start of parameter memory block      */
     uint8_t             *Default;  /*!< Start of default memory block        */
@@ -84,7 +85,7 @@ extern const CO_OBJ_TYPE COTPara;
 *
 *    This function is responsible for the storing activities of the given
 *    parameter group. The whole parameter group will be stored in NVM by
-*    calling the user callback function \ref COParaSave().
+*    calling the nvm driver function.
 *
 * \param pg
 *    Ptr to parameter group info
@@ -188,42 +189,6 @@ int16_t COTypeParaWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t
 /******************************************************************************
 * CALLBACK FUNCTIONS
 ******************************************************************************/
-
-/*! \brief LOAD PARAMETER VALUES CALLBACK
-*
-*    This callback function will be called during reset and powerup events.
-*    The function is responsible for loading the parameter from NVM into the
-*    parameter group memory.
-*
-* \note
-*    The parameter group info pointer is checked to be valid before calling
-*    this function.
-*
-* \param pg
-*    Ptr to parameter group info
-*
-* \retval  =0    parameter loading successful
-* \retval  <0    error is detected and function aborted
-*/
-extern int16_t COParaLoad(CO_PARA *pg);
-
-/*! \brief SAVE PARAMETER VALUES CALLBACK
-*
-*    This callback function will be called during storing a parameter group.
-*    The function is responsible for saving the current parameter group memory
-*    into NVM.
-*
-* \note
-*    The parameter group info pointer is checked to be valid before calling
-*    this function.
-*
-* \param pg
-*    Ptr to parameter group info
-*
-* \retval  =0    parameter loading successful
-* \retval  <0    error is detected and function aborted
-*/
-extern int16_t COParaSave(CO_PARA *pg);
 
 /*! \brief SET DEFAULT PARAMETER VALUES CALLBACK
 *

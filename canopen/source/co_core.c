@@ -103,13 +103,15 @@ CO_ERR CONodeGetErr(CO_NODE *node)
 */
 int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
 {
-    CO_DICT  *cod;
-    CO_OBJ  *obj;
-    CO_PARA *pg;
-    int16_t  err;
-    int16_t  result = 0;
-    uint8_t  num    = 0;
-    uint8_t  sub;
+    const CO_IF_NVM_DRV *nvm;
+    CO_DICT             *cod;
+    CO_OBJ              *obj;
+    CO_PARA             *pg;
+    uint32_t             bytes;
+    int16_t              err;
+    int16_t              result = 0;
+    uint8_t              num    = 0;
+    uint8_t              sub;
 
     cod = &node->Dict;
     err = CODictRdByte(cod, CO_DEV(0x1010, 0), &num);
@@ -117,15 +119,15 @@ int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
         node->Error = CO_ERR_NONE;
         return (result);
     }
-
+    nvm = node->If.Drv.Nvm;
     for (sub = 1; sub <= num; sub++) {
         obj = CODictFind(cod, CO_DEV(0x1010, sub));
         if (obj != 0) {
             pg = (CO_PARA *)obj->Data;
             if (pg->Type == type) {
-                err = COParaLoad(pg);
-                if (err != CO_ERR_NONE) {
-                    node->Error = CO_ERR_PARA_LOAD;
+                bytes = nvm->Read(pg->Offset, pg->Start, pg->Size);
+                if (bytes != pg->Size) {
+                    node->Error = CO_ERR_IF_NVM_READ;
                     result      = -1;
                 }
             }

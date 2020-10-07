@@ -33,17 +33,14 @@ extern "C" {
 
 struct CO_IF_T;                /* Declaration of interface structure         */
 
-/*! NVM init function prototype */
-typedef void (*CO_IF_NVM_INIT)(void);
-/*! NVM read function prototype */
-typedef uint32_t (*CO_IF_NVM_READ)(uint32_t, uint8_t *, uint32_t);
-/*! NVM write function prototype */
-typedef uint32_t (*CO_IF_NVM_WRITE)(uint32_t, uint8_t *, uint32_t);
+typedef void     (*CO_IF_NVM_INIT_FUNC )(void);
+typedef uint32_t (*CO_IF_NVM_READ_FUNC )(uint32_t, uint8_t *, uint32_t);
+typedef uint32_t (*CO_IF_NVM_WRITE_FUNC)(uint32_t, uint8_t *, uint32_t);
 
 typedef struct CO_IF_NVM_DRV_T {
-    CO_IF_NVM_INIT   Init;
-    CO_IF_NVM_READ   Read;
-    CO_IF_NVM_WRITE  Write;
+    CO_IF_NVM_INIT_FUNC  Init;
+    CO_IF_NVM_READ_FUNC  Read;
+    CO_IF_NVM_WRITE_FUNC Write;
 } CO_IF_NVM_DRV;
 
 /******************************************************************************

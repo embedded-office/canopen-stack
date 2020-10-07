@@ -77,8 +77,6 @@ void TS_CallbackInit(TS_CALLBACK *cb)
     cb->LssLoad_Called = 0;
     cb->LssLoad_Return = CO_ERR_NONE;
 
-    cb->ParaLoad_Called = 0;
-
     cb->PdoSyncUpdate_ArgPdo = 0;
     cb->PdoSyncUpdate_Called = 0;
 }
@@ -207,32 +205,6 @@ int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
         TsCallbacks->LssLoad_Called++;
         result = TsCallbacks->LssLoad_Return;
     }
-    return (result);
-}
-
-int16_t COParaLoad(CO_PARA *pg)
-{
-    int16_t result = CO_ERR_NONE;
-
-    if (TsCallbacks != 0) {
-        TsCallbacks->ParaLoad_ArgParaGrp = pg;
-        TsCallbacks->ParaLoad_Called++;
-        result = TsCallbacks->ParaLoad_Return;
-    }
-
-    return (result);
-}
-
-int16_t COParaSave(CO_PARA *pg)
-{
-    int16_t result = CO_ERR_NONE;
-
-    if (TsCallbacks != 0) {
-        TsCallbacks->ParaSave_ArgParaGrp = pg;
-        TsCallbacks->ParaSave_Called++;
-        result = TsCallbacks->ParaSave_Return;
-    }
-
     return (result);
 }
 
