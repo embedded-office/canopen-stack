@@ -44,8 +44,8 @@ void TS_CallbackInit(TS_CALLBACK *cb)
     cb->TmrLock_Called = 0;
     cb->TmrUnlock_Called = 0;
 
-    cb->IfReceive_ArgFrm = 0;
-    cb->IfReceive_Called = 0;
+    cb->IfCanReceive_ArgFrm = 0;
+    cb->IfCanReceive_Called = 0;
 
     cb->PdoTransmit_ArgFrm = 0;
     cb->PdoTransmit_Called = 0;
@@ -116,11 +116,11 @@ void COTmrUnlock(void)
     }
 }
 
-void COIfReceive(CO_IF_FRM *frm)
+void COIfCanReceive(CO_IF_FRM *frm)
 {
     if (TsCallbacks != 0) {
-        TsCallbacks->IfReceive_ArgFrm = frm;
-        TsCallbacks->IfReceive_Called++;
+        TsCallbacks->IfCanReceive_ArgFrm = frm;
+        TsCallbacks->IfCanReceive_Called++;
     }
 }
 

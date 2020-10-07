@@ -197,6 +197,6 @@ void CONodeProcess(CO_NODE *node)
     }
 
     if (allowed != 0) {
-        COIfReceive(&frm);
+        COIfCanReceive(&frm);
     }
 }
