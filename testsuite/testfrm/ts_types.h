@@ -54,34 +54,39 @@ typedef unsigned int        uintptr_t;
 
 #endif
 
-#if defined ( _MSC_VER )          /* ========================= MSVC ============================= */
-#define TEST_SECTION_PRE                              __declspec(allocate(".test$u")) 
-#define TEST_SECTION_DEF                              __pragma(section(".test$u", read))
+/******************************************************************************
+* PUBLIC DEFINES
+******************************************************************************/
+
+#if defined ( _MSC_VER )
+#define TEST_SECTION_PRE          __declspec(allocate(".test$u")) 
+#define TEST_SECTION_DEF          __pragma(section(".test$u", read))
 #define TEST_SECTION_SUF
-#define TEST_SECTION_START                            __start_test
-#define TEST_SECTION_END                              __stop_test
-#define TEST_SECTION_START_DEF                        __pragma(section(".test$a", read))
-#define TEST_SECTION_START_ALLOC(TEST_SECTION_START)  __declspec(allocate(".test$a")) const TS_INFOFUNC TEST_SECTION_START = (TS_INFOFUNC)0;
-#define TEST_SECTION_END_DEF                          __pragma(section(".test$z", read))
-#define TEST_SECTION_END_ALLOC(TEST_SECTION_START)    __declspec(allocate(".test$z")) const TS_INFOFUNC TEST_SECTION_END   = (TS_INFOFUNC)0;
-#define STRUCT_PACKED_PRE                             __pragma(pack(push, 1))
-#define STRUCT_PACKED_SUF                             __pragma(pack(pop))
-#elif defined ( __ICCARM__ )      /* ========================= IAR ============================== */
-#include <intrinsics.h>                               /* Compiler extensions                      */
-#define TEST_GET_SECTION(sym,var)                     extern void *sym; static uint32_t var = (uint32_t)&sym
-#define TEST_SECTION_PRE                              __root
-#define TEST_SECTION_DEF                              _Pragma("location=\"test\"")
-#define TEST_SECTION_SUF
-#define TEST_SECTION_START                            __start_test
-#define TEST_SECTION_END                              __stop_test
-#define TEST_SECTION_START_DEF                        TEST_GET_SECTION(test$$Base, __start_test);
-#define TEST_SECTION_START_ALLOC(x)
-#define TEST_SECTION_END_DEF                          TEST_GET_SECTION(test$$Limit, __stop_test)-1;
-#define TEST_SECTION_END_ALLOC(x)
-#define STRUCT_PACKED_PRE                             __packed
-#define STRUCT_PACKED_SUF
+#define TEST_SECTION_START        __start_test
+#define TEST_SECTION_END          __stop_test
+#define TEST_SECTION_START_DEF    __pragma(section(".test$a", read))
+#define TEST_SECTION_START_ALLOC  __declspec(allocate(".test$a")) const TS_INFOFUNC TEST_SECTION_START = (TS_INFOFUNC)0;
+#define TEST_SECTION_END_DEF      __pragma(section(".test$z", read))
+#define TEST_SECTION_END_ALLOC    __declspec(allocate(".test$z")) const TS_INFOFUNC TEST_SECTION_END   = (TS_INFOFUNC)0;
+#define STRUCT_PACKED_PRE         __pragma(pack(push, 1))
+#define STRUCT_PACKED_SUF         __pragma(pack(pop))
 #else
-#error "Adjust some compiler specific settings in ts.types.h"
+/* 
+* \note  The testsuite is running with MSVC compiler on the windows host, only. You may
+*        adjust the settings here and provide an output channel in ts_output.c to get
+*        the tests running on your target, too.
+*/
+#define TEST_SECTION_PRE
+#define TEST_SECTION_DEF
+#define TEST_SECTION_SUF
+#define TEST_SECTION_START
+#define TEST_SECTION_END
+#define TEST_SECTION_START_DEF
+#define TEST_SECTION_START_ALLOC
+#define TEST_SECTION_END_DEF
+#define TEST_SECTION_END_ALLOC
+#define STRUCT_PACKED_PRE
+#define STRUCT_PACKED_SUF
 #endif
 
 #endif /* TYPES_H_ */

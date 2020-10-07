@@ -99,10 +99,10 @@ typedef struct TS_DATA_T {
 ******************************************************************************/
 
 TEST_SECTION_START_DEF
-TEST_SECTION_START_ALLOC(TEST_SECTION_START)
+TEST_SECTION_START_ALLOC
 
 TEST_SECTION_END_DEF
-TEST_SECTION_END_ALLOC(TEST_SECTION_START)
+TEST_SECTION_END_ALLOC
 
 /******************************************************************************
 * PRIVATE VARIABLES
@@ -513,12 +513,13 @@ void TS_Init (void)
 
 int32_t TS_Start (void)
 {
+    int32_t            result = 0;
+#if defined ( _MSC_VER )
     const TS_INFOFUNC *test;
     TS_INFO            Info;
-    int32_t            result;
 
     TS_SummaryInit();                                 /* reset summary statistic                  */
-    
+
     test = (TS_INFOFUNC *)&TEST_SECTION_START;
     while (test < (TS_INFOFUNC *)&TEST_SECTION_END) {
         if (*test) {
@@ -533,6 +534,13 @@ int32_t TS_Start (void)
     }
 
     result = TS_Summary();                            /* show test summary statistic              */
-    
+#else
+/* 
+* \note  The testsuite is running with MSVC compiler on the windows host, only. You may
+*        adjust the settings in ts_types.h and provide an output channel in ts_output.c
+*        to get the tests running on your target, too.
+*/
+#endif
+
     return (result);
 }
