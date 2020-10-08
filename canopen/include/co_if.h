@@ -44,7 +44,7 @@ typedef struct CO_IF_DRV_T {         /*!< Type, which links driver functions */
 
 typedef struct CO_IF_T {          /*!< Driver interface structure            */
     struct CO_NODE_T *Node;       /*!< Link to parent node                   */
-    CO_IF_DRV         Drv;        /*!< Link to hardware driver functions     */
+    CO_IF_DRV        *Drv;        /*!< Link to hardware driver functions     */
 } CO_IF;
 
 /******************************************************************************

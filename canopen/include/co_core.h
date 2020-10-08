@@ -83,7 +83,7 @@ typedef struct CO_NODE_SPEC_T {
     struct CO_TMR_MEM_T   *TmrMem;       /*!< timer memory blocks            */
     uint16_t               TmrNum;       /*!< number of timer memory blocks  */
     uint32_t               TmrFreq;      /*!< timer clock frequency in Hz    */
-    CO_IF_DRV              Drv;          /*!< linked interface drivers       */
+    CO_IF_DRV             *Drv;          /*!< linked interface drivers       */
     uint8_t               *SdoBuf;       /*!< SDO Transfer Buffer Memory     */
 
 } CO_NODE_SPEC;

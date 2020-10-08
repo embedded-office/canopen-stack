@@ -119,7 +119,7 @@ int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
         node->Error = CO_ERR_NONE;
         return (result);
     }
-    nvm = node->If.Drv.Nvm;
+    nvm = node->If.Drv->Nvm;
     for (sub = 1; sub <= num; sub++) {
         obj = CODictFind(cod, CO_DEV(0x1010, sub));
         if (obj != 0) {

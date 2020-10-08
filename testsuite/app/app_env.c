@@ -127,7 +127,7 @@ void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec, uint32_t freq)
 
     spec->NodeId   = 1u;                         /* setup node specification */
     spec->Baudrate = 250000u;
-    spec->Drv      = TS_Driver;
+    spec->Drv      = &TS_Driver;
 
     spec->Dict      = ODGetDict(&TS_ODDyn);
     spec->DictLen   = TS_OD_MAX;

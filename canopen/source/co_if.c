@@ -29,9 +29,9 @@
 */
 void COIfInit(CO_IF *cif, struct CO_NODE_T *node, uint32_t freq)
 {
-    const CO_IF_CAN_DRV   *can   = cif->Drv.Can;
-    const CO_IF_TIMER_DRV *timer = cif->Drv.Timer;
-    const CO_IF_NVM_DRV   *nvm   = cif->Drv.Nvm;
+    const CO_IF_CAN_DRV   *can   = cif->Drv->Can;
+    const CO_IF_TIMER_DRV *timer = cif->Drv->Timer;
+    const CO_IF_NVM_DRV   *nvm   = cif->Drv->Nvm;
 
     nvm->Init();
     timer->Init(freq);

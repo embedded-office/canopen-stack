@@ -42,7 +42,7 @@ const CO_OBJ_TYPE COTPara = { 0, 0, COTypeParaRead, COTypeParaWrite };
 */
 void COParaStore(CO_PARA *pg, CO_NODE *node)
 {
-    const CO_IF_NVM_DRV *nvm = node->If.Drv.Nvm;
+    const CO_IF_NVM_DRV *nvm = node->If.Drv->Nvm;
     uint32_t bytes;
 
     /* argument chekcs */
