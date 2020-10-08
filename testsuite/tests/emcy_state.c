@@ -36,7 +36,7 @@ TS_DEF_MAIN(TS_Emcy_TxOnSet)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     SimCanRun();
@@ -68,7 +68,7 @@ TS_DEF_MAIN(TS_Emcy_NoTxOnSetRepeat)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2 without user info      */
     SimCanRun();
@@ -94,7 +94,7 @@ TS_DEF_MAIN(TS_Emcy_TxOnClr)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     SimCanRun();
@@ -128,7 +128,7 @@ TS_DEF_MAIN(TS_Emcy_NoTxOnClrRepeat)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcyClr(&node.Emcy, 2);                         /* clear not existing error #2              */
     SimCanRun();
@@ -149,7 +149,7 @@ TS_DEF_MAIN(TS_Emcy_TxOnReset)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     COEmcySet(&node.Emcy, 3, 0);                      /* register error #3 without user info      */
@@ -193,7 +193,7 @@ TS_DEF_MAIN(TS_Emcy_NoTxOnResetRepeat)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcyReset(&node.Emcy, 0);                       /* reset all errors                         */
     SimCanRun();

@@ -38,7 +38,7 @@ TS_DEF_MAIN(TS_Nmt_Bootup)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
                                                       /*------------------------------------------*/
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
@@ -62,7 +62,7 @@ TS_DEF_MAIN(TS_Nmt_BootupChangedNodeId)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
 
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&node);                                /* check, that no BootUp message is sent    */
@@ -88,7 +88,7 @@ TS_DEF_MAIN(TS_Nmt_NoBootupInInitResetNode)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
 
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
@@ -112,7 +112,7 @@ TS_DEF_MAIN(TS_Nmt_NoBootupInInitResetCom)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
 
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
@@ -135,7 +135,7 @@ TS_DEF_MAIN(TS_Nmt_TxBootupInPreopResetNode)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
 
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
@@ -163,7 +163,7 @@ TS_DEF_MAIN(TS_Nmt_TxBootupInPreopResetCom)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
 
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
@@ -191,7 +191,7 @@ TS_DEF_MAIN(TS_Nmt_NoSdoInInit)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
 
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
@@ -215,7 +215,7 @@ TS_DEF_MAIN(TS_Nmt_NoEmcyInInit)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
 
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
@@ -238,7 +238,7 @@ TS_DEF_MAIN(TS_Nmt_NoNmtInInit)
     CO_NODE_SPEC   spec;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateSpec(&node, &spec);
+    TS_CreateSpec(&node, &spec, 0);
 
     CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
     CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */

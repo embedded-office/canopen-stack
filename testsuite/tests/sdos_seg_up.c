@@ -94,7 +94,7 @@ TS_DEF_MAIN(TS_SegRd_42ByteDomain)
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
     DomFill(dom, 0);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
  
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
     TS_SDO_SEND (0x40, idx, sub, size);
@@ -148,7 +148,7 @@ TS_DEF_MAIN(TS_SegRd_43ByteDomain)
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
     DomFill(dom, 0);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
     TS_SDO_SEND (0x40, idx, sub, size);
@@ -203,7 +203,7 @@ TS_DEF_MAIN(TS_SegRd_41ByteDomain)
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
     DomFill(dom, 0);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
     TS_SDO_SEND (0x40, idx, sub, size); 
@@ -257,7 +257,7 @@ TS_DEF_MAIN(TS_SegRd_23ByteString)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_STRING|CO_OBJ____R_), CO_TSTRING, (uintptr_t)&Str23);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
     TS_SDO_SEND (0x40, idx, sub, size);
@@ -322,7 +322,7 @@ TS_DEF_MAIN(TS_SegRd_BadCmd)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0xF0, idx, sub, 0); 
@@ -355,7 +355,7 @@ TS_DEF_MAIN(TS_SegRd_ObjNotExist)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     idx++;
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -389,7 +389,7 @@ TS_DEF_MAIN(TS_SegRd_SubIdxNotExist)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     sub++;
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -423,7 +423,7 @@ TS_DEF_MAIN(TS_SegRd_WriteOnly)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ_____W, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0x40, idx, sub, 0);
@@ -455,7 +455,7 @@ TS_DEF_MAIN(TS_SegRd_DomainNullPtr)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)0);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0x40, idx, sub, 0);
@@ -492,7 +492,7 @@ TS_DEF_MAIN(TS_SegRd_Bad1stToggleBit)
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
     DomFill(dom, 0);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
     TS_SDO_SEND (0x40, idx, sub, size); 
@@ -540,7 +540,7 @@ TS_DEF_MAIN(TS_SegRd_Bad2ndToggleBit)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_STRING|CO_OBJ____R_), CO_TSTRING, (uintptr_t)&Str23);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
     TS_SDO_SEND (0x40, idx, sub, size);

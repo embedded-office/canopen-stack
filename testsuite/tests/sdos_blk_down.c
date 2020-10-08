@@ -44,7 +44,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
 
@@ -93,7 +93,7 @@ TS_DEF_MAIN(TS_BlkWr_43ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -144,7 +144,7 @@ TS_DEF_MAIN(TS_BlkWr_41ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -194,7 +194,7 @@ TS_DEF_MAIN(TS_BlkWr_994ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -251,7 +251,7 @@ TS_DEF_MAIN(TS_BlkWr_995ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -308,7 +308,7 @@ TS_DEF_MAIN(TS_BlkWr_993ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -366,7 +366,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_NoLen)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC0, idx, sub, 0);
@@ -418,7 +418,7 @@ TS_DEF_MAIN(TS_BlkWr_43ByteDomain_NoLen)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC0, idx, sub, 0);
@@ -469,7 +469,7 @@ TS_DEF_MAIN(TS_BlkWr_41ByteDomain_NoLen)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC0, idx, sub, 0);
@@ -520,7 +520,7 @@ TS_DEF_MAIN(TS_BlkWr_1000ByteDomain_NoLen)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC0, idx, sub, 0);
@@ -580,7 +580,7 @@ TS_DEF_MAIN(TS_BlkWr_LostSeg)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC0, idx, sub, size);
@@ -638,7 +638,7 @@ TS_DEF_MAIN(TS_BlkWr_890ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, 890);
@@ -689,7 +689,7 @@ TS_DEF_MAIN(TS_BlkWr_889ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -740,7 +740,7 @@ TS_DEF_MAIN(TS_BlkWr_46ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -790,7 +790,7 @@ TS_DEF_MAIN(TS_BlkWr_44ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -840,7 +840,7 @@ TS_DEF_MAIN(TS_BlkWr_BadCmd)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0xE0, idx, sub, size);
@@ -873,7 +873,7 @@ TS_DEF_MAIN(TS_BlkWr_ObjNotExist)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     idx++;
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -907,7 +907,7 @@ TS_DEF_MAIN(TS_BlkWr_SubIdxNotExist)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     sub++;
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -941,7 +941,7 @@ TS_DEF_MAIN(TS_BlkWr_ReadOnly)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____R_, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -975,7 +975,7 @@ TS_DEF_MAIN(TS_BlkWr_LenTooHigh)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     size++;
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -1009,7 +1009,7 @@ TS_DEF_MAIN(TS_BlkWr_DomainNullPtr)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (uintptr_t)0);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0xC2, idx, sub, 0);
@@ -1049,7 +1049,7 @@ TS_DEF_MAIN(TS_BlkWr_TwoDomains)
     TS_CreateMandatoryDir();
     dom1 = DomCreate(idx, sub1, CO_OBJ____RW, size1);
     dom2 = DomCreate(idx, sub2, CO_OBJ____RW, size2);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== FIRST BLOCK DOWNLOAD ===============*/
 
@@ -1136,7 +1136,7 @@ TS_DEF_MAIN(TS_BlkWr_455ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
@@ -1190,7 +1190,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_35Byte)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     size = 35;
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
@@ -1245,7 +1245,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     size = 49;
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
@@ -1281,7 +1281,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte_NoLen)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, 0);
@@ -1330,7 +1330,7 @@ TS_DEF_MAIN(TS_BlkWr_ExpWrAfter43ByteDomain)
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
     TS_ODAdd(CO_KEY(idx2, sub2, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);

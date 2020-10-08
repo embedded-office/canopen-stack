@@ -34,6 +34,9 @@
 /* Maximal number of timers in tests */
 #define TS_TMR_N   16
 
+/* Timer clock frequency */
+#define TS_TMR_FREQ   100
+
 /* Maximal number of SDO servers */
 #define TS_SDOS_N   1
 
@@ -118,7 +121,7 @@ void TS_CanIsr(void)
 *          - SDO buffer: TS_SDOS_N servers with CO_SDO_BUF_BYTE bytes
 */
 /*---------------------------------------------------------------------------*/
-void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec)
+void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec, uint32_t freq)
 {
     TS_TestNode    = node;                               /* link parent node */
 
@@ -138,6 +141,11 @@ void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec)
 
     spec->TmrMem   = &TmrMem[0];
     spec->TmrNum   = TS_TMR_N;
+    if (freq > 0) {
+        spec->TmrFreq = freq;
+    } else {
+        spec->TmrFreq = TS_TMR_FREQ;
+    }
     spec->SdoBuf   = &SdoBuf[0][0];
 
     SimCanSetIsr(TS_CanIsr);                /* connect to test can interface */
@@ -153,11 +161,11 @@ void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec)
 *          Starting mode is: PRE-OPERATIONAL
 */
 /*---------------------------------------------------------------------------*/
-void TS_CreateNode(CO_NODE *node)
+void TS_CreateNode(CO_NODE *node, uint32_t freq)
 {
     CO_NODE_SPEC spec;
 
-    TS_CreateSpec(node, &spec);
+    TS_CreateSpec(node, &spec, freq);
 
     CONodeInit(node, &spec);
     CONodeStart(node);
@@ -174,7 +182,7 @@ void TS_CreateNode(CO_NODE *node)
 /*---------------------------------------------------------------------------*/
 void TS_CreateNodeAutoStart(CO_NODE *node)
 {
-    TS_CreateNode(node);
+    TS_CreateNode(node, 0);
     CONmtSetMode(&node->Nmt, CO_OPERATIONAL);
 }
 
@@ -348,8 +356,9 @@ void TS_CreateTPdoMap(uint8_t num, uint32_t *map, uint8_t *len)
 /*---------------------------------------------------------------------------*/
 void TS_Wait(CO_NODE *node, uint32_t millisec)
 {
-    uint32_t time = 0;
-    uint32_t frac = 0;
+    uint32_t time  = 0;
+    uint32_t frac  = 0;
+    uint32_t ticks = COTmrGetTicks(&node->Tmr, 1000, CO_TMR_UNIT_1MS);
     int16_t  elabsed;
 
     while (millisec > time) {               /* wait for given amount of time */
@@ -357,11 +366,11 @@ void TS_Wait(CO_NODE *node, uint32_t millisec)
         if (elabsed > 0) {
             COTmrProcess(&node->Tmr);       /* process elapsed timer actions */
         }
-        if (CO_TMR_TICKS_PER_SEC <= 1000) {
-            time += (1000 / CO_TMR_TICKS_PER_SEC);
+        if (ticks <= 1000) {
+            time += (1000 / ticks);
         } else {
             if (frac == 0) {
-                frac = CO_TMR_TICKS_PER_SEC / 1000;
+                frac = ticks / 1000;
             }
             if (frac > 0) {
                 frac--;

@@ -537,7 +537,7 @@ TS_DEF_MAIN(TS_TPdo_Tmr)
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
     TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
                                                       /* wait more than 1 event timer time        */
     TS_Wait(&node, 300);                              /* wait 300ms                               */
@@ -759,7 +759,7 @@ TS_DEF_MAIN(TS_TPdo_ChangeTmr)
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
     TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
     TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_SDO_SEND (0x22, 0x1800, 5, 200);
 
@@ -797,14 +797,15 @@ TS_DEF_MAIN(TS_TPdo_ChangeTmr)
 TS_DEF_MAIN(TS_TPdo_TmrFastest)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 255;
-    uint16_t     tpdo_inhibit = 1000;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 1000;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
+    uint16_t  min_time;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -816,7 +817,8 @@ TS_DEF_MAIN(TS_TPdo_TmrFastest)
 
     CHK_NOCAN(&frm);                                  /* check no PDO is sent                     */
 
-    TS_SDO_SEND (0x22, 0x1800, 5, 1);
+    min_time = COTmrGetMinTime(&node.Tmr, CO_TMR_UNIT_1MS);
+    TS_SDO_SEND (0x22, 0x1800, 5, min_time);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_SDO0 (frm, 0x60);                             /* check SDO #0 response (Id and DLC)       */

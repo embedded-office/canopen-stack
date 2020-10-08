@@ -36,7 +36,7 @@ TS_DEF_MAIN(TS_Emcy_ErrRegOnSet)
     uint8_t err_reg;
     
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
 
@@ -59,7 +59,7 @@ TS_DEF_MAIN(TS_Emcy_ErrRegOnSetRepeat)
     uint8_t err_reg;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2                        */
@@ -83,7 +83,7 @@ TS_DEF_MAIN(TS_Emcy_ErrRegOnClr)
     uint8_t err_reg;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2                        */
@@ -109,7 +109,7 @@ TS_DEF_MAIN(TS_Emcy_ErrRegOnReset)
     uint8_t err_reg;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1                        */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2                        */

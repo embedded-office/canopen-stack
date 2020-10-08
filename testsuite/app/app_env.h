@@ -408,9 +408,12 @@ void TS_CanIsr(void);
 *
 * \param   spec
 *          Specification for CANopen node for testing
+*
+* \param   freq
+*          Overwrite default frequency (if value is >0)
 */
 /*---------------------------------------------------------------------------*/
-void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec);
+void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec, uint32_t freq);
 
 /*---------------------------------------------------------------------------*/
 /*! \brief CREATE CANOPEN NODE
@@ -419,9 +422,12 @@ void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec);
 *
 * \param   node
 *          CANopen node for testing
+*
+* \param   freq
+*          Overwrite default frequency (if value is >0)
 */
 /*---------------------------------------------------------------------------*/
-void TS_CreateNode(CO_NODE *node);
+void TS_CreateNode(CO_NODE *node, uint32_t freq);
 
 /*---------------------------------------------------------------------------*/
 /*! \brief CREATE AND START CANOPEN NODE

@@ -45,6 +45,8 @@ target_include_directories(CanopenTest
 #
 target_sources(CanopenTest
   PRIVATE
+    tests/get_ticks.c
+    tests/get_min_time.c
     tests/core_tmr.c
     tests/emcy_api.c
     tests/emcy_err.c

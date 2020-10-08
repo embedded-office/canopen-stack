@@ -68,7 +68,7 @@ TEST_DEF(TS_Tmr_DelA11)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -85,7 +85,7 @@ TEST_DEF(TS_Tmr_DelA12)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -102,7 +102,7 @@ TEST_DEF(TS_Tmr_DelA13)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -119,7 +119,7 @@ TEST_DEF(TS_Tmr_DelA21)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -136,7 +136,7 @@ TEST_DEF(TS_Tmr_DelA22)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -153,7 +153,7 @@ TEST_DEF(TS_Tmr_DelA23)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -170,7 +170,7 @@ TEST_DEF(TS_Tmr_DelA31)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -187,7 +187,7 @@ TEST_DEF(TS_Tmr_DelA32)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -204,7 +204,7 @@ TEST_DEF(TS_Tmr_DelA33)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 1000, 2000, 3000);
 
@@ -221,7 +221,7 @@ TEST_DEF(TS_Tmr_DelA41)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -238,7 +238,7 @@ TEST_DEF(TS_Tmr_DelA42)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -255,7 +255,7 @@ TEST_DEF(TS_Tmr_DelA43)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -272,7 +272,7 @@ TEST_DEF(TS_Tmr_DelA51)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -289,7 +289,7 @@ TEST_DEF(TS_Tmr_DelA52)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -306,7 +306,7 @@ TEST_DEF(TS_Tmr_DelA53)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -323,7 +323,7 @@ TEST_DEF(TS_Tmr_DelA61)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -340,7 +340,7 @@ TEST_DEF(TS_Tmr_DelA62)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -357,7 +357,7 @@ TEST_DEF(TS_Tmr_DelA63)
     CO_NODE  node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     TS_PrepareTmrLists(&node, 0, 0, 0);
 
@@ -388,7 +388,7 @@ TEST_DEF(TS_Tmr_1Tmr_MaxActs)
     CO_NODE   node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COTmrReset(&node.Tmr);
 
@@ -448,7 +448,7 @@ TEST_DEF(TS_Tmr_MaxTmrs_1Act)
     CO_NODE   node;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     COTmrReset(&node.Tmr);
 
     /* create timers */
@@ -499,16 +499,17 @@ TEST_DEF(TS_Tmr_Period100ms)
 {
     int16_t  val;
     CO_NODE  node;
+    uint32_t start;
+    uint32_t cycle;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     COTmrReset(&node.Tmr);
 
     /* create actions */
-    val = COTmrCreate(&node.Tmr,
-                      CO_TMR_TICKS(0),
-                      CO_TMR_TICKS(100),
-                      TS_TmrFunc, 0);
+    start = COTmrGetTicks(&node.Tmr, 0, CO_TMR_UNIT_1MS);
+    cycle = COTmrGetTicks(&node.Tmr, 100, CO_TMR_UNIT_1MS);
+    val   = COTmrCreate(&node.Tmr, start, cycle, TS_TmrFunc, 0);
     TS_ASSERT(val >= 0);
 
     SET_TMR_CNT(0);                       /* clear timer callback calling counter */
@@ -537,16 +538,17 @@ TEST_DEF(TS_Tmr_OneShot100ms)
 {
     int16_t  val;
     CO_NODE  node;
+    uint32_t start;
+    uint32_t cycle;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     COTmrReset(&node.Tmr);
 
     /* create timer */
-    val = COTmrCreate(&node.Tmr,
-                      CO_TMR_TICKS(100),
-                      CO_TMR_TICKS(0),
-                      TS_TmrFunc, 0);
+    start = COTmrGetTicks(&node.Tmr, 100, CO_TMR_UNIT_1MS);
+    cycle = COTmrGetTicks(&node.Tmr, 0, CO_TMR_UNIT_1MS);
+    val   = COTmrCreate(&node.Tmr, start, cycle, TS_TmrFunc, 0);
     TS_ASSERT(val >= 0);
 
     SET_TMR_CNT(0);                       /* clear timer callback calling counter     */
@@ -576,16 +578,17 @@ TEST_DEF(TS_Tmr_StartDelay)
 {
     int16_t  val;
     CO_NODE  node;
+    uint32_t start;
+    uint32_t cycle;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     COTmrReset(&node.Tmr);
 
     /* create timer */
-    val = COTmrCreate(&node.Tmr,
-                      CO_TMR_TICKS(200),
-                      CO_TMR_TICKS(100),
-                      TS_TmrFunc, 0);
+    start = COTmrGetTicks(&node.Tmr, 200, CO_TMR_UNIT_1MS);
+    cycle = COTmrGetTicks(&node.Tmr, 100, CO_TMR_UNIT_1MS);
+    val   = COTmrCreate(&node.Tmr, start, cycle, TS_TmrFunc, 0);
     TS_ASSERT(val >= 0);
 
     SET_TMR_CNT(0);                                   /* clear timer callback calling counter     */
@@ -617,16 +620,17 @@ TEST_DEF(TS_Tmr_AppTmrAfterNodeReset)
     CO_IF_FRM  frm;
     int16_t    val;
     CO_NODE    node;
+    uint32_t   start;
+    uint32_t   cycle;
 
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     COTmrReset(&node.Tmr);
 
     /* create actions */
-    val = COTmrCreate(&node.Tmr,
-                      CO_TMR_TICKS(0),
-                      CO_TMR_TICKS(100),
-                      TS_TmrFunc, 0);
+    start = COTmrGetTicks(&node.Tmr, 0, CO_TMR_UNIT_1MS);
+    cycle = COTmrGetTicks(&node.Tmr, 100, CO_TMR_UNIT_1MS);
+    val   = COTmrCreate(&node.Tmr, start, cycle, TS_TmrFunc, 0);
     TS_ASSERT(val >= 0);
 
     SET_TMR_CNT(0);                                   /* clear timer callback calling counter     */
