@@ -40,7 +40,7 @@ void HardwareTimerISR (void)
 {
     int16_t num;
 
-    num = COTmrCreate(&(AppNode.Tmr));
+    num = COTmrService(&(AppNode.Tmr));
     if (num > 0) {
         /* post an event to the timer processing task */
     }

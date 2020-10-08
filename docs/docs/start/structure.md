@@ -22,6 +22,11 @@ The following description explains the directories within this repository.
   |  +- _examples   : collection of example descriptions
   |  +- docs        : static documentation pages
   |  +- ...         : jekyll structure for generating project page
+  +- driver         : --- driver templates ---
+  |  +- include     : include files
+  |  +- source      : C source files
+  +- example        : --- example projects ---
+  |  +- quickstart  : quickstart files
   +- testsuite      : --- testsuite ---
   |  +- app         : test application
   |  +- driver      : CAN simulation driver
@@ -41,9 +46,6 @@ This directory tree contains the embedded source code of the CANopen Stack. The 
   - CO_TPDO_N            : maximum number of possible TPDOs (default: 4)
   - CO_RPDO_N            : maximum number of possible RPDOs (default: 4)
   - CO_EMCY_N            : maximum number of possible emergency codes (default: 32)
-
-  optional settings
-  - CO_TMR_TICKS_PER_SEC : timer tick rate in frequency (default: 100)
 ```
 
 ### Directory: docs
@@ -51,6 +53,14 @@ This directory tree contains the embedded source code of the CANopen Stack. The 
 This directory tree contains the complete documentation, which is presented as a GitHub project page. The project page is automatically generated and deployed, when there is a push into the `docs` directory tree in the master branch.
 
 The README within the docs directory explains how to setup a local environment for writing the documentation with immediate feedback on saving a change. Thanks Jekyll for this nice feature!
+
+### Directory: driver
+
+This directory tree contains the template files for your driver development (the `dummy` devices). There are drivers for the testsuite included, which mainly simulates the specific behavior.
+
+### Directory: example
+
+This directory tree contains example projects which you can take for inspiration and learning the stack. You may copy and adjust these projects to your needs.
 
 ### Directory: testsuite
 

@@ -193,10 +193,11 @@ Create the file `clock_spec.c` and insert the following code:
 #include "co_core.h"
 
 /* Define some default values for our CANopen node: */
-#define APP_NODE_ID     1u          /* CANopen node ID           */
-#define APP_BAUDRATE    250000u     /* CAN baudrate              */
-#define APP_CAN_BUS_ID  0u          /* Bus ID (driver specific)  */
-#define APP_TMR_N       16u         /* Number of software timers */
+#define APP_NODE_ID       1u       /* CANopen node ID             */
+#define APP_BAUDRATE      250000u  /* CAN baudrate                */
+#define APP_CAN_BUS_ID    0u       /* Bus ID (driver specific)    */
+#define APP_TMR_N         16u      /* Number of software timers   */
+#define APP_TICKS_PER_SEC 1000u    /* Timer clock frequency in Hz */
 
 /* get external object dictionary */
 extern const CO_OBJ   *ClockOD;
@@ -223,6 +224,7 @@ const CO_NODE_SPEC AppSpec = {
     NULL,                /* no EMCY info fields (unused)   */
     &TmrMem[0],          /* pointer to timer memory blocks */
     APP_TMR_N,           /* number of timer memory blocks  */
+    APP_TICKS_PER_SEC;   /* timer clock frequency in Hz    */
     APP_CAN_BUS_ID,      /* linked CAN bus driver          */
     &SdoSrvMem[0]        /* SDO Transfer Buffer Memory     */
 };
@@ -248,6 +250,8 @@ CO_NODE Clk;
 /* main entry function */
 void main(int argc, char *argv[])
 {
+    uint32_t ticks;
+
     /* Initialize your hardware layer and the CANopen stack.
      * Stop execution if an error is detected.
      */
@@ -258,9 +262,11 @@ void main(int argc, char *argv[])
     }
      
     /* Use CANopen software timer to create a cyclic function
-     * call to the callback function 'AppClock()'.
+     * call to the callback function 'AppClock()' with a period
+     * of 1s (equal: 1000ms).
      */
-    COTmrCreate(&Clk.Tmr, 0, CO_TMR_TICKS_PER_SEC, AppClock, &Clk);
+    ticks = COTmrGetTicks(&Clk.Tmr, 1000, CO_TMR_UNIT_1MS);
+    COTmrCreate(&Clk.Tmr, 0, ticks, AppClock, &Clk);
 
     /* Start the CANopen node and set it automatically to
      * NMT mode: 'OPERATIONAL'.
@@ -335,7 +341,7 @@ void AppClock(void *p_arg)
 
 ### Hardware Connection
 
-For the hardware connection, you need to add a CAN driver which implements the following interface functions:
+For the hardware connection, you need to select or add some drivers to your project:
 
 ```c
 int16_t COIfCanRead  (CO_IF *cif, CO_IF_FRM *frm);
@@ -346,7 +352,7 @@ void    COIfCanInit  (CO_IF *cif, struct CO_NODE_T *node);
 void    COIfCanEnable(CO_IF *cif, uint32_t baudrate);
 ```
 
-Furthermore, setup a hardware timer interrupt with your low-level layer (I call it Board Support Package) and configure a cyclic interrupt with a frequency of `CO_TMR_TICKS_PER_SEC`. The timer interrupt service handler should look like:
+Furthermore, setup a hardware timer interrupt with your low-level layer (I call it Board Support Package) and configure a cyclic interrupt with a frequency of `APP_TICKS_PER_SEC`. The timer interrupt service handler should look like:
 
 ```c
 #include "co_core.h"

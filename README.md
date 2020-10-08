@@ -60,7 +60,7 @@ and to your source path:
 
 ### Hardware interfaces
 
-The project contains a driver layer for required hardware interfaces. In this repository no real hardware specific drivers are included. The repository contains a template device (`dummy`) as a starting point for your own drivers and a driver for simulated device (`sim`) for the test suite.
+The project contains a driver layer for required hardware interfaces. In this repository no real hardware specific drivers are included. The repository contains a template device (`dummy`) as a starting point for your own drivers and a driver for simulated device (`sim`) for CAN and NVM (used by the test suite) and a device for software based timer (`swcycle`).
 
 | Interface | Component                                   |
 | --------- | ------------------------------------------- |
@@ -74,20 +74,21 @@ For selecting the hardware interfaces you need to include the header file of one
 
 ```c
 #include "co_can_sim.h"
-#include "co_timer_sim.h"
+#include "co_timer_swcycle.h"
 #include "co_nvm_sim.h"
 
 const CO_IF_DRV MyDriver = {
   SimCanDriver,
-  SimTimerDriver,
+  SwCycleTimerDriver,
   SimNvmDriver
 };
 ```
 
 #### Integrate timer service
 
-The timer management needs a hardware timer interrupt or another periodic interrupt source. Which method is used depends on the timer driver and is explained in the corresponding documentation. The service function of the timer management checks if a timer event is elapsed and coordinates the CANopen software timers.
-- call the function `COTmrService()` at the documented location
+How to integrate the timer management depends on the timer driver and is explained in the corresponding documentation. For the software cycle timer, we need to call the timer service function periodically. The service function of the timer management checks if a timer event is elapsed and coordinates the CANopen software timers.
+- call the function `COTmrService()` periodically
+- set the calling frequency in `TBD`
 
 The processing of all actions related to a timer event is performed with the process function of the timer management. This execution can take place within the timer interrupt service handler, or within a task of your RTOS.
 - call the function `COTmrProcess()` where you want to process the timed actions
@@ -144,6 +145,7 @@ void foo(void)
     spec.EmcyCode = &MyEmcyTbl;
     spec.TmrMem   = &MyTmrMem[0];
     spec.TmrNum   = 16u;
+    spec.TmrFreq  = 1000u;
     spec.SdoBuf   = &MySdoMem[0][0];
 
     CONodeInit (&myNode, &spec);

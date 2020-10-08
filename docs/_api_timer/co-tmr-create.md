@@ -17,8 +17,8 @@ This function are used within the CANopen stack for timed actions. It is possibl
 
 ```c
 int16_t COTmrCreate(CO_TMR      *tmr,
-                    uint32_t     startTime,
-                    uint32_t     cycleTime,
+                    uint32_t     startTicks,
+                    uint32_t     cycleTicks,
                     CO_TMR_FUNC  func,
                     void        *para);
 ```
@@ -28,8 +28,8 @@ int16_t COTmrCreate(CO_TMR      *tmr,
 | Parameter | Description |
 | --- | --- |
 | tmr | pointer to timer object |
-| startTime | delta time in ticks for the first timer event |
-| cycleTime | if != 0, the delta time in ticks for the cyclic timer events |
+| startTicks | delta time in ticks for the first timer event |
+| cycleTicks | if != 0, the delta time in ticks for the cyclic timer events |
 | func | pointer to the action callback function |
 | para | pointer to the callback function parameter |
 
@@ -43,9 +43,15 @@ int16_t COTmrCreate(CO_TMR      *tmr,
 The following example installs a cyclic called function `AppCyclicFunc()` to the CANopen node AppNode. The timed function will be called the first time after 10ms and then every 25ms with the parameter: 0xcafe.
 
 ```c
-    CPU_INT16S  aid;
+    CO_TMR  *tmr;
+    int16_t  aid;
+    uint32_t start;
+    uint32_t cycle;
     :
-    aid = COTmrCreate(&(AppNode.Tmr), 10, 25, AppCyclicFunc, 0xcafe);
+    tmr   = &AppNode.Tmr;
+    start = COTmrGetTicks(tmr, 10, CO_TMR_UNIT_1MS);
+    cycle = COTmrGetTicks(tmr, 25, CO_TMR_UNIT_1MS);
+    aid = COTmrCreate(tmr, start, cycle, AppCyclicFunc, 0xcafe);
     if (aid >= 0) {
         /* tid holds the timer identifier */
     } else {
@@ -54,4 +60,4 @@ The following example installs a cyclic called function `AppCyclicFunc()` to the
     :
 ```
 
-Note: The example assumes, that the timer callback function `AppCyclicFunc()` is implemented with the correct prototype. The hardware timer is configured with 1 tick equal to 1ms.
+Note: The example assumes, that the timer callback function `AppCyclicFunc()` is implemented with the correct prototype. The hardware timer is configured with sufficient timer clock frequency to achieve the 1ms resolution.

@@ -37,12 +37,16 @@ int16_t COTmrDelete(CO_TMR  *tmr,
 The following calls a critical function `AppCritFunc()` and installs a function `AppEmcyFunc()` to the CANopen node AppNode to guarantee a maximum runtime of 150ms. The timed function will be called after 150ms and perform emergency handling with the parameter 0xdead. If the `AppCritFunc()` is finished before 150ms, the timed emergency function call will be removed.
 
 ```c
+    CO_TMR     *tmr;
     CPU_INT16S  aid;
+    uint32_t    max;
     :
-    aid = COTmrCreate(&(AppNode.Tmr), 150, 0, AppEmcyFunc, 0xdead);
+    tmr = &AppNode.Tmr;
+    max = COTmrGetTicks(tmr, 150, CO_TMR_UNIT_1MS);
+    aid = COTmrCreate(tmr, max, 0, AppEmcyFunc, 0xdead);
     if (aid >= 0) {
         AppCritFunc();
-        err = COTmrDelete(&(AppNode.Tmr), aid);
+        err = COTmrDelete(tmr, aid);
         if (err < 0) {
             /* error during deleting the timed action */
         }
