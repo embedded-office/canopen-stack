@@ -60,8 +60,11 @@ typedef struct CO_IF_T {          /*!< Driver interface structure            */
 *
 * \param node
 *    pointer to the parent node
+*
+* \param freq
+*    timer clock frequency
 */
-void COIfInit(CO_IF *cif, struct CO_NODE_T *node);
+void COIfInit(CO_IF *cif, struct CO_NODE_T *node, uint32_t freq);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

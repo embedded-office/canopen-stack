@@ -33,7 +33,7 @@ extern "C" {
 
 struct CO_IF_T;                /* Declaration of interface structure         */
 
-typedef void     (*CO_IF_TIMER_INIT_FUNC  )(void);
+typedef void     (*CO_IF_TIMER_INIT_FUNC  )(uint32_t);
 typedef void     (*CO_IF_TIMER_RELOAD_FUNC)(uint32_t);
 typedef uint32_t (*CO_IF_TIMER_DELAY_FUNC )(void);
 typedef void     (*CO_IF_TIMER_STOP_FUNC  )(void);

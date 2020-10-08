@@ -35,9 +35,47 @@ extern void COTmrUnlock(void);
 /*
 * see function definition
 */
+uint32_t COTmrGetTicks(CO_TMR *tmr, uint16_t time, uint32_t unit)
+{
+    uint32_t ticks = 0u;
+    uint32_t freq  = tmr->Freq;
+
+    if (freq == 0u) {
+        ticks = 0u;
+    } else {
+        if (freq <= unit) {
+            ticks = (uint32_t)time / (unit / freq);
+        } else {
+            ticks = (uint32_t)time * (freq / unit);
+        }
+    }
+    return (ticks);
+}
+
+/*
+* see function definition
+*/
+uint16_t COTmrGetMinTime(CO_TMR *tmr, uint32_t unit)
+{
+    uint16_t time  = 1u;
+    uint32_t freq  = tmr->Freq;
+
+    if (freq == 0u) {
+        time = 0u;
+    } else {
+        if (freq <= unit) {
+            time = (uint16_t)(unit / freq);
+        }
+    }
+    return (time);
+}
+
+/*
+* see function definition
+*/
 int16_t COTmrCreate(CO_TMR      *tmr,
-                    uint32_t     startTime,
-                    uint32_t     cycleTime,
+                    uint32_t     startTicks,
+                    uint32_t     cycleTicks,
                     CO_TMR_FUNC  func,
                     void        *para)
 {
@@ -49,11 +87,11 @@ int16_t COTmrCreate(CO_TMR      *tmr,
         CONodeFatalError();
         return -1;
     }
-    if (startTime == 0) {
-        startTime = cycleTime;
+    if (startTicks == 0) {
+        startTicks = cycleTicks;
     }
-    if ((startTime == 0) &&
-        (cycleTime == 0)) {
+    if ((startTicks == 0) &&
+        (cycleTicks == 0)) {
         return -1;
     }
     if (tmr->Node == 0) {
@@ -72,16 +110,16 @@ int16_t COTmrCreate(CO_TMR      *tmr,
         return -1;
     }
 
-    act            = tmr->Acts;
-    tmr->Acts      = act->Next;
-    act->Next      = 0;
-    act->Func      = func;
-    act->Para      = para;
-    act->CycleTime = cycleTime;
+    act             = tmr->Acts;
+    tmr->Acts       = act->Next;
+    act->Next       = 0;
+    act->Func       = func;
+    act->Para       = para;
+    act->CycleTicks = cycleTicks;
 
-    tn = COTmrInsert(tmr, startTime, act);
+    tn = COTmrInsert(tmr, startTicks, act);
     if (tn == (CO_TMR_TIME*)0) {
-        act->CycleTime   = 0;
+        act->CycleTicks  = 0;
         act->Para        = 0;
         act->Func        = (CO_TMR_FUNC)0;
         act->Next        = tmr->Acts;
@@ -174,11 +212,11 @@ int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
 
     /* delete action */
     if (del != 0) {
-        del->CycleTime = 0;
-        del->Para      = 0;
-        del->Func      = (CO_TMR_FUNC)0;
-        del->Next      = tmr->Acts;
-        tmr->Acts      = del;
+        del->CycleTicks = 0;
+        del->Para       = 0;
+        del->Func       = (CO_TMR_FUNC)0;
+        del->Next       = tmr->Acts;
+        tmr->Acts       = del;
 
         if (tx != 0) {
             if (tx->Action == (CO_TMR_ACTION*)0) {
@@ -264,7 +302,7 @@ void COTmrProcess(CO_TMR *tmr)
             func      = act->Func;
             para      = act->Para;
 
-            if (act->CycleTime == 0) {
+            if (act->CycleTicks == 0) {
                 act->Para = 0;
                 act->Func = (CO_TMR_FUNC)0;
                 COTmrLock();
@@ -274,7 +312,7 @@ void COTmrProcess(CO_TMR *tmr)
 
             } else {
                 COTmrLock();
-                res = COTmrInsert(tmr, act->CycleTime, act);
+                res = COTmrInsert(tmr, act->CycleTicks, act);
                 COTmrUnlock();
                 if (res == (CO_TMR_TIME*)0) {
                     tmr->Node->Error = CO_ERR_TMR_CREATE;
@@ -290,12 +328,13 @@ void COTmrProcess(CO_TMR *tmr)
 /*
 * see function definition
 */
-void COTmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, uint16_t num)
+void COTmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, uint16_t num, uint32_t freq)
 {
     tmr->Node  = node;
     tmr->Max   = num;
     tmr->TPool = &mem->Tmr;
     tmr->APool = &mem->Act;
+    tmr->Freq  = freq;
 
     COTmrReset(tmr);
 }
@@ -325,15 +364,15 @@ void COTmrReset(CO_TMR *tmr)
             ap->Next  = 0;
             tp->Next  = 0;
         }
-        ap->Id        = id;
-        ap->Func      = (CO_TMR_FUNC)0;
-        ap->Para      = 0;
-        ap->CycleTime = 0;
-        tp->Delta     = 0;
-        tp->Action    = (void*)0;
-        tp->ActionEnd = (void*)0;
-        ap            = ap->Next;
-        tp            = tp->Next;
+        ap->Id         = id;
+        ap->Func       = (CO_TMR_FUNC)0;
+        ap->Para       = 0;
+        ap->CycleTicks = 0;
+        tp->Delta      = 0;
+        tp->Action     = (void*)0;
+        tp->ActionEnd  = (void*)0;
+        ap             = ap->Next;
+        tp             = tp->Next;
         id++;
     }
     COTmrUnlock();
@@ -344,31 +383,28 @@ void COTmrReset(CO_TMR *tmr)
 */
 void COTmrClear(CO_TMR *tmr)
 {
-    CO_NODE    *node;
+    CO_NODE    *node = tmr->Node;;
     CO_TPDO    *pdo;
     uint16_t    num;
 
-    node = tmr->Node;
-
-
-    /* heartbeat timer */
+    /* delete heartbeat timer */
     COTmrLock();
     COTmrDelete(tmr, node->Nmt.Tmr);
     node->Nmt.Tmr = -1;
     COTmrUnlock();
 
-    /* tpdo timer */
+    /* check all tpdo timers */
     for (num = 0; num < CO_TPDO_N; num++) {
         pdo = &node->TPdo[num];
         if (pdo->EvTmr > -1) {
-            /* pdo timer event */
+            /* delete pdo timer event */
             COTmrLock();
             COTmrDelete(tmr, pdo->EvTmr);
             pdo->EvTmr = -1;
             COTmrUnlock();
         }
         if (pdo->InTmr > -1) {
-            /* inhibit timer */
+            /* delete inhibit timer */
             COTmrLock();
             COTmrDelete(tmr, pdo->InTmr);
             pdo->InTmr = -1;

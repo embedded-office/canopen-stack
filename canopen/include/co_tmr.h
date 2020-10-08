@@ -32,23 +32,8 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#ifndef CO_TMR_TICKS_PER_SEC
-#define CO_TMR_TICKS_PER_SEC     100             /* default tick rate: 100Hz */
-#endif
-
-/******************************************************************************
-* PUBLIC MACROS
-******************************************************************************/
-
-/*! \brief CALCULATE TIMER TICKS
-*
-*    This macro calculates the number of ticks for a given time in ms.
-*/
-#if (CO_TMR_TICKS_PER_SEC <= 1000)
-#define CO_TMR_TICKS(ms)         ((ms)/(1000/CO_TMR_TICKS_PER_SEC))
-#else
-#define CO_TMR_TICKS(ms)         ((ms)*(CO_TMR_TICKS_PER_SEC/1000))
-#endif
+#define CO_TMR_UNIT_1MS          1000
+#define CO_TMR_UNIT_100US        10000
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -71,7 +56,7 @@ typedef struct CO_TMR_ACTION_T {
     struct CO_TMR_ACTION_T *Next;          /*!< link to next action          */
     CO_TMR_FUNC             Func;          /*!< pointer to callback function */
     void                   *Para;          /*!< callback function parameter  */
-    uint32_t                CycleTime;     /*!< action cycle time in ticks   */
+    uint32_t                CycleTicks;    /*!< action cycle time in ticks   */
 
 } CO_TMR_ACTION;
 
@@ -115,12 +100,44 @@ typedef struct CO_TMR_T {
     struct CO_TMR_TIME_T   *Free;      /*!< Timer event free list            */
     struct CO_TMR_TIME_T   *Use;       /*!< Timer event used list            */
     struct CO_TMR_TIME_T   *Elapsed;   /*!< Timer event elapsed list         */
+    uint32_t                Freq;      /*!< Timer ticks per second           */
 
 } CO_TMR;
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
+
+/*! \brief  GET TICKS FOR MILLISECONDS
+*
+*    This function converts a given time into the corresponding number
+*    of timer ticks. This depends on the specific timer driver and 
+*    clock frequency of the timer.
+*
+* \param time
+*    time in given unit
+*
+* \param unit
+*    unit of given time (CO_TMR_UNIT_1MS or CO_TMR_UNIT_100US)
+*
+* \return
+*    time ticks which represents at least the given time
+*/
+uint32_t COTmrGetTicks(CO_TMR *tmr, uint16_t time, uint32_t unit);
+
+/*! \brief  GET MINIMAL POSSIBLE TIME
+*
+*    This function calculates the minimal possible time for timer
+*    management. This depends on the specific timer driver and clock
+*    frequency of the timer.
+*
+* \param unit
+*    unit of returned time (CO_TMR_UNIT_1MS or CO_TMR_UNIT_100US)
+*
+* \return
+*    minimal possible time (which represents a single tick)
+*/
+uint16_t COTmrGetMinTime(CO_TMR *tmr, uint32_t unit);
 
 /*! \brief CREATE TIMER
 *
@@ -130,10 +147,10 @@ typedef struct CO_TMR_T {
 * \param tmr
 *    Pointer to timer structure
 *
-* \param startTime
+* \param startTicks
 *    delta time in ticks for the first timer event
 *
-* \param cycleTime
+* \param cycleTicks
 *    if != 0, the delta time in ticks for the cyclic timer events
 *
 * \param func
@@ -146,8 +163,8 @@ typedef struct CO_TMR_T {
 * \retval  <0     an error is detected
 */
 int16_t COTmrCreate(CO_TMR      *tmr,
-                    uint32_t     start,
-                    uint32_t     cycle,
+                    uint32_t     startTicks,
+                    uint32_t     cycleTicks,
                     CO_TMR_FUNC  func,
                     void        *para);
 
@@ -220,12 +237,16 @@ void COTmrProcess(CO_TMR *tmr);
 * \param num
 *    Length of memory block array
 *
+* \param freq
+*    Frequency of timer clock
+*
 * \internal
 */
 void COTmrInit(CO_TMR           *tmr,
                struct CO_NODE_T *node,
                CO_TMR_MEM       *mem,
-               uint16_t          num);
+               uint16_t          num,
+               uint32_t          freq);
 
 /*! \brief CLEAR TIMER
 *
@@ -265,7 +286,7 @@ void COTmrReset(CO_TMR *tmr);
 *    Pointer to timer structure
 *
 * \param dTnew
-*    deltatime for new action
+*    deltatime in ticks for new action
 *
 * \param action
 *    pointer to action info structure

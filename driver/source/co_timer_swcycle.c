@@ -30,7 +30,7 @@ static uint32_t TimerCounter = 0u;
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void     DrvTimerInit   (void);
+static void     DrvTimerInit   (uint32_t freq);
 static void     DrvTimerStart  (void);
 static uint8_t  DrvTimerUpdate (void);
 static uint32_t DrvTimerDelay  (void);
@@ -54,8 +54,9 @@ const CO_IF_TIMER_DRV SwCycleTimerDriver = {
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void DrvTimerInit(void)
+static void DrvTimerInit(uint32_t freq)
 {
+    (void)freq;
     TimerCounter = 0u;
 }
 

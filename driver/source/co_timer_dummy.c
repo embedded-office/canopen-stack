@@ -33,7 +33,7 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void     DrvTimerInit   (void);
+static void     DrvTimerInit   (uint32_t freq);
 static void     DrvTimerStart  (void);
 static uint8_t  DrvTimerUpdate (void);
 static uint32_t DrvTimerDelay  (void);
@@ -60,7 +60,7 @@ const CO_IF_TIMER_DRV DummyTimerDriver = {
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void DrvTimerInit(void)
+static void DrvTimerInit(uint32_t freq)
 {
     /* TODO: initialize timer, clear counter and keep timer stopped */
 }

@@ -42,8 +42,8 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
         node->Error = CO_ERR_LSS_LOAD;
         return;
     }
-    COIfInit(&node->If, node);
-    COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum);
+    COIfInit(&node->If, node, spec->TmrFreq);
+    COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum, spec->TmrFreq);
     err = CODictInit(&node->Dict, node, spec->Dict, spec->DictLen);
     if (err < 0) {
         return;
