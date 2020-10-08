@@ -5,5 +5,6 @@ project (CanopenStack VERSION 4.1.0)
 add_subdirectory(canopen)
 add_subdirectory(driver)
 
-# Make application
+# Make applications
 add_subdirectory(testsuite)
+add_subdirectory(example)
