@@ -11,7 +11,7 @@ When dealing with analog values, there is often a calibration of the hardware re
 
 The example focus is the user object for CAN triggered write access to a manufacturer specific area. 
 
-# Object Type Idea
+## Object Type Idea
 
 The main idea is a collection of object entries, which are writable after a simple identification mechanism. 
 

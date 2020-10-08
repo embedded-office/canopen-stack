@@ -42,6 +42,7 @@
 
 /* allocate global variables for runtime value of objects */
 uint8_t  Obj1001_00_08 = 0;
+
 uint32_t Obj2100_01_20 = 0;
 uint8_t  Obj2100_02_08 = 0;
 uint8_t  Obj2100_03_08 = 0;
@@ -52,6 +53,7 @@ const CO_OBJ ClockOD[APP_OBJ_N] = {
     {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (uintptr_t)&Obj1001_00_08},
     {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x80},
     {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)0},
+
     {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},
     {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
     {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},

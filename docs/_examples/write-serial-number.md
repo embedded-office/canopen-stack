@@ -11,7 +11,7 @@ In the production line, the devices should be programmed with the identical firm
 
 The main idea is a manufacturer specific data type, which allows writing into a FLASH memory area if the current FLASH memory area is empty.
 
-# Object Type Idea
+## Object Type Idea
 
 The main idea is an object entry, which is directly mapped to FLASH cells. The type checks on a write access for empty FLASH cells and allows writing with a FLASH write algorithm if FLASH cells are empty.
 

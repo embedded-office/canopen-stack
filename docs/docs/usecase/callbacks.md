@@ -74,7 +74,7 @@ This function is called during reset communication to load the stored LSS config
 
 **Returned Value**
 
-- `==CO_ERR_NONE` : configuration stored
+- `==CO_ERR_NONE` : configuration loaded
 - `!=CO_ERR_NONE` : error is detected
 
 

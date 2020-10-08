@@ -7,17 +7,19 @@ aside:
   toc: true
 ---
 
-## CANopen Clock
+This quickstart example describes in detail the steps to build a CANopen node. The source files are included in the directory `/example/quickstart/app` and should be followed during reading this article.
 
-This quickstart tutorial describes in detail the steps to build a CANopen Clock.
+<!--more-->
+
+*The example provides a **CANopen Clock** (nothing serious, but nice to see in action), and demonstrates the principal way of development to this CANopen device.*
 
 ### Functional Specification
 
-The internal clock shall be running if the device is switched in *operational* mode. The object dictionary will be updated every second with the new time.
+The CANopen clock shall run if the device is switched in *operational* mode. The object dictionary will be updated every second with the new time.
 
-A transmit process data object (TPDO) shall be sent if the object entry *second* is changed and if the device is running in *operational* mode.
+We shall send transmit process data object (TPDO) if the object entry *second* is changed and if the device is running in *operational* mode.
 
-The service data object server (SDOS) allows access to all device information within the object dictionary.
+The service data object server (SDOS) shall allow access to all device information within the object dictionary.
 
 ### Object Dictionary
 
@@ -25,20 +27,20 @@ The service data object server (SDOS) allows access to all device information wi
 
 To keep the software as simple as possible, we decide to use a static object dictionary. Therefore, the object dictionary is an array of object entries, declared as constant array of object entries of type `CO_OBJ`.
 
-Create a file `clock_obj.c` and add the following lines as a starting point into this file:
+See in file [clock_spec.c](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L50):
 
 ```c
-#include "co_core.h"
-
-/* allocate global variables for runtime value of objects */
-/* -> place here the coming global variables */
-
+  :
 /* define the static object dictionary */
 const CO_OBJ ClockOD[] = {
-    /* -> place here the coming object entry lines */
+        :
+    /* here is your object dictionary */
+        :
+    CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
 };
 /* set number of object entries */
 const uint16_t ClockODLen = sizeof(ClockOD)/sizeof(CO_OBJ);
+  :
 ```
 
 #### Mandatory Object Entries
@@ -59,7 +61,7 @@ The object dictionary must hold at least the following mandatory object entries:
 
 *Note: For complex object entries (like the 1018h), the subindex 0 holds the highest subindex in this object. The shown values are only dummy values. The correct value for vendor ID is managed by CiA, because each registered company will get a worldwide unique value.*
 
-Add the following lines into the object dictionary:
+See the following lines in the object dictionary:
 
 ```c
   :
@@ -67,6 +69,7 @@ Add the following lines into the object dictionary:
     {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (uintptr_t)&Obj1001_00_08},
     {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x80},
     {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)0},
+
     {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4},
     {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
     {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
@@ -75,11 +78,13 @@ Add the following lines into the object dictionary:
   :
 ```
 
-and add a variable for the runtime value of the error register object (1001h,00h) as global variable:
+and the corresponding global variable for the runtime value of the error register object (1001h,00h):
 
 ```c
 uint8_t Obj1001_00_08 = 0;
 ```
+
+***Attention: You must keep the index/subindex of all entries in the object dictionary sorted in ascending order. The reason is: the CANopen Stack uses a binary search to get to the right object entry as fast as possible.***
 
 #### SDO Server
 
@@ -93,7 +98,7 @@ The settings for the SDO server are defined in CiA301 and must contain the follo
 
 *Note: Since all COBIDs are settings which are dependant on the actual node ID. For this reason, the CANopen stack allows to specify such entries to consider the current node ID during runtime.*
 
-Add the following lines into the object dictionary:
+See the following lines in the object dictionary:
 
 ```c
   :
@@ -116,7 +121,7 @@ The quickstart specific object dictionary entries for the clock shall include:
 
 *Note: These entries are a free selection. Some CiA standards and profiles specify a bunch of entries, so keep your data in the manufacturer specific area (2000h up to 5FFFh), defined in CiA301.*
 
-Add the following lines into the object dictionary:
+See the following lines in the object dictionary:
 
 ```c
   :
@@ -127,7 +132,7 @@ Add the following lines into the object dictionary:
   :
 ```
 
-and add the variables for the runtime values of the clock object as global variables:
+and the corresponding global variables for the runtime values of the clock object as global variables:
 
 ```c
 uint32_t Obj2100_01_20 = 0;
@@ -147,7 +152,7 @@ The communication settings for the TPDO must contain the following object entrie
 
 *Note: The CANopen stack didn't support CAN remote frames, because they are not recommended for new devices since many years. Bit30 in 1800h:1 defines, that remote transfers are not allowed for this PDO. The CAN identifier 180h is the recommended value out of the pre-defined connection set.*
 
-Add the following lines into the object dictionary:
+See the following lines in the object dictionary:
 
 ```c
   :
@@ -156,8 +161,6 @@ Add the following lines into the object dictionary:
     {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)254},
   :
 ```
-
-***Attention: You must add the entries into the object dictionary and ensure that index/subindex is sorted in ascending order. The reason is: the CANopen Stack uses a binary search to get to the right object entry as fast as possible.***
 
 #### TPDO Data Mapping
 
@@ -170,7 +173,7 @@ The mapping settings for the TPDO must contain the following object entries:
 | 1A00h | 2        | UNSIGNED32 | Const      | 21000208h | - map:  8-bit clock minute |
 | 1A00h | 3        | UNSIGNED32 | Const      | 21000308h | - map:  8-bit clock second |
 
-Add the following lines into the object dictionary:
+See the following lines in the object dictionary:
 
 ```c
   :
@@ -181,28 +184,23 @@ Add the following lines into the object dictionary:
   :
 ```
 
-***Again: keep the index/subindex sorted in ascending order!***
-
 ### Node Specification
 
-The CANopen node needs some memory for dynamic operations. Now we create some variables to allocate the right amount of memory and provide the memory portions to the CANopen Stack during initialization for internal use.
+The CANopen node needs some memory for dynamic operations. Now we need some variables to allocate the right amount of memory and provide the memory portions to the CANopen Stack during initialization.
 
-Create the file `clock_spec.c` and insert the following code:
+See in file [clock_spec.c](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L21):
 
 ```c
 #include "co_core.h"
-
+    :
 /* Define some default values for our CANopen node: */
-#define APP_NODE_ID       1u       /* CANopen node ID             */
-#define APP_BAUDRATE      250000u  /* CAN baudrate                */
-#define APP_CAN_BUS_ID    0u       /* Bus ID (driver specific)    */
-#define APP_TMR_N         16u      /* Number of software timers   */
-#define APP_TICKS_PER_SEC 1000u    /* Timer clock frequency in Hz */
-
-/* get external object dictionary */
-extern const CO_OBJ   *ClockOD;
-extern const uint16_t  ClockODLen;
-
+#define APP_NODE_ID       1u                  /* CANopen node ID             */
+#define APP_BAUDRATE      250000u             /* CAN baudrate                */
+#define APP_CAN_BUS_ID    0u                  /* Bus ID (driver specific)    */
+#define APP_TMR_N         16u                 /* Number of software timers   */
+#define APP_TICKS_PER_SEC 1000u               /* Timer clock frequency in Hz */
+#define APP_OBJ_N         128u                /* Object dictionary max size  */
+    :
 /* Each software timer needs some memory for managing
  * the lists and states of the timed action events.
  */
@@ -211,22 +209,22 @@ CO_TMR_MEM TmrMem[APP_TMR_N];
 /* Each SDO server needs memory for the segmented or
  * block transfer requests.
  */
-uint8_t SdoSrvMem[CO_SDOS_N][CO_SDO_BUF_BYTE];
-
+uint8_t SdoSrvMem[CO_SDOS_N * CO_SDO_BUF_BYTE];
+    :
 /* Collect all node specification settings in a single
  * structure for initializing the node easily.
  */
-const CO_NODE_SPEC AppSpec = {
-    APP_NODE_ID,         /* default Node-Id                */
-    APP_BAUDRATE,        /* default Baudrate               */
-    &ClockOD[0],         /* pointer to object dictionary   */
-    ClockODLen,          /* object dictionary length       */
-    NULL,                /* no EMCY info fields (unused)   */
-    &TmrMem[0],          /* pointer to timer memory blocks */
-    APP_TMR_N,           /* number of timer memory blocks  */
-    APP_TICKS_PER_SEC;   /* timer clock frequency in Hz    */
-    APP_CAN_BUS_ID,      /* linked CAN bus driver          */
-    &SdoSrvMem[0]        /* SDO Transfer Buffer Memory     */
+CO_NODE_SPEC AppSpec = {
+    APP_NODE_ID,             /* default Node-Id                */
+    APP_BAUDRATE,            /* default Baudrate               */
+    (CO_OBJ *)&ClockOD[0],   /* pointer to object dictionary   */
+    APP_OBJ_N,               /* object dictionary max length   */
+    NULL,                    /* no EMCY info fields (unused)   */
+    &TmrMem[0],              /* pointer to timer memory blocks */
+    APP_TMR_N,               /* number of timer memory blocks  */
+    APP_TICKS_PER_SEC,       /* timer clock frequency in Hz    */
+    (CO_IF_DRV *)&AppDriver, /* select drivers for application */
+    &SdoSrvMem[0]            /* SDO Transfer Buffer Memory     */
 };
 ```
 
@@ -234,9 +232,9 @@ const CO_NODE_SPEC AppSpec = {
 
 ### Application Start
 
-For the application code we create a file `clock_app.c`. This file will include the CANopen Stack startup and the application specific clock function.
+For the application code see the file [clock_app.c](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L21). This file will include the CANopen Stack startup and the application specific clock function.
 
-Ok, let's start with the CANopen Stack startup:
+Let's start with the CANopen Stack [startup](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L48):
 
 ```c
 #include "co_core.h"
@@ -255,12 +253,12 @@ void main(int argc, char *argv[])
     /* Initialize your hardware layer and the CANopen stack.
      * Stop execution if an error is detected.
      */
-    BSPInit();
+    /* BSPInit(); */
     CONodeInit(&Clk, (CO_NODE_SPEC *)&AppSpec);
     if (CONodeGetErr(&Clk) != CO_ERR_NONE) {
         while(1);
     }
-     
+
     /* Use CANopen software timer to create a cyclic function
      * call to the callback function 'AppClock()' with a period
      * of 1s (equal: 1000ms).
@@ -286,10 +284,11 @@ void main(int argc, char *argv[])
 
 ### Application Callback
 
-The timer callback function `AppClock()` includes the main functionality of the clock node:
+The timer callback function [AppClock()](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L84) includes the main functionality of the clock node:
 
 ```c
-void AppClock(void *p_arg)
+/* timer callback function */
+static void AppClock(void *p_arg)
 {
     CO_NODE  *node;
     CO_OBJ   *od_sec;
@@ -303,7 +302,7 @@ void AppClock(void *p_arg)
      * as reference to the CANopen node object. If no node is given, we ignore
      * the function call by returning immediatelly.
      */
-    node = (CO_NODE *)arg;
+    node = (CO_NODE *)p_arg;
     if (node == 0) {
         return;
     }
@@ -314,13 +313,13 @@ void AppClock(void *p_arg)
      */
     if (CONmtGetMode(&node->Nmt) == CO_OPERATIONAL) {
 
-        od_sec = CODirFind(&node->Dir, CO_DEV(0x2100, 3));
-        od_min = CODirFind(&node->Dir, CO_DEV(0x2100, 2));
-        od_hr  = CODirFind(&node->Dir, CO_DEV(0x2100, 1));
+        od_sec = CODictFind(&node->Dict, CO_DEV(0x2100, 3));
+        od_min = CODictFind(&node->Dict, CO_DEV(0x2100, 2));
+        od_hr  = CODictFind(&node->Dict, CO_DEV(0x2100, 1));
 
-        COObjRdValue(od_sec, (void *)&second, sizeof(second), 0);
-        COObjRdValue(od_min, (void *)&minute, sizeof(minute), 0);
-        COObjRdValue(od_hr , (void *)&hour  , sizeof(hour),   0);
+        COObjRdValue(od_sec, node, (void *)&second, sizeof(second), 0);
+        COObjRdValue(od_min, node, (void *)&minute, sizeof(minute), 0);
+        COObjRdValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
 
         second++;
         if (second >= 60) {
@@ -332,9 +331,9 @@ void AppClock(void *p_arg)
             hour++;
         }
 
-        COObjWrValue(od_sec, (void *)&second, sizeof(second), 0);
-        COObjWrValue(od_min, (void *)&minute, sizeof(minute), 0);
-        COObjWrValue(od_hr , (void *)&hour  , sizeof(hour),   0);
+        COObjWrValue(od_sec, node, (void *)&second, sizeof(second), 0);
+        COObjWrValue(od_min, node, (void *)&minute, sizeof(minute), 0);
+        COObjWrValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
     }
 }
 ```
@@ -343,26 +342,39 @@ void AppClock(void *p_arg)
 
 For the hardware connection, you need to select or add some drivers to your project:
 
+See in file [clock_spec.c](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L94):
+
 ```c
-int16_t COIfCanRead  (CO_IF *cif, CO_IF_FRM *frm);
-int16_t COIfCanSend  (CO_IF *cif, CO_IF_FRM *frm);
-void    COIfCanReset (CO_IF *cif);
-void    COIfCanClose (CO_IF *cif);
-void    COIfCanInit  (CO_IF *cif, struct CO_NODE_T *node);
-void    COIfCanEnable(CO_IF *cif, uint32_t baudrate);
+   :
+                                              /* select application drivers: */
+#include "co_can_dummy.h"                     /* CAN driver                  */
+#include "co_timer_dummy.h"                   /* Timer driver                */
+#include "co_nvm_dummy.h"                     /* NVM driver                  */
+   :
+/* Select the drivers for your application. For possible
+ * selections, see the directory /drivers. In this example
+ * we select the driver templates. You may fill them with
+ * your specific hardware functionality.
+ */
+const CO_IF_DRV AppDriver = {
+    &DummyCanDriver,
+    &DummyTimerDriver,
+    &DummyNvmDriver
+};
+   :
 ```
 
-Furthermore, setup a hardware timer interrupt with your low-level layer (I call it Board Support Package) and configure a cyclic interrupt with a frequency of `APP_TICKS_PER_SEC`. The timer interrupt service handler should look like:
+When you write your device driver, you will setup a hardware timer interrupt with your low-level layer, I call it Board Support Package (BSP), and configure a cyclic interrupt source with a frequency of `APP_TICKS_PER_SEC`. Somewhere in your BSP, the timer interrupt service handler should look like:
 
 ```c
 #include "co_core.h"
-
+   :
 /* get external CANopen node */
 extern CO_NODE Clk;
-
+   :
 void App_TmrIsrHandler(void)
 {
-    /* update all timers and collect elapsed timed actions */				           
+    /* collect elapsed timed actions */
     COTmrService(&Clk.Tmr);
 }
 ```
