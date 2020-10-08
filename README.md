@@ -88,7 +88,7 @@ const CO_IF_DRV MyDriver = {
 
 How to integrate the timer management depends on the timer driver and is explained in the corresponding documentation. For the software cycle timer, we need to call the timer service function periodically. The service function of the timer management checks if a timer event is elapsed and coordinates the CANopen software timers.
 - call the function `COTmrService()` periodically
-- set the calling frequency in `TBD`
+- ensure the calling frequency you define in member `TmrFreq` of node specification
 
 The processing of all actions related to a timer event is performed with the process function of the timer management. This execution can take place within the timer interrupt service handler, or within a task of your RTOS.
 - call the function `COTmrProcess()` where you want to process the timed actions

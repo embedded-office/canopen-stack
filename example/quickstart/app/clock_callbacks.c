@@ -136,3 +136,11 @@ void COPdoSyncUpdate(CO_RPDO *pdo)
      * a synchronized PDO.
      */
 }
+
+int16_t COParaDefault(CO_PARA *pg)
+{
+    /* Optional: place here some code, which is called
+     * when a parameter group is restored to factory
+     * settings.
+     */
+}
