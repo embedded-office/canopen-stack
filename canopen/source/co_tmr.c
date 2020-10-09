@@ -29,7 +29,68 @@ extern void COTmrLock(void);
 extern void COTmrUnlock(void);
 
 /******************************************************************************
-* FUNCTIONS
+* PRIVATE FUNCTION PROTOTYPES
+******************************************************************************/
+
+static void         COTmrReset  (CO_TMR *tmr);
+static CO_TMR_TIME *COTmrInsert (CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action);
+static void         COTmrRemove (CO_TMR *tmr, CO_TMR_TIME *tx);
+
+/******************************************************************************
+* PROTECTED FUNCTIONS
+******************************************************************************/
+
+/*
+* see function definition
+*/
+void COTmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, uint16_t num, uint32_t freq)
+{
+    COTmrLock();
+    tmr->Node  = node;
+    tmr->Max   = num;
+    tmr->TPool = &mem->Tmr;
+    tmr->APool = &mem->Act;
+    tmr->Freq  = freq;
+
+    COTmrReset(tmr);
+    COTmrUnlock();
+}
+
+/*
+* see function definition
+*/
+void COTmrClear(CO_TMR *tmr)
+{
+    CO_NODE    *node = tmr->Node;;
+    CO_TPDO    *pdo;
+    uint16_t    num;
+
+    /* delete heartbeat timer */
+    if (node->Nmt.Tmr > -1) {
+        COTmrDelete(tmr, node->Nmt.Tmr);
+        node->Nmt.Tmr = -1;
+    }
+
+    /* check all tpdo timers */
+    for (num = 0; num < CO_TPDO_N; num++) {
+        pdo = &node->TPdo[num];
+
+         /* delete pdo timer event */
+        if (pdo->EvTmr > -1) {
+            COTmrDelete(tmr, pdo->EvTmr);
+            pdo->EvTmr = -1;
+        }
+
+        /* delete inhibit timer */
+        if (pdo->InTmr > -1) {
+            COTmrDelete(tmr, pdo->InTmr);
+            pdo->InTmr = -1;
+        }
+    }
+}
+
+/******************************************************************************
+* PUBLIC FUNCTIONS
 ******************************************************************************/
 
 /*
@@ -236,37 +297,43 @@ int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
 */
 int16_t COTmrService(CO_TMR *tmr)
 {
-    CO_TMR_TIME         *tn;
-    CO_IF               *cif;
-    int16_t              result = 0;
-    int16_t              elapsed;
+    CO_TMR_TIME *tn;
+    CO_IF       *cif;
+    int16_t      result = 0;
+    int16_t      elapsed;
 
     if (tmr == 0) {
         CONodeFatalError();
         return -1;
     }
+
     cif = &tmr->Node->If;
-    COTmrLock();
     elapsed = COIfTimerUpdate(cif);
     if (elapsed > 0) {
-        tn       = tmr->Use;
+        /* get elapsed timer */
+        tn       = tmr->Use;                            
         tmr->Use = tn->Next;
         tn->Next = 0;
-        if (tmr->Use != 0) {
-            COIfTimerReload(cif, tmr->Use->Delta);
-        } else {
-            COIfTimerStop(cif);
-        }
-        if (tmr->Elapsed == 0) {
+
+        /* put elapsed timer in list */
+        if (tmr->Elapsed == 0) {                
             tmr->Elapsed = tn;
         } else {
             tn->Next     = tmr->Elapsed;
             tmr->Elapsed = tn;
         }
+
+        /* get next timer */
+        tn = tmr->Use;
+
+        /* setup next timer event */
+        if (tn != 0) {                       
+            COIfTimerReload(cif, tn->Delta);
+        } else {
+            COIfTimerStop(cif);
+        }
         result = 1;
     }
-    COTmrUnlock();
-
     return (result);
 }
 
@@ -325,24 +392,14 @@ void COTmrProcess(CO_TMR *tmr)
     }
 }
 
-/*
-* see function definition
-*/
-void COTmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, uint16_t num, uint32_t freq)
-{
-    tmr->Node  = node;
-    tmr->Max   = num;
-    tmr->TPool = &mem->Tmr;
-    tmr->APool = &mem->Act;
-    tmr->Freq  = freq;
-
-    COTmrReset(tmr);
-}
+/******************************************************************************
+* PRIVATE FUNCTIONS
+******************************************************************************/
 
 /*
 * see function definition
 */
-void COTmrReset(CO_TMR *tmr)
+static void COTmrReset(CO_TMR *tmr)
 {
     CO_TMR_MEM    *mem = (CO_TMR_MEM *)tmr->APool;
     CO_TMR_ACTION *ap  = tmr->APool;
@@ -350,7 +407,6 @@ void COTmrReset(CO_TMR *tmr)
     uint16_t       id  = 0;
     uint16_t       blk;
 
-    COTmrLock();
     tmr->Use     = 0;
     tmr->Elapsed = 0;
     tmr->Free    = tmr->TPool;
@@ -375,48 +431,12 @@ void COTmrReset(CO_TMR *tmr)
         tp             = tp->Next;
         id++;
     }
-    COTmrUnlock();
 }
 
 /*
 * see function definition
 */
-void COTmrClear(CO_TMR *tmr)
-{
-    CO_NODE    *node = tmr->Node;;
-    CO_TPDO    *pdo;
-    uint16_t    num;
-
-    /* delete heartbeat timer */
-    COTmrLock();
-    COTmrDelete(tmr, node->Nmt.Tmr);
-    node->Nmt.Tmr = -1;
-    COTmrUnlock();
-
-    /* check all tpdo timers */
-    for (num = 0; num < CO_TPDO_N; num++) {
-        pdo = &node->TPdo[num];
-        if (pdo->EvTmr > -1) {
-            /* delete pdo timer event */
-            COTmrLock();
-            COTmrDelete(tmr, pdo->EvTmr);
-            pdo->EvTmr = -1;
-            COTmrUnlock();
-        }
-        if (pdo->InTmr > -1) {
-            /* delete inhibit timer */
-            COTmrLock();
-            COTmrDelete(tmr, pdo->InTmr);
-            pdo->InTmr = -1;
-            COTmrUnlock();
-        }
-    }
-}
-
-/*
-* see function definition
-*/
-CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
+static CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
 {
     uint32_t     dTx;
     CO_TMR_TIME *tx;
@@ -425,9 +445,13 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
 
     cif = &tmr->Node->If;
     tx  = tmr->Use;
-    if (tx == 0) {                                       /* first used timer */
+
+    /* no used timer */
+    if (tx == 0) {
+        /* fetch a timer */
         tn            = tmr->Free;
         tmr->Free     = tn->Next;
+        /* setup first timer */
         tn->Delta     = dTnew;
         tn->Action    = action;
         tn->ActionEnd = action;
@@ -435,25 +459,40 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
         tmr->Use      = tn;
         COIfTimerReload(cif, tn->Delta);
         COIfTimerStart(cif);
+
+    /* add to timer list */
     } else {
-        /* get remaining delta time to next event */
+        /* get remaining time to first event */
         dTx = COIfTimerDelay(cif);
+
+        /* find position while new time interval is not reached and
+         * no is timer added 
+         */
         while ((dTnew > dTx) && (tn == 0)) {
-            /* behind last timer */
+
+            /* last used timer: append at end of list */
             if (tx->Next == 0) {
+                /* fetch a timer */
                 tn            = tmr->Free;
                 tmr->Free     = tn->Next;
+                /* setup new timer at the end of list */
                 tn->Delta     = dTnew - dTx;
                 tn->Action    = action;
                 tn->ActionEnd = action;
                 tn->Next      = 0;
                 tx->Next      = tn;
+
+            /* used timer within list */
             } else {
-                /* between two timers */
+                /* calculate time interval for next used timer */
                 dTx += tx->Next->Delta;
+
+                /* new time interval is before next used timer */
                 if (dTnew < dTx) {
+                    /* fetch a timer */
                     tn              = tmr->Free;
                     tmr->Free       = tn->Next;
+                    /* setup timer in front of next timer */
                     tn->Next        = tx->Next;
                     tx->Next        = tn;
                     tn->Delta       = dTnew -
@@ -461,21 +500,30 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
                     tn->Action      = action;
                     tn->ActionEnd   = action;
                     tn->Next->Delta = dTx - dTnew;
+                
+                /* new time interval is after next used timer */
                 } else {
                     tx = tx->Next;
                 }
             }
         }
+
+        /* no new timer added */
         if (tn == 0) {
-            /* equal existing timer */
+
+            /* time interval is equal to a used timer */
             if (dTnew == dTx) {
+                /* add action to used timer */
                 tx->ActionEnd->Next = action;
                 tx->ActionEnd       = action;
                 tn                  = tx;
+
+            /* time interval is before first timer */
             } else if (dTnew < dTx) {
-                /* before first timer */
+                /* fetch a timer */
                 tn            = tmr->Free;
                 tmr->Free     = tn->Next;
+                /* setup timer in front of first timer */
                 tn->Delta     = dTnew;
                 tn->Action    = action;
                 tn->ActionEnd = action;
@@ -492,36 +540,45 @@ CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
 /*
 * see function definition
 */
-void COTmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx)
+static void COTmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx)
 {
     CO_TMR_TIME *tn;
     CO_IF       *cif;
 
     cif = &tmr->Node->If;
     if (tx != 0) {
+        /* timer is first in list */
         if (tmr->Use == tx) {
+            /* remove last used timer in list */
             if (tx->Next == 0) {
-                /* last entry */
                 COIfTimerStop(cif);
                 tmr->Use = tx->Next;
+
+            /* remove first used timer in list */
             } else {
-                /* first entry */
                 tx->Next->Delta += COIfTimerDelay(cif);
                 tmr->Use = tx->Next;
                 COIfTimerReload(cif, tmr->Use->Delta);
             }
+            /* put timer in free list */
             tx->Next  = tmr->Free;
             tmr->Free = tx;
+
+        /* timer maybe within list */
         } else {
+
+            /* loop through used timers in list until timer is removed */
             tn = tmr->Use;
             do {
+                /* remove next timer in list */
                 if (tn->Next == tx) {
-                    /* entry within list */
-                    tn->Next   = tx->Next;
+                    tn->Next = tx->Next;
+
+                    /* timer was within list */
                     if (tx->Next != 0) {
-                        /* not at end of list */
                         tn->Next->Delta += tx->Delta;
                     }
+                    /* put timer in free list */
                     tx->Next   = tmr->Free;
                     tmr->Free  = tx;
                     tx         = 0;

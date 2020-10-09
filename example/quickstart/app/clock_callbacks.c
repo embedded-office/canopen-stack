@@ -143,4 +143,5 @@ int16_t COParaDefault(CO_PARA *pg)
      * when a parameter group is restored to factory
      * settings.
      */
+    return (0u);
 }

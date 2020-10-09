@@ -218,7 +218,7 @@ int16_t COTmrService(CO_TMR *tmr);
 void COTmrProcess(CO_TMR *tmr);
 
 /******************************************************************************
-* PRIVATE FUNCTIONS
+* PROTECTED FUNCTIONS
 ******************************************************************************/
 
 /*! \brief INITIALIZE TIMER
@@ -260,58 +260,6 @@ void COTmrInit(CO_TMR           *tmr,
 * \internal
 */
 void COTmrClear(CO_TMR *tmr);
-
-/*! \brief RESET TIMER
-*
-*    This function creates the linked lists of the unused action info and
-*    event time structures.
-*
-* \param tmr
-*    Pointer to timer structure
-*
-* \internal
-*/
-void COTmrReset(CO_TMR *tmr);
-
-/*! \brief INSERT TIMER
-*
-*    This function inserts an action into the used timer list. First, this
-*    function checks for an existing timer event on the same time and links
-*    the action to the existing timer info. If no timer event exists on the
-*    same time, a new timer event will be created and inserted into the used
-*    timer list in a way, that the resulting used timer list is a sorted list
-*    with precalculated delta times between the time events.
-*
-* \param tmr
-*    Pointer to timer structure
-*
-* \param dTnew
-*    deltatime in ticks for new action
-*
-* \param action
-*    pointer to action info structure
-*
-* \return
-*    This function returns the pointer to the event timer, which contains the
-*    new action.
-*
-* \internal
-*/
-CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action);
-
-/*! \brief REMOVE TIMER
-*
-*    This function removes timer info from the used timer list.
-*
-* \param tmr
-*    Pointer to timer structure
-*
-* \param tx
-*    Pointer to timer info structure, which shall be removed from the list
-*
-* \internal
-*/
-void COTmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
