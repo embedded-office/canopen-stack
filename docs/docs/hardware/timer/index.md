@@ -1,36 +1,177 @@
 ---
-layout: articles
-title: Hardware Timer
+layout: article
+title: Timer Driver
 sidebar:
   nav: docs
-articles:
-  data_source: site.api_timer
-  type: brief
-  show_excerpt: true
+aside:
+  toc: true
 ---
 
-<div class="article__content" markdown="1">
+## Timer Driver Overview 
 
-  ---
+### Timer Modes
 
-  This area describes the API functions of the CANopen timer module. These functions are implemented within the source file: `co_tmr.c/h`
+As a source for CANopen timer management we need some kind of interrupt, which is related to the real time. We destinguish between two different modes for generate the needed time intervals out of the real-time related interrupt: the **Cyclic Mode** and the **Delta Mode**.
 
-  <!--more-->
 
-  The class `CO_TMR` is defined within `co_tmr.h` and is responsible for the CANopen highspeed timer management. The following data members are in this class:
+#### Cyclic Mode
 
-  | Data Member | Type | Description |
-  | --- | --- | --- |
-  | Node | `CO_NODE*` | pointer to parent node object |
-  | Max | `uint32_t` | maximum nunber of timed actions |
-  | APool[] | `CO_TMR_ACTION` | timer action pool array |
-  | TPool[] | `CO_TMR_TIME` | timer event pool array |
-  | Acts | `CO_TMR_ACTION*` | pointer to root of free actions linked list |
-  | Free | `CO_TMR_TIME*` | pointer to root of free events linked list |
-  | Use | `CO_TMR_TIME*` | pointer to root of used events linked list |
-  | Time | `uint32_t` | time ticks of next event since creation |
-  | Delay | `uint32_t` | time ticks of next event from now |
-  
-  Note: The data within this structure must never be manipulated without the corresponding class member functions. This can lead to unpredictable behavior of the node.
+In this mode, a periodic interrupt source is (re-)used. The period time of the interrupts represents the granularity for generation of needed time intervals.
 
-</div>
+![Time Generation in Cyclic Mode](/assets/images/timer-cyclic-mode.svg "Time Generation in Cyclic Mode")
+
+- no dedicated hardware timer required
+
+- small and easy timer implementation
+
+
+#### Delta Mode
+
+In this mode, a hardware timer is used as interrupt source. The input clock frequency of the timer represents the granularity for generation of needed time intervals.
+
+![Time Generation in Delta Mode](/assets/images/timer-delta-mode.svg "Time Generation in Delta Mode")
+
+- interrupt occurs only when needed
+
+- higher accuracy of time intervals possible
+
+
+### Timer Driver Functions
+
+The timer driver contains a set of functions, which are called at specific locations within the CANopen stack.
+
+| driver function | calling location                           |
+| --------------- | ------------------------------------------ |
+| `Init()`        | during initialization of CANopen node      |
+| `Reload()`      | when running time interval is elapsed      |
+| `Delay()`       | when needed time interval is created       |
+| `Stop()`        | when last running time interval is deleted |
+| `Start()`       | when first time interval is created        |
+| `update()`      | when timer interrupt occurs                |
+
+
+#### Timer Init
+
+This driver function is called during the initialization phase of the CANopen stack. The function is intended to prepare the real-time related interrupt.
+
+```c
+void DrvTimerInit(uint32_t freq);
+```
+
+The required implementation depends on the time generation mode:
+
+- *Cyclic Mode* - the function initializes the internal driver variables for counting the periodic interrupts (and ignores the given frequency `freq`).
+
+- *Delta Mode* - the function initializes a hardware timer with the given frequency `freq` as timer counting frequency.
+
+
+#### Timer Reload
+
+This driver function is called when a running time interval is elapsed. The function is intended to prepare the next needed time interval.
+
+```c
+void DrvTimerReload (uint32_t reload);
+```
+
+The required implementation depends on the time generation mode:
+
+- *Cyclic Mode* - the function sets the internal driver interrupt counting variable to the given number of interrupts: `reload`.
+
+- *Delta Mode* - the function uses the value `reload` to setup the hardware timer for the next needed interrupt.
+
+
+#### Timer Delay
+
+This driver function is called during creating a needed time interval. This function is intended to return the number of ticks before the current running time is elapsed.
+
+```c
+uint32_t DrvTimerDelay(void);
+```
+
+The required implementation is independent from the time generation mode.
+
+
+#### Timer Stop
+
+This driver function is called after deleting or elapsing of the last needed time interval. This function is intended to stop further interrupts.
+
+```c
+void DrvTimerStop(void);
+```
+
+The required implementation depends on the time generation mode:
+
+- *Cyclic Mode* - the function may optionally reset the internal driver interrupt counting variable. The interrupt are still generated (by the (re)used source), but have no impact on the timer management.
+
+- *Delta Mode* - the function stops the hardware timer to avoid unneccessary interrupts.
+
+
+#### Timer Start
+
+This function is called after creating the first needed time interval. This function is intended to enable the real-time related interrupts.
+
+```c
+void DrvTimerStart(void);
+```
+
+The required implementation depends on the time generation mode:
+
+- *Cyclic Mode* - the function is most likely empty, because the interrupts are (re)used from an independent source.
+
+- *Delta Mode* - the function starts the hardware timer to get the already programmed timer interrupts.
+
+
+#### Timer Update
+
+This function is called when a real-time related interrupt occurs. This function is intended to update the timer driver state.
+
+```c
+uint8_t DrvTimerUpdate(void);
+```
+
+The required implementation depends on the time generation mode:
+
+- *Cyclic Mode* - the function counts the amount of cyclic interrupts and indicates an elapsed time interval by returning `(uint8_t)1u`.
+
+- *Delta Mode* - this function returns always an elapsed time interval `(uint8_t)1u`, because each interrupt represents a needed time interval.
+
+### Timer Driver Integration
+
+During design of the driver interface for usage with the CANopen stack, we want to decouple the CANopen library from the driver implementation. At the same time, we want to keep the overal usage as easy as possible.
+
+The solution for this requirements is the implementation of the timer driver function as static functions within a single file and an allocated interface structure of type `CO_IF_TIMER_DRV`:
+
+```c
+#include "co_if.h"
+   :
+static void     DrvTimerInit   (uint32_t freq);
+static void     DrvTimerReload (uint32_t reload);
+static uint32_t DrvTimerDelay  (void);
+static void     DrvTimerStop   (void);
+static void     DrvTimerStart  (void);
+static uint8_t  DrvTimerUpdate (void);
+   :
+const CO_IF_TIMER_DRV <MyDeviceDriverName>TimerDriver = {
+    DrvTimerInit,
+    DrvTimerReload,
+    DrvTimerDelay,
+    DrvTimerStop,
+    DrvTimerStart,
+    DrvTimerUpdate
+};
+```
+
+With this kind of implementation, the usage is simply the import of the interface structure as external symbol, and we are ready to go:
+
+```c
+  :
+extern const CO_IF_TIMER_DRV <MyDeviceDriverName>TimerDriver;
+  :
+```
+
+To keep the drivers organized, we put the implementation in a file which follows the naming convention: `co_timer_<my-device-driver-name>.c`, and the declaration of the external symbol in the corresponding header file `co_timer_<my-device-driver-name>.h`.
+
+
+#### Timer Driver Template
+
+The files `/driver/source/co_timer_dummy.c` and `/driver/include/co_timer_dummy.h` are templates for timer drivers.

@@ -11,7 +11,7 @@ This function deletes the defined action and removes the timer, if this was the 
 
 ### Description
 
-This function are used within the CANopen stack for timed actions. It is possible to use timed actions in the application, too.
+This function is used within the CANopen stack for timed actions. It is possible to use timed actions in the application, too.
 
 #### Prototype
 
@@ -56,4 +56,4 @@ The following calls a critical function `AppCritFunc()` and installs a function 
     :
 ```
 
-Note: The example assumes, that the timer callback function `AppEmcyFunc()` and the application function `AppCritFunc()` are implemented with the correct prototype. The hardware timer is configured with 1 tick equal to 1ms.
+*Note: The example assumes, that the timer callback function `AppEmcyFunc()` and the application function `AppCritFunc()` are implemented with the correct prototype. The hardware timer is configured with sufficient timer clock frequency to achieve the 50ms resolution.*

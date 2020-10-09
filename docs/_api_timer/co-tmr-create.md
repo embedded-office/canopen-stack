@@ -11,7 +11,7 @@ This function creates the defined action and links this action into the event ti
 
 ### Description
 
-This function are used within the CANopen stack for timed actions. It is possible to use timed actions in the application, too.
+This function is used within the CANopen stack for timed actions. It is possible to use timed actions in the application, too.
 
 #### Prototype
 
@@ -60,4 +60,4 @@ The following example installs a cyclic called function `AppCyclicFunc()` to the
     :
 ```
 
-Note: The example assumes, that the timer callback function `AppCyclicFunc()` is implemented with the correct prototype. The hardware timer is configured with sufficient timer clock frequency to achieve the 1ms resolution.
+*Note: The example assumes, that the timer callback function `AppCyclicFunc()` is implemented with the correct prototype. The hardware timer is configured with sufficient timer clock frequency to achieve the 5ms resolution.*

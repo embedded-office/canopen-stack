@@ -51,11 +51,17 @@ docs:
         url:    /docs/api/object
       - title:  TPDO Event
         url:    /docs/api/tpdo
+      - title:  CAN Interface
+        url:    /docs/api/interface
+      - title:  Timer Handling
+        url:    /docs/api/timer
+      - title:  Parameter Storage
+        url:    /docs/api/parameter
   - title:      Hardware Connection
     children:
-      - title:  CAN Interface
-        url:    /docs/hardware/interface
-      - title:  Hardware Timer
+      - title:  CAN Driver
+        url:    /docs/hardware/can
+      - title:  Timer Driver
         url:    /docs/hardware/timer
-      - title:  Parameter Storage
-        url:    /docs/hardware/parameter
+      - title:  NVM Driver
+        url:    /docs/hardware/nvm
