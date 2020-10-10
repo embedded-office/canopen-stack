@@ -72,18 +72,14 @@ static void DrvTimerStart(void)
 
 static uint8_t DrvTimerUpdate(void)
 {
-    uint8_t result = 0u;
-
     /* TODO: return 1 if timer event is elapsed, otherwise 0 */
-    return (result);
+    return (0u);
 }
 
 static uint32_t DrvTimerDelay(void)
 {
-    uint32_t result = 0u;
-
     /* TODO: return current timer counter value */
-    return (result);
+    return (0u);
 }
 
 static void DrvTimerReload(uint32_t reload)
