@@ -46,15 +46,16 @@ The following source lines show a typical node specification:
 
 ```c
   const CO_NODE_SPEC DemoSpec = {
-    (uint8_t      ) 0x01,        /* pre-defined Node-ID            */
-    (uint32_t     ) Baudrate,    /* default baudrate               */
-    (CO_OBJ      *)&AppObjDir,   /* start of object directory      */
-    (uint16_t     ) APP_OBJ_N,   /* number of objects in directory */
-    (CO_EMCY_TBL *)&AppEmcyCode, /* start of emergency code table  */
-    (CO_TMR_MEM  *)&AppTmrMem,   /* start of timer manager memory  */
-    (uint16_t     ) APP_TMR_N,   /* max. number of timers/actions  */
-    (CO_IF_DRV    )&AppDrv,      /* hardware interface drivers     */
-    (uint8_t     *)&AppSdoBuf    /* start of SDO transfer buffer   */
+    (uint8_t      ) 0x01,              /* pre-defined Node-ID            */
+    (uint32_t     ) Baudrate,          /* default baudrate               */
+    (CO_OBJ      *)&AppObjDir,         /* start of object directory      */
+    (uint16_t     ) APP_OBJ_N,         /* number of objects in directory */
+    (CO_EMCY_TBL *)&AppEmcyCode,       /* start of emergency code table  */
+    (CO_TMR_MEM  *)&AppTmrMem,         /* start of timer manager memory  */
+    (uint16_t     ) APP_TMR_N,         /* max. number of timers/actions  */
+    (uint32_t     ) APP_TICKS_PER_SEC, /* timer clock frequency in Hz    */
+    (CO_IF_DRV    )&AppDrv,            /* hardware interface drivers     */
+    (uint8_t     *)&AppSdoBuf          /* start of SDO transfer buffer   */
 };
 ```
 
