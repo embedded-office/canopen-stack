@@ -7,7 +7,6 @@ aside:
   toc: true
 ---
 
-## Timer Driver Overview 
 
 ### Timer Modes
 
@@ -47,7 +46,7 @@ The timer driver contains a set of functions, which are called at specific locat
 | `Delay()`       | when needed time interval is created       |
 | `Stop()`        | when last running time interval is deleted |
 | `Start()`       | when first time interval is created        |
-| `update()`      | when timer interrupt occurs                |
+| `Update()`      | when timer interrupt occurs                |
 
 
 #### Timer Init
