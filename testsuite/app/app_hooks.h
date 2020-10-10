@@ -31,7 +31,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CHK_CB_IF_RECEIVE(s,n)       TS_ASSERT((n) == (s)->IfReceive_Called)
+#define CHK_CB_IF_RECEIVE(s,n)       TS_ASSERT((n) == (s)->IfCanReceive_Called)
 
 #define CHK_CB_TPDO_TRANSMIT(s,n)    TS_ASSERT((n) == (s)->PdoTransmit_Called)
 
@@ -58,8 +58,8 @@ typedef struct TS_CALLBACK_T {
     uint32_t    TmrLock_Called;
     uint32_t    TmrUnlock_Called;
 
-    CO_IF_FRM  *IfReceive_ArgFrm;
-    uint32_t    IfReceive_Called;
+    CO_IF_FRM  *IfCanReceive_ArgFrm;
+    uint32_t    IfCanReceive_Called;
 
     CO_IF_FRM  *PdoTransmit_ArgFrm;
     uint32_t    PdoTransmit_Called;
@@ -90,14 +90,6 @@ typedef struct TS_CALLBACK_T {
     uint8_t    *LssLoad_ArgNodeId;
     uint32_t    LssLoad_Called;
     int16_t     LssLoad_Return;
-
-    CO_PARA    *ParaLoad_ArgParaGrp;
-    uint32_t    ParaLoad_Called;
-    int16_t     ParaLoad_Return;
-
-    CO_PARA    *ParaSave_ArgParaGrp;
-    uint32_t    ParaSave_Called;
-    int16_t     ParaSave_Return;
 
     CO_PARA    *ParaDefault_ArgParaGrp;
     uint32_t    ParaDefault_Called;

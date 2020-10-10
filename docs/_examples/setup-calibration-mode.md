@@ -11,7 +11,7 @@ When dealing with analog values, there is often a calibration of the hardware re
 
 The example focus is the user object for CAN triggered write access to a manufacturer specific area. 
 
-# Object Type Idea
+## Object Type Idea
 
 The main idea is a collection of object entries, which are writable after a simple identification mechanism. 
 
@@ -115,12 +115,13 @@ For store and restore operations, the parameter group control structure specifie
 
 ```c
 const CO_PARA CalParaObj = {
-  sizeof(struct CAL_MEM_T),      /* size of parameter memory        */
-  (uint8_t*)&CalValue,           /* start address of parameter mem  */
-  (uint8_t*)&CalDefaults,        /* start address of default para.  */
-  CO_RESET_NODE,                 /* reset type for reload parameter */
-  (void*)"Calibration",          /* user parameter identification   */
-  CO_PARA___E                    /* enable parameter storage on cmd */
+  0L,                            /* placement in non-volatile memory */
+  sizeof(struct CAL_MEM_T),      /* size of parameter memory         */
+  (uint8_t*)&CalValue,           /* start address of parameter mem   */
+  (uint8_t*)&CalDefaults,        /* start address of default para.   */
+  CO_RESET_NODE,                 /* reset type for reload parameter  */
+  (void*)"Calibration",          /* user parameter identification    */
+  CO_PARA___E                    /* enable parameter storage on cmd  */
 };
 ```
 

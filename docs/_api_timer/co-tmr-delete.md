@@ -11,7 +11,7 @@ This function deletes the defined action and removes the timer, if this was the 
 
 ### Description
 
-This function are used within the CANopen stack for timed actions. It is possible to use timed actions in the application, too.
+This function is used within the CANopen stack for timed actions. It is possible to use timed actions in the application, too.
 
 #### Prototype
 
@@ -37,12 +37,16 @@ int16_t COTmrDelete(CO_TMR  *tmr,
 The following calls a critical function `AppCritFunc()` and installs a function `AppEmcyFunc()` to the CANopen node AppNode to guarantee a maximum runtime of 150ms. The timed function will be called after 150ms and perform emergency handling with the parameter 0xdead. If the `AppCritFunc()` is finished before 150ms, the timed emergency function call will be removed.
 
 ```c
+    CO_TMR     *tmr;
     CPU_INT16S  aid;
+    uint32_t    max;
     :
-    aid = COTmrCreate(&(AppNode.Tmr), 150, 0, AppEmcyFunc, 0xdead);
+    tmr = &AppNode.Tmr;
+    max = COTmrGetTicks(tmr, 150, CO_TMR_UNIT_1MS);
+    aid = COTmrCreate(tmr, max, 0, AppEmcyFunc, 0xdead);
     if (aid >= 0) {
         AppCritFunc();
-        err = COTmrDelete(&(AppNode.Tmr), aid);
+        err = COTmrDelete(tmr, aid);
         if (err < 0) {
             /* error during deleting the timed action */
         }
@@ -52,4 +56,4 @@ The following calls a critical function `AppCritFunc()` and installs a function 
     :
 ```
 
-Note: The example assumes, that the timer callback function `AppEmcyFunc()` and the application function `AppCritFunc()` are implemented with the correct prototype. The hardware timer is configured with 1 tick equal to 1ms.
+*Note: The example assumes, that the timer callback function `AppEmcyFunc()` and the application function `AppCritFunc()` are implemented with the correct prototype. The hardware timer is configured with sufficient timer clock frequency to achieve the 50ms resolution.*

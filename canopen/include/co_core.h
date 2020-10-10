@@ -77,12 +77,13 @@ typedef struct CO_NODE_T {
 typedef struct CO_NODE_SPEC_T {
     uint8_t                NodeId;       /*!< default Node-Id                */
     uint32_t               Baudrate;     /*!< default Baudrate               */
-    struct CO_OBJ_T       *Dict;         /*!< object dictionary               */
-    uint16_t               DictLen;      /*!< object dictionary (max) length  */
+    struct CO_OBJ_T       *Dict;         /*!< object dictionary              */
+    uint16_t               DictLen;      /*!< object dictionary (max) length */
     struct CO_EMCY_TBL_T  *EmcyCode;     /*!< application EMCY info fields   */
     struct CO_TMR_MEM_T   *TmrMem;       /*!< timer memory blocks            */
     uint16_t               TmrNum;       /*!< number of timer memory blocks  */
-    CO_IF_DRV              CanDrv;       /*!< linked CAN bus driver          */
+    uint32_t               TmrFreq;      /*!< timer clock frequency in Hz    */
+    CO_IF_DRV             *Drv;          /*!< linked interface drivers       */
     uint8_t               *SdoBuf;       /*!< SDO Transfer Buffer Memory     */
 
 } CO_NODE_SPEC;
@@ -163,7 +164,7 @@ void CONodeProcess(CO_NODE *node);
 *
 *    This function is responsible for the loading of all parameter groups
 *    with the given type. The single parameter group(s) will be loaded from
-*    NVM by calling the user application callback function \ref CO_ParaLoad().
+*    NVM by calling the nvm driver function for reading data.
 *
 * \note
 *    This function considers all parameter groups, which are linked to the

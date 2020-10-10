@@ -11,7 +11,7 @@ This function is responsible for the storing activities of the given parameter g
 
 ### Description
 
-The whole parameter group will be stored in NVM by calling the user callback function `CO_ParaSave()`.
+The whole parameter group will be stored in NVM by calling the NVM driver function for writing data.
 
 #### Prototype
 

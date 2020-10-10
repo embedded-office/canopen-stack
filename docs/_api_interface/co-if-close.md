@@ -1,6 +1,6 @@
 ---
 layout: article
-title: COIfClose()
+title: COIfCanClose()
 sidebar:
   nav: docs
 ---
@@ -16,7 +16,7 @@ This function closes the interface ONLY. Be careful in calling this function for
 #### Prototype
 
 ```c
-void COIfClose(CO_IF *cif);
+void COIfCanClose(CO_IF *cif);
 ```
 
 #### Arguments
@@ -35,6 +35,6 @@ The following example shows how to close the interface of the CANopen node AppNo
 
 ```c
     :
-    COIfClose (&(AppNode.If));
+    COIfCanClose (&(AppNode.If));
     :
 ```

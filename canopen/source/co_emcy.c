@@ -342,7 +342,7 @@ void COEmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
             frm.Data[3+n] = usr->Emcy[n];
         }
     }
-    (void)COIfSend(&emcy->Node->If, &frm);
+    (void)COIfCanSend(&emcy->Node->If, &frm);
 }
 
 /*

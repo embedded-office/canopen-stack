@@ -46,7 +46,7 @@ articles:
       :
       CONodeInit (&AppNode       ,...);  /* call member function of class CO_NODE */
       CODirFind  (&(AppNode.Dir) ,...);  /* call member function of class CO_DIR  */
-      COIfSend   (&(AppNode.If)  ,...);  /* call member function of class CO_IF   */
+      COIfCanSend(&(AppNode.If)  ,...);  /* call member function of class CO_IF   */
       COEmcySet  (&(AppNode.Emcy),...);  /* call member function of class CO_EMCY */
       COTmrCreate(&(AppNode.Tmr) ,...);  /* call member function of class CO_TMR  */
       CONmtReset (&(AppNode.Nmt) ,...);  /* call member function of class CO_NMT  */

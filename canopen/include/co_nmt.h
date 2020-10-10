@@ -68,8 +68,8 @@ extern const CO_OBJ_TYPE COTNmtHbProd;
 * PUBLIC TYPES
 ******************************************************************************/
 
-struct CO_NODE_T;
-struct CO_HBCONS_T;
+struct CO_NODE_T;             /* Declaration of canopen node structure       */
+struct CO_HBCONS_T;           /* Declaration of heartbeat consumer structure */
 
 /*! \brief RESET TYPE
 *

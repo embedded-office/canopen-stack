@@ -11,7 +11,7 @@ This function is responsible for the loading of all parameter groups with the gi
 
 ### Description
 
-A single parameter group will be loaded from NVM by calling the user application callback function `CO_ParaLoad()`.
+A single parameter group will be loaded from NVM by calling the nvm driver function for reading data.
 
 This function considers all parameter groups, which are linked to the parameter store index (1010h) within the object dictionary. Every not linked parameter group is not scope of this function and must be handled within the application.
 
@@ -45,5 +45,3 @@ The function `CONodeParaLoad()` is rarely called from within the applications. T
     }
     :
 ```
-
-Whereas the callback function `CO_ParaLoad()` must be implemented within the application area to get the data from NVM into the object directory entries.

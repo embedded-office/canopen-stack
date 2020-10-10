@@ -44,7 +44,7 @@ TS_DEF_MAIN(TS_Lss_MsgConsumed)
 
     /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     /*------------------------------------------*/
     TS_LSS_SEND( 4, 0, 0);
 
@@ -67,7 +67,7 @@ TS_DEF_MAIN(TS_Lss_SelGlobal_ChgNodeId)
 
     /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
     TS_LSS_SEND( 4, 1, 0);                            /* global switch to configuration mode      */
@@ -101,7 +101,7 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongVendor)
     TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&product);
     TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&revision);
     TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&serial);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
     TS_LSS_SEND_L(64, vendor + 1);
@@ -135,7 +135,7 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongProduct)
     TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&product);
     TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&revision);
     TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&serial);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
     TS_LSS_SEND_L(64, vendor);
@@ -169,7 +169,7 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongRevision)
     TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&product);
     TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&revision);
     TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&serial);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
     TS_LSS_SEND_L(64, vendor);
@@ -203,7 +203,7 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongSerial)
     TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&product);
     TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&revision);
     TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&serial);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
     TS_LSS_SEND_L(64, vendor);
@@ -236,7 +236,7 @@ TS_DEF_MAIN(TS_Lss_SelIdent_Ok)
     TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&product);
     TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&revision);
     TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (uintptr_t)&serial);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
     TS_LSS_SEND_L(64, vendor);

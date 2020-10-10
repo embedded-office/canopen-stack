@@ -31,7 +31,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 {
     int16_t  err;
 
-    node->If.Drv   = spec->CanDrv;
+    node->If.Drv   = spec->Drv;
     node->SdoBuf   = spec->SdoBuf;
     node->Baudrate = spec->Baudrate;
     node->NodeId   = spec->NodeId;
@@ -42,9 +42,8 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
         node->Error = CO_ERR_LSS_LOAD;
         return;
     }
-    COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum);
-    COIfInit(&node->If, node);
-    COIfEnable(&node->If, node->Baudrate);
+    COIfInit(&node->If, node, spec->TmrFreq);
+    COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum, spec->TmrFreq);
     err = CODictInit(&node->Dict, node, spec->Dict, spec->DictLen);
     if (err < 0) {
         return;
@@ -60,6 +59,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     }
     COSyncInit(&node->Sync, node);
     COLssInit(&node->Lss, node);
+    COIfCanEnable(&node->If, node->Baudrate);
 }
 
 /*
@@ -82,7 +82,7 @@ void CONodeStop(CO_NODE *node)
 {
     COTmrClear(&node->Tmr);
     CONmtSetMode(&node->Nmt, CO_INVALID);
-    COIfClose(&node->If);
+    COIfCanClose(&node->If);
 }
 
 /*
@@ -104,12 +104,13 @@ CO_ERR CONodeGetErr(CO_NODE *node)
 int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
 {
     CO_DICT  *cod;
-    CO_OBJ  *obj;
-    CO_PARA *pg;
-    int16_t  err;
-    int16_t  result = 0;
-    uint8_t  num    = 0;
-    uint8_t  sub;
+    CO_OBJ   *obj;
+    CO_PARA  *pg;
+    uint32_t  bytes;
+    int16_t   err;
+    int16_t   result = 0;
+    uint8_t   num    = 0;
+    uint8_t   sub;
 
     cod = &node->Dict;
     err = CODictRdByte(cod, CO_DEV(0x1010, 0), &num);
@@ -117,15 +118,14 @@ int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
         node->Error = CO_ERR_NONE;
         return (result);
     }
-
     for (sub = 1; sub <= num; sub++) {
         obj = CODictFind(cod, CO_DEV(0x1010, sub));
         if (obj != 0) {
             pg = (CO_PARA *)obj->Data;
             if (pg->Type == type) {
-                err = COParaLoad(pg);
-                if (err != CO_ERR_NONE) {
-                    node->Error = CO_ERR_PARA_LOAD;
+                bytes = COIfNvmRead(&node->If, pg->Offset, pg->Start, pg->Size);
+                if (bytes != pg->Size) {
+                    node->Error = CO_ERR_IF_NVM_READ;
                     result      = -1;
                 }
             }
@@ -146,7 +146,7 @@ void CONodeProcess(CO_NODE *node)
     uint8_t   allowed;
     int16_t   num;
 
-    err = COIfRead(&node->If, &frm);
+    err = COIfCanRead(&node->If, &frm);
     if (err < 0) {
         allowed = 0;
     } else {
@@ -156,7 +156,7 @@ void CONodeProcess(CO_NODE *node)
     err = COLssCheck(&node->Lss, &frm);
     if (err != 0) {
         if (err > 0) {
-            (void)COIfSend(&node->If, &frm);
+            (void)COIfCanSend(&node->If, &frm);
         }
         allowed = 0;
     }
@@ -166,7 +166,7 @@ void CONodeProcess(CO_NODE *node)
         if (srv != 0) {
             err = COSdoResponse(srv);
             if (err >= -1) {
-                (void)COIfSend(&node->If, &frm);
+                (void)COIfCanSend(&node->If, &frm);
             }
             allowed = 0;
         }
@@ -197,6 +197,6 @@ void CONodeProcess(CO_NODE *node)
     }
 
     if (allowed != 0) {
-        COIfReceive(&frm);
+        COIfCanReceive(&frm);
     }
 }

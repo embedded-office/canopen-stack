@@ -48,6 +48,7 @@ Example:
 
 ```c
 static const CO_PARA AllParaObj = {
+    0L,                            /* placement in non-volatile memory */
     sizeof(ALL_PARA_MEM),
     (uint8_t *)&Para,
     (uint8_t *)&ParaDef,
@@ -56,21 +57,23 @@ static const CO_PARA AllParaObj = {
     CO_PARA___E
 };
 
-static const CO_PARA AppParaObj = {
-    sizeof(APP_PARA_MEM),
-    (uint8_t *)&Para.App,
-    (uint8_t *)&ParaDef.App,
-    CO_RESET_NODE,
-    (void *)"app.txt",
-    CO_PARA___E
-};
-
 static const CO_PARA ComParaObj = {
+    0L,                            /* placement in non-volatile memory */
     sizeof(COM_PARA_MEM),
     (uint8_t *)&Para.Com,
     (uint8_t *)&ParaDef.Com,
     CO_RESET_COM,
     (void *)"com.txt",
+    CO_PARA___E
+};
+
+static const CO_PARA AppParaObj = {
+    sizeof(COM_PARA_MEM),          /* placement in non-volatile memory */
+    sizeof(APP_PARA_MEM),
+    (uint8_t *)&Para.App,
+    (uint8_t *)&ParaDef.App,
+    CO_RESET_NODE,
+    (void *)"app.txt",
     CO_PARA___E
 };
 ```
@@ -370,15 +373,16 @@ Example:
 
 ```c
   const CO_NODE_SPEC AppSpec = {
-    (uint8_t      ) 0x01,        /* pre-defined Node-ID            */
-    (uint32_t     ) Baudrate,    /* default baudrate               */
-    (CO_OBJ      *)&AppObjDir,   /* start of object directory      */
-    (uint16_t     ) APP_OBJ_N,   /* number of objects in directory */
-    (CO_EMCY_TBL *)&AppEmcyCode, /* start of emergency code table  */
-    (CO_TMR_MEM  *)&AppTmrMem,   /* start of timer manager memory  */
-    (uint16_t     ) APP_TMR_N,   /* max. number of timers/actions  */
-    (CO_IF_DRV    )&AppCanDrv,   /* start of CAN driver interface  */
-    (uint8_t     *)&AppSdoBuf    /* start of SDO transfer buffer   */
+    (uint8_t      ) 0x01,              /* pre-defined Node-ID            */
+    (uint32_t     ) Baudrate,          /* default baudrate               */
+    (CO_OBJ      *)&AppObjDir,         /* start of object directory      */
+    (uint16_t     ) APP_OBJ_N,         /* number of objects in directory */
+    (CO_EMCY_TBL *)&AppEmcyCode,       /* start of emergency code table  */
+    (CO_TMR_MEM  *)&AppTmrMem,         /* start of timer manager memory  */
+    (uint16_t     ) APP_TMR_N,         /* max. number of timers/actions  */
+    (uint32_t     ) APP_TICKS_PER_SEC, /* timer clock frequency in Hz    */
+    (CO_IF_DRV    )&AppDrv,            /* hardware interface drivers     */
+    (uint8_t     *)&AppSdoBuf          /* start of SDO transfer buffer   */
 };
 ```
 

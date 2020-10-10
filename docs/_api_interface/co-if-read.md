@@ -1,6 +1,6 @@
 ---
 layout: article
-title: COIfRead()
+title: COIfCanRead()
 sidebar:
   nav: docs
 ---
@@ -16,7 +16,7 @@ If a CAN frame is received, the given receive frame buffer will be filled with t
 #### Prototype
 
 ```c
-int16_t COIfRead(CO_IF *cif, CO_IF_FRM *frm);
+int16_t COIfCanRead(CO_IF *cif, CO_IF_FRM *frm);
 ```
 
 #### Arguments
@@ -39,7 +39,7 @@ If necessary, the following example show how to call the blocking receive functi
     CO_IF_FRM  frame;
     int16_t    err;
     :
-    err = COIfRead (&(AppNode.If), &frame);
+    err = COIfCanRead (&(AppNode.If), &frame);
     if (err < 0) {
         /* error in interface layer */
     } else {

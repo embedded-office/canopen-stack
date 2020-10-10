@@ -137,25 +137,29 @@ void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
 void COTPdoReset(CO_TPDO *pdo, uint16_t num)
 {
     CO_TPDO  *wp;
-    CO_DICT   *cod;
+    CO_DICT  *cod;
+    CO_TMR   *tmr;
+    CO_SYNC  *sync;
     uint32_t  id      = CO_TPDO_COBID_OFF;
     uint16_t  inhibit = 0;
     uint16_t  timer   = 0;
     int16_t   err;
     uint8_t   type    = 0;
 
-    wp  = &pdo[num];
-    cod = &wp->Node->Dict;
+    wp   = &pdo[num];
+    cod  = &wp->Node->Dict;
+    tmr  = &wp->Node->Tmr;
+    sync = &pdo->Node->Sync;
     if (wp->EvTmr >= 0) {
-        (void)COTmrDelete(&wp->Node->Tmr, wp->EvTmr);
+        (void)COTmrDelete(tmr, wp->EvTmr);
         wp->EvTmr = -1;
     }
     if (wp->InTmr >= 0) {
-        (void)COTmrDelete(&wp->Node->Tmr, wp->InTmr);
+        (void)COTmrDelete(tmr, wp->InTmr);
         wp->InTmr = -1;
     }
     if ((wp->Flags & CO_TPDO_FLG_S__) != 0) {
-        COSyncRemove(&pdo->Node->Sync, num, CO_SYNC_FLG_TX);
+        COSyncRemove(sync, num, CO_SYNC_FLG_TX);
     }
     wp->Flags = 0;
     
@@ -170,16 +174,7 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
         err = (int16_t)CO_ERR_NONE;
         pdo->Node->Error = CO_ERR_NONE;
     }
-
-    if (inhibit > 0) {
-        inhibit = (inhibit + 9) / 10;
-        if (inhibit <= CO_TPDO_TMR_MIN) {
-            inhibit = CO_TPDO_TMR_MIN;
-        } else {
-            inhibit = CO_TPDO_ROUND(inhibit, CO_TPDO_TMR_MIN);
-        }
-    }
-    pdo[num].Inhibit = CO_TPDO_MS(inhibit);
+    pdo[num].Inhibit = COTmrGetTicks(tmr, inhibit, CO_TMR_UNIT_100US);
 
     if ((type == 254) || (type == 255)) {
         err = CODictRdWord(cod, CO_DEV(0x1800 + num, 5), &timer);
@@ -187,15 +182,8 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
             err = (int16_t)CO_ERR_NONE;
             pdo->Node->Error = CO_ERR_NONE;
         }
-        if (timer > 0) {
-            if (timer <= CO_TPDO_TMR_MIN) {
-                timer = CO_TPDO_TMR_MIN;
-            } else {
-                timer = CO_TPDO_ROUND(timer, CO_TPDO_TMR_MIN);
-            }
-        }
     }
-    
+
     err = CODictRdLong(cod, CO_DEV(0x1800 + num, 1), &id);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_TPDO_COM_OBJ;
@@ -225,12 +213,12 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
     if (pdo[num].Identifier != CO_TPDO_COBID_OFF) {
         if (type <= 240) {
             pdo[num].Flags |= CO_TPDO_FLG_S__;
-            COSyncAdd(&pdo->Node->Sync, num, CO_SYNC_FLG_TX, type);
+            COSyncAdd(sync, num, CO_SYNC_FLG_TX, type);
         }
     }
-    pdo[num].Event = CO_TPDO_MS(timer);
+    pdo[num].Event = COTmrGetTicks(tmr, timer, CO_TMR_UNIT_1MS);
     if (pdo[num].Event > 0) {
-        pdo[num].EvTmr = COTmrCreate(&pdo->Node->Tmr,
+        pdo[num].EvTmr = COTmrCreate(tmr,
                                      pdo[num].Event + num,
                                      0,
                                      COTPdoTmrEvent,
@@ -317,10 +305,11 @@ void COTPdoEndInhibit(void *parg)
 */
 void COTPdoTx (CO_TPDO *pdo)
 {
-    CO_IF_FRM frm;
-    uint32_t  sz;
-    uint32_t  data;
-    uint8_t   num;
+    CO_TMR    *tmr;
+    CO_IF_FRM  frm;
+    uint32_t   sz;
+    uint32_t   data;
+    uint8_t    num;
 
     if ((pdo->Node->Nmt.Allowed & CO_PDO_ALLOWED) == 0) {
         return;
@@ -329,25 +318,25 @@ void COTPdoTx (CO_TPDO *pdo)
         pdo->Flags |= CO_TPDO_FLG___E;
         return;
     }
-    
+    tmr = &pdo->Node->Tmr;
     if (pdo->EvTmr >= 0) {
-        (void)COTmrDelete(&pdo->Node->Tmr, pdo->EvTmr);
+        (void)COTmrDelete(tmr, pdo->EvTmr);
         pdo->EvTmr = -1;
     }
     if (pdo->Inhibit > 0) {
-        pdo->InTmr = COTmrCreate(&pdo->Node->Tmr,
+        pdo->InTmr = COTmrCreate(tmr,
                                  pdo->Inhibit,
                                  0,
                                  COTPdoEndInhibit,
                                  (void*)pdo);
-        if (pdo->InTmr< 0) {
+        if (pdo->InTmr < 0) {
             pdo->Node->Error = CO_ERR_TPDO_INHIBIT;
         } else {
             pdo->Flags |= CO_TPDO_FLG__I_;
         }
     }
     if (pdo->Event > 0) {
-        pdo->EvTmr = COTmrCreate(&pdo->Node->Tmr,
+        pdo->EvTmr = COTmrCreate(tmr,
                                pdo->Event,
                                0,
                                COTPdoTmrEvent,
@@ -375,7 +364,7 @@ void COTPdoTx (CO_TPDO *pdo)
     }
 
     COPdoTransmit(&frm);
-    (void)COIfSend(&pdo->Node->If, &frm);
+    (void)COIfCanSend(&pdo->Node->If, &frm);
 }
 
 /*
@@ -459,9 +448,10 @@ int16_t COTypeAsyncCtrl (CO_OBJ* obj, struct CO_NODE_T *node, uint16_t func, uin
 */
 int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    CO_DICT   *cod;
+    CO_DICT  *cod;
     CO_NMT   *nmt;
     CO_TPDO  *pdo;
+    CO_TMR   *tmr;
     uint32_t  cobid = 0;
     uint16_t  cycTime;
     uint16_t  num;
@@ -480,25 +470,18 @@ int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_
     if (nmt->Mode != CO_OPERATIONAL) {
         return (err);
     }
+    tmr = &pdo->Node->Tmr;
 
-    
     cycTime = (uint16_t)(*(uint32_t *)buf);
-    if (cycTime > 0) {
-        if (cycTime <= CO_TPDO_TMR_MIN) {
-            cycTime = CO_TPDO_TMR_MIN;
-        } else {
-            cycTime = CO_TPDO_ROUND(cycTime, CO_TPDO_TMR_MIN);
-        }
-    }
-    pdo->Event = CO_TPDO_MS(cycTime);
+    pdo->Event = COTmrGetTicks(tmr, cycTime, CO_TMR_UNIT_1MS);
     if (pdo->EvTmr >= 0) {
-        result = COTmrDelete(&pdo->Node->Tmr, pdo->EvTmr);
+        result = COTmrDelete(tmr, pdo->EvTmr);
         if (result < 0) {
             pdo->Node->Error = CO_ERR_TMR_DELETE;
         }
     }
     if (pdo->InTmr >= 0) {
-        result = COTmrDelete(&pdo->Node->Tmr, pdo->InTmr);
+        result = COTmrDelete(tmr, pdo->InTmr);
         if (result < 0) {
             pdo->Node->Error = CO_ERR_TMR_DELETE;
         }
@@ -508,7 +491,7 @@ int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_
     if (((cobid & CO_TPDO_COBID_OFF) == 0) &&
         (pdo->Event > 0)                   &&
         (nmt->Mode == CO_OPERATIONAL)) {
-        pdo->EvTmr = COTmrCreate(&pdo->Node->Tmr,
+        pdo->EvTmr = COTmrCreate(tmr,
                                  pdo->Event,
                                  0,
                                  COTPdoTmrEvent,

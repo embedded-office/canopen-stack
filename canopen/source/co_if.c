@@ -21,95 +21,23 @@
 #include "co_core.h"
 
 /******************************************************************************
-* FUNCTIONS
+* PUBLIC FUNCTIONS
 ******************************************************************************/
 
 /*
 * see function definition
 */
-int16_t COIfRead (CO_IF *cif, CO_IF_FRM *frm)
+void COIfInit(CO_IF *cif, struct CO_NODE_T *node, uint32_t freq)
 {
-    int16_t err = -1;
+    const CO_IF_CAN_DRV   *can   = cif->Drv->Can;
+    const CO_IF_TIMER_DRV *timer = cif->Drv->Timer;
+    const CO_IF_NVM_DRV   *nvm   = cif->Drv->Nvm;
 
-    /* insert your code here */
+    /* initialize interface structure */
+    cif->Node = node;
 
-    return (err);
-}
-
-/*
-* see function definition
-*/
-int16_t COIfSend(CO_IF *cif, CO_IF_FRM *frm)
-{
-    int16_t err = -1;
-
-    /* insert your code here */
-
-    if (err < 0) {
-        cif->Node->Error = CO_ERR_IF_SEND;
-    }
-
-    return (err);
-}
-
-/*
-* see function definition
-*/
-void COIfReset(CO_IF *cif)
-{
-    int16_t err = -1;
-
-    /* insert your code here */
-    
-    if (err < 0) {
-        cif->Node->Error = CO_ERR_IF_RESET;
-    }
-}
-
-/*
-* see function definition
-*/
-void COIfClose(CO_IF *cif)
-{
-    int16_t err = -1;
-
-    /* insert your code here */
-    
-    if (err < 0) {
-        cif->Node->Error = CO_ERR_IF_CLOSE;
-    }
-}
-
-/*
-* see function definition
-*/
-void COIfInit(CO_IF *cif, struct CO_NODE_T *node)
-{
-    int16_t err = -1;
-
-    /* insert your code here */
-    
-    if (err < 0) {
-        node->Error = CO_ERR_IF_INIT;
-    }
-}
-
-/*
-* see function definition
-*/
-void COIfEnable(CO_IF *cif, uint32_t baudrate)
-{
-    int16_t err = -1;
-
-    if (baudrate == 0) {
-    	baudrate = cif->Node->Baudrate;
-    }
-
-    /* insert your code here */
-
-    if (err < 0) {
-        cif->Node->Error = CO_ERR_IF_ENABLE;
-    } else {
-    	cif->Node->Baudrate = baudrate;
-    }
+    /* initialize hardware via drivers */
+    nvm->Init();
+    timer->Init(freq);
+    can->Init();
 }

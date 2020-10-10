@@ -36,7 +36,7 @@ TS_DEF_MAIN(TS_Emcy_TxUserData)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     usr.Emcy[0] = 0x11;
     usr.Emcy[1] = 0x12;
@@ -45,7 +45,7 @@ TS_DEF_MAIN(TS_Emcy_TxUserData)
     usr.Emcy[4] = 0x15;
 
     COEmcySet(&node.Emcy, 1, &usr);                   /* register error #1 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_EMCY (frm);                                   /* check EMCY (Id and DLC)                  */
@@ -74,12 +74,12 @@ TS_DEF_MAIN(TS_Emcy_TxChangedId)
     uint32_t     emcy_id = 0x00000101;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     (void)CODictWrLong(&node.Dict,CO_DEV(0x1014,0),emcy_id);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
-    RunSimCan(0, 0);                                  /* run simulated CAN                        */
+    SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     TS_ASSERT(0x101 == frm.Identifier);
@@ -98,7 +98,7 @@ TS_DEF_MAIN(TS_Emcy_GetStatusNoError)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     err = COEmcyGet(&node.Emcy, 1);                   /* get status of EMCY error #1              */
     TS_ASSERT(0 == err);                              /* check status 'no error'                  */
@@ -117,7 +117,7 @@ TS_DEF_MAIN(TS_Emcy_GetStatusError)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
 
@@ -139,7 +139,7 @@ TS_DEF_MAIN(TS_Emcy_TotalNumNoError)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     num = COEmcyCnt(&node.Emcy);                      /* get total number of EMCY errors          */
     TS_ASSERT(0 == num);                              /* check total number                       */
@@ -159,7 +159,7 @@ TS_DEF_MAIN(TS_Emcy_TotalNumError)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2 without user info      */

@@ -29,7 +29,7 @@ default:
       show_section_nav: false
     show_title: true
     show_edit_on_github: false
-    show_date: true
+    show_date: false
     show_tags: true
     show_author_profile: false
     show_subscribe: false

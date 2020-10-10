@@ -106,7 +106,7 @@ extern const CO_OBJ_TYPE COTEmcy;      /* Link to EMCY Object Type Structure */
 * PUBLIC TYPES
 ******************************************************************************/
 
-struct CO_OBJ_T;
+struct CO_OBJ_T;               /* Declaration of object entry structure      */
 
 /*! \brief EMCY HISTORY
 *

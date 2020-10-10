@@ -55,14 +55,6 @@ extern "C" {
 #define CO_TPDO_ASYNC       1    /*!< Ctrl function code: asynchronous TPDO  */
 #define CO_RPDO_ASYNC       1    /*!< Ctrl function code: asynchronous RPDO  */
 
-#if (CO_TMR_TICKS_PER_SEC < 1000)
-#define CO_TPDO_TMR_MIN  (1000/CO_TMR_TICKS_PER_SEC)  /*!< timer granularity */
-#else
-#define CO_TPDO_TMR_MIN  (1)                          /*!< timer granularity */
-#endif
-#define CO_TPDO_ROUND(x,d)  (((x)/(d))*(d))
-#define CO_TPDO_MS(x)       ((((uint32_t)(x))*CO_TMR_TICKS_PER_SEC)/1000)
-
 #define CO_TASYNC   ((CO_OBJ_TYPE *)&COTAsync)   /*!< Asynchronous TPDO      */
 #define CO_TEVENT   ((CO_OBJ_TYPE *)&COTEvent)   /*!< TPDO Event Timer       */
 #define CO_TPDONUM  ((CO_OBJ_TYPE *)&COTPdoMapN) /*!< Dynamic Map Numbers    */
@@ -96,9 +88,9 @@ typedef struct CO_TPDO_T {
     uint32_t          Identifier;  /*!< message identifier                   */
     struct CO_OBJ_T  *Map[8];      /*!< pointer list with mapped objects     */
     int16_t           EvTmr;       /*!< event timer id                       */
-    uint16_t          Event;       /*!< event time in timer ticks            */
+    uint32_t          Event;       /*!< event time in timer ticks            */
     int16_t           InTmr;       /*!< inhibit timer id                     */
-    uint16_t          Inhibit;     /*!< inhibit time in timer ticks          */
+    uint32_t          Inhibit;     /*!< inhibit time in timer ticks          */
     uint8_t           Flags;       /*!< info flags                           */
     uint8_t           ObjNum;      /*!< Number of linked objects             */
 

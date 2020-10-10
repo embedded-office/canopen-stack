@@ -108,7 +108,7 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
         COTmrClear(&nmt->Node->Tmr);
         CONmtInit(nmt, nmt->Node);
         COSdoInit(nmt->Node->Sdo, nmt->Node);
-        COIfReset(&nmt->Node->If);
+        COIfCanReset(&nmt->Node->If);
         COEmcyReset(&nmt->Node->Emcy, 1);
         COSyncInit(&nmt->Node->Sync, nmt->Node);
         if (nobootup == 0) {
@@ -392,11 +392,13 @@ CO_ERR CONmtHbConsActivate(CO_NMT    *nmt,
 */
 int16_t CONmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 {
+    CO_HBCONS *hbc;
+    CO_TMR    *tmr;
+    CO_MODE    state;
     int16_t    result = -1;
     uint32_t   cobid;
+    uint32_t   ticks;
     uint8_t    nodeid;
-    CO_MODE    state;
-    CO_HBCONS *hbc;
 
     cobid  = frm->Identifier;
     hbc    = nmt->HbCons;
@@ -409,15 +411,17 @@ int16_t CONmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm)
     } else {
         return (result);
     }
+    tmr = &nmt->Node->Tmr;
     while (hbc != 0) {
         if (hbc->NodeId != nodeid) {
             hbc = hbc->Next;
         } else {
             if (hbc->Tmr >= 0) {
-                COTmrDelete(&nmt->Node->Tmr, hbc->Tmr);
-            } 
-            hbc->Tmr = COTmrCreate(&nmt->Node->Tmr,
-                CO_TMR_TICKS(hbc->Time),
+                COTmrDelete(tmr, hbc->Tmr);
+            }
+            ticks = COTmrGetTicks(tmr, hbc->Time, CO_TMR_UNIT_1MS);
+            hbc->Tmr = COTmrCreate(tmr,
+                ticks,
                 0,
                 CONmtHbConsMonitor,
                 hbc);
@@ -444,12 +448,15 @@ void CONmtHbConsMonitor(void *parg)
 {
     CO_NODE   *node;
     CO_HBCONS *hbc;
+    CO_TMR    *tmr;
+    uint32_t   ticks;
 
-    hbc  = (CO_HBCONS *)parg;
-    node = hbc->Node;
-
-    hbc->Tmr = COTmrCreate(&node->Tmr,
-        CO_TMR_TICKS(hbc->Time),
+    hbc   = (CO_HBCONS *)parg;
+    node  = hbc->Node;
+    tmr   = &node->Tmr;
+    ticks = COTmrGetTicks(tmr, hbc->Time, CO_TMR_UNIT_1MS);
+    hbc->Tmr = COTmrCreate(tmr,
+        ticks,
         0,
         CONmtHbConsMonitor,
         hbc);
@@ -526,29 +533,33 @@ int16_t COTypeNmtHbConsRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint
 void CONmtHbProdInit(CO_NMT *nmt)
 {
     CO_NODE *node;
+    CO_TMR  *tmr;
     int16_t  err;
     uint16_t cycTime;
+    uint32_t ticks;
 
     if (nmt == 0) {
         CONodeFatalError();
         return;
     }
     node = nmt->Node;
-    err = CODictRdWord(&node->Dict, CO_DEV(0x1017, 0), &cycTime);
+    tmr  = &node->Tmr;
+    err  = CODictRdWord(&node->Dict, CO_DEV(0x1017, 0), &cycTime);
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_CFG_1017_0;
     }
     if (nmt->Tmr >= 0) {
-        err = COTmrDelete(&node->Tmr, nmt->Tmr);
+        err = COTmrDelete(tmr, nmt->Tmr);
         if (err < 0) {
             node->Error = CO_ERR_TMR_DELETE;
         }
     }
 
     if (cycTime > 0) {
-        nmt->Tmr = COTmrCreate(&node->Tmr,
-            CO_TMR_TICKS(cycTime),
-            CO_TMR_TICKS(cycTime),
+        ticks = COTmrGetTicks(tmr, cycTime, CO_TMR_UNIT_1MS);
+        nmt->Tmr = COTmrCreate(tmr,
+            ticks,
+            ticks,
             CONmtHbProdSend,
             nmt);
         if (nmt->Tmr < 0) {
@@ -579,7 +590,7 @@ void CONmtHbProdSend(void *parg)
     CO_SET_DLC(&frm, 1);
     CO_SET_BYTE(&frm, state, 0);
 
-    (void)COIfSend(&nmt->Node->If, &frm);
+    (void)COIfCanSend(&nmt->Node->If, &frm);
 }
 
 /*
@@ -611,7 +622,7 @@ void CONmtBootup(CO_NMT *nmt)
         CO_SET_DLC  (&frm, 1);
         CO_SET_BYTE (&frm, 0, 0);
 
-        (void)COIfSend(&nmt->Node->If, &frm);
+        (void)COIfCanSend(&nmt->Node->If, &frm);
     }
 }
 
@@ -655,6 +666,8 @@ int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 */
 int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
+    CO_TMR   *tmr;
+    uint32_t  ticks;
     uint16_t  cycTime;
     int16_t   result = CO_ERR_OBJ_ACC;
 
@@ -665,9 +678,9 @@ int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uin
         return (CO_ERR_CFG_1017_0);
     }
     cycTime = (uint16_t)(*(uint32_t *)buf);
-
+    tmr = &node->Tmr;
     if (node->Nmt.Tmr >= 0) {
-        result = COTmrDelete(&node->Tmr, node->Nmt.Tmr);
+        result = COTmrDelete(tmr, node->Nmt.Tmr);
         if (result < 0) {
             node->Error = CO_ERR_TMR_DELETE;
             return (CO_ERR_TMR_DELETE);
@@ -675,9 +688,10 @@ int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uin
         node->Nmt.Tmr = -1;
     }
     if (cycTime > 0) {
-        node->Nmt.Tmr = COTmrCreate(&node->Tmr,
-            CO_TMR_TICKS(cycTime),
-            CO_TMR_TICKS(cycTime),
+        ticks = COTmrGetTicks(tmr, cycTime, CO_TMR_UNIT_1MS);
+        node->Nmt.Tmr = COTmrCreate(tmr,
+            ticks,
+            ticks,
             CONmtHbProdSend,
             &node->Nmt);
         if (node->Nmt.Tmr < 0) {

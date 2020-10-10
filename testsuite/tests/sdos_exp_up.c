@@ -104,7 +104,7 @@ TS_DEF_MAIN(TS_ExpRd_1BytePara)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -149,7 +149,7 @@ TS_DEF_MAIN(TS_ExpRd_2BytePara)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000); 
@@ -194,7 +194,7 @@ TS_DEF_MAIN(TS_ExpRd_4BytePara)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -239,7 +239,7 @@ TS_DEF_MAIN(TS_ExpRd_1ByteVar)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ___PRW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -284,7 +284,7 @@ TS_DEF_MAIN(TS_ExpRd_2ByteVar)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ___PRW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -328,7 +328,7 @@ TS_DEF_MAIN(TS_ExpRd_4ByteVar)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ___PRW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -372,7 +372,7 @@ TS_DEF_MAIN(TS_ExpRd_4ByteConst)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x44434241);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -417,7 +417,7 @@ TS_DEF_MAIN(TS_ExpRd_4ByteConstNodeId)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32 | CO_OBJ_DN_R_), 0, (uintptr_t)0x44434241);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -463,7 +463,7 @@ TS_DEF_MAIN(TS_ExpRd_2ByteParaNodeId)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ__NPRW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -508,7 +508,7 @@ TS_DEF_MAIN(TS_ExpRd_BadCmd)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0xF0, idx, sub, 0x00000000);
@@ -552,7 +552,7 @@ TS_DEF_MAIN(TS_ExpRd_ObjNotExist)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -597,7 +597,7 @@ TS_DEF_MAIN(TS_ExpRd_SubIdxNotExist)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     sub++;
@@ -643,7 +643,7 @@ TS_DEF_MAIN(TS_ExpRd_WriteOnly)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ_____W), 0, (uintptr_t)&val);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);
@@ -688,7 +688,7 @@ TS_DEF_MAIN(TS_ExpRd_DataNullPtr)
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)0);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
 
     /* -- TEST -- */
     TS_SDO_SEND (0x40, idx, sub, 0x00000000);

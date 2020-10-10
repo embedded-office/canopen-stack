@@ -39,7 +39,7 @@ TS_DEF_MAIN(TS_HBProd_Disable)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), CO_THB_PROD, (uintptr_t)&time);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
                                                       /*------------------------------------------*/
     TS_Wait(&node, 1000);                             /* wait 1000ms                              */
     CHK_NOCAN(&frm);                                  /* check for no CAN frame                   */
@@ -62,7 +62,7 @@ TS_DEF_MAIN(TS_HBProd_PreOperational)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), CO_THB_PROD, (uintptr_t)&time);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
                                                       /*------------------------------------------*/
     TS_Wait(&node, 50);                               /* wait heartbeat time                      */
 
@@ -87,7 +87,7 @@ TS_DEF_MAIN(TS_HBProd_Operational)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), CO_THB_PROD, (uintptr_t)&time);
-    TS_CreateNode(&node);
+    TS_CreateNode(&node,0);
                                                       /*------------------------------------------*/
     TS_NMT_SEND(0x01, 1);                            /* set node-id 0x01 to operational          */
     TS_Wait(&node, 50);                               /* wait heartbeat time                      */
