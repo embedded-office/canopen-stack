@@ -50,17 +50,19 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 Get the project repository and add to your include search path:
 - `canopen/config`
 - `canopen/include` 
-- `driver/include` 
 
 and to your source path:
 - `canopen/source`
+
+Select the driver templates for CAN, NVM and Timer you want as starting point for your hardware interface and add them to your project:
+- `driver/include` 
 - `driver/source`
 
 *Note: in future versions, we want to remove the pre-compiler configuration file in `canopen/config`. The corresponding configuration will be possible in a more flexible way. The main goal is to get a CANopen library for a specific microcontroller, with no application specific configuration included and therefore usable in all applications.*
 
 ### Hardware interfaces
 
-The project contains a driver layer for required hardware interfaces. In this repository no real hardware specific drivers are included. The repository contains a template device (`dummy`) as a starting point for your own drivers and a driver for simulated device (`sim`) for CAN and NVM (used by the test suite) and a device for software based timer (`swcycle`).
+The project contains a driver layer for required hardware interfaces. In this repository no real hardware specific drivers are included. The repository contains a template device (`dummy`) as a starting point for your own drivers and a driver for simulated device (`sim`) for CAN and NVM (used by the test suite) and a device for software based cyclic timer (`swcycle`) for the test suite.
 
 | Interface | Component                                   |
 | --------- | ------------------------------------------- |
@@ -70,17 +72,17 @@ The project contains a driver layer for required hardware interfaces. In this re
 
 #### Connect hardware drivers
 
-For selecting the hardware interfaces you need to include the header file of one specific driver module and use the matching global interface variable. The naming convention for the include file is `co_<interface>_<device>.c/h` and for the matching interface variable `<Device><Interface>Driver`. Therefore, connecting the simulation devices (`sim`) for all interfaces leads us to:
+For selecting the hardware interfaces you need to include the header file of one specific driver module and use the matching global interface variable. The naming convention for the include file is `co_<interface>_<device>.c/h` and for the matching interface variable `<Device><Interface>Driver`. Therefore, as an example for connecting the STM32F429 microcontroller (`stm32f429`) for all interfaces leads us to:
 
 ```c
-#include "co_can_sim.h"
-#include "co_timer_swcycle.h"
-#include "co_nvm_sim.h"
+#include "co_can_stm32f429.h"
+#include "co_timer_stm32f429.h"
+#include "co_nvm_stm32f429.h"
 
 const CO_IF_DRV MyDriver = {
-  SimCanDriver,
-  SwCycleTimerDriver,
-  SimNvmDriver
+  Stm32f429CanDriver,
+  Stm32f429TimerDriver,
+  Stm32f429NvmDriver
 };
 ```
 
@@ -88,7 +90,7 @@ const CO_IF_DRV MyDriver = {
 
 How to integrate the timer management depends on the timer driver and is explained in the corresponding documentation. For the software cycle timer, we need to call the timer service function periodically. The service function of the timer management checks if a timer event is elapsed and coordinates the CANopen software timers.
 - call the function `COTmrService()` periodically
-- ensure the calling frequency you define in member `TmrFreq` of node specification
+- ensure the calling frequency you define in member `TmrFreq` of the node specification
 
 The processing of all actions related to a timer event is performed with the process function of the timer management. This execution can take place within the timer interrupt service handler, or within a task of your RTOS.
 - call the function `COTmrProcess()` where you want to process the timed actions
@@ -106,31 +108,31 @@ The CANopen node is configured with global data structures:
 
 The CANopen dictionary is an array of object entries, which we can allocate statically:
 
-~~~c
+```c
 const CO_OBJ MyDir[MY_DIR_LEN] = {
     /* setup application specific dictionary, example entry: */
     { CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)(0u) },
     /* : */
 };
-~~~
+```
 
 #### Define Emergency Table
 
 The emergency code table maps the application emergency codes to the corresponding bits in the mandatory error register.
 
-~~~c
+```c
 const CO_EMCY MyEmcyTbl[MY_EMCY_TBL_LEN] = {
     /* setup application specific error codes, example entry: */
     { MY_OVER_VOLTAGE_ERROR_CODE, CO_EMCY_REG_VOLTAGE },
     /* : */
 }
-~~~
+```
 
 #### Initialize CANopen Node
 
 Fill the specification structure with your configuration constants, memory areas and default values and call the CANopen initialization function for setting up all the internal references and structures.
 
-~~~c
+```c
 CO_NODE myNode;
 
 void foo(void)
@@ -139,18 +141,18 @@ void foo(void)
 
     spec.NodeId   = 1u;
     spec.Baudrate = 250000u;
-    spec.Drv      = &MyDriver;
     spec.Dir      = &MyDir;
     spec.DirLen   = MY_DIR_LEN;
     spec.EmcyCode = &MyEmcyTbl;
     spec.TmrMem   = &MyTmrMem[0];
     spec.TmrNum   = 16u;
     spec.TmrFreq  = 1000u;
+    spec.Drv      = &MyDriver;
     spec.SdoBuf   = &MySdoMem[0][0];
 
     CONodeInit (&myNode, &spec);
 }
-~~~
+```
 
 # History
 
@@ -159,6 +161,15 @@ The first release of this CANopen stack is back in 2005. It is still used in man
 Some years later, now in 2020, we think it is time for a new way of software development of components where no product specific know-how is neccessary. This project is the try with the hope, that this way of software development is good for existing customers, for Embedded Offic and for all potential new users.
 
 ## Change Log
+
+**V4.1.0**
+- add: introduce a drivers layer for CAN, NVM and Timer
+- add: clock example as compilable source code
+- add: documentation for interfacing the hardware
+- add: driver templates and simulation drivers for testsuite
+- imp: documentation for callback functions
+
+*Note: since the version v4.1.x, the callback interface is changed (some functions are not required anymore) and the hardware interface must be done with the drivers functions (breaking change)*
 
 **V4.0.3**
 - add: make timer tick rate configurable
