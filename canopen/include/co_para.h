@@ -134,11 +134,10 @@ void COParaRestore(CO_PARA *pg, struct CO_NODE_T *node);
 * \param size
 *    Size of given data in buffer
 *
-* \retval  =0      restore activity
-* \retval  >0      store activity
-* \retval  <0      error is detected and function aborted
+* \retval  ==CO_ERR_NONE     store/restore activity successfull
+* \retval  !=CO_ERR_NONE     error is detected and function aborted
 */
-int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief PARAMETER OBJECT READ ACCESS
 *
@@ -159,10 +158,10 @@ int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t siz
 * \param size
 *    Size of given data in buffer
 *
-* \retval   >0    store / restore successful
-* \retval  <=0    error is detected and function aborted
+* \retval  ==CO_ERR_NONE    store / restore successful
+* \retval  !=CO_ERR_NONE    error is detected and function aborted
 */
-int16_t COTypeParaRead(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypeParaRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief PARAMETER OBJECT WRITE ACCESS
 *
@@ -181,10 +180,10 @@ int16_t COTypeParaRead(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t 
 * \param size
 *    Size of given data in buffer
 *
-* \retval  =0    store / restore successful
-* \retval  <0    error is detected and function aborted
+* \retval  ==CO_ERR_NONE    store / restore successful
+* \retval  !=CO_ERR_NONE    error is detected and function aborted
 */
-int16_t COTypeParaWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypeParaWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

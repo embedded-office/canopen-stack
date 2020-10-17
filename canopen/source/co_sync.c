@@ -31,8 +31,8 @@
 */
 void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
 {
-    int16_t err;
-    uint8_t   i;
+    CO_ERR  err;
+    uint8_t i;
 
     if ((sync == 0) || (node == 0)) {
         CONodeFatalError();

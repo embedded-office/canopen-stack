@@ -83,7 +83,7 @@ void COSdoEnable(CO_SDO *srv, uint8_t num)
     uint32_t txId;
     CO_NODE *node;
     CO_SDO  *srvnum;
-    int16_t  err;
+    CO_ERR   err;
 
     if (num >= CO_SDOS_N) {
         return;
@@ -139,9 +139,9 @@ CO_SDO *COSdoCheck(CO_SDO *srv, CO_IF_FRM *frm)
 /*
 * see function definition
 */
-int16_t COSdoResponse(CO_SDO *srv)
+CO_ERR COSdoResponse(CO_SDO *srv)
 {
-    int16_t result = -1;
+    CO_ERR  result = CO_ERR_SDO_ABORT;
     uint8_t cmd;
 
     cmd = CO_GET_BYTE(srv->Frm, 0);
@@ -149,7 +149,7 @@ int16_t COSdoResponse(CO_SDO *srv)
     /* client abort */
     if (cmd == 0x80) {
         COSdoAbortReq(srv);
-        return (-2);
+        return (result);
     }
 
     /* active block transfer */
@@ -220,11 +220,11 @@ int16_t COSdoResponse(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoGetObject(CO_SDO *srv, uint16_t mode)
+CO_ERR COSdoGetObject(CO_SDO *srv, uint16_t mode)
 {
+    CO_ERR   result = CO_ERR_SDO_ABORT;
     CO_OBJ  *obj;
     uint32_t key;
-    int16_t  result = -1;
 
     key = CO_DEV(srv->Idx, srv->Sub);
     obj = CODictFind(&srv->Node->Dict, key);
@@ -232,14 +232,14 @@ int16_t COSdoGetObject(CO_SDO *srv, uint16_t mode)
         if (mode == CO_SDO_RD) {
             if (CO_IS_READ(obj->Key) != 0) {
                 srv->Obj = obj;
-                result   = 0;
+                result   = CO_ERR_NONE;
             } else {
                 COSdoAbort(srv, CO_SDO_ERR_RD);
             }
         } else {
             if (CO_IS_WRITE(obj->Key) != 0) {
                 srv->Obj = obj;
-                result   = 0;
+                result   = CO_ERR_NONE;
             } else {
                 COSdoAbort(srv, CO_SDO_ERR_WR);
             }
@@ -295,12 +295,12 @@ uint32_t COSdoGetSize(CO_SDO *srv, uint32_t width)
 /*
 * see function definition
 */
-int16_t COSdoUploadExpedited(CO_SDO *srv)
+CO_ERR COSdoUploadExpedited(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_SDO_ABORT;
+    CO_ERR   err;
     uint32_t size;
     uint32_t data   = 0;
-    int16_t  result = -1;
-    int16_t  num;
     uint8_t  cmd;
     uint8_t  nodeid;
 
@@ -309,16 +309,16 @@ int16_t COSdoUploadExpedited(CO_SDO *srv)
         return (result);
     } else if ((size > 0) && (size <= 4)) {
         nodeid = srv->Node->NodeId;
-        num    = COObjRdValue(srv->Obj, srv->Node, (void *)&data, CO_LONG, nodeid);
-        if (num != CO_ERR_NONE) {
+        err    = COObjRdValue(srv->Obj, srv->Node, (void *)&data, CO_LONG, nodeid);
+        if (err != CO_ERR_NONE) {
             COSdoAbort(srv, CO_SDO_ERR_TOS);
             return (result);
         } else {
-            cmd = 0x43 | (((4-size) & 0x3) << 2);
+            cmd = (uint8_t)0x43u | (uint8_t)(((4u - size) & 0x3u) << 2u);
             CO_SET_BYTE(srv->Frm,  cmd, 0);
             CO_SET_LONG(srv->Frm, data, 4);
             srv->Obj = 0;
-            result   = 0;
+            result   = CO_ERR_NONE;
         }
     }
 
@@ -326,7 +326,7 @@ int16_t COSdoUploadExpedited(CO_SDO *srv)
         result = COSdoInitUploadSegmented(srv, size);
     }
 
-    if (result < 0) {
+    if (result != CO_ERR_NONE) {
         COSdoAbort(srv, CO_SDO_ERR_CMD);
     }
 
@@ -336,13 +336,13 @@ int16_t COSdoUploadExpedited(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoDownloadExpedited(CO_SDO *srv)
+CO_ERR COSdoDownloadExpedited(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_SDO_ABORT;
+    CO_ERR   err;
     uint32_t size;
     uint32_t data;
     uint32_t width  =  0;
-    int16_t  result = -1;
-    int16_t  num;
     uint8_t  cmd;
     uint8_t  nodeid;
 
@@ -354,17 +354,17 @@ int16_t COSdoDownloadExpedited(CO_SDO *srv)
     if ((size > 0) && (size <= 4)) {
         nodeid = srv->Node->NodeId;
         data   = CO_GET_LONG(srv->Frm, 4);
-        num    = COObjWrValue(srv->Obj, srv->Node, (void*)&data, CO_LONG, nodeid);
-        if (num != CO_ERR_NONE) {
-            if (num ==  CO_ERR_OBJ_RANGE) {
+        err    = COObjWrValue(srv->Obj, srv->Node, (void*)&data, CO_LONG, nodeid);
+        if (err != CO_ERR_NONE) {
+            if (err == CO_ERR_OBJ_RANGE) {
                 COSdoAbort(srv, CO_SDO_ERR_RANGE);
-            } else if (num == CO_ERR_OBJ_MAP_TYPE) {
+            } else if (err == CO_ERR_OBJ_MAP_TYPE) {
                 COSdoAbort(srv, CO_SDO_ERR_OBJ_MAP);
-            } else if (num == CO_ERR_OBJ_ACC) {
+            } else if (err == CO_ERR_OBJ_ACC) {
                 COSdoAbort(srv, CO_SDO_ERR_TOS);
-            } else if (num == CO_ERR_OBJ_MAP_LEN) {
+            } else if (err == CO_ERR_OBJ_MAP_LEN) {
                 COSdoAbort(srv, CO_SDO_ERR_OBJ_MAP_N);
-            } else if (num == CO_ERR_OBJ_INCOMPATIBLE) {
+            } else if (err == CO_ERR_OBJ_INCOMPATIBLE) {
                 COSdoAbort(srv, CO_SDO_ERR_PARA_INCOMP);
             } else {
                 COSdoAbort(srv, CO_SDO_ERR_TOS);
@@ -373,7 +373,7 @@ int16_t COSdoDownloadExpedited(CO_SDO *srv)
             CO_SET_BYTE(srv->Frm, 0x60, 0);
             CO_SET_LONG(srv->Frm,    0, 4);
             srv->Obj = 0;
-            result   = 0;
+            result   = CO_ERR_NONE;
         }
     }
 
@@ -396,9 +396,9 @@ void COSdoAbort(CO_SDO *srv, uint32_t err)
 /*
 * see function definition
 */
-int16_t COSdoInitUploadSegmented(CO_SDO *srv, uint32_t size)
+CO_ERR COSdoInitUploadSegmented(CO_SDO *srv, uint32_t size)
 {
-    int16_t result;
+    CO_ERR  result;
     uint8_t cmd;
 
     cmd = 0x41;
@@ -423,11 +423,11 @@ int16_t COSdoInitUploadSegmented(CO_SDO *srv, uint32_t size)
 /*
 * see function definition
 */
-int16_t COSdoInitDownloadSegmented(CO_SDO *srv)
+CO_ERR COSdoInitDownloadSegmented(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_SDO_ABORT;
     uint32_t size;
-    uint32_t width  =  0;
-    int16_t  result = -1;
+    uint32_t width  = 0;
     uint8_t  cmd;
 
     cmd = CO_GET_BYTE(srv->Frm, 0);
@@ -458,11 +458,11 @@ int16_t COSdoInitDownloadSegmented(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoDownloadSegmented(CO_SDO *srv)
+CO_ERR COSdoDownloadSegmented(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_NONE;
     uint32_t num;
     uint32_t len;
-    int16_t  result = 0;
     uint8_t  n;
     uint8_t  cmd;
     uint8_t  bid;
@@ -470,7 +470,7 @@ int16_t COSdoDownloadSegmented(CO_SDO *srv)
     cmd = CO_GET_BYTE(srv->Frm, 0);
     if ((cmd >> 4) != srv->Seg.TBit) {
         COSdoAbort(srv, CO_SDO_ERR_TBIT);
-        return (-1);
+        return (CO_ERR_SDO_ABORT);
     }
 
     n = ((cmd >> 1) & 0x07);
@@ -498,7 +498,7 @@ int16_t COSdoDownloadSegmented(CO_SDO *srv)
         result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
         if (result != CO_ERR_NONE) {
             COSdoAbort(srv, CO_SDO_ERR_TOS);
-            result = -1;
+            result = CO_ERR_SDO_ABORT;
         }
         srv->Seg.Size = 0;
         srv->Seg.Num  = 0;
@@ -508,14 +508,14 @@ int16_t COSdoDownloadSegmented(CO_SDO *srv)
         result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
         if (result != CO_ERR_NONE) {
             COSdoAbort(srv, CO_SDO_ERR_TOS);
-            result = -1;
+            result = CO_ERR_SDO_ABORT;
         }
         srv->Buf.Cur  = srv->Buf.Start;
         srv->Buf.Num  = 0;
     }
 
     cmd = (uint8_t)((1 << 5) | (srv->Seg.TBit << 4));
-    if (result == 0) {
+    if (result == CO_ERR_NONE) {
         CO_SET_BYTE(srv->Frm, cmd, 0);
         CO_SET_BYTE(srv->Frm, 0, 1);
         CO_SET_WORD(srv->Frm, 0, 2);
@@ -530,23 +530,23 @@ int16_t COSdoDownloadSegmented(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoUploadSegmented(CO_SDO *srv)
+CO_ERR COSdoUploadSegmented(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_NONE;
     uint32_t width;
-    int16_t  result = 0;
     uint8_t  cmd;
     uint8_t  c_bit  = 0;
     uint8_t  i;
 
     if (srv->Obj == 0) {
         COSdoAbort(srv, CO_SDO_ERR_CMD);
-        return (-1);
+        return (CO_ERR_SDO_ABORT);
     }
 
     cmd = CO_GET_BYTE(srv->Frm, 0);
     if (((cmd >> 4) & 0x01) != srv->Seg.TBit) {
         COSdoAbort(srv, CO_SDO_ERR_TBIT);
-        return (-1);
+        return (CO_ERR_SDO_ABORT);
     }
 
     width = srv->Seg.Size - srv->Seg.Num;
@@ -563,7 +563,7 @@ int16_t COSdoUploadSegmented(CO_SDO *srv)
     }
     if (result != CO_ERR_NONE) {
         COSdoAbort(srv, CO_SDO_ERR_TOS);
-        return (-1);
+        return (CO_ERR_SDO_ABORT);
     }
 
     srv->Buf.Cur = srv->Buf.Start;
@@ -597,11 +597,11 @@ int16_t COSdoUploadSegmented(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoInitDownloadBlock(CO_SDO *srv)
+CO_ERR COSdoInitDownloadBlock(CO_SDO *srv)
 {
-    uint32_t size;
+    CO_ERR   result = CO_ERR_SDO_ABORT;
     uint32_t width  =  0;
-    int16_t  result = -1;
+    uint32_t size;
     uint8_t  cmd;
 
     cmd = CO_GET_BYTE(srv->Frm, 0);
@@ -636,10 +636,10 @@ int16_t COSdoInitDownloadBlock(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoEndDownloadBlock(CO_SDO *srv)
+CO_ERR COSdoEndDownloadBlock(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_SDO_ABORT;
     uint32_t len;
-    int16_t  result = -1;
     uint8_t  cmd;
     uint8_t  n;
 
@@ -650,7 +650,7 @@ int16_t COSdoEndDownloadBlock(CO_SDO *srv)
         result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
-            result = -1;
+            result = CO_ERR_SDO_ABORT;
         }
         CO_SET_BYTE(srv->Frm, 0xA1, 0);
         CO_SET_WORD(srv->Frm, 0, 1);
@@ -661,7 +661,7 @@ int16_t COSdoEndDownloadBlock(CO_SDO *srv)
         srv->Buf.Cur   = srv->Buf.Start;
         srv->Buf.Num   = 0;
         srv->Obj       = 0;
-        result         = 0;
+        result         = CO_ERR_NONE;
     }
 
     return (result);
@@ -670,11 +670,11 @@ int16_t COSdoEndDownloadBlock(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoDownloadBlock(CO_SDO *srv)
+CO_ERR COSdoDownloadBlock(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_SDO_ABORT;
+    CO_ERR   err;
     uint32_t len;
-    int16_t  result = -2;
-    int16_t  err;
     uint8_t  cmd;
     uint8_t  i;
 
@@ -697,10 +697,10 @@ int16_t COSdoDownloadBlock(CO_SDO *srv)
             }
             srv->Blk.SegCnt  = 0;
             srv->Blk.State   = BLK_DNWAIT;
-            result           = 0;
+            result           = CO_ERR_NONE;
         }
 
-        if (result == 0) {
+        if (result == CO_ERR_NONE) {
             if ((cmd & 0x80) == 0) {
                 len = (uint32_t)srv->Buf.Num;
                 err = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
@@ -728,7 +728,7 @@ int16_t COSdoDownloadBlock(CO_SDO *srv)
             srv->Blk.SegCnt = 0;
             srv->Buf.Cur    = srv->Buf.Start;
             srv->Buf.Num    = 0;
-            result          = 0;
+            result          = CO_ERR_NONE;
         }
     }
 
@@ -738,21 +738,21 @@ int16_t COSdoDownloadBlock(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoInitUploadBlock(CO_SDO *srv)
+CO_ERR COSdoInitUploadBlock(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_NONE;
+    CO_ERR   err;
     uint32_t size;
-    int16_t  result = 0;
-    int16_t  err;
     uint8_t  cmd;
 
     err = COSdoGetObject(srv, CO_SDO_RD);
-    if (err < 0) {
-        return (-1);
+    if (err != CO_ERR_NONE) {
+        return (CO_ERR_SDO_ABORT);
     }
 
     srv->Blk.Size = COSdoGetSize(srv, 0);
     if (srv->Blk.Size == 0) {
-        return (-1);
+        return (CO_ERR_SDO_ABORT);
     }
     srv->Blk.SegNum = CO_GET_BYTE(srv->Frm, 4);
 
@@ -760,7 +760,7 @@ int16_t COSdoInitUploadBlock(CO_SDO *srv)
         (srv->Blk.SegNum > 0x7F)) {
         COSdoAbort(srv, CO_SDO_ERR_BLK_SIZE);
         COSdoAbortReq(srv);
-        return (-1);
+        return (CO_ERR_SDO_ABORT);
     } else {
         if (srv->Blk.SegNum > CO_SDO_BUF_SEG) {
             srv->Blk.SegNum = CO_SDO_BUF_SEG;
@@ -786,12 +786,12 @@ int16_t COSdoInitUploadBlock(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoUploadBlock(CO_SDO *srv)
+CO_ERR COSdoUploadBlock(CO_SDO *srv)
 {
+    CO_ERR   result = CO_ERR_SDO_ABORT;
+    CO_ERR   err;
     uint32_t size;
     uint32_t num;
-    int16_t  result   = -2;
-    int16_t  err;
     uint8_t  finished =  0;
     uint8_t  seg;
     uint8_t  len;
@@ -861,9 +861,9 @@ int16_t COSdoUploadBlock(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoAckUploadBlock(CO_SDO *srv)
+CO_ERR COSdoAckUploadBlock(CO_SDO *srv)
 {
-    int16_t result = -2;
+    CO_ERR  result = CO_ERR_SDO_ABORT;
     uint8_t cmd;
     uint8_t seq;
     uint8_t val;
@@ -873,7 +873,7 @@ int16_t COSdoAckUploadBlock(CO_SDO *srv)
     if (seq > 0x7F) {
         COSdoAbort(srv, CO_SDO_ERR_SEQ_NUM);
         COSdoAbortReq(srv);
-        return (-1);
+        return (CO_ERR_SDO_ABORT);
     } else if (seq != srv->Blk.SegCnt) {
         srv->Blk.State  = BLK_REPEAT;
         result          = COSdoUploadBlock(srv);
@@ -887,7 +887,7 @@ int16_t COSdoAckUploadBlock(CO_SDO *srv)
             for (i = 1; i <= 7; i++) {
                 CO_SET_BYTE(srv->Frm, 0, i);
             }
-            result = 0;
+            result = CO_ERR_NONE;
         }
     } else {
         srv->Blk.SegNum = CO_GET_BYTE(srv->Frm, 2);
@@ -895,7 +895,7 @@ int16_t COSdoAckUploadBlock(CO_SDO *srv)
             (srv->Blk.SegNum > 0x7F)) {
             COSdoAbort(srv, CO_SDO_ERR_BLK_SIZE);
             COSdoAbortReq(srv);
-            return (-1);
+            return (CO_ERR_SDO_ABORT);
         } else {
             if (srv->Blk.SegNum > CO_SDO_BUF_SEG) {
                 srv->Blk.SegNum = CO_SDO_BUF_SEG;
@@ -910,9 +910,9 @@ int16_t COSdoAckUploadBlock(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COSdoEndUploadBlock(CO_SDO *srv)
+CO_ERR COSdoEndUploadBlock(CO_SDO *srv)
 {
-    int16_t result = -2;
+    CO_ERR result = CO_ERR_SDO_ABORT;
 
     srv->Blk.State = BLK_IDLE;
     srv->Obj       = 0;
@@ -939,11 +939,11 @@ void COSdoAbortReq(CO_SDO *srv)
 /*
 * see function definition
 */
-int16_t COTypeSdoIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+CO_ERR COTypeSdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
+    CO_ERR    err = CO_ERR_NONE;
     uint32_t  newval;
     uint32_t  curval;
-    int16_t   err = CO_ERR_NONE;
     uint8_t   num;
 
     if ((obj == 0) || (buf == 0) || (size != CO_LONG)) {

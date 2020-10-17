@@ -27,6 +27,7 @@ extern "C" {
 
 #include "co_types.h"
 #include "co_cfg.h"
+#include "co_err.h"
 
 #include "co_obj.h"
 
@@ -261,8 +262,6 @@ void COEmcyHistReset(struct CO_EMCY_T *emcy);
 *
 * \param root
 *    pointer to the start of the User EMCY table
-*
-* \internal
 */
 void COEmcyInit(CO_EMCY *emcy, struct CO_NODE_T *node, CO_EMCY_TBL *root);
 
@@ -276,8 +275,6 @@ void COEmcyInit(CO_EMCY *emcy, struct CO_NODE_T *node, CO_EMCY_TBL *root);
 *
 * \retval  =0    the given parameter emcy is ok
 * \retval  <0    an error is detected in parameter emcy
-*
-* \internal
 */
 int16_t COEmcyCheck(CO_EMCY *emcy);
 
@@ -297,8 +294,6 @@ int16_t COEmcyCheck(CO_EMCY *emcy);
 *
 * \retval  =0    this error is not present
 * \retval  =1    the error is already detected
-*
-* \internal
 */
 int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err);
 
@@ -321,8 +316,6 @@ int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err);
 *
 * \retval  =0    error state is unchanged
 * \retval  =1    the error state has changed
-*
-* \internal
 */
 int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state);
     
@@ -344,8 +337,6 @@ int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state);
 *
 * \param state
 *    error state (=0: no error, !=0: error)
-*
-* \internal
 */
 void COEmcySend(CO_EMCY     *emcy,
                 uint8_t      err,
@@ -371,8 +362,6 @@ void COEmcySend(CO_EMCY     *emcy,
 *
 * \param state
 *    error state (=0: no error, !=0: error)
-*
-* \internal
 */
 void COEmcyUpdate(CO_EMCY     *emcy,
                   uint8_t      err,
@@ -389,8 +378,6 @@ void COEmcyUpdate(CO_EMCY     *emcy,
 *
 * \param emcy
 *    pointer to the EMCY object
-*
-* \internal
 */
 void COEmcyHistInit(CO_EMCY *emcy);
 
@@ -418,8 +405,6 @@ void COEmcyHistInit(CO_EMCY *emcy);
 *
 * \param usr
 *    manufacturer specific fields in EMCY message and/or EMCY message
-*
-* \internal
 */
 void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
 
@@ -447,10 +432,8 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
 *
 * \retval   =CO_ERR_NONE    emergency entry is read
 * \retval  !=CO_ERR_NONE    an error is detected and function aborted
-*
-* \internal
 */
-int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeEmcyRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief EMCY OBJECT WRITE ACCESS
 *
@@ -473,10 +456,8 @@ int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t 
 *
 * \retval  CO_ERR_NONE        emergency history is cleared
 * \retval  CO_ERR_TYPE_WR     an error is detected and function aborted
-*
-* \internal
 */
-int16_t COTypeEmcyWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeEmcyWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

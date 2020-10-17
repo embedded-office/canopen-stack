@@ -178,10 +178,10 @@ void CONodeProcess(CO_NODE *node);
 * \param type
 *    Reset type, e.g. CO_RESET_COM or CO_RESET_NODE
 *
-* \retval  =0    loading successful
-* \retval  <0    an error is detected and function aborted
+* \retval  ==CO_ERR_NONE    loading successful
+* \retval  !=CO_ERR_NONE    an error is detected and function aborted
 */
-int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type);
+CO_ERR CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

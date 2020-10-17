@@ -15,10 +15,10 @@
 ******************************************************************************/
 
 /* TODO: rename the include protection to match the naming convention: 
- *   _CO_TIMER_<device>_H_
+ *   CO_TIMER_<device>_H_
  */
-#ifndef _CO_TIMER_DUMMY_H_
-#define _CO_TIMER_DUMMY_H_
+#ifndef CO_TIMER_DUMMY_H_
+#define CO_TIMER_DUMMY_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {

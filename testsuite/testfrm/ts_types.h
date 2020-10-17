@@ -65,9 +65,9 @@ typedef unsigned int        uintptr_t;
 #define TEST_SECTION_START        __start_test
 #define TEST_SECTION_END          __stop_test
 #define TEST_SECTION_START_DEF    __pragma(section(".test$a", read))
-#define TEST_SECTION_START_ALLOC  __declspec(allocate(".test$a")) const TS_INFOFUNC TEST_SECTION_START = (TS_INFOFUNC)0;
+#define TEST_SECTION_START_ALLOC  __declspec(allocate(".test$a")) static const TS_INFOFUNC TEST_SECTION_START = (TS_INFOFUNC)0;
 #define TEST_SECTION_END_DEF      __pragma(section(".test$z", read))
-#define TEST_SECTION_END_ALLOC    __declspec(allocate(".test$z")) const TS_INFOFUNC TEST_SECTION_END   = (TS_INFOFUNC)0;
+#define TEST_SECTION_END_ALLOC    __declspec(allocate(".test$z")) static const TS_INFOFUNC TEST_SECTION_END   = (TS_INFOFUNC)0;
 #define STRUCT_PACKED_PRE         __pragma(pack(push, 1))
 #define STRUCT_PACKED_SUF         __pragma(pack(pop))
 #else

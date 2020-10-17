@@ -239,8 +239,6 @@ void COTmrProcess(CO_TMR *tmr);
 *
 * \param freq
 *    Frequency of timer clock
-*
-* \internal
 */
 void COTmrInit(CO_TMR           *tmr,
                struct CO_NODE_T *node,
@@ -256,8 +254,6 @@ void COTmrInit(CO_TMR           *tmr,
 *
 * \param tmr
 *    Pointer to timer structure
-*
-* \internal
 */
 void COTmrClear(CO_TMR *tmr);
 

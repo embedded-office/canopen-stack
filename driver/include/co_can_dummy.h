@@ -15,10 +15,10 @@
 ******************************************************************************/
 
 /* TODO: rename the include protection to match the naming convention: 
- *   _CO_CAN_<device-name>_H_
+ *   CO_CAN_<device-name>_H_
  */
-#ifndef _CO_CAN_DUMMY_H_
-#define _CO_CAN_DUMMY_H_
+#ifndef CO_CAN_DUMMY_H_
+#define CO_CAN_DUMMY_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
