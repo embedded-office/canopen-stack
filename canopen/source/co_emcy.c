@@ -260,7 +260,7 @@ int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err)
     }
 
     byte = err >> 3;
-    mask = (uint8_t)1 << (err & 0x7);
+    mask = (uint8_t)(1u << (err & 0x7u));
     if ((emcy->Err[byte] & mask) == 0) {
         result = 0;
     } else {
@@ -283,7 +283,7 @@ int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state)
         err = CO_EMCY_N - 1;
     }
     byte = err >> 3;
-    mask = (uint8_t)1 << (err & 0x7);
+    mask = (uint8_t)(1u << (err & 0x7u));
     if ((emcy->Err[byte] & mask) == 0) {
         if (state != 0) {
             emcy->Err[byte] |= mask;
@@ -466,11 +466,11 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 /*
 * see function definition
 */
-int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+CO_ERR COTypeEmcyRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
 {
-    CO_DICT  *cod;
+    CO_ERR   result = CO_ERR_NONE;
+    CO_DICT *cod;
     CO_EMCY *emcy;
-    int16_t  result = CO_ERR_NONE;
     uint8_t  sub;
     uint8_t  map;
 
@@ -499,10 +499,10 @@ int16_t COTypeEmcyRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t 
 /*
 * see function definition
 */
-int16_t COTypeEmcyWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+CO_ERR COTypeEmcyWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
 {
+    CO_ERR   result = CO_ERR_TYPE_WR;
     CO_EMCY *emcy;
-    int16_t  result = CO_ERR_TYPE_WR;
     uint8_t  val    = 0;
     uint8_t  sub;
 

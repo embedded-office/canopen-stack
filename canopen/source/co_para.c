@@ -81,14 +81,14 @@ void COParaRestore(CO_PARA *pg, CO_NODE *node)
 /*
 * see function definition
 */
-int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+CO_ERR COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
-    uint32_t signature;
-    int16_t  result = CO_ERR_PARA_IDX;
+    CO_ERR    result = CO_ERR_PARA_IDX;
+    CO_ERR    err;
+    uint32_t  signature;
     CO_DICT  *cod;
-    int16_t  err;
-    uint8_t  num;
-    uint8_t  sub;
+    uint8_t   num;
+    uint8_t   sub;
 
     /* argument checks */
     if ((obj == 0) || (buf == 0) || (size != 4)) {
@@ -151,7 +151,7 @@ int16_t COParaCheck(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t siz
 /*
 * see function definition
 */
-int16_t COTypeParaRead(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+CO_ERR COTypeParaRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_PARA *pg;
 
@@ -177,15 +177,15 @@ int16_t COTypeParaRead(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t 
 /*
 * see function definition
 */
-int16_t COTypeParaWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+CO_ERR COTypeParaWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
+    CO_ERR    select;
     CO_DICT  *cod;
-    CO_OBJ  *pwo;
-    CO_PARA *pg;
-    int16_t  select;
-    uint16_t idx;
-    uint8_t  num;
-    uint8_t  sub;
+    CO_OBJ   *pwo;
+    CO_PARA  *pg;
+    uint16_t  idx;
+    uint8_t   num;
+    uint8_t   sub;
     
     /* check parameter and configuration */
     select = COParaCheck(obj, node, buf, size);

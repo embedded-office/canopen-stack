@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _APP_H_
-#define _APP_H_
+#ifndef APP_H_
+#define APP_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -40,7 +40,7 @@ extern "C" {
 *          Per default are all existing test selected for execution. You may
 *          limit the amount of running tests during the test development.
 *
-* \param   return
+* \return
 *          number of failed tests (matching the typical errorcode convention)
 */
 /*---------------------------------------------------------------------------*/

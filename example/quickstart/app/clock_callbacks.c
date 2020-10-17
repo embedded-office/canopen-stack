@@ -20,17 +20,22 @@
 
 #include "co_core.h"
 
+void COTmrLock  (void);
+void COTmrUnlock(void);
+
 /******************************************************************************
 * MANDATORY CALLBACK FUNCTIONS
 ******************************************************************************/
 
 void CONodeFatalError(void) 
 {
+    volatile uint8_t debugExit = 0u;
+
     /* Place here your fatal error handling.
      * There is most likely a programming error.
      * !! Please don't ignore this errors. !!
      */
-    for (;;);
+    for (;debugExit == 0u;);
 }
 
 void COTmrLock(void)
@@ -63,6 +68,9 @@ void COTmrUnlock(void)
 
 void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
 {
+    (void)nmt;
+    (void)mode;
+
     /* Optional: place here some code, which is called
      * when a NMT mode change is initiated.
      */
@@ -70,6 +78,9 @@ void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
 
 void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId)
 {
+    (void)nmt;
+    (void)nodeId;
+
     /* Optional: place here some code, which is called
      * called when heartbeat consumer is in use and
      * detects an error on monitored node(s).
@@ -78,6 +89,10 @@ void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId)
 
 void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
 {
+    (void)nmt;
+    (void)nodeId;
+    (void)mode;
+
     /* Optional: place here some code, which is called
      * when heartbeat consumer is in use and detects a
      * NMT state change on monitored node(s).
@@ -86,6 +101,9 @@ void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
 
 int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
 {
+    (void)baudrate;
+    (void)nodeId;
+
     /* Optional: place here some code, which is called
      * when LSS client is in use and the CANopen node
      * is initialized.
@@ -95,6 +113,9 @@ int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
 
 int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
 {
+    (void)baudrate;
+    (void)nodeId;
+
     /* Optional: place here some code, which is called
      * when LSS client is in use and the CANopen node
      * needs to store updated values.
@@ -104,6 +125,8 @@ int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
 
 void COIfCanReceive(CO_IF_FRM *frm)
 {
+    (void)frm;
+
     /* Optional: place here some code, which is called
      * when you need to handle CAN messages, which are
      * not part of the CANopen protocol.
@@ -112,6 +135,8 @@ void COIfCanReceive(CO_IF_FRM *frm)
 
 void COPdoTransmit(CO_IF_FRM *frm)
 {
+    (void)frm;
+
     /* Optional: place here some code, which is called
      * just before a PDO is transmitted. You may adjust
      * the given CAN frame which is send afterwards.
@@ -120,6 +145,8 @@ void COPdoTransmit(CO_IF_FRM *frm)
 
 int16_t COPdoReceive(CO_IF_FRM *frm)
 {
+    (void)frm;
+
     /* Optional: place here some code, which is called
      * right after receiving a PDO. You may adjust
      * the given CAN frame which is written into the
@@ -131,6 +158,8 @@ int16_t COPdoReceive(CO_IF_FRM *frm)
 
 void COPdoSyncUpdate(CO_RPDO *pdo)
 {
+    (void)pdo;
+
     /* Optional: place here some code, which is called
      * right after the object dictionary update due to
      * a synchronized PDO.
@@ -139,6 +168,8 @@ void COPdoSyncUpdate(CO_RPDO *pdo)
 
 int16_t COParaDefault(CO_PARA *pg)
 {
+    (void)pg;
+
     /* Optional: place here some code, which is called
      * when a parameter group is restored to factory
      * settings.

@@ -26,6 +26,7 @@ extern "C" {
 ******************************************************************************/
 
 #include "co_types.h"
+#include "co_err.h"
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -84,7 +85,7 @@ struct CO_OBJ_T *CODictFind(CO_DICT *cod, uint32_t key);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODictRdByte(CO_DICT *cod, uint32_t key, uint8_t *val);
+CO_ERR CODictRdByte(CO_DICT *cod, uint32_t key, uint8_t *val);
 
 /*! \brief  READ WORD FROM OBJECT DICTIONARY
 *
@@ -104,7 +105,7 @@ int16_t CODictRdByte(CO_DICT *cod, uint32_t key, uint8_t *val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val);
+CO_ERR CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val);
 
 /*! \brief  READ LONG FROM OBJECT DICTIONARY
 *
@@ -124,7 +125,7 @@ int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODictRdLong(CO_DICT *cod, uint32_t key, uint32_t *val);
+CO_ERR CODictRdLong(CO_DICT *cod, uint32_t key, uint32_t *val);
 
 /*! \brief  WRITE BYTE TO OBJECT DICTIONARY
 *
@@ -144,7 +145,7 @@ int16_t CODictRdLong(CO_DICT *cod, uint32_t key, uint32_t *val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODictWrByte(CO_DICT *cod, uint32_t key, uint8_t val);
+CO_ERR CODictWrByte(CO_DICT *cod, uint32_t key, uint8_t val);
 
 /*! \brief  WRITE WORD TO OBJECT DICTIONARY
 *
@@ -164,7 +165,7 @@ int16_t CODictWrByte(CO_DICT *cod, uint32_t key, uint8_t val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val);
+CO_ERR CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val);
 
 /*! \brief  WRITE LONG TO OBJECT DICTIONARY
 *
@@ -184,7 +185,7 @@ int16_t CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t val);
+CO_ERR CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t val);
 
 /*! \brief  READ BUFFER FROM OBJECT DICTIONARY
 *
@@ -208,7 +209,7 @@ int16_t CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t val);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODictRdBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len);
+CO_ERR CODictRdBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len);
 
 /*! \brief  WRITE BUFFER TO OBJECT DICTIONARY
 *
@@ -231,7 +232,7 @@ int16_t CODictRdBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t CODictWrBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len);
+CO_ERR CODictWrBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len);
 
 /******************************************************************************
 * PRIVATE FUNCTIONS

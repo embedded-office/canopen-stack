@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _CO_NVM_SIM_H_
-#define _CO_NVM_SIM_H_
+#ifndef CO_NVM_SIM_H_
+#define CO_NVM_SIM_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {

@@ -24,9 +24,9 @@
 * PRIVATE VARIABLES
 ******************************************************************************/
 
-TS_CALLBACK *TsCallbacks         = 0;
-uint32_t     RamStorage_Baudrate = 0xFFFFFFFF;
-uint8_t      RamStorage_NodeId   = 0xFF;
+static TS_CALLBACK *TsCallbacks         = 0;
+static uint32_t     RamStorage_Baudrate = 0xFFFFFFFF;
+static uint8_t      RamStorage_NodeId   = 0xFF;
 
 /******************************************************************************
 * PUBLIC FUNCTIONS

@@ -103,8 +103,9 @@ extern "C" {
 * \param p
 *    The data position (0..7)
 */
-#define CO_SET_BYTE(f,n,p)   \
-    { (f)->Data[(p)&0x7] = (uint8_t)(n); }
+#define CO_SET_BYTE(f,n,p)   do {      \
+        (f)->Data[(p)&0x7] = (uint8_t)(n); \
+    } while(0)
 
 /*! \brief GET DATA WORD
 *
@@ -133,9 +134,10 @@ extern "C" {
 * \param p
 *    The data position (0..6)
 */
-#define CO_SET_WORD(f,n,p)   \
-    { (f)->Data[((p)  )&0x7] = (uint8_t)( ((uint16_t)(n) )     ); \
-      (f)->Data[((p)+1)&0x7] = (uint8_t)( ((uint16_t)(n) ) >> 8); }
+#define CO_SET_WORD(f,n,p)  do {                                  \
+        (f)->Data[((p)  )&0x7] = (uint8_t)( ((uint16_t)(n) )     ); \
+        (f)->Data[((p)+1)&0x7] = (uint8_t)( ((uint16_t)(n) ) >> 8); \
+    } while(0)
 
 /*! \brief GET DATA LONG
 *
@@ -166,11 +168,12 @@ extern "C" {
 * \param p
 *    The data position (0..4)
 */
-#define CO_SET_LONG(f,n,p)   \
-    { (f)->Data[((p)  )&0x7] = (uint8_t)(((uint32_t)(n))      ); \
-      (f)->Data[((p)+1)&0x7] = (uint8_t)(((uint32_t)(n)) >>  8); \
-      (f)->Data[((p)+2)&0x7] = (uint8_t)(((uint32_t)(n)) >> 16); \
-      (f)->Data[((p)+3)&0x7] = (uint8_t)(((uint32_t)(n)) >> 24); }
+#define CO_SET_LONG(f,n,p)   do { \
+        (f)->Data[((p)  )&0x7] = (uint8_t)(((uint32_t)(n))      ); \
+        (f)->Data[((p)+1)&0x7] = (uint8_t)(((uint32_t)(n)) >>  8); \
+        (f)->Data[((p)+2)&0x7] = (uint8_t)(((uint32_t)(n)) >> 16); \
+        (f)->Data[((p)+3)&0x7] = (uint8_t)(((uint32_t)(n)) >> 24); \
+    } while(0)
 
 /******************************************************************************
 * PUBLIC TYPES

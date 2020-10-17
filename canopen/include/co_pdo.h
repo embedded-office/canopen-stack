@@ -55,16 +55,18 @@ extern "C" {
 #define CO_TPDO_ASYNC       1    /*!< Ctrl function code: asynchronous TPDO  */
 #define CO_RPDO_ASYNC       1    /*!< Ctrl function code: asynchronous RPDO  */
 
-#define CO_TASYNC   ((CO_OBJ_TYPE *)&COTAsync)   /*!< Asynchronous TPDO      */
-#define CO_TEVENT   ((CO_OBJ_TYPE *)&COTEvent)   /*!< TPDO Event Timer       */
-#define CO_TPDONUM  ((CO_OBJ_TYPE *)&COTPdoMapN) /*!< Dynamic Map Numbers    */
-#define CO_TPDOMAP  ((CO_OBJ_TYPE *)&COTPdoMap)  /*!< Dynamic Mapping        */
-#define CO_TPDOID   ((CO_OBJ_TYPE *)&COTPdoId)   /*!< Dynamic Identifier     */
-#define CO_TPDOTYPE ((CO_OBJ_TYPE *)&COTPdoType) /*!< Dynamic Transm. Type   */
+#define CO_TASYNC   ((const CO_OBJ_TYPE *)&COTAsync)   /*!< Asynchronous TPDO    */
+#define CO_TEVENT   ((const CO_OBJ_TYPE *)&COTEvent)   /*!< TPDO Event Timer     */
+#define CO_TPDONUM  ((const CO_OBJ_TYPE *)&COTPdoMapN) /*!< Dynamic Map Numbers  */
+#define CO_TPDOMAP  ((const CO_OBJ_TYPE *)&COTPdoMap)  /*!< Dynamic Mapping      */
+#define CO_TPDOID   ((const CO_OBJ_TYPE *)&COTPdoId)   /*!< Dynamic Identifier   */
+#define CO_TPDOTYPE ((const CO_OBJ_TYPE *)&COTPdoType) /*!< Dynamic Transm. Type */
 
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
+
+struct CO_OBJ_T;
 
 /*! \brief TPDO SIGNAL LINK TABLE
 *
@@ -174,7 +176,7 @@ extern const CO_OBJ_TYPE COTPdoType;        /*!< PDO Transmission Type       */
 *    given object entry. The event will be distributed to all TPDOs, which
 *    holds an active mapping entry to this object entry.
 *
-* \param pdo
+* \param tpdo
 *    Pointer to start of TPDO array
 *
 * \param obj
@@ -187,7 +189,7 @@ void COTPdoTrigObj(CO_TPDO *tpdo, struct CO_OBJ_T *obj);
 *    This function allows the application to trigger a TPDO event for the
 *    given TPDO number.
 *
-* \param pdo
+* \param tpdo
 *    Pointer to start of TPDO array
 *
 * \param num
@@ -209,8 +211,6 @@ void COTPdoTrigPdo(CO_TPDO *tpdo, uint16_t num);
 *
 * \param node
 *    Pointer to parent node object
-*
-* \internal
 */
 void COTPdoClear(CO_TPDO *pdo, struct CO_NODE_T *node);
 
@@ -224,8 +224,6 @@ void COTPdoClear(CO_TPDO *pdo, struct CO_NODE_T *node);
 *
 * \param node
 *    Pointer to parent node object
-*
-* \internal
 */
 void COTPdoInit(CO_TPDO *pdo, struct CO_NODE_T *node);
 
@@ -250,8 +248,6 @@ void COTPdoInit(CO_TPDO *pdo, struct CO_NODE_T *node);
 *
 * \param num
 *    Number of TPDO (0..511)
-*
-* \internal
 */
 void COTPdoReset(CO_TPDO *pdo, uint16_t num);
 
@@ -270,13 +266,11 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num);
 * \param num
 *    Number of TPDO (0..511)
 *
-* \retval  =0    Mapping successful parsed out of object dictionary
-* \retval  <0    At least one error is detected within the mapping
-*                configuration
-*
-* \internal
+* \retval  ==CO_ERR_NONE      Mapping successful parsed out of object dictionary
+* \retval  !=CO_ERR_NONE      At least one error is detected within the mapping
+*                             configuration
 */
-int16_t COTPdoGetMap(CO_TPDO *pdo, uint16_t num);
+CO_ERR COTPdoGetMap(CO_TPDO *pdo, uint16_t num);
 
 /*! \brief TPDO TRIGGER EVENT TIMER CALLBACK
 *
@@ -285,8 +279,6 @@ int16_t COTPdoGetMap(CO_TPDO *pdo, uint16_t num);
 *
 * \param parg
 *    Pointer to TPDO element
-*
-* \internal
 */
 void COTPdoTmrEvent(void *parg);
 
@@ -297,8 +289,6 @@ void COTPdoTmrEvent(void *parg);
 *
 * \param parg
 *    Pointer to TPDO element
-*
-* \internal
 */
 void COTPdoEndInhibit(void *parg);
 
@@ -311,8 +301,6 @@ void COTPdoEndInhibit(void *parg);
 *
 * \param pdo
 *    Pointer to TPDO element
-*
-* \internal
 */
 void COTPdoTx(CO_TPDO *pdo);
 
@@ -323,8 +311,6 @@ void COTPdoTx(CO_TPDO *pdo);
 *
 * \param map
 *    Pointer to start of link mapping table
-*
-* \internal
 */
 void COTPdoMapClear(CO_TPDO_LINK *map);
 
@@ -341,8 +327,6 @@ void COTPdoMapClear(CO_TPDO_LINK *map);
 *
 * \param num
 *    Linked TPDO number
-*
-* \internal
 */
 void COTPdoMapAdd(CO_TPDO_LINK *map, struct CO_OBJ_T *obj, uint16_t num);
 
@@ -356,8 +340,6 @@ void COTPdoMapAdd(CO_TPDO_LINK *map, struct CO_OBJ_T *obj, uint16_t num);
 *
 * \param num
 *    Linked TPDO number
-*
-* \internal
 */
 void COTPdoMapDelNum(CO_TPDO_LINK *map, uint16_t num);
 
@@ -371,8 +353,6 @@ void COTPdoMapDelNum(CO_TPDO_LINK *map, uint16_t num);
 *
 * \param obj
 *    Pointer to object entry
-*
-* \internal
 */
 void COTPdoMapDelSig(CO_TPDO_LINK *map, struct CO_OBJ_T *obj);
 
@@ -393,12 +373,10 @@ void COTPdoMapDelSig(CO_TPDO_LINK *map, struct CO_OBJ_T *obj);
 * \param para
 *    unused (should be 0)
 *
-* \retval  =0    Successful TPDO event triggered
-* \retval  <0    Function aborted due to detected error
-*
-* \internal
+* \retval  ==CO_ERR_NONE    Successful TPDO event triggered
+* \retval  !=CO_ERR_NONE    Function aborted due to detected error
 */
-int16_t COTypeAsyncCtrl(CO_OBJ* obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
+CO_ERR COTypeAsyncCtrl(struct CO_OBJ_T* obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
 
 /*! \brief TPDO EVENT TIMER OBJECT WRITE ACCESS
 *
@@ -417,12 +395,10 @@ int16_t COTypeAsyncCtrl(CO_OBJ* obj, struct CO_NODE_T *node, uint16_t func, uint
 * \param size
 *    Size of given data in buffer
 *
-* \retval  =0    writing successful
-* \retval  <0    error is detected and function aborted
-*
-* \internal
+* \retval  ==CO_ERR_NONE    writing successful
+* \retval  !=CO_ERR_NONE    error is detected and function aborted
 */
-int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypeEventWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief RPDO CLEAR
 *
@@ -434,8 +410,6 @@ int16_t COTypeEventWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_
 *
 * \param node
 *    Pointer to parent node object
-*
-* \internal
 */
 void CORPdoClear(CO_RPDO *pdo, struct CO_NODE_T *node);
 
@@ -449,8 +423,6 @@ void CORPdoClear(CO_RPDO *pdo, struct CO_NODE_T *node);
 *
 * \param node
 *    Pointer to parent node object
-*
-* \internal
 */
 void CORPdoInit(CO_RPDO *pdo, struct CO_NODE_T *node);
 
@@ -474,13 +446,11 @@ void CORPdoInit(CO_RPDO *pdo, struct CO_NODE_T *node);
 * \param num
 *    Number of RPDO (0..511)
 *
-* \retval  =0    The communication profile is checked, and data are considered
-* \retval  <0    At least one communication profile entry is invalid, further
-*                checks aborted
-*
-* \internal
+* \retval  ==CO_ERR_NONE    The communication profile is checked, and data are considered
+* \retval  !=CO_ERR_NONE    At least one communication profile entry is invalid, further
+*                           checks aborted
 */
-int16_t CORPdoReset(CO_RPDO *pdo, int16_t num);
+CO_ERR CORPdoReset(CO_RPDO *pdo, uint16_t num);
 
 /*! \brief GET PDO MAPPING DATA
 *
@@ -497,13 +467,11 @@ int16_t CORPdoReset(CO_RPDO *pdo, int16_t num);
 * \param num
 *    Number of RPDO (0..511)
 *
-* \retval  =0    Mapping successful parsed out of object dictionary
-* \retval  <0    At least one error is detected within the mapping
-*                configuration
-*
-* \internal
+* \retval  ==CO_ERR_NONE    Mapping successful parsed out of object dictionary
+* \retval  !=CO_ERR_NONE    At least one error is detected within the mapping
+*                           configuration
 */
-int16_t CORPdoGetMap(CO_RPDO *pdo, uint16_t num);
+CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num);
 
 /*! \brief RPDO CHECK
 *
@@ -516,12 +484,10 @@ int16_t CORPdoGetMap(CO_RPDO *pdo, uint16_t num);
 * \param frm
 *    Received CAN message frame
 *
-* \retval  >=0    The number of the destination RPDO
-* \retval   <0    Not a valid RPDO CAN message
-*
-* \internal
+* \retval  !=NULL    Pointer to the receive PDO
+* \retval  ==NULL    Not a valid RPDO CAN message
 */
-int16_t CORPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm);
+CO_RPDO *CORPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm);
 
 /*! \brief RPDO RECEIVE
 *
@@ -531,15 +497,10 @@ int16_t CORPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm);
 * \param pdo
 *    Pointer to RPDO element
 *
-* \param num
-*    Number of RPDO (0..511)
-*
 * \param frm
 *    Pointer to received CAN frame
-*
-* \internal
 */
-void CORPdoRx(CO_RPDO *pdo, uint16_t num, CO_IF_FRM *frm);
+void CORPdoRx(CO_RPDO *pdo, CO_IF_FRM *frm);
 
 /*! \brief RPDO WRITE
 *
@@ -551,8 +512,6 @@ void CORPdoRx(CO_RPDO *pdo, uint16_t num, CO_IF_FRM *frm);
 *
 * \param frm
 *    Received CAN message frame
-*
-* \internal
 */
 void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm);
 
@@ -575,10 +534,8 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm);
 *
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
-*
-* \internal
 */
-int16_t COTypePdoMapNumWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypePdoMapNumWrite(struct CO_OBJ_T* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief  WRITE PDO MAPPING
 *
@@ -599,10 +556,8 @@ int16_t COTypePdoMapNumWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uin
 *
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
-*
-* \internal
 */
-int16_t COTypePdoMapWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypePdoMapWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief  WRITE PDO IDENTIFIER
 *
@@ -623,10 +578,8 @@ int16_t COTypePdoMapWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32
 *
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
-*
-* \internal
 */
-int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypePdoComIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief  WRITE PDO IDENTIFIER
 *
@@ -647,10 +600,8 @@ int16_t COTypePdoComIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint
 *
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
-*
-* \internal
 */
-int16_t COTypePdoComTypeWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypePdoComTypeWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

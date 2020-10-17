@@ -14,11 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-/* TODO: rename the include protection to match the naming convention: 
- *   CO_NVM_<device>_H_
- */
-#ifndef CO_NVM_SIM_H_
-#define CO_NVM_SIM_H_
+#ifndef APP_CLOCK_H_
+#define APP_CLOCK_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -28,19 +25,16 @@ extern "C" {
 * INCLUDES
 ******************************************************************************/
 
-#include "co_if.h"
+#include "co_core.h"
 
 /******************************************************************************
 * PUBLIC SYMBOLS
 ******************************************************************************/
 
-/* TODO: rename the extern variable declaration to match the naming convention:
- *   <device-name>NvmDriver
- */
-extern const CO_IF_NVM_DRV DummyNvmDriver;
+extern struct CO_NODE_SPEC_T AppSpec;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 
-#endif
+#endif /* CO_IF_H_ */

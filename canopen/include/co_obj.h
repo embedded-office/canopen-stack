@@ -26,7 +26,7 @@ extern "C" {
 ******************************************************************************/
 
 #include "co_types.h"
-#include "co_cfg.h"
+#include "co_err.h"
 
 /******************************************************************************
 * DEFINES
@@ -191,7 +191,7 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_GET_SIZE(key)    (uint32_t)(1L << (((key) & CO_OBJ_SZ_MSK) >> 4))
+#define CO_GET_SIZE(key)    (uint8_t)(1L << (((key) & CO_OBJ_SZ_MSK) >> 4))
 
 /*! \brief CHECK IF OBJECT IS PDO MAPPABLE
 *
@@ -274,13 +274,13 @@ typedef struct CO_OBJ_T {
 } CO_OBJ;
 
 /*!< Size type function prototype */
-typedef uint32_t (*CO_OBJ_SIZE_FUNC) (CO_OBJ *, struct CO_NODE_T *, uint32_t);
+typedef uint32_t (*CO_OBJ_SIZE_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
 /*!< Control type function prototype */
-typedef int16_t  (*CO_OBJ_CTRL_FUNC) (CO_OBJ *, struct CO_NODE_T *, uint16_t, uint32_t);
+typedef CO_ERR   (*CO_OBJ_CTRL_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, uint16_t, uint32_t);
 /*!< Read type function prototype */
-typedef int16_t  (*CO_OBJ_READ_FUNC) (CO_OBJ *, struct CO_NODE_T *, void*, uint32_t);
+typedef CO_ERR   (*CO_OBJ_READ_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
 /*!< Write type function prototype */
-typedef int16_t  (*CO_OBJ_WRITE_FUNC)(CO_OBJ *, struct CO_NODE_T *, void*, uint32_t);
+typedef CO_ERR   (*CO_OBJ_WRITE_FUNC)(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
 
 /*! \brief OBJECT TYPE
 *
@@ -391,7 +391,7 @@ uint32_t COObjGetSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
+CO_ERR COObjRdValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
 
 /*! \brief  WRITE VALUE TO OBJECT ENTRY
 *
@@ -416,7 +416,7 @@ int16_t COObjRdValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t w
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
+CO_ERR COObjWrValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
 
 /*! \brief  START READ BUFFER FROM OBJECT ENTRY
 *
@@ -439,7 +439,7 @@ int16_t COObjWrValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t w
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
+CO_ERR COObjRdBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  CONTINUE READ BUFFER FROM OBJECT ENTRY
 *
@@ -462,7 +462,7 @@ int16_t COObjRdBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, ui
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
+CO_ERR COObjRdBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  START WRITE BUFFER TO OBJECT ENTRY
 *
@@ -484,7 +484,7 @@ int16_t COObjRdBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uin
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
+CO_ERR COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  CONTINUE WRITE BUFFER TO OBJECT ENTRY
 *
@@ -507,7 +507,7 @@ int16_t COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, ui
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
+CO_ERR COObjWrBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -558,7 +558,7 @@ int16_t COObjCmp(CO_OBJ *obj, void *val);
 * \retval    =CO_ERR_NONE    Successfully operation
 * \retval   !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdDirect(CO_OBJ *obj, void *val, uint32_t len);
+CO_ERR COObjRdDirect(CO_OBJ *obj, void *val, uint32_t len);
 
 /*! \brief  DIRECT WRITE TO DATA POINTER
 *
@@ -579,7 +579,7 @@ int16_t COObjRdDirect(CO_OBJ *obj, void *val, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
+CO_ERR COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 
 /*! \brief  READ WITH TYPE FUNCTIONS
 *
@@ -595,9 +595,6 @@ int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 * \param dst
 *    pointer to the result memory
 *
-* \param node
-*    reference to parent node
-*
 * \param len
 *    length of value in bytes
 *
@@ -607,7 +604,7 @@ int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off);
+CO_ERR COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off);
 
 /*! \brief  WRITE WITH TYPE FUNCTIONS
 *
@@ -632,7 +629,7 @@ int16_t COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len
 * \retval    =CO_ERR_NONE    Successfully operation
 * \retval   !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off);
+CO_ERR COObjWrType(CO_OBJ *obj, struct CO_NODE_T *node, void *src, uint32_t len, uint32_t off);
 
 /*! \brief STRING OBJECT SIZE
 *
@@ -654,7 +651,7 @@ int16_t COObjWrType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len
 *    Number of character in the string, counting without the end of string
 *    mark.
 */
-uint32_t COTypeStringSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
+uint32_t COTypeStringSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 
 /*! \brief STRING OBJECT ACCESS CONTROL
 *
@@ -679,7 +676,7 @@ uint32_t COTypeStringSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeStringCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
+CO_ERR COTypeStringCtrl(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
 
 /*! \brief STRING OBJECT READ ACCESS
 *
@@ -701,7 +698,7 @@ int16_t COTypeStringCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uin
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeStringRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeStringRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief DOMAIN OBJECT SIZE
 *
@@ -719,7 +716,7 @@ int16_t COTypeStringRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_
 * \return
 *    Size in bytes of the domain.
 */
-uint32_t COTypeDomainSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
+uint32_t COTypeDomainSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 
 /*! \brief DOMAIN OBJECT ACCESS CONTROL
 *
@@ -744,7 +741,7 @@ uint32_t COTypeDomainSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
+CO_ERR COTypeDomainCtrl(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
 
 /*! \brief DOMAIN OBJECT READ ACCESS
 *
@@ -766,7 +763,7 @@ int16_t COTypeDomainCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uin
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeDomainRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief DOMAIN OBJECT WRITE ACCESS
 *
@@ -788,7 +785,7 @@ int16_t COTypeDomainRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

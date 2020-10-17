@@ -18,37 +18,36 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "co_core.h"
+#include "clock_spec.h"
                                               /* select application drivers: */
 #include "co_can_dummy.h"                     /* CAN driver                  */
 #include "co_timer_dummy.h"                   /* Timer driver                */
 #include "co_nvm_dummy.h"                     /* NVM driver                  */
 
 /******************************************************************************
-* PUBLIC DEFINES
+* PRIVATE DEFINES
 ******************************************************************************/
 
 /* Define some default values for our CANopen node: */
 #define APP_NODE_ID       1u                  /* CANopen node ID             */
 #define APP_BAUDRATE      250000u             /* CAN baudrate                */
-#define APP_CAN_BUS_ID    0u                  /* Bus ID (driver specific)    */
 #define APP_TMR_N         16u                 /* Number of software timers   */
 #define APP_TICKS_PER_SEC 1000u               /* Timer clock frequency in Hz */
 #define APP_OBJ_N         128u                /* Object dictionary max size  */
 
 /******************************************************************************
-* PUBLIC VARIABLES
+* PRIVATE VARIABLES
 ******************************************************************************/
 
 /* allocate global variables for runtime value of objects */
-uint8_t  Obj1001_00_08 = 0;
+static uint8_t  Obj1001_00_08 = 0;
 
-uint32_t Obj2100_01_20 = 0;
-uint8_t  Obj2100_02_08 = 0;
-uint8_t  Obj2100_03_08 = 0;
+static uint32_t Obj2100_01_20 = 0;
+static uint8_t  Obj2100_02_08 = 0;
+static uint8_t  Obj2100_03_08 = 0;
 
 /* define the static object dictionary */
-const CO_OBJ ClockOD[APP_OBJ_N] = {
+static struct CO_OBJ_T ClockOD[APP_OBJ_N] = {
     {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
     {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (uintptr_t)&Obj1001_00_08},
     {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x80},
@@ -84,36 +83,40 @@ const CO_OBJ ClockOD[APP_OBJ_N] = {
 /* Each software timer needs some memory for managing
  * the lists and states of the timed action events.
  */
-CO_TMR_MEM TmrMem[APP_TMR_N];
+static CO_TMR_MEM TmrMem[APP_TMR_N];
 
 /* Each SDO server needs memory for the segmented or
  * block transfer requests.
  */
-uint8_t SdoSrvMem[CO_SDOS_N * CO_SDO_BUF_BYTE];
+static uint8_t SdoSrvMem[CO_SDOS_N * CO_SDO_BUF_BYTE];
 
 /* Select the drivers for your application. For possible
  * selections, see the directory /drivers. In this example
  * we select the driver templates. You may fill them with
  * your specific hardware functionality.
  */
-const CO_IF_DRV AppDriver = {
+static struct CO_IF_DRV_T AppDriver = {
     &DummyCanDriver,
     &DummyTimerDriver,
     &DummyNvmDriver
 };
 
+/******************************************************************************
+* PUBLIC VARIABLES
+******************************************************************************/
+
 /* Collect all node specification settings in a single
  * structure for initializing the node easily.
  */
-CO_NODE_SPEC AppSpec = {
+struct CO_NODE_SPEC_T AppSpec = {
     APP_NODE_ID,             /* default Node-Id                */
     APP_BAUDRATE,            /* default Baudrate               */
-    (CO_OBJ *)&ClockOD[0],   /* pointer to object dictionary   */
+    &ClockOD[0],             /* pointer to object dictionary   */
     APP_OBJ_N,               /* object dictionary max length   */
     NULL,                    /* no EMCY info fields (unused)   */
     &TmrMem[0],              /* pointer to timer memory blocks */
     APP_TMR_N,               /* number of timer memory blocks  */
     APP_TICKS_PER_SEC,       /* timer clock frequency in Hz    */
-    (CO_IF_DRV *)&AppDriver, /* select drivers for application */
+    &AppDriver,              /* select drivers for application */
     &SdoSrvMem[0]            /* SDO Transfer Buffer Memory     */
 };
