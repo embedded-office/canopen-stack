@@ -143,7 +143,6 @@ void CONodeProcess(CO_NODE *node)
     CO_IF_FRM frm;
     CO_SDO   *srv;
     CO_RPDO  *rpdo;
-    CO_ERR    err;
     int16_t   result;
     uint8_t   allowed;
 
@@ -165,10 +164,8 @@ void CONodeProcess(CO_NODE *node)
     if ((allowed & CO_SDO_ALLOWED) != 0) {
         srv = COSdoCheck(node->Sdo, &frm);
         if (srv != 0) {
-            err = COSdoResponse(srv);
-            if (err != CO_ERR_NONE) {
-                (void)COIfCanSend(&node->If, &frm);
-            }
+            (void)COSdoResponse(srv);
+            (void)COIfCanSend(&node->If, &frm);
             allowed = 0;
         }
     }
