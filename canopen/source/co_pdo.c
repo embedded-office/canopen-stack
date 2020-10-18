@@ -466,9 +466,6 @@ CO_ERR COTypeEventWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf,
     num     = CO_GET_IDX(obj->Key);
     num    &= 0x1FF;
     pdo     = &node->TPdo[num];
-    if (nmt->Mode != CO_OPERATIONAL) {
-        return (CO_ERR_TPDO_EVENT);
-    }
     tmr = &pdo->Node->Tmr;
 
     cycTime = (uint16_t)(*(uint32_t *)buf);
