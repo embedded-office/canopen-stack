@@ -788,7 +788,7 @@ CO_ERR COSdoInitUploadBlock(CO_SDO *srv)
 */
 CO_ERR COSdoUploadBlock(CO_SDO *srv)
 {
-    CO_ERR   result = CO_ERR_SDO_ABORT;
+    CO_ERR   result = CO_ERR_NONE;
     CO_ERR   err;
     uint32_t size;
     uint32_t num;
@@ -852,7 +852,11 @@ CO_ERR COSdoUploadBlock(CO_SDO *srv)
         for (i = (uint8_t)len; i < 7; i++) {
             CO_SET_BYTE(srv->Frm, 0, 1 + i);
         }
-        (void)COIfCanSend(&srv->Node->If, srv->Frm);
+        if ((srv->Blk.SegCnt <= srv->Blk.SegNum) && (finished == 0)) {
+            /* note: the last frame of a block is sent in CONodeProcess()
+             * as 'normal' single SDO response */
+            (void)COIfCanSend(&srv->Node->If, srv->Frm);
+        }
     }
 
     return (result);
