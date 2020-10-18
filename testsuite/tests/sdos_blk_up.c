@@ -1069,7 +1069,8 @@ TS_DEF_MAIN(TS_BlkRd_TwoDomains)
 
     TS_EBLK_SEND(0xA1, 0x00000000);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_NO_ERR  (&node);                              /* check error free stack execution         */
 
 
                                                       /*===== SECOND BLOCK UPLOAD ================*/
