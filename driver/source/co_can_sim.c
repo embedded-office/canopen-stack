@@ -204,13 +204,6 @@ int16_t SimCanGetFrm(uint8_t *buf, uint16_t size)
     CO_IF_FRM      *tx;
     CO_IF_FRM      *frm;
 
-    if (size != sizeof(CO_IF_FRM)) {
-        return ((int16_t)-1u);
-    }
-    if (buf == NULL) {
-        return ((int16_t)-1u);
-    }
-
     if (bus->TxRd != bus->TxWr) {
         tx = bus->TxRd;
         bus->TxRd++;
@@ -218,17 +211,20 @@ int16_t SimCanGetFrm(uint8_t *buf, uint16_t size)
             bus->TxRd = &bus->TxQ[0u];
         }
 
-        frm             = (CO_IF_FRM*)buf;
-        frm->Identifier = tx->Identifier;
-        frm->DLC        = tx->DLC;
-        frm->Data[0u]   = tx->Data[0u] & 0xFFu;
-        frm->Data[1u]   = tx->Data[1u] & 0xFFu;
-        frm->Data[2u]   = tx->Data[2u] & 0xFFu;
-        frm->Data[3u]   = tx->Data[3u] & 0xFFu;
-        frm->Data[4u]   = tx->Data[4u] & 0xFFu;
-        frm->Data[5u]   = tx->Data[5u] & 0xFFu;
-        frm->Data[6u]   = tx->Data[6u] & 0xFFu;
-        frm->Data[7u]   = tx->Data[7u] & 0xFFu;
+        if ((size >= sizeof(CO_IF_FRM)) &&
+            (buf  != NULL             )) {
+            frm             = (CO_IF_FRM*)buf;
+            frm->Identifier = tx->Identifier;
+            frm->DLC        = tx->DLC;
+            frm->Data[0u]   = tx->Data[0u] & 0xFFu;
+            frm->Data[1u]   = tx->Data[1u] & 0xFFu;
+            frm->Data[2u]   = tx->Data[2u] & 0xFFu;
+            frm->Data[3u]   = tx->Data[3u] & 0xFFu;
+            frm->Data[4u]   = tx->Data[4u] & 0xFFu;
+            frm->Data[5u]   = tx->Data[5u] & 0xFFu;
+            frm->Data[6u]   = tx->Data[6u] & 0xFFu;
+            frm->Data[7u]   = tx->Data[7u] & 0xFFu;
+        }
 
         result = 1u;
     }

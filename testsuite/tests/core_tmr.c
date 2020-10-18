@@ -481,7 +481,6 @@ TEST_DEF(TS_Tmr_AppTmrAfterNodeReset)
 {
     CO_IF_FRM  frm;
     int16_t    val;
-    CO_NODE    node;
     uint32_t   start;
     uint32_t   cycle;
 
