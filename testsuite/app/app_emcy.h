@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _APP_EMCY_H_
-#define _APP_EMCY_H_
+#ifndef APP_EMCY_H_
+#define APP_EMCY_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {

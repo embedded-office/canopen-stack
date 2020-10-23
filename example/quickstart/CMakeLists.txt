@@ -21,3 +21,21 @@ target_include_directories(Quickstart
 # specify the dependencies for this application
 #
 target_link_libraries(Quickstart Canopen CanopenDriver)
+
+#---
+# enable warnings and tread as errors
+#
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+    # tread all files as C files 
+    target_compile_options(Quickstart PRIVATE /TC)
+  endif()
+  # enable all warnings
+  target_compile_options(Quickstart PRIVATE -Wall
+                                            -Wextra
+                                            -Wpedantic
+                                            -Werror)
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  target_compile_options(Quickstart PRIVATE /W4
+                                            /WX)
+endif()

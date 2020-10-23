@@ -399,7 +399,7 @@ void CONmtHbConsMonitor(void *parg);
 * \retval  CO_ERR_NONE       heartbeat consumer config is written
 * \retval  CO_ERR_TYPE_WR    an error is detected and function aborted
 */
-int16_t COTypeNmtHbConsWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypeNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief READ HEARTBEAT CONSUMER CONFIG
 *
@@ -422,7 +422,7 @@ int16_t COTypeNmtHbConsWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uin
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeNmtHbConsRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief  WRITE HEARTBEAT PRODUCER TIME
 *
@@ -444,7 +444,7 @@ int16_t COTypeNmtHbConsRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint
 * \retval   >0    heartbeat cycle time write successful
 * \retval  <=0    an error is detected and function aborted
 */
-int16_t COTypeNmtHbProdWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypeNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

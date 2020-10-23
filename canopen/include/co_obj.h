@@ -26,7 +26,7 @@ extern "C" {
 ******************************************************************************/
 
 #include "co_types.h"
-#include "co_cfg.h"
+#include "co_err.h"
 
 /******************************************************************************
 * DEFINES
@@ -191,7 +191,7 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_GET_SIZE(key)    (uint32_t)(1L << (((key) & CO_OBJ_SZ_MSK) >> 4))
+#define CO_GET_SIZE(key)    (uint8_t)(1L << (((key) & CO_OBJ_SZ_MSK) >> 4))
 
 /*! \brief CHECK IF OBJECT IS PDO MAPPABLE
 *
@@ -244,6 +244,227 @@ extern "C" {
 */
 #define CO_IS_WRITE(key)    (uint32_t)(key & CO_OBJ_____W)
 
+/*! \brief COB-ID sync message
+*
+*    These macros constructs the COB-ID for usage in object entry
+*    index 1005: COB-ID sync message. The standard defines the
+*    following encoding:
+*    - bit31: x = don't care
+*    - bit30: gen = device generates SYNC message (1), or not (0)
+*    - bit29: frame = 11bit standard CAN-ID (0) or 29bit extended CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param generate
+*    1: the device produces SYNC messages
+*    0: the device consumes SYNC messages
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+* \{
+*/
+#define CO_COBID_SYNC_STD(generate, id)    \
+    (((uint32_t)id & 0x7ffuL)            | \
+     ((uint32_t)generate & 0x1uL) << 30u)
+
+#define CO_COBID_SYNC_EXT(generate, id)    \
+    (((uint32_t)id & 0x1fffffffuL)       | \
+     ((uint32_t)0x1uL << 29u)            | \
+     ((uint32_t)generate & 0x1uL) << 30u)
+/*! \} */
+
+/*! \brief COB-ID time stamp object
+*
+*    These macros constructs the COB-ID for usage in object entry
+*    index 1012: COB-ID time stamp object. The standard defines the
+*    following encoding:
+*    - bit31: consume: device consumes time stamp objects (1) or not (0)
+*    - bit30: produce: device produces time stamp objects (1) or not (0)
+*    - bit29: frame = 11bit standard CAN-ID (0) or 29bit extended CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param consume
+*    the device consumes time stamp objects (1), or not (0)
+*
+* \param produce
+*    the device produces time stamp objects (1); or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+* \{
+*/
+#define CO_COBID_TIME_STD(consume, produce, id)  \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     ((uint32_t)consume & 0x1uL) << 31u)       | \
+     ((uint32_t)produce & 0x1uL) << 30u))
+
+#define CO_COBID_TIME_EXT(consume, produce, id)  \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1uL << 29u)                  | \
+     ((uint32_t)consume & 0x1uL) << 31u)       | \
+     ((uint32_t)produce & 0x1uL) << 30u))
+/*! \} */
+
+/*! \brief COB-ID EMCY
+*
+*    These macros constructs the COB-ID for usage in object entry
+*    index 1014: COB-ID EMCY. The standard defines the following encoding:
+*    - bit31: valid: EMCY exists (0) or not (1)
+*    - bit30: fixed to 0
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    EMCY exists (1), or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_EMCY_STD(valid, id)             \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     ((uint32_t)(1u - (valid & 0x1u)) << 31u)
+
+#define CO_COBID_EMCY_EXT(valid, id)             \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1uL << 29u)                  | \
+     ((uint32_t)(1u - (valid & 0x1u)) << 31u)
+/*! \} */
+
+/*! \brief SDO server/client COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1200..12ff: COB-ID for SDO servers and clients. The standard
+*    defines the following encoding:
+*    - bit31: valid: SDO exists (0) or not (1)
+*    - bit30: dyn: value is static (0) or dynamic (1)
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    EMCY exists (1), or not (0)
+*
+* \param dynamic
+*    the value is static (0) or dynamic (1)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_SDO_STD(valid, dynamic, id)     \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     (((uint32_t)dynamic & 0x1u) << 30u)       | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+
+#define CO_COBID_SDO_EXT(valid, dynamic, id)     \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1u << 29u)                   | \
+     (((uint32_t)dynamic & 0x1u) << 30u)       | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+/*! \} */
+
+/*! \brief SDO Default Connection
+*
+*    The CANopen standard defines a mandatory connection for SDO server #0.
+*/
+#define CO_COBID_SDO_REQUEST()    CO_COBID_SDO_STD(1u,0u,0x600uL)
+#define CO_COBID_SDO_RESPONSE()   CO_COBID_SDO_STD(1u,0u,0x580uL)
+
+/*! \brief RPDO COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1400..14ff: COB-ID for RPDO communication. The standard
+*    defines the following encoding:
+*    - bit31: valid: PDO exists (0) or not (1)
+*    - bit30: reserved: don't care
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    RPDO exists (1), or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_RPDO_STD(valid, id)             \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+
+#define CO_COBID_RPDO_EXT(valid, id)             \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1u << 29u)                   | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+/*! \} */
+
+#define CO_COBID_RPDO_BASE   (uint32_t)0x200
+#define CO_COBID_RPDO_INC    (uint32_t)0x100
+
+/*! \brief RPDO Default Connectionset
+*
+*    The CANopen standard recommends a default connection set. This set
+*    includes 4 RPDOs.
+*
+* \param rpdo
+*    the RPDO number (0..3)
+*/
+#define CO_COBID_RPDO_DEFAULT(rpdo)                                       \
+    CO_COBID_RPDO_STD(1u, CO_COBID_RPDO_BASE + (rpdo * CO_COBID_RPDO_INC))
+
+/*! \brief TPDO COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1800..18ff: COB-ID for TPDO communication. The standard
+*    defines the following encoding:
+*    - bit31: valid: PDO exists (0) or not (1)
+*    - bit30: RTR: RTR allowed on PDO (0) or not (1)
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    TPDO exists (1), or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_TPDO_STD(valid, id)             \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     ((uint32_t)0x1u << 30u)                   | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+
+#define CO_COBID_TPDO_EXT(valid, id)             \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1u << 29u)                   | \
+     ((uint32_t)0x1u << 30u)                   | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+/*! \} */
+
+#define CO_COBID_TPDO_BASE   (uint32_t)0x180
+#define CO_COBID_TPDO_INC    (uint32_t)0x100
+
+/*! \brief TPDO Default Connectionset
+*
+*    The CANopen standard recommends a default connection set. This set
+*    includes 4 TPDOs.
+*
+* \param tpdo
+*    the TPDO number (0..3)
+*/
+#define CO_COBID_TPDO_DEFAULT(tpdo)                                       \
+    CO_COBID_TPDO_STD(1u, CO_COBID_TPDO_BASE + (tpdo * CO_COBID_TPDO_INC))
+
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
@@ -274,13 +495,13 @@ typedef struct CO_OBJ_T {
 } CO_OBJ;
 
 /*!< Size type function prototype */
-typedef uint32_t (*CO_OBJ_SIZE_FUNC) (CO_OBJ *, struct CO_NODE_T *, uint32_t);
+typedef uint32_t (*CO_OBJ_SIZE_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
 /*!< Control type function prototype */
-typedef int16_t  (*CO_OBJ_CTRL_FUNC) (CO_OBJ *, struct CO_NODE_T *, uint16_t, uint32_t);
+typedef CO_ERR   (*CO_OBJ_CTRL_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, uint16_t, uint32_t);
 /*!< Read type function prototype */
-typedef int16_t  (*CO_OBJ_READ_FUNC) (CO_OBJ *, struct CO_NODE_T *, void*, uint32_t);
+typedef CO_ERR   (*CO_OBJ_READ_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
 /*!< Write type function prototype */
-typedef int16_t  (*CO_OBJ_WRITE_FUNC)(CO_OBJ *, struct CO_NODE_T *, void*, uint32_t);
+typedef CO_ERR   (*CO_OBJ_WRITE_FUNC)(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
 
 /*! \brief OBJECT TYPE
 *
@@ -391,7 +612,7 @@ uint32_t COObjGetSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
+CO_ERR COObjRdValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
 
 /*! \brief  WRITE VALUE TO OBJECT ENTRY
 *
@@ -416,7 +637,7 @@ int16_t COObjRdValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t w
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
+CO_ERR COObjWrValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid);
 
 /*! \brief  START READ BUFFER FROM OBJECT ENTRY
 *
@@ -439,7 +660,7 @@ int16_t COObjWrValue(CO_OBJ *obj, struct CO_NODE_T *node, void *value, uint8_t w
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
+CO_ERR COObjRdBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  CONTINUE READ BUFFER FROM OBJECT ENTRY
 *
@@ -462,7 +683,7 @@ int16_t COObjRdBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, ui
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
+CO_ERR COObjRdBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  START WRITE BUFFER TO OBJECT ENTRY
 *
@@ -484,7 +705,7 @@ int16_t COObjRdBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uin
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
+CO_ERR COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /*! \brief  CONTINUE WRITE BUFFER TO OBJECT ENTRY
 *
@@ -507,7 +728,7 @@ int16_t COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, ui
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
+CO_ERR COObjWrBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -558,7 +779,7 @@ int16_t COObjCmp(CO_OBJ *obj, void *val);
 * \retval    =CO_ERR_NONE    Successfully operation
 * \retval   !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdDirect(CO_OBJ *obj, void *val, uint32_t len);
+CO_ERR COObjRdDirect(CO_OBJ *obj, void *val, uint32_t len);
 
 /*! \brief  DIRECT WRITE TO DATA POINTER
 *
@@ -579,7 +800,7 @@ int16_t COObjRdDirect(CO_OBJ *obj, void *val, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
+CO_ERR COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 
 /*! \brief  READ WITH TYPE FUNCTIONS
 *
@@ -595,9 +816,6 @@ int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 * \param dst
 *    pointer to the result memory
 *
-* \param node
-*    reference to parent node
-*
 * \param len
 *    length of value in bytes
 *
@@ -607,7 +825,7 @@ int16_t COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off);
+CO_ERR COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off);
 
 /*! \brief  WRITE WITH TYPE FUNCTIONS
 *
@@ -632,7 +850,7 @@ int16_t COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len
 * \retval    =CO_ERR_NONE    Successfully operation
 * \retval   !=CO_ERR_NONE    An error is detected
 */
-int16_t COObjWrType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off);
+CO_ERR COObjWrType(CO_OBJ *obj, struct CO_NODE_T *node, void *src, uint32_t len, uint32_t off);
 
 /*! \brief STRING OBJECT SIZE
 *
@@ -654,7 +872,7 @@ int16_t COObjWrType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len
 *    Number of character in the string, counting without the end of string
 *    mark.
 */
-uint32_t COTypeStringSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
+uint32_t COTypeStringSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 
 /*! \brief STRING OBJECT ACCESS CONTROL
 *
@@ -679,7 +897,7 @@ uint32_t COTypeStringSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeStringCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
+CO_ERR COTypeStringCtrl(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
 
 /*! \brief STRING OBJECT READ ACCESS
 *
@@ -701,7 +919,7 @@ int16_t COTypeStringCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uin
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeStringRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeStringRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief DOMAIN OBJECT SIZE
 *
@@ -719,7 +937,7 @@ int16_t COTypeStringRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_
 * \return
 *    Size in bytes of the domain.
 */
-uint32_t COTypeDomainSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
+uint32_t COTypeDomainSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 
 /*! \brief DOMAIN OBJECT ACCESS CONTROL
 *
@@ -744,7 +962,7 @@ uint32_t COTypeDomainSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
+CO_ERR COTypeDomainCtrl(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
 
 /*! \brief DOMAIN OBJECT READ ACCESS
 *
@@ -766,7 +984,7 @@ int16_t COTypeDomainCtrl(CO_OBJ *obj, struct CO_NODE_T *node, uint16_t func, uin
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeDomainRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /*! \brief DOMAIN OBJECT WRITE ACCESS
 *
@@ -788,7 +1006,7 @@ int16_t COTypeDomainRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-int16_t COTypeDomainWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+CO_ERR COTypeDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

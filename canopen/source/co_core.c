@@ -101,15 +101,15 @@ CO_ERR CONodeGetErr(CO_NODE *node)
 /*
 * see function definition
 */
-int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
+CO_ERR CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
 {
+    CO_ERR    result = CO_ERR_NONE;
+    CO_ERR    err;
     CO_DICT  *cod;
     CO_OBJ   *obj;
     CO_PARA  *pg;
     uint32_t  bytes;
-    int16_t   err;
-    int16_t   result = 0;
-    uint8_t   num    = 0;
+    uint8_t   num = 0;
     uint8_t   sub;
 
     cod = &node->Dict;
@@ -126,7 +126,7 @@ int16_t CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
                 bytes = COIfNvmRead(&node->If, pg->Offset, pg->Start, pg->Size);
                 if (bytes != pg->Size) {
                     node->Error = CO_ERR_IF_NVM_READ;
-                    result      = -1;
+                    result      = CO_ERR_IF_NVM_READ;
                 }
             }
         }
@@ -142,20 +142,20 @@ void CONodeProcess(CO_NODE *node)
 {
     CO_IF_FRM frm;
     CO_SDO   *srv;
-    int16_t   err;
+    CO_RPDO  *rpdo;
+    int16_t   result;
     uint8_t   allowed;
-    int16_t   num;
 
-    err = COIfCanRead(&node->If, &frm);
-    if (err < 0) {
+    result = COIfCanRead(&node->If, &frm);
+    if (result < 0) {
         allowed = 0;
     } else {
         allowed = node->Nmt.Allowed;
     }
 
-    err = COLssCheck(&node->Lss, &frm);
-    if (err != 0) {
-        if (err > 0) {
+    result = COLssCheck(&node->Lss, &frm);
+    if (result != 0) {
+        if (result > 0) {
             (void)COIfCanSend(&node->If, &frm);
         }
         allowed = 0;
@@ -164,10 +164,8 @@ void CONodeProcess(CO_NODE *node)
     if ((allowed & CO_SDO_ALLOWED) != 0) {
         srv = COSdoCheck(node->Sdo, &frm);
         if (srv != 0) {
-            err = COSdoResponse(srv);
-            if (err >= -1) {
-                (void)COIfCanSend(&node->If, &frm);
-            }
+            (void)COSdoResponse(srv);
+            (void)COIfCanSend(&node->If, &frm);
             allowed = 0;
         }
     }
@@ -181,16 +179,16 @@ void CONodeProcess(CO_NODE *node)
     }
 
     if ((allowed & CO_PDO_ALLOWED) != 0) {
-        num = CORPdoCheck(node->RPdo, &frm);
-        if (num >= 0) {
-            CORPdoRx(node->RPdo, num, &frm);
+        rpdo = CORPdoCheck(node->RPdo, &frm);
+        if (rpdo != NULL) {
+            CORPdoRx(rpdo, &frm);
             allowed = 0;
         }
     }
 
     if ((allowed & CO_SYNC_ALLOWED) != 0) {
-        err = COSyncUpdate(&node->Sync, &frm);
-        if (err >= 0) {
+        result = COSyncUpdate(&node->Sync, &frm);
+        if (result >= 0) {
             COSyncHandler(&node->Sync);
             allowed = 0;
         }

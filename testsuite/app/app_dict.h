@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _APP_DICT_H_
-#define _APP_DICT_H_
+#ifndef APP_DICT_H_
+#define APP_DICT_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {

@@ -18,67 +18,19 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "co_core.h"
-
-/******************************************************************************
-* EXTERN VARIABLES
-******************************************************************************/
-
 /* get external node specification */
-extern const CO_NODE_SPEC AppSpec;
+#include "clock_spec.h"
 
 /******************************************************************************
-* PUBLIC VARIABLES
+* PRIVATE VARIABLES
 ******************************************************************************/
 
 /* Allocate a global CANopen node object */
-CO_NODE Clk;
+static CO_NODE Clk;
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
-
-static void AppClock(void *p_arg);
-
-/******************************************************************************
-* PUBLIC FUNCTIONS
-******************************************************************************/
-
-/* main entry function */
-void main(int argc, char *argv[])
-{
-    uint32_t ticks;
-
-    /* Initialize your hardware layer and the CANopen stack.
-     * Stop execution if an error is detected.
-     */
-    /* BSPInit(); */
-    CONodeInit(&Clk, (CO_NODE_SPEC *)&AppSpec);
-    if (CONodeGetErr(&Clk) != CO_ERR_NONE) {
-        while(1);
-    }
-
-    /* Use CANopen software timer to create a cyclic function
-     * call to the callback function 'AppClock()' with a period
-     * of 1s (equal: 1000ms).
-     */
-    ticks = COTmrGetTicks(&Clk.Tmr, 1000, CO_TMR_UNIT_1MS);
-    COTmrCreate(&Clk.Tmr, 0, ticks, AppClock, &Clk);
-
-    /* Start the CANopen node and set it automatically to
-     * NMT mode: 'OPERATIONAL'.
-     */
-    CONodeStart(&Clk);
-    CONmtSetMode(&Clk.Nmt, CO_OPERATIONAL);
-
-    /* In the background loop we process received CAN frames
-     * and executes elapsed action callback functions.
-     */
-    while (1) {
-        CONodeProcess(&Clk);
-        COTmrProcess(&Clk.Tmr);
-    }
-}
 
 /* timer callback function */
 static void AppClock(void *p_arg)
@@ -127,5 +79,45 @@ static void AppClock(void *p_arg)
         COObjWrValue(od_sec, node, (void *)&second, sizeof(second), 0);
         COObjWrValue(od_min, node, (void *)&minute, sizeof(minute), 0);
         COObjWrValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
+    }
+}
+
+/******************************************************************************
+* PUBLIC FUNCTIONS
+******************************************************************************/
+
+/* main entry function */
+int main(void)
+{
+    uint32_t ticks;
+
+    /* Initialize your hardware layer and the CANopen stack.
+     * Stop execution if an error is detected.
+     */
+    /* BSPInit(); */
+    CONodeInit(&Clk, &AppSpec);
+    if (CONodeGetErr(&Clk) != CO_ERR_NONE) {
+        while(1);
+    }
+
+    /* Use CANopen software timer to create a cyclic function
+     * call to the callback function 'AppClock()' with a period
+     * of 1s (equal: 1000ms).
+     */
+    ticks = COTmrGetTicks(&Clk.Tmr, 1000, CO_TMR_UNIT_1MS);
+    COTmrCreate(&Clk.Tmr, 0, ticks, AppClock, &Clk);
+
+    /* Start the CANopen node and set it automatically to
+     * NMT mode: 'OPERATIONAL'.
+     */
+    CONodeStart(&Clk);
+    CONmtSetMode(&Clk.Nmt, CO_OPERATIONAL);
+
+    /* In the background loop we process received CAN frames
+     * and executes elapsed action callback functions.
+     */
+    while (1) {
+        CONodeProcess(&Clk);
+        COTmrProcess(&Clk.Tmr);
     }
 }

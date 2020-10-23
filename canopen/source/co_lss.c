@@ -24,7 +24,7 @@
 * GLOBAL CONSTANTS
 ******************************************************************************/
 
-const CO_LSS_MAP COLssServices[CO_LSS_MAX_SID] = {
+static const CO_LSS_MAP COLssServices[CO_LSS_MAX_SID] = {
     {   4 , CO_LSS_WAIT | CO_LSS_CONF, COLssSwitchStateGlobal },
     {  64 , CO_LSS_WAIT              , COLssSwitchStateSelective_Vendor },
     {  65 , CO_LSS_WAIT              , COLssSwitchStateSelective_Product },
@@ -48,7 +48,7 @@ const CO_LSS_MAP COLssServices[CO_LSS_MAX_SID] = {
     {  76 , CO_LSS_WAIT | CO_LSS_CONF, COLssNonConfiguredRemoteSlave }
 };
 
-const uint32_t CO_LssBaudTbl[CO_LSS_MAX_BAUD] = {
+static const uint32_t CO_LssBaudTbl[CO_LSS_MAX_BAUD] = {
     1000000,                     /* 1MBit                                    */
     800000,                      /* 800kBit                                  */
     500000,                      /* 500kBit                                  */
@@ -143,7 +143,7 @@ int16_t COLssSwitchStateSelective_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
 
     lss->Step = CO_LSS_SEL_VENDOR;
 
@@ -160,7 +160,7 @@ int16_t COLssSwitchStateSelective_Product(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
 
     if (lss->Step != CO_LSS_SEL_PRODUCT) {
         lss->Step = CO_LSS_SEL_VENDOR;
@@ -180,7 +180,7 @@ int16_t COLssSwitchStateSelective_Revision(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
 
     if (lss->Step != CO_LSS_SEL_REVISION) {
         lss->Step = CO_LSS_SEL_VENDOR;
@@ -201,7 +201,7 @@ int16_t COLssSwitchStateSelective_Serial(CO_LSS *lss, CO_IF_FRM *frm)
     uint32_t select;
     uint32_t ident;
     int16_t  result = -1;
-    int16_t  err;
+    CO_ERR   err;
 
     if (lss->Step != CO_LSS_SEL_SERIAL) {
         lss->Step = CO_LSS_SEL_VENDOR;
@@ -222,7 +222,7 @@ int16_t COLssSwitchStateSelective_Serial(CO_LSS *lss, CO_IF_FRM *frm)
     return result;
 }
 
-void CO_LssActivateBitTiming_SwitchDelay (void *arg)
+static void CO_LssActivateBitTiming_SwitchDelay (void *arg)
 {
     CO_LSS *lss;
 
@@ -378,7 +378,7 @@ int16_t COLssIdentifyRemoteSlave_Vendor(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
 
     lss->Step = CO_LSS_REM_VENDOR;
 
@@ -395,7 +395,7 @@ int16_t COLssIdentifyRemoteSlave_Product(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
 
     if (lss->Step != CO_LSS_REM_PRODUCT) {
         lss->Step = CO_LSS_REM_VENDOR;
@@ -414,7 +414,7 @@ int16_t COLssIdentifyRemoteSlave_RevMin(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
 
     if (lss->Step != CO_LSS_REM_REVISION_MIN) {
         lss->Step = CO_LSS_REM_VENDOR;
@@ -433,7 +433,7 @@ int16_t COLssIdentifyRemoteSlave_RevMax(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
 
     if (lss->Step != CO_LSS_REM_REVISION_MAX) {
         lss->Step = CO_LSS_REM_VENDOR;
@@ -452,7 +452,7 @@ int16_t COLssIdentifyRemoteSlave_SerMin(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
 
     if (lss->Step != CO_LSS_REM_SERIAL_MIN) {
         lss->Step = CO_LSS_REM_VENDOR;
@@ -471,7 +471,7 @@ int16_t COLssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm)
 {
     uint32_t select;
     uint32_t ident;
-    int16_t  err;
+    CO_ERR   err;
     int16_t  result = -1;
 
     if (lss->Step != CO_LSS_REM_SERIAL_MAX) {

@@ -600,6 +600,7 @@ TS_DEF_MAIN(TS_SegWr_RestartTransfer)
     }
                                                       /*===== ABORT REQUEST ======================*/
     TS_SDO_SEND (0x80, 0x0000, 0, 0x00000000);
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0x21, idx, sub, size);
