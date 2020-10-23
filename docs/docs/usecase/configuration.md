@@ -372,7 +372,7 @@ const CO_OBJ AppObjDir[] = {
     {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x02, 8)},
       :
     /* mapped object entry */
-    {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ_D__RW), 0, (uintptr_t)&MyData},
+    {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&MyData},
       :
     CO_OBJ_DIR_ENDMARK
 };
