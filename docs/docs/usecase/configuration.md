@@ -253,7 +253,7 @@ The following chapters describes the details of the table members.
 The object entry key [`uint32_t`] shall be constructed with the following macro:
 
 ```c
-CO_DEV(<index>, <subindex>, <specification>)
+CO_KEY(<index>, <subindex>, <specification>)
 ```
 
 - The index is a 16bit value with possible range from 0x0000 to 0xFFFF
@@ -346,6 +346,39 @@ The object data reference [`uintptr_t`] shall be set in dependence to the object
 | `CO_TPDOTYPE` | N/A            | address of variable                       |
 | `CO_TSDOID`   | N/A            | address of variable                       |
 | `CO_TSTRING`  | N/A            | address of string info structure          |
+
+#### PDO Mapping Value
+
+For the PDO mapping object entries, we must encode the object data value in the following way:
+
+![PDO Mapping](/assets/images/pdo-mapping.svg "PDO Mapping Concept")
+
+You can use the macro `CO_LINK` to get the value in a readable way:
+
+```c
+CO_LINK(<destination-index>, <destination-subindex>, <mapping-bits>)
+```
+
+For example, when you want to map an object entry with a size of 8 bits from index 0x2100, subindex 0x02 to your PDO, the mapping entry in the object dictionary is:
+
+```c
+/* variable for object entry data */
+uint8_t MyData = 0u;
+
+/* object dictionary */
+const CO_OBJ AppObjDir[] = {
+      :
+    /* PDO mapping entry */
+    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x02, 8)},
+      :
+    /* mapped object entry */
+    {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ_D__RW), 0, (uintptr_t)&MyData},
+      :
+    CO_OBJ_DIR_ENDMARK
+};
+```
+
+*Note: this CANopen stack supports the mapping of 8, 16 or 32bits.*
 
 ### Timer Memory Block
 

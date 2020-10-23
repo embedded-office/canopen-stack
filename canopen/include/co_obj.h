@@ -244,6 +244,227 @@ extern "C" {
 */
 #define CO_IS_WRITE(key)    (uint32_t)(key & CO_OBJ_____W)
 
+/*! \brief COB-ID sync message
+*
+*    These macros constructs the COB-ID for usage in object entry
+*    index 1005: COB-ID sync message. The standard defines the
+*    following encoding:
+*    - bit31: x = don't care
+*    - bit30: gen = device generates SYNC message (1), or not (0)
+*    - bit29: frame = 11bit standard CAN-ID (0) or 29bit extended CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param generate
+*    1: the device produces SYNC messages
+*    0: the device consumes SYNC messages
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+* \{
+*/
+#define CO_COBID_SYNC_STD(generate, id)    \
+    (((uint32_t)id & 0x7ffuL)            | \
+     ((uint32_t)generate & 0x1uL) << 30u)
+
+#define CO_COBID_SYNC_EXT(generate, id)    \
+    (((uint32_t)id & 0x1fffffffuL)       | \
+     ((uint32_t)0x1uL << 29u)            | \
+     ((uint32_t)generate & 0x1uL) << 30u)
+/*! \} */
+
+/*! \brief COB-ID time stamp object
+*
+*    These macros constructs the COB-ID for usage in object entry
+*    index 1012: COB-ID time stamp object. The standard defines the
+*    following encoding:
+*    - bit31: consume: device consumes time stamp objects (1) or not (0)
+*    - bit30: produce: device produces time stamp objects (1) or not (0)
+*    - bit29: frame = 11bit standard CAN-ID (0) or 29bit extended CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param consume
+*    the device consumes time stamp objects (1), or not (0)
+*
+* \param produce
+*    the device produces time stamp objects (1); or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+* \{
+*/
+#define CO_COBID_TIME_STD(consume, produce, id)  \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     ((uint32_t)consume & 0x1uL) << 31u)       | \
+     ((uint32_t)produce & 0x1uL) << 30u))
+
+#define CO_COBID_TIME_EXT(consume, produce, id)  \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1uL << 29u)                  | \
+     ((uint32_t)consume & 0x1uL) << 31u)       | \
+     ((uint32_t)produce & 0x1uL) << 30u))
+/*! \} */
+
+/*! \brief COB-ID EMCY
+*
+*    These macros constructs the COB-ID for usage in object entry
+*    index 1014: COB-ID EMCY. The standard defines the following encoding:
+*    - bit31: valid: EMCY exists (0) or not (1)
+*    - bit30: fixed to 0
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    EMCY exists (1), or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_EMCY_STD(valid, id)             \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     ((uint32_t)(1u - (valid & 0x1u)) << 31u)
+
+#define CO_COBID_EMCY_EXT(valid, id)             \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1uL << 29u)                  | \
+     ((uint32_t)(1u - (valid & 0x1u)) << 31u)
+/*! \} */
+
+/*! \brief SDO server/client COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1200..12ff: COB-ID for SDO servers and clients. The standard
+*    defines the following encoding:
+*    - bit31: valid: SDO exists (0) or not (1)
+*    - bit30: dyn: value is static (0) or dynamic (1)
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    EMCY exists (1), or not (0)
+*
+* \param dynamic
+*    the value is static (0) or dynamic (1)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_SDO_STD(valid, dynamic, id)     \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     (((uint32_t)dynamic & 0x1u) << 30u)       | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+
+#define CO_COBID_SDO_EXT(valid, dynamic, id)     \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1u << 29u)                   | \
+     (((uint32_t)dynamic & 0x1u) << 30u)       | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+/*! \} */
+
+/*! \brief SDO Default Connection
+*
+*    The CANopen standard defines a mandatory connection for SDO server #0.
+*/
+#define CO_COBID_SDO_REQUEST()    CO_COBID_SDO_STD(1u,0u,0x600uL)
+#define CO_COBID_SDO_RESPONSE()   CO_COBID_SDO_STD(1u,0u,0x580uL)
+
+/*! \brief RPDO COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1400..14ff: COB-ID for RPDO communication. The standard
+*    defines the following encoding:
+*    - bit31: valid: PDO exists (0) or not (1)
+*    - bit30: reserved: don't care
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    RPDO exists (1), or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_RPDO_STD(valid, id)             \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+
+#define CO_COBID_RPDO_EXT(valid, id)             \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1u << 29u)                   | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+/*! \} */
+
+#define CO_COBID_RPDO_BASE   (uint32_t)0x200
+#define CO_COBID_RPDO_INC    (uint32_t)0x100
+
+/*! \brief RPDO Default Connectionset
+*
+*    The CANopen standard recommends a default connection set. This set
+*    includes 4 RPDOs.
+*
+* \param rpdo
+*    the RPDO number (0..3)
+*/
+#define CO_COBID_RPDO_DEFAULT(rpdo)                                       \
+    CO_COBID_RPDO_STD(1u, CO_COBID_RPDO_BASE + (rpdo * CO_COBID_RPDO_INC))
+
+/*! \brief TPDO COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1800..18ff: COB-ID for TPDO communication. The standard
+*    defines the following encoding:
+*    - bit31: valid: PDO exists (0) or not (1)
+*    - bit30: RTR: RTR allowed on PDO (0) or not (1)
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    TPDO exists (1), or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_TPDO_STD(valid, id)             \
+    (((uint32_t)id & 0x3ffuL)                  | \
+     ((uint32_t)0x1u << 30u)                   | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+
+#define CO_COBID_TPDO_EXT(valid, id)             \
+    (((uint32_t)id & 0x1fffffffuL)             | \
+     ((uint32_t)0x1u << 29u)                   | \
+     ((uint32_t)0x1u << 30u)                   | \
+     ((uint32_t)(1uL - (valid & 0x1u)) << 31u))
+/*! \} */
+
+#define CO_COBID_TPDO_BASE   (uint32_t)0x180
+#define CO_COBID_TPDO_INC    (uint32_t)0x100
+
+/*! \brief TPDO Default Connectionset
+*
+*    The CANopen standard recommends a default connection set. This set
+*    includes 4 TPDOs.
+*
+* \param tpdo
+*    the TPDO number (0..3)
+*/
+#define CO_COBID_TPDO_DEFAULT(tpdo)                                       \
+    CO_COBID_TPDO_STD(1u, CO_COBID_TPDO_BASE + (tpdo * CO_COBID_TPDO_INC))
+
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
