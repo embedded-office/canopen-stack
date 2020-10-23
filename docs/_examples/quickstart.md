@@ -103,8 +103,8 @@ See the following lines in the object dictionary:
 ```c
   :
     {CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
-    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (uintptr_t)0x600},
-    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (uintptr_t)0x580},
+    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, CO_COBID_SDO_REQUEST()},
+    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, CO_COBID_SDO_RESPONSE()},
   :
 ```
 
@@ -144,11 +144,11 @@ uint8_t  Obj2100_03_08 = 0;
 
 The communication settings for the TPDO must contain the following object entries:
 
-| Index | Subindex | Type       | Access     | Value     | Description                    |
-| ----- | -------- | ---------- | ---------- | --------- | ------------------------------ |
-| 1800h | 0        | UNSIGNED8  | Const      | 2         | *Communication Object TPDO #0* |
-| 1800h | 1        | UNSIGNED32 | Const      | 40000180h | - PDO transmission COBID       |
-| 1800h | 2        | UNSIGNED8  | Const      | 254       | - PDO transmission type        |
+| Index | Subindex | Type       | Access     | Value     | Description                       |
+| ----- | -------- | ---------- | ---------- | --------- | --------------------------------- |
+| 1800h | 0        | UNSIGNED8  | Const      | 2         | *Communication Object TPDO #0*    |
+| 1800h | 1        | UNSIGNED32 | Const      | 40000180h | - PDO transmission COBID (no RTR) |
+| 1800h | 2        | UNSIGNED8  | Const      | 254       | - PDO transmission type           |
 
 *Note: The CANopen stack didn't support CAN remote frames, because they are not recommended for new devices since many years. Bit30 in 1800h:1 defines, that remote transfers are not allowed for this PDO. The CAN identifier 180h is the recommended value out of the pre-defined connection set.*
 
@@ -157,7 +157,7 @@ See the following lines in the object dictionary:
 ```c
   :
     {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x40000180},
+    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
     {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)254},
   :
 ```
@@ -173,14 +173,14 @@ The mapping settings for the TPDO must contain the following object entries:
 | 1A00h | 2        | UNSIGNED32 | Const      | 21000208h | - map:  8-bit clock minute |
 | 1A00h | 3        | UNSIGNED32 | Const      | 21000308h | - map:  8-bit clock second |
 
-See the following lines in the object dictionary:
+How we get these values is explained in section [configuration of PDO mapping](/docs/usecase/configuration#pdo-mapping-value). This way of defining the payload for PDOs is part of the CiA301 standard and leads us to the following lines in the object dictionary:
 
 ```c
   :
     {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)3},
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x21000120},
-    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x21000208},
-    {CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x21000308},
+    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x01, 32)},
+    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x02,  8)},
+    {CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x03,  8)},
   :
 ```
 
@@ -196,7 +196,6 @@ See in file [clock_spec.c](https://github.com/embedded-office/canopen-stack/blob
 /* Define some default values for our CANopen node: */
 #define APP_NODE_ID       1u                  /* CANopen node ID             */
 #define APP_BAUDRATE      250000u             /* CAN baudrate                */
-#define APP_CAN_BUS_ID    0u                  /* Bus ID (driver specific)    */
 #define APP_TMR_N         16u                 /* Number of software timers   */
 #define APP_TICKS_PER_SEC 1000u               /* Timer clock frequency in Hz */
 #define APP_OBJ_N         128u                /* Object dictionary max size  */
