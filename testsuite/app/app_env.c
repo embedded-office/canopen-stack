@@ -447,6 +447,7 @@ void TS_SendBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t seglost)
     seg = 1;                                  /* initialize sequence counter */
     idx = start;
     while ((seg <= segnum) && (seg > 0)) {
+        SimCanGetFrm(NULL, 0);
         if ( (seg >= segnum) &&
              (last != 0     ) ) {
             seg = seg | 0x80;
@@ -456,7 +457,6 @@ void TS_SendBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t seglost)
         } else {
             TS_SDO_SEND(0, 0, 0, 0);                     /* send SDO request */
         }
-        SimCanRun();
         idx += 7;
         seg  = (seg + 1) & 0x7F;           /* calculate next segment counter */
     }

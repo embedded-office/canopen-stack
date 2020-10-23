@@ -277,12 +277,12 @@ CO_MODE CONmtLastHbState(CO_NMT *nmt, uint8_t nodeId)
 */
 void CONmtHbConsInit(CO_NMT *nmt)
 {
-    uint8_t    num;
-    int16_t    err;
+    CO_ERR     err;
+    CO_ERR     act;
     CO_OBJ    *obj;
     CO_HBCONS *hbc;
     CO_NODE   *node;
-    CO_ERR     act;
+    uint8_t    num;
 
     if (nmt == 0) {
         CONodeFatalError();
@@ -472,10 +472,10 @@ void CONmtHbConsMonitor(void *parg)
 /*
 * see function definition
 */
-int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+CO_ERR COTypeNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
+    CO_ERR      result = CO_ERR_TYPE_WR;
     CO_HBCONS  *hbc;
-    int16_t     result = CO_ERR_TYPE_WR;
     uint32_t    value  = 0;
     uint16_t    time;
     uint8_t     nodeid;
@@ -500,10 +500,10 @@ int16_t COTypeNmtHbConsWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uin
 /*
 * see function definition
 */
-int16_t COTypeNmtHbConsRead(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+CO_ERR COTypeNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
 {
+    CO_ERR     result = CO_ERR_NONE;
     CO_HBCONS *hbc;
-    int16_t    result = CO_ERR_NONE;
     uint32_t   value;
     uint8_t   *src;
     uint8_t   *dst;
@@ -534,7 +534,8 @@ void CONmtHbProdInit(CO_NMT *nmt)
 {
     CO_NODE *node;
     CO_TMR  *tmr;
-    int16_t  err;
+    CO_ERR   err;
+    int16_t  tid;
     uint16_t cycTime;
     uint32_t ticks;
 
@@ -549,8 +550,8 @@ void CONmtHbProdInit(CO_NMT *nmt)
         node->Error = CO_ERR_CFG_1017_0;
     }
     if (nmt->Tmr >= 0) {
-        err = COTmrDelete(tmr, nmt->Tmr);
-        if (err < 0) {
+        tid = COTmrDelete(tmr, nmt->Tmr);
+        if (tid < 0) {
             node->Error = CO_ERR_TMR_DELETE;
         }
     }
@@ -664,12 +665,13 @@ int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 /*
 * see function definition
 */
-int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+CO_ERR COTypeNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
+    CO_ERR    result = CO_ERR_OBJ_ACC;
     CO_TMR   *tmr;
     uint32_t  ticks;
     uint16_t  cycTime;
-    int16_t   result = CO_ERR_OBJ_ACC;
+    int16_t   tid;
 
     if (size != CO_LONG) {
         return (CO_ERR_BAD_ARG);
@@ -680,8 +682,8 @@ int16_t COTypeNmtHbProdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uin
     cycTime = (uint16_t)(*(uint32_t *)buf);
     tmr = &node->Tmr;
     if (node->Nmt.Tmr >= 0) {
-        result = COTmrDelete(tmr, node->Nmt.Tmr);
-        if (result < 0) {
+        tid = COTmrDelete(tmr, node->Nmt.Tmr);
+        if (tid < 0) {
             node->Error = CO_ERR_TMR_DELETE;
             return (CO_ERR_TMR_DELETE);
         }

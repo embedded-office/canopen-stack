@@ -113,28 +113,4 @@ typedef enum DEF_EMCY_SUITES_E {                      /*---- EMCY Management Tes
 #define SUITE_EMCY_API()   TS_DEF_SUITE(DEF_G_EMCY, DEF_S_EMCY_API)   /*!< \addtogroup emcy_api   EMCY Application Interface Test */
 
 
-#if DEF_G_NUM > TS_GROUP_MAX
-#error "Group Limit reached in DEF_G_NUM!"
-#endif
-
-#if DEF_S_CORE_NUM > TS_SUITE_MAX
-#error "Suite Limit reached in DEF_S_CORE_NUM!"
-#endif
-
-#if DEF_S_SDOS_NUM > TS_SUITE_MAX
-#error "Suite Limit reached in DEF_S_SDOS_NUM!"
-#endif
-
-#if DEF_S_PDO_NUM > TS_SUITE_MAX
-#error "Suite Limit reached in DEF_S_PDO_NUM!"
-#endif
-
-#if DEF_S_NMT_NUM > TS_SUITE_MAX
-#error "Suite Limit reached in DEF_S_NMT_NUM!"
-#endif
-
-#if DEF_S_EMCY_NUM > TS_SUITE_MAX
-#error "Suite Limit reached in DEF_S_EMCY_NUM!"
-#endif
-
 #endif /* DEF_SUITE_H_ */

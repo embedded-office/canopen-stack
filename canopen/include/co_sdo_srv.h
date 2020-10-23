@@ -77,6 +77,8 @@ extern const CO_OBJ_TYPE COTSdoId;
 * PUBLIC TYPES
 ******************************************************************************/
 
+struct CO_OBJ_T;
+
 /*! \brief SDO TRANSFER BUFFER
 *
 *    This structure holds the data, which are needed for the SDO transfer
@@ -164,8 +166,6 @@ typedef struct CO_SDO_T {
 *
 * \param node
 *    Ptr to parent CANopen node
-*
-* \internal
 */
 void COSdoInit(CO_SDO *srv, struct CO_NODE_T *node);
 
@@ -181,8 +181,6 @@ void COSdoInit(CO_SDO *srv, struct CO_NODE_T *node);
 *
 * \param node
 *    Ptr to parent CANopen node
-*
-* \internal
 */
 void COSdoReset(CO_SDO *srv, uint8_t num, struct CO_NODE_T *node);
 
@@ -199,8 +197,6 @@ void COSdoReset(CO_SDO *srv, uint8_t num, struct CO_NODE_T *node);
 *
 * \param num
 *    Number of SDO server
-*
-* \internal
 */
 void COSdoEnable(CO_SDO *srv, uint8_t num);
 
@@ -218,8 +214,6 @@ void COSdoEnable(CO_SDO *srv, uint8_t num);
 *
 * \retval  >0    pointer to addressed SDO server
 * \retval  =0    not a SDO request or an error is detected.
-*
-* \internal
 */
 CO_SDO *COSdoCheck(CO_SDO *srv, CO_IF_FRM *frm);
 
@@ -231,12 +225,10 @@ CO_SDO *COSdoCheck(CO_SDO *srv, CO_IF_FRM *frm);
 * \param srv
 *    Ptr to root element of SDO server array
 *
-* \retval  =0    successful SDO response
-* \retval  <0    an error is detected
-*
-* \internal
+* \retval  ==CO_ERR_NONE    successful SDO response
+* \retval  !=CO_ERR_NONE    an error is detected
 */
-int16_t COSdoResponse(CO_SDO *srv);
+CO_ERR COSdoResponse(CO_SDO *srv);
 
 /*! \brief  GET ADDRESSED OBJECT
 *
@@ -251,12 +243,10 @@ int16_t COSdoResponse(CO_SDO *srv);
 * \param mode
 *    Access mode (\ref CO_SDO_RD or \ref CO_SDO_WR)
 *
-* \retval  =0    successful operation
-* \retval  <0    abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    successful operation
+* \retval  !=CO_ERR_NONE    abort
 */
-int16_t COSdoGetObject(CO_SDO *srv, uint16_t mode);
+CO_ERR COSdoGetObject(CO_SDO *srv, uint16_t mode);
 
 /*! \brief  GET SIZE OF OBJECT
 *
@@ -273,8 +263,6 @@ int16_t COSdoGetObject(CO_SDO *srv, uint16_t mode);
 *
 * \retval  =0    Abort for known width
 * \retval  >0    Size of Object
-*
-* \internal
 */
 uint32_t COSdoGetSize(CO_SDO *srv, uint32_t width);
 
@@ -288,12 +276,10 @@ uint32_t COSdoGetSize(CO_SDO *srv, uint32_t width);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    successful operation
-* \retval  <0    abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    successful operation
+* \retval  !=CO_ERR_NONE    abort
 */
-int16_t COSdoUploadExpedited(CO_SDO *srv);
+CO_ERR COSdoUploadExpedited(CO_SDO *srv);
 
 /*! \brief  EXPEDITED DOWNLOAD PROTOCOL
 *
@@ -303,12 +289,10 @@ int16_t COSdoUploadExpedited(CO_SDO *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    successful operation
-* \retval  <0    abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    successful operation
+* \retval  !=CO_ERR_NONE    abort
 */
-int16_t COSdoDownloadExpedited(CO_SDO *srv);
+CO_ERR COSdoDownloadExpedited(CO_SDO *srv);
 
 /*! \brief  ABORT PROTOCOL
 *
@@ -319,8 +303,6 @@ int16_t COSdoDownloadExpedited(CO_SDO *srv);
 *
 * \param err
 *    The error code to be inserted in the data bytes #4..#7
-*
-* \internal
 */
 void COSdoAbort(CO_SDO *srv, uint32_t err);
 
@@ -342,15 +324,13 @@ void COSdoAbort(CO_SDO *srv, uint32_t err);
 * \param srv
 *    Pointer to SDO server object
 *
-* \param size
+* \param width
 *    Object size in byte
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoInitUploadSegmented(struct CO_SDO_T *srv, uint32_t width);
+CO_ERR COSdoInitUploadSegmented(struct CO_SDO_T *srv, uint32_t width);
 
 /*! \brief  SEGMENTED UPLOAD
 *
@@ -370,12 +350,10 @@ int16_t COSdoInitUploadSegmented(struct CO_SDO_T *srv, uint32_t width);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoUploadSegmented(struct CO_SDO_T *srv);
+CO_ERR COSdoUploadSegmented(struct CO_SDO_T *srv);
 
 /*! \brief  INIT SEGMENTED DOWNLOAD
 *
@@ -396,12 +374,10 @@ int16_t COSdoUploadSegmented(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoInitDownloadSegmented(struct CO_SDO_T *srv);
+CO_ERR COSdoInitDownloadSegmented(struct CO_SDO_T *srv);
 
 /*! \brief  SEGMENTED DOWNLOAD
 *
@@ -422,12 +398,10 @@ int16_t COSdoInitDownloadSegmented(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoDownloadSegmented(struct CO_SDO_T *srv);
+CO_ERR COSdoDownloadSegmented(struct CO_SDO_T *srv);
 
 /*! \brief  INIT BLOCK DOWNLOAD
 *
@@ -448,12 +422,10 @@ int16_t COSdoDownloadSegmented(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoInitDownloadBlock(struct CO_SDO_T *srv);
+CO_ERR COSdoInitDownloadBlock(struct CO_SDO_T *srv);
 
 /*! \brief  END BLOCK DOWNLOAD
 *
@@ -474,12 +446,10 @@ int16_t COSdoInitDownloadBlock(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoEndDownloadBlock(struct CO_SDO_T *srv);
+CO_ERR COSdoEndDownloadBlock(struct CO_SDO_T *srv);
 
 /*! \brief  BLOCK DOWNLOAD
 *
@@ -502,12 +472,10 @@ int16_t COSdoEndDownloadBlock(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoDownloadBlock(struct CO_SDO_T *srv);
+CO_ERR COSdoDownloadBlock(struct CO_SDO_T *srv);
 
 /*! \brief  INIT BLOCK UPLOAD
 *
@@ -528,16 +496,14 @@ int16_t COSdoDownloadBlock(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 *
 * \todo     Implement the PST to dynamically switch to segmented or
 *           expedited transfer if number of segments is below the
 *           given threshold.
 */
-int16_t COSdoInitUploadBlock(struct CO_SDO_T *srv);
+CO_ERR COSdoInitUploadBlock(struct CO_SDO_T *srv);
 
 /*! \brief  BLOCK UPLOAD
 *
@@ -559,12 +525,10 @@ int16_t COSdoInitUploadBlock(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoUploadBlock(struct CO_SDO_T *srv);
+CO_ERR COSdoUploadBlock(struct CO_SDO_T *srv);
 
 /*! \brief  CONFIRM BLOCK UPLOAD
 *
@@ -585,12 +549,10 @@ int16_t COSdoUploadBlock(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoAckUploadBlock(struct CO_SDO_T *srv);
+CO_ERR COSdoAckUploadBlock(struct CO_SDO_T *srv);
 
 /*! \brief  END BLOCK UPLOAD
 *
@@ -610,12 +572,10 @@ int16_t COSdoAckUploadBlock(struct CO_SDO_T *srv);
 * \param srv
 *    Pointer to SDO server object
 *
-* \retval  =0    on success
-* \retval  <0    on SDO abort
-*
-* \internal
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on SDO abort
 */
-int16_t COSdoEndUploadBlock(struct CO_SDO_T *srv);
+CO_ERR COSdoEndUploadBlock(struct CO_SDO_T *srv);
 
 /*! \brief  SDO ABORT REQUEST
 *
@@ -624,8 +584,6 @@ int16_t COSdoEndUploadBlock(struct CO_SDO_T *srv);
 *
 * \param srv
 *    Pointer to SDO server object
-*
-* \internal
 */
 void COSdoAbortReq(CO_SDO *srv);
 
@@ -648,10 +606,8 @@ void COSdoAbortReq(CO_SDO *srv);
 *
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
-*
-* \internal
 */
-int16_t COTypeSdoIdWrite(CO_OBJ* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+CO_ERR COTypeSdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

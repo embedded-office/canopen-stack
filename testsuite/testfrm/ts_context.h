@@ -63,7 +63,9 @@ typedef jmp_buf TS_CONTEXT;
 *          This argument must be a reference to a variable of type @ref TS_CONTEXT
 */
 /*------------------------------------------------------------------------------------------------*/
-#define TS_ABORT(ctx)   {longjmp((ctx), 1u);}
+#define TS_ABORT(ctx)   do { \
+        longjmp((ctx), 1u);  \
+    } while(0)
 
 /******************************************************************************
 * PUBLIC FUNCTIONS

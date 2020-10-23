@@ -162,7 +162,7 @@ static void TS_Result(TS_LINE line)
 /*------------------------------------------------------------------------------------------------*/
 static void TS_SetSuiteName(TS_LITERAL name, TS_STRING string)
 {
-    TS_STRING  ptr = (TS_STRING)name;
+    TS_LITERAL ptr = name;
     uint16_t   cnt = 0u;
     bool      path = false;
 
@@ -179,7 +179,7 @@ static void TS_SetSuiteName(TS_LITERAL name, TS_STRING string)
             }
             ptr++;                                    /* move behind file delimiter               */
         } else {
-            ptr = (char *)name;
+            ptr = name;
         }
 
         while ((*ptr != 0u ) && (cnt < TS_NAME_MAX)) { /* end of string or destination memory     */

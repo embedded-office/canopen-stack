@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _APP_ENV_H_
-#define _APP_ENV_H_
+#ifndef APP_ENV_H_
+#define APP_ENV_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {

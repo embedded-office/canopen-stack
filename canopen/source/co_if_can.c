@@ -30,6 +30,7 @@
 void COIfCanInit(CO_IF *cif, struct CO_NODE_T *node)
 {
     const CO_IF_CAN_DRV *can = cif->Drv->Can;
+    (void)node;
     can->Init();
 }
 
@@ -42,7 +43,7 @@ int16_t COIfCanRead (CO_IF *cif, CO_IF_FRM *frm)
     const CO_IF_CAN_DRV *can = cif->Drv->Can;
 
     err = can->Read(frm);
-    if (err < 0u) {
+    if (err < (int16_t)0) {
         cif->Node->Error = CO_ERR_IF_CAN_READ;
     }
     return (err);
@@ -57,7 +58,7 @@ int16_t COIfCanSend(CO_IF *cif, CO_IF_FRM *frm)
     const CO_IF_CAN_DRV *can = cif->Drv->Can;
 
     err = can->Send(frm);
-    if (err < 0u) {
+    if (err < (int16_t)0) {
         cif->Node->Error = CO_ERR_IF_CAN_SEND;
     }
     return (err);
@@ -88,7 +89,7 @@ void COIfCanEnable(CO_IF *cif, uint32_t baudrate)
 {
     const CO_IF_CAN_DRV *can = cif->Drv->Can;
 
-    if (baudrate == 0) {
+    if (baudrate == (uint32_t)0) {
     	baudrate = cif->Node->Baudrate;
     } else {
       	cif->Node->Baudrate = baudrate;

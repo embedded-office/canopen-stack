@@ -61,7 +61,7 @@ void COTmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, uint16_t num, uint32
 */
 void COTmrClear(CO_TMR *tmr)
 {
-    CO_NODE    *node = tmr->Node;;
+    CO_NODE    *node = tmr->Node;
     CO_TPDO    *pdo;
     uint16_t    num;
 

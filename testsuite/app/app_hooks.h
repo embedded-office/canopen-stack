@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef _APP_HOOKS_H_
-#define _APP_HOOKS_H_
+#ifndef APP_HOOKS_H_
+#define APP_HOOKS_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -106,6 +106,9 @@ typedef struct TS_CALLBACK_T {
 
 void TS_CallbackInit  (TS_CALLBACK *cb);
 void TS_CallbackDeInit(void);
+
+void COTmrLock  (void);
+void COTmrUnlock(void);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
