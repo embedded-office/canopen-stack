@@ -162,6 +162,14 @@ Some years later, now in 2020, we think it is time for a new way of software dev
 
 ## Change Log
 
+**V4.1.1**
+- add: macros for generating COB-IDs
+- fix: double transmission of last frame in a block upload
+- fix: ensure all SDO requests gets a response
+- fix: warning free compilation with clang
+- imp: documentation for configuration of PDO mapping
+- imp: testsuite improvements
+
 **V4.1.0**
 - add: introduce a drivers layer for CAN, NVM and Timer
 - add: clock example as compilable source code
