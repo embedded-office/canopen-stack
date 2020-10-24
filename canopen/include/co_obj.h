@@ -293,7 +293,7 @@ extern "C" {
 * \{
 */
 #define CO_COBID_TIME_STD(consume, produce, id)    \
-    (((uint32_t)(id) & 0x3ffuL)                  | \
+    (((uint32_t)(id) & 0x7ffuL)                  | \
      ((uint32_t)(consume) & 0x1uL) << 31u)       | \
      ((uint32_t)(produce) & 0x1uL) << 30u))
 
@@ -324,7 +324,7 @@ extern "C" {
 * \{
 */
 #define CO_COBID_EMCY_STD(valid, id)               \
-    (((uint32_t)(id) & 0x3ffuL)                  | \
+    (((uint32_t)(id) & 0x7ffuL)                  | \
      ((uint32_t)(1u - ((valid) & 0x1u)) << 31u)
 
 #define CO_COBID_EMCY_EXT(valid, id)               \
@@ -357,7 +357,7 @@ extern "C" {
 * \{
 */
 #define CO_COBID_SDO_STD(valid, dynamic, id)       \
-    (((uint32_t)(id) & 0x3ffuL)                  | \
+    (((uint32_t)(id) & 0x7ffuL)                  | \
      (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
@@ -396,7 +396,7 @@ extern "C" {
 * \{
 */
 #define CO_COBID_RPDO_STD(valid, id)               \
-    (((uint32_t)(id) & 0x3ffuL)                  | \
+    (((uint32_t)(id) & 0x7ffuL)                  | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
 #define CO_COBID_RPDO_EXT(valid, id)               \
@@ -440,7 +440,7 @@ extern "C" {
 * \{
 */
 #define CO_COBID_TPDO_STD(valid, id)             \
-    (((uint32_t)(id) & 0x3ffuL)                | \
+    (((uint32_t)(id) & 0x7ffuL)                | \
      ((uint32_t)0x1u << 30u)                   | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
