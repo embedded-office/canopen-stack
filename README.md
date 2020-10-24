@@ -162,6 +162,10 @@ Some years later, now in 2020, we think it is time for a new way of software dev
 
 ## Change Log
 
+**V4.1.2**
+- fix: improve COBID macro robustness
+- fix: correct the flags of mapped object in documentation
+
 **V4.1.1**
 - add: macros for generating COB-IDs
 - fix: double transmission of last frame in a block upload
