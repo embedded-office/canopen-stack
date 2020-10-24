@@ -36,8 +36,8 @@ const CO_OBJ_TYPE COTDomain = { COTypeDomainSize, COTypeDomainCtrl, COTypeDomain
 */
 uint32_t COObjGetSize(struct CO_OBJ_T *obj, CO_NODE *node, uint32_t width)
 {
-    uint32_t     result = 0;
-    CO_OBJ_TYPE *type;
+    uint32_t           result = 0;
+    const CO_OBJ_TYPE *type;
 
     if (obj == 0) {
         return (result);
@@ -61,9 +61,9 @@ uint32_t COObjGetSize(struct CO_OBJ_T *obj, CO_NODE *node, uint32_t width)
 */
 CO_ERR COObjRdValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, uint8_t width, uint8_t nodeid)
 {
-    CO_ERR       result = CO_ERR_NONE;
-    CO_OBJ_TYPE *type;
-    uint32_t     val = 0;
+    CO_ERR             result = CO_ERR_NONE;
+    const CO_OBJ_TYPE *type;
+    uint32_t           val = 0;
 
     if ((obj == 0) || (value == 0)) {
         return (CO_ERR_BAD_ARG);
@@ -145,8 +145,8 @@ CO_ERR COObjWrValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, u
 */
 CO_ERR COObjRdBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
 {
-    CO_OBJ_TYPE *type;
-    CO_ERR       result = CO_ERR_OBJ_ACC;
+    const CO_OBJ_TYPE *type;
+    CO_ERR             result = CO_ERR_OBJ_ACC;
 
     if ((obj == 0) || (buffer == 0)) {
         return (CO_ERR_BAD_ARG);
@@ -165,8 +165,8 @@ CO_ERR COObjRdBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *bu
 */
 CO_ERR COObjRdBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
 {
-    CO_OBJ_TYPE *type;
-    CO_ERR       result = CO_ERR_OBJ_ACC;
+    const CO_OBJ_TYPE *type;
+    CO_ERR             result = CO_ERR_OBJ_ACC;
 
     if ((obj == 0) || (buffer == 0)) {
         return (CO_ERR_BAD_ARG);
@@ -186,8 +186,8 @@ CO_ERR COObjRdBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buf
 */
 CO_ERR COObjWrBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
 {
-    CO_OBJ_TYPE *type;
-    CO_ERR       result = CO_ERR_OBJ_ACC;
+    const CO_OBJ_TYPE *type;
+    CO_ERR             result = CO_ERR_OBJ_ACC;
 
     if ((obj == 0) || (buffer == 0)) {
         return (CO_ERR_BAD_ARG);
@@ -206,8 +206,8 @@ CO_ERR COObjWrBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *bu
 */
 CO_ERR COObjWrBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
 {
-    CO_OBJ_TYPE *type;
-    CO_ERR       result = CO_ERR_OBJ_ACC;
+    const CO_OBJ_TYPE *type;
+    CO_ERR             result = CO_ERR_OBJ_ACC;
 
     if ((obj == 0) || (buffer == 0)) {
         return (CO_ERR_BAD_ARG);
@@ -328,8 +328,8 @@ int16_t COObjCmp(struct CO_OBJ_T *obj, void *val)
 */
 CO_ERR COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len, uint32_t off)
 {
-    CO_ERR       result = CO_ERR_OBJ_ACC;
-    CO_OBJ_TYPE *type;
+    CO_ERR             result = CO_ERR_OBJ_ACC;
+    const CO_OBJ_TYPE *type;
 
     type = obj->Type;
     if (type != 0) {
@@ -416,8 +416,8 @@ CO_ERR COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len)
 */
 CO_ERR COObjWrType(CO_OBJ *obj, CO_NODE *node, void *src, uint32_t len, uint32_t off)
 {
-    CO_ERR       result = CO_ERR_OBJ_ACC;
-    CO_OBJ_TYPE *type;
+    CO_ERR             result = CO_ERR_OBJ_ACC;
+    const CO_OBJ_TYPE *type;
 
     type = obj->Type;
     if (type != 0) {

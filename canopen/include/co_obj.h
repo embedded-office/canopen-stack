@@ -479,19 +479,19 @@ struct CO_DICT_T;              /* Declaration of object dictionary structure */
 *    entry.
 */
 typedef struct CO_OBJ_T {
-    uint32_t              Key;   /*!< 16Bit Index, 8Bit Subindex, 8Bit Flags */
-                                 /*   - 0: 1=rd access allowed               */
-                                 /*   - 1: 1=wr access allowed               */
-                                 /*   - 2: 1=pdo mappable                    */
-                                 /*   - 3: 1=signed value                    */
-                                 /*   - 4: |- valid bytes in 2^n; used if    */
-                                 /*   - 5: |  Type=0, or Type->Size ptr=0    */
-                                 /*   - 6: 1=+/- node-id on read/write       */
-                                 /*   - 7: 1=direct (ptr is value if Type=0) */
-    struct CO_OBJ_TYPE_T *Type;  /*!< ==0: value access via Data-Ptr,        */
-                                 /*   !=0: access via type structure         */
-    uintptr_t             Data;  /*!< Address of value or data structure     */
-                                 /*   or data value for direct access        */
+    uint32_t                    Key;   /*!< 16Bit Index, 8Bit Subindex, 8Bit Flags */
+                                       /*   - 0: 1=rd access allowed               */
+                                       /*   - 1: 1=wr access allowed               */
+                                       /*   - 2: 1=pdo mappable                    */
+                                       /*   - 3: 1=signed value                    */
+                                       /*   - 4: |- valid bytes in 2^n; used if    */
+                                       /*   - 5: |  Type=0, or Type->Size ptr=0    */
+                                       /*   - 6: 1=+/- node-id on read/write       */
+                                       /*   - 7: 1=direct (ptr is value if Type=0) */
+    const struct CO_OBJ_TYPE_T *Type;  /*!< ==0: value access via Data-Ptr,        */
+                                       /*   !=0: access via type structure         */
+    uintptr_t                   Data;  /*!< Address of value or data structure     */
+                                       /*   or data value for direct access        */
 } CO_OBJ;
 
 /*!< Size type function prototype */
