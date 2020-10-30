@@ -160,50 +160,9 @@ The first release of this CANopen stack is back in 2005. It is still used in man
 
 Some years later, now in 2020, we think it is time for a new way of software development of components where no product specific know-how is neccessary. This project is the try with the hope, that this way of software development is good for existing customers, for Embedded Offic and for all potential new users.
 
-## Change Log
-
-**V4.1.2**
-- fix: improve COBID macro robustness
-- fix: correct the flags of mapped object in documentation
-
-**V4.1.1**
-- add: macros for generating COB-IDs
-- fix: double transmission of last frame in a block upload
-- fix: ensure all SDO requests gets a response
-- fix: warning free compilation with clang
-- imp: documentation for configuration of PDO mapping
-- imp: testsuite improvements
-
-**V4.1.0**
-- add: introduce a drivers layer for CAN, NVM and Timer
-- add: clock example as compilable source code
-- add: documentation for interfacing the hardware
-- add: driver templates and simulation drivers for testsuite
-- imp: documentation for callback functions
-
-*Note: since the version v4.1.x, the callback interface is changed (some functions are not required anymore) and the hardware interface must be done with the drivers functions (breaking change)*
-
-**V4.0.3**
-- add: make timer tick rate configurable
-- fix: compiles warning free in IAR, GCC and Keil
-- fix: minor improvements in documentation
-
-**V4.0.2**
-- add: make headers compatible with C++
-- fix: NMT state machine image in docs
-- fix: improve quickstart example docs
-
-**V4.0.1**
-- fix: version number in source code
-- fix: prepare testsuite for 64bit machines
-- add: callback after synchronized RPDO distribution into object dictionary
-
-**V4.0.0**
-- First open source release.
+To avoid confusion, it is the best to continue with the release version numbering. The first stable release of the open-source variant of the CANopen Stack is: **V4.0.0**
 
 ## Roadmap
-
-To avoid confusion, it is the best to continue with the release version numbering with the semantic scheme 'major'.'minor'.'build'. The first stable release of the open-source variant of the CANopen Stack is: **V4.0.0**
 
 *Ideas for further development:*
 
