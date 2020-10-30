@@ -7,6 +7,10 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [Unreleased]
 
+no changes
+
+## [4.1.3] - 2020-10-30
+
 ### Added
 
 - Standard changelog file in the project root.
@@ -86,7 +90,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.2...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.3...HEAD
+[4.1.3]: https://github.com/embedded-office/canopen-stack/compare/v4.1.2...v4.1.3
 [4.1.2]: https://github.com/embedded-office/canopen-stack/compare/v4.1.1...v4.1.2
 [4.1.1]: https://github.com/embedded-office/canopen-stack/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/embedded-office/canopen-stack/compare/v4.0.3...v4.1.0
