@@ -7,27 +7,36 @@ aside:
   toc: true
 ---
 
-This quickstart example describes in detail the steps to build a CANopen node. The source files are included in the directory `/example/quickstart/app` and should be followed during reading this article.
+This quickstart example describes in detail the steps to build a CANopen node.
+The source files are included in the directory [example/quickstart/app][1]
+and should be followed during reading this article. In this example, we will
+create a *CANopen Clock*. While this clock node is not intended for serious
+applications, the example illustrates the key principles of development using
+the CANopen Stack.
+
+[1]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/
 
 <!--more-->
 
-*The example provides a **CANopen Clock** (nothing serious, but nice to see in action), and demonstrates the principal way of development to this CANopen device.*
 
 ### Functional Specification
 
-The CANopen clock shall run if the device is switched in *operational* mode. The object dictionary will be updated every second with the new time.
+The CANopen clock will only run if the device is switched to *operational* mode.
+The object dictionary will be updated every second with the new time. In
+*operational* mode, the node will transmit a process data object (`TPDO`)
+whenever the object dictionary entry *"second"* (`2100h:03`{:.info}) is changed.
+The service data object server (`SDOS`) will allow access to the device
+information contained within the object dictionary.
 
-We shall send transmit process data object (TPDO) if the object entry *second* is changed and if the device is running in *operational* mode.
-
-The service data object server (SDOS) shall allow access to all device information within the object dictionary.
 
 ### Object Dictionary
 
-#### Static Object Dictionary
+To keep the software as simple as possible, we will use a static object dictionary.
+In this case, the object dictionary is an array of object entries, declared as a
+constant array of object entries of type `CO_OBJ`. The object dictionary is
+declared in the file [clock_spec.c][2]:
 
-To keep the software as simple as possible, we decide to use a static object dictionary. Therefore, the object dictionary is an array of object entries, declared as constant array of object entries of type `CO_OBJ`.
-
-See in file [clock_spec.c](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L50):
+[2]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L50
 
 ```c
   :
@@ -47,21 +56,28 @@ const uint16_t ClockODLen = sizeof(ClockOD)/sizeof(CO_OBJ);
 
 The object dictionary must hold at least the following mandatory object entries:
 
-| Index | Subindex | Type       | Access     | Value | Description        |
-| ----- | -------- | ---------- | ---------- | ----- | ------------------ |
-| 1000h | 0        | UNSIGNED32 | Const      | 0     | Device Type        |
-| 1001h | 0        | UNSIGNED8  | Read Only  | 0     | Error Register     |
-| 1005h | 0        | UNSIGNED32 | Const      | 0x80  | COB-ID SYNC        |
-| 1017h | 0        | UNSIGNED16 | Const      | 0     | Heartbeat Producer |
-| 1018h | 0        | UNSIGNED8  | Const      | 4     | *Identity Object*  |
-| 1018h | 1        | UNSIGNED32 | Const      | 0     | - Vendor ID        |
-| 1018h | 2        | UNSIGNED32 | Const      | 0     | - Product code     |
-| 1018h | 3        | UNSIGNED32 | Const      | 0     | - Revision number  |
-| 1018h | 4        | UNSIGNED32 | Const      | 0     | - Serial number    |
+| Index:sub          | Type         | Access      | Value   | Description        |
+| ------------------ | ------------ | ----------- | ------- | ------------------ |
+| `1000h:00`{:.info} | `UNSIGNED32` | `Const`     | `0`     | Device Type        |
+| `1001h:00`{:.info} | `UNSIGNED8`  | `Read-only` | `0`     | Error Register     |
+| `1005h:00`{:.info} | `UNSIGNED32` | `Const`     | `0x80`  | COB-ID SYNC        |
+| `1017h:00`{:.info} | `UNSIGNED16` | `Const`     | `0`     | Heartbeat Producer |
+| `1018h:00`{:.info} | `UNSIGNED8`  | `Const`     | `4`     | *Identity Object*  |
+| `1018h:01`{:.info} | `UNSIGNED32` | `Const`     | `0`     | - Vendor ID        |
+| `1018h:02`{:.info} | `UNSIGNED32` | `Const`     | `0`     | - Product code     |
+| `1018h:03`{:.info} | `UNSIGNED32` | `Const`     | `0`     | - Revision number  |
+| `1018h:04`{:.info} | `UNSIGNED32` | `Const`     | `0`     | - Serial number    |
+{:.fullwidth}
 
-*Note: For complex object entries (like the 1018h), the subindex 0 holds the highest subindex in this object. The shown values are only dummy values. The correct value for vendor ID is managed by CiA, because each registered company will get a worldwide unique value.*
+**Note:** For complex object dictionary entries (e.g. `1018h`{:.info}),
+subindex `0`{:.info} holds the highest subindex in this object.
+{:.info}
 
-See the following lines in the object dictionary:
+**Note:** The values shown for `1018h`{:.info} are only dummy values. Vendor IDs
+are managed by CiA, and each registered company is assigned a globally unique value.
+{:.info}
+
+These mandatory entries are added with the following lines of code:
 
 ```c
   :
@@ -78,27 +94,47 @@ See the following lines in the object dictionary:
   :
 ```
 
-and the corresponding global variable for the runtime value of the error register object (1001h,00h):
+**Attention:** The CANopen Stack relies on a binary search algorithm to ensure
+that object dictionary entries are found quickly. Because of this, you must keep
+the index / subindex of all entries in the object dictionary sorted in ascending
+order.
+{:.warning}
+
+
+Most of these entries are constant, and their values can be stored directly
+inside the object dictionary. This is not the case for the error register object
+`1001h`{:.info}. This entry is read-only, but can be changed by the node. We
+need to declare global variable to contain the runtime value of the entry:
 
 ```c
 uint8_t Obj1001_00_08 = 0;
 ```
 
-***Attention: You must keep the index/subindex of all entries in the object dictionary sorted in ascending order. The reason is: the CANopen Stack uses a binary search to get to the right object entry as fast as possible.***
+A pointer to this variable is stored in the corresponding object dictionary
+entry. This entry must be marked as `CO_OBJ____R_` instead of `CO_OBJ_D__R_` to
+let the stack know that this entry contains a pointer instead of a direct value.
+
 
 #### SDO Server
 
-The settings for the SDO server are defined in CiA301 and must contain the following object entries:
+The settings for the SDO server are defined in CiA301 and must contain the
+following object dictionary entries:
 
-| Index | Subindex | Type       | Access     | Value | Description                       |
-| ----- | -------- | ---------- | ---------- | ----- | --------------------------------- |
-| 1200h | 0        | UNSIGNED8  | Const      | 2     | *Communication Object SDO Server* |
-| 1200h | 1        | UNSIGNED32 | Const      | 600h  | - SDO Server Request COBID        |
-| 1200h | 2        | UNSIGNED32 | Const      | 580h  | - SDO Server Response COBID       |
+| Index:sub          | Type         | Access  | Value            | Description                       |
+| ------------------ | ------------ | ------- | ---------------- | --------------------------------- |
+| `1200h:00`{:.info} | `UNSIGNED8`  | `Const` | `2`              | *Communication Object SDO Server* |
+| `1200h:01`{:.info} | `UNSIGNED32` | `Const` | `600h + node ID` | - SDO Server Request COBID        |
+| `1200h:02`{:.info} | `UNSIGNED32` | `Const` | `580h + node ID` | - SDO Server Response COBID       |
+{:.fullwidth}
 
-*Note: Since all COBIDs are settings which are dependant on the actual node ID. For this reason, the CANopen stack allows to specify such entries to consider the current node ID during runtime.*
+**Note:** The predefined COBIDs are dependent on the actual node ID. For this
+reason, the CANopen stack allows you to specify entries whose value depends on
+the current node ID at runtime. This behavior is specified using the
+`CO_OBJ__N___` flag.
+{:.info}
 
-See the following lines in the object dictionary:
+
+The following lines add the SDO server entries to the object dictionary:
 
 ```c
   :
@@ -110,18 +146,26 @@ See the following lines in the object dictionary:
 
 #### Application Object Entries
 
-The quickstart specific object dictionary entries for the clock shall include:
+Next, we need to add some application-specific entries to support the clock
+functionality of the example:
 
-| Index | Subindex | Type       | Access     | Value | Description    |
-| ----- | -------- | ---------- | ---------- | ----- | -------------- |
-| 2100h | 0        | UNSIGNED8  | Const      | 3     | *Clock Object* |
-| 2100h | 1        | UNSIGNED32 | Read Only  | 0     | - Hour         |
-| 2100h | 2        | UNSIGNED8  | Read Only  | 0     | - Minute       |
-| 2100h | 3        | UNSIGNED8  | Read Only  | 0     | - Second       |
+| Index:sub          | Type         | Access      | Value  | Description    |
+| ------------------ | ------------ | ----------- | ------ | -------------- |
+| `2100h:00`{:.info} | `UNSIGNED8`  | `Const`     | `3`    | *Clock Object* |
+| `2100h:01`{:.info} | `UNSIGNED32` | `Read Only` | `0`    | - Hour         |
+| `2100h:02`{:.info} | `UNSIGNED8`  | `Read Only` | `0`    | - Minute       |
+| `2100h:03`{:.info} | `UNSIGNED8`  | `Read Only` | `0`    | - Second       |
+{:.fullwidth}
 
-*Note: These entries are a free selection. Some CiA standards and profiles specify a bunch of entries, so keep your data in the manufacturer specific area (2000h up to 5FFFh), defined in CiA301.*
+**Note:**
+These entries are placed within the manufacturer specific area (from
+`2000h`{:.info} up to `5FFFh`{:.info}) and can be chosen freely (see CiA301).
+Entries outside of this range cannot be chosen freely, and should conform to the
+various CiA standards and profiles (e.g. CiA301 for communication profile area,
+CiA401 for generic IO modules, etc).
+{:.info}
 
-See the following lines in the object dictionary:
+These entries are created using the following lines of code:
 
 ```c
   :
@@ -132,7 +176,8 @@ See the following lines in the object dictionary:
   :
 ```
 
-and the corresponding global variables for the runtime values of the clock object as global variables:
+We also need to create three global variables to hold the runtime values of the
+clock object:
 
 ```c
 uint32_t Obj2100_01_20 = 0;
@@ -140,24 +185,31 @@ uint8_t  Obj2100_02_08 = 0;
 uint8_t  Obj2100_03_08 = 0;
 ```
 
+
 #### TPDO Communication
 
 The communication settings for the TPDO must contain the following object entries:
 
-| Index | Subindex | Type       | Access     | Value     | Description                       |
-| ----- | -------- | ---------- | ---------- | --------- | --------------------------------- |
-| 1800h | 0        | UNSIGNED8  | Const      | 2         | *Communication Object TPDO #0*    |
-| 1800h | 1        | UNSIGNED32 | Const      | 40000180h | - PDO transmission COBID (no RTR) |
-| 1800h | 2        | UNSIGNED8  | Const      | 254       | - PDO transmission type           |
+| Index:sub          | Type         | Access  | Value       | Description                       |
+| ------------------ | ------------ | ------- | ----------- | --------------------------------- |
+| `1800h:00`{:.info} | `UNSIGNED8`  | `Const` | `2`         | *Communication Object TPDO #0*    |
+| `1800h:01`{:.info} | `UNSIGNED32` | `Const` | `40000180h` | - PDO transmission COBID (no RTR) |
+| `1800h:02`{:.info} | `UNSIGNED8`  | `Const` | `254`       | - PDO transmission type           |
+{:.fullwidth}
 
-*Note: The CANopen stack didn't support CAN remote frames, because they are not recommended for new devices since many years. Bit30 in 1800h:1 defines, that remote transfers are not allowed for this PDO. The CAN identifier 180h is the recommended value out of the pre-defined connection set.*
+**Note:** The CANopen stack does not support remote CAN frames as they are no longer
+recommended for new devices. The use of RTR frames in CANopen devices has been
+deprecated for many years now. Bit 30 in `1800h:01`{:.info} indicates that
+remote transfers are not allowed for this PDO. The CAN identifier
+`180h + node-ID` is the recommended value from the pre-defined connection set.
+{:.info}
 
 See the following lines in the object dictionary:
 
 ```c
   :
     {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
+    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, CO_COBID_TPDO_DEFAULT(0)},
     {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)254},
   :
 ```
@@ -166,14 +218,20 @@ See the following lines in the object dictionary:
 
 The mapping settings for the TPDO must contain the following object entries:
 
-| Index | Subindex | Type       | Access     | Value     | Description                |
-| ----- | -------- | ---------- | ---------- | --------- | -------------------------- |
-| 1A00h | 0        | UNSIGNED8  | Const      | 3         | *Mapping Object TPDO #0*   |
-| 1A00h | 1        | UNSIGNED32 | Const      | 21000120h | - map: 32-bit clock hour   |
-| 1A00h | 2        | UNSIGNED32 | Const      | 21000208h | - map:  8-bit clock minute |
-| 1A00h | 3        | UNSIGNED32 | Const      | 21000308h | - map:  8-bit clock second |
+| Index:sub          | Type         | Access  | Value       | Description                |
+| ------------------ | ------------ | ------- | ----------- | -------------------------- |
+| `1A00h:00`{:.info} | `UNSIGNED8`  | `Const` | `3`         | *Mapping Object TPDO #0*   |
+| `1A00h:01`{:.info} | `UNSIGNED32` | `Const` | `21000120h` | - map: 32-bit clock hour   |
+| `1A00h:02`{:.info} | `UNSIGNED32` | `Const` | `21000208h` | - map:  8-bit clock minute |
+| `1A00h:03`{:.info} | `UNSIGNED32` | `Const` | `21000308h` | - map:  8-bit clock second |
+{:.fullwidth}
 
-How we get these values is explained in section [configuration of PDO mapping](/docs/usecase/configuration#pdo-mapping-value). This way of defining the payload for PDOs is part of the CiA301 standard and leads us to the following lines in the object dictionary:
+How we get these values is explained in section [configuration of PDO mapping][3].
+This way of defining the payload for PDOs is part of the CiA301 standard and
+leads us to the following lines in the object dictionary:
+
+[3]: /docs/usecase/configuration#pdo-mapping-value
+
 
 ```c
   :
@@ -184,11 +242,18 @@ How we get these values is explained in section [configuration of PDO mapping](/
   :
 ```
 
+
 ### Node Specification
 
-The CANopen node needs some memory for dynamic operations. Now we need some variables to allocate the right amount of memory and provide the memory portions to the CANopen Stack during initialization.
+The main settings of the node are configured inside the `CO_NODE_SPEC` struct.
+This struct will not be modified at runtime, so it can be declared as a
+constant, reducing RAM usage. The CANopen node needs some memory buffers for
+dynamic operations. These two buffers are statically allocated, and a pointer is
+stored inside the `CO_NODE_SPEC` struct. Refer to the file [clock_spec.c][4]
+for more detail:
 
-See in file [clock_spec.c](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L21):
+[4]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L21
+
 
 ```c
 #include "co_core.h"
@@ -227,13 +292,20 @@ CO_NODE_SPEC AppSpec = {
 };
 ```
 
-***We should never use these variables directly. This will cause trouble.***
+**Warning:** Never manipulate these variables directly. Doing so will cause problems.
+{:.error}
+
 
 ### Application Start
 
-For the application code see the file [clock_app.c](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L21). This file will include the CANopen Stack startup and the application specific clock function.
+The application code is implemented in the file [clock_app.c][5].
+This file is responsible for the CANopen Stack startup as well as the
+application-specific clock function. Let's start with the CANopen Stack
+[startup][6]:
 
-Let's start with the CANopen Stack [startup](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L48):
+[5]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L21
+[6]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L48
+
 
 ```c
 #include "co_core.h"
@@ -283,7 +355,11 @@ void main(int argc, char *argv[])
 
 ### Application Callback
 
-The timer callback function [AppClock()](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L84) includes the main functionality of the clock node:
+The timer callback function [AppClock()][7] includes the main functionality of
+the clock node:
+
+[7]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L84
+
 
 ```c
 /* timer callback function */
@@ -339,9 +415,11 @@ static void AppClock(void *p_arg)
 
 ### Hardware Connection
 
-For the hardware connection, you need to select or add some drivers to your project:
+Next, you will need to add drivers to your project to interface the stack with
+your hardware, as shown in [clock_spec.c][8]:
 
-See in file [clock_spec.c](https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L94):
+[8]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L94
+
 
 ```c
    :
@@ -363,7 +441,10 @@ const CO_IF_DRV AppDriver = {
    :
 ```
 
-When you write your device driver, you will setup a hardware timer interrupt with your low-level layer, I call it Board Support Package (BSP), and configure a cyclic interrupt source with a frequency of `APP_TICKS_PER_SEC`. Somewhere in your BSP, the timer interrupt service handler should look like:
+When you write your device driver, you will need to set up a hardware timer
+interrupt within your low-level layer - the Board Support Package (BSP) - and
+configure a periodic interrupt source with a frequency of `APP_TICKS_PER_SEC`.
+The timer interrupt service handler should look something like this:
 
 ```c
 #include "co_core.h"
