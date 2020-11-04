@@ -82,7 +82,7 @@ The following descriptions explains the details of the table members:
 
 - The parameter group size [`uint32_t`] shall be set to the number of bytes within the parameter group memory area
 
-- The start address of the parameter group memory area [CPU_INT08U *] shall be set to the first address of the parameter group memory
+- The start address of the parameter group memory area [`uint8_t *`] shall be set to the first address of the parameter group memory
 
 - The reset type [`CO_NMT_RESET`] shall be set to one of the following values:
 
@@ -91,7 +91,7 @@ The following descriptions explains the details of the table members:
   | `CO_RESET_COM`  | parameter group shall be set to the stored values on communication reset |
   | `CO_RESET_NODE` | parameter group shall be set to the stored values on node reset          |
 
-- The pointer to the identification [void *] of this parameter group is not used by the CANopen stack. This member is intended to identify the different parameter groups within the application callback functions, related to the parameter handling. Any type of identification may be used for this purpose. In the shown example, an identification string is used.
+- The pointer to the identification [`void *`] of this parameter group is not used by the CANopen stack. This member is intended to identify the different parameter groups within the application callback functions, related to the parameter handling. Any type of identification may be used for this purpose. In the shown example, an identification string is used.
 
 - The parameter group feature indication [`uint32_t`], which is returned on a simple object entry read access, shall be set to one of the following values:
 
@@ -108,7 +108,7 @@ The object entries, handling the saving and restoring of parameters, shall be se
 
 ```c
 { CO_KEY(0x1010, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 0x03 },
-{ CO_KEY(0x1010, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&AppParaObj },
+{ CO_KEY(0x1010, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&AllParaObj },
 { CO_KEY(0x1010, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&ComParaObj },
 { CO_KEY(0x1010, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&AppParaObj },
 
