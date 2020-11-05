@@ -218,4 +218,7 @@
       font-weight: map-get($base, font-weight-bold);
     }
   }
+  table.fullwidth {
+    display: table;
+  }
 }
