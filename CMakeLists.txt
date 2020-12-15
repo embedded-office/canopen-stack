@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 3.15)
-project (CanopenStack VERSION 4.1.3)
+project (CanopenStack VERSION 4.1.4)
 
 # Make CANopen library
 add_subdirectory(canopen)
