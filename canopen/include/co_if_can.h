@@ -222,9 +222,16 @@ void COIfCanInit(struct CO_IF_T *cif, struct CO_NODE_T *node);
 
 /*! \brief  READ CAN FRAME
 *
-*    This function waits for a CAN frame on the interface without timeout.
-*    If a CAN frame is received, the given frm will be filled with the
-*    received data.
+*    This function usually waits for a CAN frame on the interface without
+*    timeout. If a CAN frame is received, the given frm will be filled
+*    with the received data.
+*
+*    For evaluation, demonstration or testing the CAN read may poll for
+*    a new CAN frame. In this case, the exceptional path with no received
+*    CAN frame is possible.
+*
+* \note  Don't use the polling mode in production. This communication is
+*        not reliable, especially when synchronized PDOs are used.
 *
 * \param cif
 *    pointer to the interface structure
@@ -233,6 +240,7 @@ void COIfCanInit(struct CO_IF_T *cif, struct CO_NODE_T *node);
 *    pointer to the receive frame buffer
 *
 * \retval  >0    the size of CO_IF_FRM on success
+* \retval  =0    special: nothing received during polling (timeout)
 * \retval  <0    the CAN driver error code
 */
 int16_t COIfCanRead(struct CO_IF_T *cif, CO_IF_FRM *frm);

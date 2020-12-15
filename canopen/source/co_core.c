@@ -147,7 +147,7 @@ void CONodeProcess(CO_NODE *node)
     uint8_t   allowed;
 
     result = COIfCanRead(&node->If, &frm);
-    if (result < 0) {
+    if (result <= 0) {
         allowed = 0;
     } else {
         allowed = node->Nmt.Allowed;
