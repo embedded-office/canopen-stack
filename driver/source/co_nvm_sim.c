@@ -66,14 +66,32 @@ static void DrvNvmInit(void)
 
 static uint32_t DrvNvmRead(uint32_t start, uint8_t *buffer, uint32_t size)
 {
-    uint32_t bytes = 0;
+    uint32_t idx = 0;
+    uint32_t pos;
 
-    return (bytes);
+    idx = 0;
+    pos = start;
+    while ((pos < NVM_SIM_SIZE) && (size > 0)) {
+        buffer[idx] = NvmMemory[pos];
+        idx++;
+        pos++;
+    }
+
+    return (idx);
 }
 
 static uint32_t DrvNvmWrite(uint32_t start, uint8_t *buffer, uint32_t size)
 {
-    uint32_t bytes = 0;
+    uint32_t idx = 0;
+    uint32_t pos;
 
-    return (bytes);
+    idx = 0;
+    pos = start;
+    while ((pos < NVM_SIM_SIZE) && (size > 0)) {
+        NvmMemory[pos] = buffer[idx];
+        idx++;
+        pos++;
+    }
+
+    return (idx);
 }
