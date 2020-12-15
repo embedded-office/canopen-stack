@@ -29,7 +29,6 @@ The following description explains the directories within this repository.
   |  +- quickstart  : quickstart files
   +- testsuite      : --- testsuite ---
   |  +- app         : test application
-  |  +- driver      : CAN simulation driver
   |  +- testfrm     : test framework
   |  +- tests       : tests for CANopen Stack
 ```

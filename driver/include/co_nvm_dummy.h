@@ -17,8 +17,8 @@
 /* TODO: rename the include protection to match the naming convention: 
  *   CO_NVM_<device>_H_
  */
-#ifndef CO_NVM_SIM_H_
-#define CO_NVM_SIM_H_
+#ifndef CO_NVM_DUMMY_H_
+#define CO_NVM_DUMMY_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {

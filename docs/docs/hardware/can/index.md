@@ -69,6 +69,8 @@ int16_t DrvCanRead(CO_IF_FRM *frm);
 
 *Note: you must ensure that the messages are processed in the same order as they arrived from the CAN bus. Check the behavior of your CAN controller when you want to use multiple message buffers for a queued receiption.*
 
+**Attention:** For evaluation, demonstration, or testing purpose this CAN read function may poll for a new CAN frame. In this special case, the additional return value with no received CAN frame is possible. Don't use the polling mode in production; you should use interrupt driven CAN communication (ideally with some kind of CAN frame queueing). The CAN polling is not suitable for robust CANopen communication.
+{:.warning}
 
 #### CAN Reset
 

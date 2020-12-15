@@ -172,9 +172,15 @@ These entries are created using the following lines of code:
     {CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)3},
     {CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, (uintptr_t)&Obj2100_01_20},
     {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&Obj2100_02_08},
-    {CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&Obj2100_03_08},
+    {CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), CO_TASYNC, (uintptr_t)&Obj2100_03_08},
   :
 ```
+
+**Note:**
+The type `CO_TASYNC` for the object entry `2100h:03` indicates the transmission
+of all PDOs, which includes this object. We use this mechanism to achieve the
+PDO transmission on each write access to the second.
+{:.info}
 
 We also need to create three global variables to hold the runtime values of the
 clock object:
@@ -406,12 +412,15 @@ static void AppClock(void *p_arg)
             hour++;
         }
 
-        COObjWrValue(od_sec, node, (void *)&second, sizeof(second), 0);
-        COObjWrValue(od_min, node, (void *)&minute, sizeof(minute), 0);
         COObjWrValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
+        COObjWrValue(od_min, node, (void *)&minute, sizeof(minute), 0);
+        COObjWrValue(od_sec, node, (void *)&second, sizeof(second), 0);
     }
 }
 ```
+
+**Note:** The last write access with `COObjWrValue()` triggers the transmission of the PDO, because the corresponding object entry is defined as type `CO_TASYNC`.
+{:.info}
 
 ### Hardware Connection
 

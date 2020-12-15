@@ -160,7 +160,7 @@ CO_ERR COSdoResponse(CO_SDO *srv)
         if ((cmd & 0xE3) == 0xC1) {
             result = COSdoEndDownloadBlock(srv);
         } else {
-            srv->Blk.State   = BLK_DOWNLOAD;
+            srv->Blk.State = BLK_DOWNLOAD;
             result = COSdoDownloadBlock(srv);
         }
         return (result);
@@ -213,6 +213,9 @@ CO_ERR COSdoResponse(CO_SDO *srv)
     } else {
         COSdoAbort(srv, CO_SDO_ERR_CMD);
     }
+
+    /* set DLC for the SDO response */
+    CO_SET_DLC(srv->Frm, 8u);
 
     return (result);
 }
@@ -819,6 +822,10 @@ CO_ERR COSdoUploadBlock(CO_SDO *srv)
             srv->Blk.Size = 0;
         }
     }
+
+    /* set DLC for block transfers */
+    CO_SET_DLC(srv->Frm, 8u);
+
     srv->Blk.State  = BLK_UPLOAD;
     srv->Blk.SegCnt = 1;
     while ((srv->Blk.SegCnt <= srv->Blk.SegNum) && (finished == 0)) {

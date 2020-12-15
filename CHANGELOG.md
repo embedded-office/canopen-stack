@@ -5,9 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and starting with version 4.1.0 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [unreleased]
 
 no changes
+
+## [4.1.4] - 2020-12-15
+
+### Added
+
+- Allow CAN driver polling for testing and demo purpose (Don't use this in production!).
+- Implement a simple NVM driver simulation in RAM.
+
+### Fixed
+
+- Add `CO_TASYNC` in quickstart object entry to trigger PDO transmission on write access.
 
 ## [4.1.3] - 2020-10-30
 
@@ -90,7 +101,8 @@ no changes
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.3...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.4...HEAD
+[4.1.4]: https://github.com/embedded-office/canopen-stack/compare/v4.1.3...v4.1.4
 [4.1.3]: https://github.com/embedded-office/canopen-stack/compare/v4.1.2...v4.1.3
 [4.1.2]: https://github.com/embedded-office/canopen-stack/compare/v4.1.1...v4.1.2
 [4.1.1]: https://github.com/embedded-office/canopen-stack/compare/v4.1.0...v4.1.1
