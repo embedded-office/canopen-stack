@@ -412,12 +412,15 @@ static void AppClock(void *p_arg)
             hour++;
         }
 
-        COObjWrValue(od_sec, node, (void *)&second, sizeof(second), 0);
-        COObjWrValue(od_min, node, (void *)&minute, sizeof(minute), 0);
         COObjWrValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
+        COObjWrValue(od_min, node, (void *)&minute, sizeof(minute), 0);
+        COObjWrValue(od_sec, node, (void *)&second, sizeof(second), 0);
     }
 }
 ```
+
+**Note:** The last write access with `COObjWrValue()` triggers the transmission of the PDO, because the corresponding object entry is defined as type `CO_TASYNC`.
+{:.info}
 
 ### Hardware Connection
 
