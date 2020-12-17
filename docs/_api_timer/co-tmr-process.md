@@ -9,11 +9,11 @@ This function processes a single elapsed timer action.
 
 <!--more-->
 
-### Description
+## Description
 
 The function is used decouple the generation of the periodic time base and the timed action processing.
 
-#### Prototype
+### Prototype
 
 ```c
 void COTmrProcess(CO_TMR *tmr);
@@ -29,7 +29,7 @@ void COTmrProcess(CO_TMR *tmr);
 
 - none
 
-### Example
+## Example
 
 The timed action processing must be called cyclic. Due to the timer management, the calling sequence is irrelevant. Therefore the function may be called in the background loop of the application.
 

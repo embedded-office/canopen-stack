@@ -9,11 +9,11 @@ This function initializes the internals of the CANopen stack.
 
 <!--more-->
 
-### Description
+## Description
 
-The specification of the CANopen node, and the CANopen node object itself is given as parameter.
+The specification of the CANopen node, and the CANopen node object itself is given as a parameter.
 
-#### Prototype
+### Prototype
 
 ```c
 void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec);
@@ -30,7 +30,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec);
 
 - none
 
-### Example
+## Example
 
 The following example shows the external reference to the node specification AppSpec which is typically allocated within a configuration file and the allocation of the CANopen node memory AppNode.
 

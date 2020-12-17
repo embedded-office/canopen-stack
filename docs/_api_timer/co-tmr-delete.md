@@ -5,19 +5,19 @@ sidebar:
   nav: docs
 ---
 
-This function deletes the defined action and removes the timer, if this was the last action for this timer event.
+This function deletes the defined action and removes the timer if this was the last action for this timer event.
 
 <!--more-->
 
-### Description
+## Description
 
 This function is used within the CANopen stack for timed actions. It is possible to use timed actions in the application, too.
 
-#### Prototype
+### Prototype
 
 ```c
 int16_t COTmrDelete(CO_TMR  *tmr,
-                    int16_t  actId);
+                    int16_t  action);
 ```
 
 #### Arguments
@@ -25,14 +25,14 @@ int16_t COTmrDelete(CO_TMR  *tmr,
 | Parameter | Description |
 | --- | --- |
 | tmr | pointer to timer object |
-| actId | action identifier, returned by [COTmrCreate()](co-tmr-create) |
+| action | action identifier, returned by [COTmrCreate()](co-tmr-create) |
 
 #### Returned Value
 
 - `>=0` : action identifier (successful operation)
 - `<0` : an error is detected
 
-### Example
+## Example
 
 The following calls a critical function `AppCritFunc()` and installs a function `AppEmcyFunc()` to the CANopen node AppNode to guarantee a maximum runtime of 150ms. The timed function will be called after 150ms and perform emergency handling with the parameter 0xdead. If the `AppCritFunc()` is finished before 150ms, the timed emergency function call will be removed.
 

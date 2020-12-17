@@ -9,11 +9,11 @@ This function returns the number of detected heartbeat miss events of the given 
 
 <!--more-->
 
-### Description
+## Description
 
 If a second heartbeat is received within the heartbeat deadline, the heartbeat timing is marked as *ok*. If the second heartbeat is received after the heartbeat deadline, the heartbeat timing is marked as *missed*.
 
-#### Prototype
+### Prototype
 
 ```c
 int16_t CONmtGetHbEvents (CO_NMT *nmt, uint8_t nodeId);
@@ -32,7 +32,7 @@ int16_t CONmtGetHbEvents (CO_NMT *nmt, uint8_t nodeId);
 - `=0` : the heartbeat consumer detects no miss event for the given node ID
 - `>0` : the heartbeat consumer detects this number of missed heartbeat deadlines
 
-### Example
+## Example
 
 The following example shows how to check the heartbeat consumer results of the CANopen node AppNode for the CANopen Node with node-ID = 10:
 

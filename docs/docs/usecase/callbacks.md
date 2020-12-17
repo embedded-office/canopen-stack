@@ -9,7 +9,7 @@ aside:
 
 ## Application Callback Functions
 
-This chapter gives an overview of the component Callback Interface. The listed functions are available for programming the application specific reactions on several events of the CANopen device.
+This chapter gives an overview of the component Callback Interface. The listed functions are available for programming the application-specific reactions on several events of the CANopen device.
 
 
 ### Fatal Error
@@ -30,7 +30,7 @@ void CONodeFatalError(void)
 
 ### Timer Locks
 
-These mandatory function pair is called during timer management and is the right place to add a locking mechanisms for the timer management structure. The simplest implementation is disabling and re-enabling the timer hardware interrupt. In more advanced scenarios there could be a timer mutex or spin-lock, depending on the RTOS and number of active cores.
+These mandatory function pair is called during timer management and is the right place to add a locking mechanism for the timer management structure. The simplest implementation is disabling and re-enabling the timer hardware interrupt. In more advanced scenarios there could be a timer mutex or spin-lock, depending on the RTOS and number of active cores.
 
 ```c
 void COTmrLock(void)
@@ -82,7 +82,7 @@ void COIfCanReceive(CO_IF_FRM *frm)
 
 ### LSS Configuration Store
 
-This optional function is called with new configuration data, which is set by the LSS service. If a configuration data should stay unchanged, the argument is 0. The CAN frame pointer is checked to be valid before the CANopen stack calls this function.
+This optional function is called with new configuration data, which is set by the LSS service. If the configuration data should stay unchanged, the argument is 0. The CAN frame pointer is checked to be valid before the CANopen stack calls this function.
 
 ```c
 int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
@@ -110,7 +110,7 @@ int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
 
 ### LSS Configuration Load
 
-This optional function is called during reset communication to load the stored LSS configuration. If no storage for a configuration data is found, the referenced argument should stay unchanged. The CAN frame pointer is checked to be valid before the CANopen stack calls this function.
+This optional function is called during reset communication to load the stored LSS configuration. If no storage for the configuration data is found, the referenced argument should stay unchanged. The CAN frame pointer is checked to be valid before the CANopen stack calls this function.
 
 ```c
 int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
@@ -225,7 +225,7 @@ void COPdoTransmit(CO_IF_FRM *frm)
 
 ### PDO Receiption
 
-This optional function is called just before the PDO receiption will distribute the PDO message frame into the object dictionary. This callback function is able to *consume* the PDO message frame, e.g. the distribution into the object dictionary will be skipped. Furthermore without *consuming* the PDO message frame, this function could modify the received data before distribution takes place.
+This optional function is called just before the PDO reception will distribute the PDO message frame into the object dictionary. This callback function is able to *consume* the PDO message frame, e.g. the distribution into the object dictionary will be skipped. Furthermore without *consuming* the PDO message frame, this function could modify the received data before distribution takes place.
 
 ```c
 int16_t COPdoReceive(CO_IF_FRM *frm)
@@ -270,7 +270,7 @@ void COPdoSyncUpdate(CO_RPDO *pdo)
 
 | Parameter | Description |
 | --- | --- |
-| pdo | Pointer to received and synchron processed RPDO |
+| pdo | Pointer to received and synchronous processed RPDO |
 
 
 ### Parameter Default Values

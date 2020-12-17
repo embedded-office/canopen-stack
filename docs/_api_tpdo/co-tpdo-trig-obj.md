@@ -9,11 +9,11 @@ This function allows the application to trigger a TPDO event for the given objec
 
 <!--more-->
 
-### Description
+## Description
 
 The event will be distributed to all TPDOs, which holds an active mapping entry to this object entry.
 
-#### Prototype
+### Prototype
 
 ```c
 void COTPdoTrigObj(CO_TPDO *pdo, CO_OBJ *obj);
@@ -30,7 +30,7 @@ void COTPdoTrigObj(CO_TPDO *pdo, CO_OBJ *obj);
 
 - none
 
-### Example
+## Example
 
 The following example triggers the transmission of all TPDOs of the CANopen node AppNode, which contains the hypothetical object directory entry "[1234:56]".
 

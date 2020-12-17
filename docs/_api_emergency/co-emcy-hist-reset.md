@@ -9,11 +9,11 @@ This function clears the EMCY history in the object dictionary.
 
 <!--more-->
 
-### Description
+## Description
 
 There is no EMCY message transmission due to this function call.
 
-#### Prototype
+### Prototype
 
 ```c
 void COEmcyHistReset(CO_EMCY *emcy);
@@ -29,7 +29,7 @@ void COEmcyHistReset(CO_EMCY *emcy);
 
 - none
 
-### Example
+## Example
 
 The following example clears all emergency history entries within the object dictionary of the CANopen node AppNode.
 

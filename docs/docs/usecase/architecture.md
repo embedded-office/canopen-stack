@@ -15,7 +15,7 @@ The architecture of a CANopen device is standardized and shown in the following 
 
 ### Object Dictionary
 
-The central component in a CANopen device is the *Object Directory (OD)*. The OD is organized as a table with object entries. Each *Entry* is addressed with a unique combination of *Index* and *SubIdx*. The index is a 16 bit value (from 0...0xFFFF), and the sub-index is a 8 bit value (from 0...0xFF). Within the CANopen standard, the layout and usage of many object entries is specified and marked as *mandatory*, *optional* or *manufacturer specific*. The following table shows an overview of the OD areas:
+The central component in a CANopen device is the *Object Directory (OD)*. The OD is organized as a table with object entries. Each *Entry* is addressed with a unique combination of *Index* and *SubIdx*. The index is a 16 bit value (from 0...0xFFFF), and the sub-index is a 8 bit value (from 0...0xFF). Within the CANopen standard, the layout and usage of many object entries is specified and marked as *mandatory*, *optional* or *manufacturer-specific*. The following table shows an overview of the OD areas:
 
 | Index           | Content                             |
 | --------------- | ----------------------------------- |

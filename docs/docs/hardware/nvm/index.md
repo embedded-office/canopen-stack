@@ -12,11 +12,11 @@ aside:
 
 The NVM driver contains a set of functions, which are called at specific locations within the CANopen stack.
 
-| driver function | calling location                                 |
-| --------------- | ------------------------------------------------ |
-| `Init()`        | during start of node                             |
-| `Read()`        | during start of node and parameter load requests |
-| `Write()`       | when parameter storage is requested              |
+| driver function | calling location                                     |
+| --------------- | ---------------------------------------------------- |
+| `Init()`        | during the start of node                             |
+| `Read()`        | during the start of node and parameter load requests |
+| `Write()`       | when parameter storage is requested                  |
 
 #### NVM Init
 
@@ -36,7 +36,7 @@ uint32_t DrvNvmRead(uint32_t start, uint8_t *buffer, uint32_t size);
 
 #### NVM Write
 
-This driver function is called during the storing data in the CANopen stack. The function is intended to write data given in given `buffer` into the non-volatile memory starting at the address `start` with a given `size`. The function returns the number of successfully written bytes.
+This driver function is called during the storing data in the CANopen stack. The function is intended to write data given by the given `buffer` into the non-volatile memory starting at the address `start` with a given `size`. The function returns the number of successfully written bytes.
 
 ```c
 uint32_t DrvNvmWrite(uint32_t start, uint8_t *buffer, uint32_t size);
@@ -44,9 +44,9 @@ uint32_t DrvNvmWrite(uint32_t start, uint8_t *buffer, uint32_t size);
 
 ### NVM Driver Reference
 
-During design of the driver interface for usage with the CANopen stack, we want to decouple the CANopen library from the driver implementation. At the same time, we want to keep the overal usage as easy as possible.
+During the design of the driver interface for usage with the CANopen stack, we want to decouple the CANopen library from the driver implementation. At the same time, we want to keep the overall usage as easy as possible.
 
-The solution for this requirements is the implementation of the NVM driver function as static functions within a single file and an allocated interface structure of type `CO_IF_NVM_DRV`:
+The solution for this requirement is the implementation of the NVM driver function as static functions within a single file and an allocated interface structure of type `CO_IF_NVM_DRV`:
 
 ```c
 #include "co_if.h"
@@ -62,7 +62,7 @@ const CO_IF_NVM_DRV <MyDeviceDriverName>NvmDriver = {
 };
 ```
 
-With this kind of implementation, the usage is simply the import of the interface structure as external symbol, and we are ready to go:
+With this kind of implementation, the usage is simply the import of the interface structure as an external symbol, and we are ready to go:
 
 ```c
   :

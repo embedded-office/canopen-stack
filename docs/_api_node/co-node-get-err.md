@@ -9,11 +9,11 @@ This function returns the current error status of the given node.
 
 <!--more-->
 
-### Description
+## Description
 
 If an error was detected, the error is cleared with this function call.
 
-#### Prototype
+### Prototype
 
 ```c
 CO_ERR CONodeGetErr(CO_NODE *node);
@@ -34,9 +34,9 @@ One of the following error codes:
 | CO_ERR_NONE | no error |
 | CO_ERR_BAD_ARG | invalid argument |
 | CO_ERR_OBJ_NOT_FOUND | searched object not found in directory |
-| CO_ERR_OBJ_READ | error during reading a object entry |
-| CO_ERR_OBJ_WRITE | error during writing a object entry |
-| CO_ERR_OBJ_SIZE | read/write with wrong size to object |
+| CO_ERR_OBJ_READ | error during reading an object entry |
+| CO_ERR_OBJ_WRITE | error during writing an object entry |
+| CO_ERR_OBJ_SIZE | read/write with a wrong size to object |
 | CO_ERR_OBJ_MAP_LEN | invalid mapping length |
 | CO_ERR_OBJ_MAP_TYPE | invalid mapping type |
 | CO_ERR_OBJ_ACC | unsupported access |
@@ -70,7 +70,7 @@ One of the following error codes:
 | CO_ERR_TPDO_COM_OBJ | config error in TPDO communication |
 | CO_ERR_TPDO_MAP_OBJ | config error in TPDO mapping |
 | CO_ERR_TPDO_OBJ_TRIGGER | error during trigger via an object |
-| CO_ERR_TPDO_NUM_TRIGGER | error during trigger via an PDO number |
+| CO_ERR_TPDO_NUM_TRIGGER | error during trigger via a PDO number |
 | CO_ERR_TPDO_INHIBIT | error during inhibit timer creation |
 | CO_ERR_TPDO_EVENT | error during event timer creation |
 | CO_ERR_RPDO_COM_OBJ | config error in RPDO communication |
@@ -95,7 +95,7 @@ One of the following error codes:
 | CO_ERR_TYPE_CTRL | error during type control |
 | CO_ERR_TYPE_WR | error during writing type |
 
-### Example
+## Example
 
 The following example demonstrates a diagnostic section of a CANopen startup sequence:
 

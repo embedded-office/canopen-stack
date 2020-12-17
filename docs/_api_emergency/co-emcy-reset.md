@@ -9,11 +9,11 @@ This function clears all EMCY errors.
 
 <!--more-->
 
-### Description
+## Description
 
 The EMCY message transmission can be suppressed by setting the parameter silent to 1.
 
-#### Prototype
+### Prototype
 
 ```c
 void COEmcyReset(CO_EMCY *emcy, uint8_t silent);
@@ -30,7 +30,7 @@ void COEmcyReset(CO_EMCY *emcy, uint8_t silent);
 
 - none
 
-### Example
+## Example
 
 The following example clears all detected emergency within the application of the CANopen node AppNode. The corresponding emergency state change messages will be sent.
 

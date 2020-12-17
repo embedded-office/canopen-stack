@@ -9,11 +9,11 @@ This function searches the given key within the given object dictionary.
 
 <!--more-->
 
-### Description
+## Description
 
 The function is often called from the application to get an object entry. If an object entry is not found, this generates no stack error.
 
-#### Prototype
+### Prototype
 
 ```c
 CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key);
@@ -31,7 +31,7 @@ CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key);
 - `>0` : pointer to identified object entry
 - `=0` : object entry is not found
 
-### Example
+## Example
 
 The following example checks the existence of the mandatory object entry "[1017:00] - Heartbeat" within the object dictionary of the CANopen node AppNode.
 

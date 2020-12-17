@@ -21,7 +21,7 @@ git clone https://github.com/embedded-office/canopen-stack.git
 
 ### Download ZIP File
 
-Download and unzip the file from repository [canopen-stack](https://github.com/embedded-office/canopen-stack):
+Download and unzip the file from the repository [canopen-stack](https://github.com/embedded-office/canopen-stack):
 
 - Click on `Clone or download`
 - Select `Download ZIP`

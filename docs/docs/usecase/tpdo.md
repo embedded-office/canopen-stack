@@ -9,7 +9,7 @@ aside:
 
 ## Triggering PDO Transmission
 
-The CANopen stack provides service functions for triggering PDO transmission on application or profile specific events. The timing behavior, corresponding to automatic event timer triggering, is handled within the CANopen stack with the service function group COTmr…(). For triggering the PDO transmission the service function group COTPdo…() is provided.
+The CANopen stack provides service functions for triggering PDO transmission on an application or profile-specific event. The timing behavior, corresponding to automatic event timer triggering, is handled within the CANopen stack with the service function group COTmr…(). For triggering the PDO transmission the service function group COTPdo…() is provided.
 
 
 ### Object Trigger

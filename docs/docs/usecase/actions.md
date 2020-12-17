@@ -9,7 +9,7 @@ aside:
 
 ## CANopen Timer
 
-The CANopen stack provides service functions for performing timed actions on application or profile specific events. For timed actions the service function group COTmr…() is provided.
+The CANopen stack provides service functions for performing timed actions on the application or the profile-specific events. For timed actions the service function group COTmr…() is provided.
 
 
 ### Event Time Base

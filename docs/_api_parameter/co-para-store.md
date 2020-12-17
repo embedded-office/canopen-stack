@@ -9,11 +9,11 @@ This function is responsible for the storing activities of the given parameter g
 
 <!--more-->
 
-### Description
+## Description
 
 The whole parameter group will be stored in NVM by calling the NVM driver function for writing data.
 
-#### Prototype
+### Prototype
 
 ```c
 void COParaStore(CO_PARA *pg, CO_NODE *node);

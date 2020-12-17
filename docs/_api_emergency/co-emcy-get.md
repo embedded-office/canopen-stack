@@ -9,14 +9,14 @@ This function returns the current EMCY error status.
 
 <!--more-->
 
-### Description
+## Description
 
 When calling this function, the EMCY error status will stay unchanged.
 
-#### Prototype
+### Prototype
 
 ```c
-int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err);
+int16_t COEmcyGet(CO_EMCY *emcy, uint8_t error);
 ```
 
 #### Arguments
@@ -24,15 +24,15 @@ int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err);
 | Parameter | Description |
 | --- | --- |
 | emcy | pointer to EMCY object |
-| err | error code identifier in application EMCY table |
+| error | error code identifier in application EMCY table |
 
 #### Returned Value
 
 - `=0` : success with error is not detected
-- `=1` : success with error was detected before
+- `=1` : success with an error was detected before
 - `<0` : an error is detected inside of this function
 
-### Example
+## Example
 
 The following example reads the current status of a possible detected emergency event APP_EMCY_2 within the application of the CANopen node AppNode.
 
@@ -48,4 +48,4 @@ The following example reads the current status of a possible detected emergency 
     :
 ```
 
-Note: The emergency identifier APP_EMCY_2 must be defined within the application specific configuration.
+Note: The emergency identifier APP_EMCY_2 must be defined within the application-specific configuration.

@@ -5,17 +5,17 @@ sidebar:
   nav: docs
 ---
 
-This function waits for a CAN frame on the interface without timeout.
+This function waits for the next CAN frame on the interface without a timeout.
 
 <!--more-->
 
-### Description
+## Description
 
-If a CAN frame is received, the given receive frame buffer will be filled with the received data. The read function is rarely used from within the application, because the CANopen will receive all messages by default and allows to work on all non-CANopen messages with a callback function.
+If a CAN frame is received, the given receive frame buffer will be filled with the received data. The read function is rarely used from within the application because the CANopen will receive all messages by default and allows to work on all non-CANopen messages with a callback function.
 
-*For evaluation, demonstration, or testing purpose this CAN read function may poll for a new CAN frame. In this special case, the additional return value with no received CAN frame is possible. Don't use the polling mode in production; you should use interrupt driven CAN communication. The CAN polling is not suitable for CANopen.*
+*For evaluation, demonstration, or testing purposes this CAN read function may poll for a new CAN frame. In this special case, the additional return value with no received CAN frame is possible. Don't use the polling mode in production; you should use interrupt-driven CAN communication. The CAN polling is not suitable for CANopen.*
 
-#### Prototype
+### Prototype
 
 ```c
 int16_t COIfCanRead(CO_IF *cif, CO_IF_FRM *frm);
@@ -34,7 +34,7 @@ int16_t COIfCanRead(CO_IF *cif, CO_IF_FRM *frm);
 - `=0` : special: nothing received during polling (timeout)
 - `<0` : an error is detected
 
-### Example
+## Example
 
 If necessary, the following example show how to call the blocking receive function for the interface of the CANopen node AppNode:
 

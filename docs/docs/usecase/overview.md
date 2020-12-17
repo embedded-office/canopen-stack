@@ -16,7 +16,7 @@ In principle, all of these activities can initiated by external devices in the C
 
 ### Autonomous external request
 
-An *autonomous external request* is initiated by external device and is handled by the CANopen stack according to the standard. No interaction with the application is neccessary.
+An *autonomous external request* is initiated by an external device and is handled by the CANopen stack according to the standard. No interaction with the application is necessary.
 
 ```mermaid
 sequenceDiagram
@@ -29,12 +29,12 @@ sequenceDiagram
 
 *An example for this type of request is the SDO access to an object entry.*
 
-Therefore, there is nothing to do within the application. It is important to know the CANopen standard CiA-301 to know how to configure the CANopen stack responses within the object dictionary.
+Therefore, there is nothing to do in the application. It is important to know the CANopen standard CiA-301 to know how to configure the CANopen stack responses within the object dictionary.
 
 
 ### External request
 
-An *external request* is similar to the autonomous external request with the difference that the application ineeds to provide a callback function which realizes the application specific behavior.
+An *external request* is similar to the autonomous external request with the difference that the application needs to provide a callback function to realize the application-specific behavior.
 
 ```mermaid
 sequenceDiagram

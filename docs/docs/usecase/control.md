@@ -17,7 +17,7 @@ The following source line is essential to create a new instance of the node:
   CO_NODE demo;   /* create the node instance 'demo' */
 ```
 
-The service functions starting with `CONode…()` are provided for initializing and controlling the node specific aspects. These service functions are requesting the corresponding node pointer as first argument.
+The service functions starting with `CONode…()` are provided for initializing and controlling the node-specific aspects. These service functions are requesting the corresponding node pointer as the first argument.
 
 For example reading the internal error state of the CANopen Node:
 
@@ -85,7 +85,7 @@ sequenceDiagram
     Note over S,N: NMT State = CO_PREOP
 ```
 
-The CANopen network state machine state is still in `CO_INIT` after the node initialization, because there may be several additional actions necessary before setting the node in pre-operational state.
+The CANopen network state machine state is still in `CO_INIT` after the node initialization, because there may be several additional actions necessary before setting the node in the pre-operational state.
 With the second function call `CONodeStart()` the bootup message is sent and the node is in pre-operational mode. The node is now able to perform network communications.
 
 

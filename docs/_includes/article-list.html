@@ -17,6 +17,11 @@
 <div class="article-list items items--divided">
 {%- elsif include.type == 'brief' -%}
 <div class="article-list items">
+{%- elsif include.type == 'table' -%}
+<div class="article-list items table">
+  <table>
+    <thead><tr><th>Function</th><th>Description</th></tr></thead>
+    <tbody>
 {%- elsif include.type == 'grid' -%}
   {%- if include.size == 'sm' -%}
   <div class="article-list grid gird--sm grid--p-3">
@@ -107,6 +112,22 @@
           <a itemprop="headline" class="item__header" href="{{ _article_url }}">{{ _article.title }}</a></div>
       </li>
 
+
+      {%- elsif include.type == 'table' -%}
+
+      <tr>
+        <td>
+          <a itemprop="headline" class="item__header" href="{{ _article_url }}">{{ _article.title }}</a>
+        </td>
+        <td>
+          {%- if _excerpt_type == 'html' -%}
+          {{ _article.excerpt }}
+          {%- else -%}
+          {{ _article.excerpt | strip_html | strip | truncate: _excerpt_truncate }}
+          {%- endif -%}
+        </td>
+      </tr>
+
     {%- elsif include.type == 'grid' -%}
       {%- if include.size == 'sm' -%}
         <div class="cell cell--12 cell--md-4 cell--lg-3">
@@ -141,4 +162,8 @@
     {%- endif -%}
   {%- endfor -%}
 
-</div>
+  {%- if include.type == 'table' -%}
+      </tbody>
+    </table>
+  {%- endif -%}
+  </div>

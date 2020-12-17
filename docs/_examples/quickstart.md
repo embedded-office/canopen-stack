@@ -32,8 +32,8 @@ information contained within the object dictionary.
 ### Object Dictionary
 
 To keep the software as simple as possible, we will use a static object dictionary.
-In this case, the object dictionary is an array of object entries, declared as a
-constant array of object entries of type `CO_OBJ`. The object dictionary is
+In this case, the object dictionary is an array of object entries, declared as
+a constant array of object entries of type `CO_OBJ`. The object dictionary is
 declared in the file [clock_spec.c][2]:
 
 [2]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L50
@@ -104,7 +104,7 @@ order.
 Most of these entries are constant, and their values can be stored directly
 inside the object dictionary. This is not the case for the error register object
 `1001h`{:.info}. This entry is read-only, but can be changed by the node. We
-need to declare global variable to contain the runtime value of the entry:
+need to declare a global variable to contain the runtime value of the entry:
 
 ```c
 uint8_t Obj1001_00_08 = 0;
@@ -146,8 +146,8 @@ The following lines add the SDO server entries to the object dictionary:
 
 #### Application Object Entries
 
-Next, we need to add some application-specific entries to support the clock
-functionality of the example:
+Next, we need to add some application-specific object entries to support the 
+clock-functionality of the example:
 
 | Index:sub          | Type         | Access      | Value  | Description    |
 | ------------------ | ------------ | ----------- | ------ | -------------- |
@@ -158,7 +158,7 @@ functionality of the example:
 {:.fullwidth}
 
 **Note:**
-These entries are placed within the manufacturer specific area (from
+These entries are placed within the manufacturer-specific area (from
 `2000h`{:.info} up to `5FFFh`{:.info}) and can be chosen freely (see CiA301).
 Entries outside of this range cannot be chosen freely, and should conform to the
 various CiA standards and profiles (e.g. CiA301 for communication profile area,

@@ -11,7 +11,7 @@ aside:
 
 ### Application Parameter
 
-This chapter describes the specification of a parameter groups. The parameter structures are highly application specific and shall be defined within the application header files.
+This chapter describes the specification of the parameter groups. The parameter structures are highly application-specific and shall be defined within the application header files.
 
 Example:
 
@@ -34,11 +34,11 @@ typedef struct ALL_PARA_MEM_T {
 
 This example defines multiple parameter groups:
 
-- one parameter group containing the communication profile parameter (COM_PARA_MEM)
+- a parameter group containing the communication profile parameter (COM_PARA_MEM)
 
-- one parameter group containing the application specific parameter (APP_PARA_MEM)
+- a parameter group containing the application-specific parameter (APP_PARA_MEM)
 
-- The third definition collects the previously defined parameter groups to a single parameter group to allow loading and storage of both parameter groups with a single access (ALL_PARA_MEM)
+- The third definition collects the previously defined parameter groups to a single parameter group to allow loading and storage of both parameter groups with single access (ALL_PARA_MEM)
 
 These structure type definitions are recommended to force the linker to place the corresponding parameter variables in a consecutive memory block. Any other technique to get this result is reasonable, too.
 
@@ -118,7 +118,7 @@ The object entries, handling the saving and restoring of parameters, shall be se
 { CO_KEY(0x1011, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&AppParaObj },
 ```
 
-The single parameters are most likely used within the object directory. The example definition of a object entry is shown for one parameter:
+The single parameters are most likely used within the object directory. The example definition of an object entry is shown for one parameter:
 
 ```c
 { CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&Para.App.DemoWord },
@@ -126,7 +126,7 @@ The single parameters are most likely used within the object directory. The exam
 
 ### Domain Definition
 
-This chapter describes the specification of a domain objects. The domains are highly application specific and are usable in a wide range. 
+This chapter describes the specification of an object with the type `domain`. The domains are highly application-specific and are usable in a wide range. 
 
 Example:
 
@@ -137,7 +137,7 @@ const CO_DOM AppDomain = {
 };
 ```
 
-This example defines a domain information object for the already allocated memory space of the variable AppParaObj (a variable within the application parameter example). This allows the access to the complete application parameter set with SDO segmented or block transfers from within the CANopen network.
+This example defines a domain information object for the already allocated memory space of the variable AppParaObj (a variable within the application parameter example). This allows access to the complete application parameter set with SDO segmented or block transfers from within the CANopen network.
 
 The following descriptions explains the details of the structure members:
 
@@ -145,13 +145,13 @@ The following descriptions explains the details of the structure members:
 
 - The start address of the domain memory area [`uint8_t *`] shall be set to the first address of the domain
 
-The object entry, presenting the example domain above to the CANopen network, should be defined within the manufacturer specific area (e.g. index 0x2500, subindex 0x00) with the following object directory entry definition line:
+The object entry, presenting the example domain above to the CANopen network, should be defined within the manufacturer-specific area (e.g. index 0x2500, subindex 0x00) with the following object directory entry definition line:
 
 ```c
 { CO_KEY(0x2500, 0, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (uintptr_t)&AppDomain },
 ```
 
-Note: The standard type implementation `CO_TDOMAIN` assumes, that the domain memory is located in RAM and is direct accessible. For other types of domain, a project specific domain type shall be implemented.
+Note: The standard type implementation `CO_TDOMAIN` assumes, that the domain memory is located in RAM and is direct accessible. For other types of domain, a project-specific domain type shall be implemented.
 
 ### Heartbeat Consumer Definition
 
@@ -168,11 +168,11 @@ AppHbConsumer_1.Time   = 100;  /* heartbeat consumer time of 100ms */
 AppHbConsumer_1.NodeId = 42;   /* heartbeat consumer for node 42   */
 ```
 
-This example defines an heartbeat consumer object. The initialization of all members with 0 is good practice, but not mandatory. The heartbeat consumer  object allows the configuration of a heartbeat consumer with SDO transfers from within the CANopen network or during configuration time.
+This example defines a heartbeat consumer object. The initialization of all members with 0 is good practice, but not mandatory. The heartbeat consumer  object allows the configuration of a heartbeat consumer with SDO transfers from within the CANopen network or during configuration time.
 
-The following descriptions explains the details of the structure members, which should be initialized (via application - or via a SDO write access):
+The following descriptions explains the details of the structure members, which should be initialized (via application - or via an SDO write access):
 
-- The Time [`uint16_t`] shall be set to the heartbeat consumer time in ms. The monitoring of the addressed heartbeat starts after the first receiption of the addressed heartbeat.
+- The Time [`uint16_t`] shall be set to the heartbeat consumer time in ms. The monitoring of the addressed heartbeat starts after the first reception of the addressed heartbeat.
 
 - The NodeId [`uint8_t`] shall be set to the CANopen Node-ID of the heartbeat producer, which shall be consumed.
 
@@ -216,7 +216,7 @@ The following descriptions explains the details of the table members:
   | `CO_EMCY_REG_PROFILE`      | error class: profile specific error        |
   | `CO_EMCY_REG_MANUFACTURER` | error class: manufacturer specific         |
 
-- The emergency error code [`uint16_t`] shall be set to the application specific error code. This error code should be defined acc. the CANopen specification.
+- The emergency error code [`uint16_t`] shall be set to the application-specific error code. This error code should be defined acc. the CANopen specification.
 
 The EMCY handling and object directory manipulations with these definitions is performed by the CANopen stack without further definitions.
 
@@ -232,7 +232,7 @@ This example gets the current status of the Emergency error with the given emerg
 
 ### Object Dictionary
 
-This chapter describes the configuration table representing the CANopen object dictionary. This is the central element of the CANopen node. This table can be placed in RAM or in ROM. The placement decides, which access type is possible with direct entries. Most likely this table is placed in ROM, because RAM is in most cases the limited resource.
+This chapter describes the configuration table representing the CANopen object dictionary. This is the central element of the CANopen node. This table can be placed in RAM or in ROM. The placement decides, which access type is possible with direct entries. Most likely this table is placed in ROM because RAM is in most cases the limited resource.
 
 ```c
 const CO_OBJ AppObjDir[] = {
@@ -258,7 +258,7 @@ CO_KEY(<index>, <subindex>, <specification>)
 
 - The index is a 16bit value with possible range from 0x0000 to 0xFFFF
 
-- The subindex is a 8bit value with possible range from 0x00 to 0xFF
+- The subindex is an 8bit value with the possible range from 0x00 to 0xFF
 
   *Note: to be compliant to the CANopen specification, the defined index and subindex ranges shall be considered.*
 
@@ -298,9 +298,9 @@ CO_KEY(<index>, <subindex>, <specification>)
   | `CO_OBJ_DN__W`     | Write Only, - Node-Id, Direct Access   |
   | `CO_OBJ_DN_RW`     | Read/Write, +/- Node-Id, Direct Access |
 
-  *Note: The access types read only, write only and read/write specifies the possible access types from the CANopen network to that object entry. The application is always able to read and write the object entry.*
+  *Note: The access types read-only, write-only and read/write specifies the possible access types from the CANopen network to that object entry. The application is always able to read and write the object entry.*
 
-When placing the object entry table in read only memory (with keyword "const"), the direct access modes (tread pointer as object entry value), are limited to read only access, even by the application.
+When placing the object entry table in read-only memory (with keyword "const"), the direct access modes (tread pointer as object entry value), are limited to read-only access, even by the application.
 
 #### Object Type Reference
 
@@ -321,7 +321,7 @@ The object entry type structure reference [`CO_OBJ_TYPE *`] shall be set to one 
 | `CO_TPDONUM`    | Dynamic PDO number of mapping entries |
 | `CO_TPDOTYPE`   | Dynamic PDO transmission type entry   |
 | `CO_TSDOID`     | Dynamic SDO identifier entry          |
-| `CO_TSTRING`    | Unlimited read only string            |
+| `CO_TSTRING`    | Unlimited read-only string            |
 
 *) Note: The object type `CO_THEARTBEAT` is obsolete and replaced by the new `CO_THB_PROD`. We keep the previous type for compatibility reasons, but you should change your object type to the new one.
 
@@ -382,7 +382,7 @@ const CO_OBJ AppObjDir[] = {
 
 ### Timer Memory Block
 
-This chapter describes the allocation of the data memory, required by the CANopen timer module. The presented source code lines represents the default and must not be changed. The typical need on changing this memory allocation is to place this memory to specific place in internal or external RAM.
+This chapter describes the allocation of the data memory, required by the CANopen timer module. The presented source code lines represent the default and must not be changed. The typical need on changing this memory allocation is to place this memory to a specific place in internal or external RAM.
 
 ```c
 CO_TMR_MEM AppTmrMem[CO_TMR_N];
@@ -390,7 +390,7 @@ CO_TMR_MEM AppTmrMem[CO_TMR_N];
 
 ### SDO Transfer Memory
 
-This chapter describes the allocation of the data memory, required by the CANopen SDO server module. The presented source code lines represents the default and must not be changed. The typical need on changing this memory allocation is to place this memory to specific place in internal or external RAM.
+This chapter describes the allocation of the data memory, required by the CANopen SDO server module. The presented source code lines represent the default and must not be changed. The typical need on changing this memory allocation is to place this memory to a specific place in internal or external RAM.
 
 ```c
 uint8_t AppSdoBuf[CO_SDO_N][CO_SDO_BUF_BYTE];
@@ -419,7 +419,7 @@ Example:
 };
 ```
 
-This example specifies the basic node information for the example node. Each entry is a part of the configuration. This structure is only required for startup of the CANopen stack. 
+This example specifies the basic node information for the example node. Each entry is a part of the configuration. This structure is only required during the startup of the CANopen stack. 
 
 If SDO block and segmented transfer is disabled, e.g. the SDO transfer buffer is not used, the last entry in the node specification can be set to `NULL`.
 

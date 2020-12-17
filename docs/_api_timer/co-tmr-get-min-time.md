@@ -9,11 +9,11 @@ This function calculates the smallest possible time interval with the configured
 
 <!--more-->
 
-### Description
+## Description
 
 This function returns the time interval in the given unit, which represents a single configured timer tick.
 
-#### Prototype
+### Prototype
 
 ```c
 uint16_t COTmrGetMinTime(CO_TMR   *tmr,
@@ -32,7 +32,7 @@ uint16_t COTmrGetMinTime(CO_TMR   *tmr,
 - `>0` : time value in the given time interval for a single timer tick
 - `=0` : a single given time interval unit is not possible with the used timer
 
-### Example
+## Example
 
 The following example calculates the smallest possible time interval in 100us.
 

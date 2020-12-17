@@ -5,17 +5,11 @@ sidebar:
   nav: docs
 articles:
   data_source: site.api_parameter
-  type: brief
+  type: table
   show_excerpt: true
 ---
 
 <div class="article__content" markdown="1">
-
-  ---
-
-  This area describes the API functions of the CANopen parameter module. These functions are implemented within the source file: `co_para.c/h`
-
-  <!--more-->
 
   The class `CO_PARA` is defined within `co_para.h` and is responsible for the CANopen parameter group handling. The following data members are in this class:
 
@@ -29,5 +23,7 @@ articles:
   | Value | `uint32_t` | value, when reading this parameter group |
   
   Note: The data within this structure must never be manipulated without the corresponding class member functions. This can lead to unpredictable behavior of the node.
+
+  The following table describes the API functions of the CANopen parameter module. These functions are implemented within the source file: `co_para.c/h`
 
 </div>

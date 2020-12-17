@@ -9,11 +9,11 @@ This function allows the application to trigger a TPDO event for the given TPDO 
 
 <!--more-->
 
-### Description
+## Description
 
-The function call will immediatelly initiate the TPDO transmission, independent on the TPDO communication type settings in the object dictionary.
+The function call will immediately initiate the TPDO transmission, independent on the TPDO communication type settings in the object dictionary.
 
-#### Prototype
+### Prototype
 
 ```c
 void COTPdoTrigPdo(CO_TPDO *pdo, uint16_t num);
@@ -30,7 +30,7 @@ void COTPdoTrigPdo(CO_TPDO *pdo, uint16_t num);
 
 - none
 
-### Example
+## Example
 
 The following example triggers the transmission of TPDO #3 of the CANopen node AppNode.
 

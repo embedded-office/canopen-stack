@@ -9,7 +9,7 @@ This function returns the NMT state, received by the heartbeat consumer for the 
 
 <!--more-->
 
-### Description
+## Description
 
 The possible values of the device mode CO_MODE are:
 
@@ -21,7 +21,7 @@ The possible values of the device mode CO_MODE are:
 | CO_OPERATIONAL | device in OPERATIONAL mode |
 | CO_STOP | device in STOP mode |
 
-#### Prototype
+### Prototype
 
 ```c
 CO_MODE CONmtLastHbState (CO_NMT *nmt, uint8_t nodeId);
@@ -39,7 +39,7 @@ CO_MODE CONmtLastHbState (CO_NMT *nmt, uint8_t nodeId);
 - `==CO_INVALID` : an error is detected; e.g. the given node ID is not monitored by a heartbeat consumer
 - `!=CO_INVALID` : the heartbeat consumer received state from the given node ID
 
-### Example
+## Example
 
 The following example shows how to check the heartbeat consumer received mode of the CANopen node AppNode for the CANopen Node with node ID = 10:
 

@@ -9,17 +9,17 @@ This function writes a buffer byte stream to the given object dictionary.
 
 <!--more-->
 
-### Description
+## Description
 
 The object entry is addressed with the given key and the bytes will be read from to the given source buffer of the given length.
 
-#### Prototype
+### Prototype
 
 ```c
-int16_t CODictWrBuffer(CO_DICT   *cod,
+int16_t CODictWrBuffer(CO_DICT  *cod,
                        uint32_t  key,
                        uint8_t  *buffer,
-                       uint32_t  len);
+                       uint32_t  length);
 ```
 
 #### Arguments
@@ -29,16 +29,16 @@ int16_t CODictWrBuffer(CO_DICT   *cod,
 | cod | pointer to the object dictionary |
 | key | object entry key; should be generated with `CO_DEV` |
 | buffer | pointer to the source bytes |
-| len | length of source buffer |
+| length | length of source buffer |
 
 #### Returned Value
 
 - `== CO_ERR_NONE` : successful operation
 - `!= CO_ERR_NONE` : an error is detected
 
-### Example
+## Example
 
-The following example writes the value to the hypothetical application specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
+The following example writes the value to the hypothetical application-specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
 
 ```c
     int16_t  err;

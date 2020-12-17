@@ -9,13 +9,13 @@ This function will stop all communication activities.
 
 <!--more-->
 
-### Description
+## Description
 
 This function removes the CANopen node from the CAN bus interface.
 
 To reactivate a stopped CANopen node, the functions `CONodeInit()` and `CONodeStart()` must be called again.
 
-#### Prototype
+### Prototype
 
 ```c
 void CONodeStop(CO_NODE *node);
@@ -31,7 +31,7 @@ void CONodeStop(CO_NODE *node);
 
 - none
 
-### Example
+## Example
 
 The following example shows the sequence for restarting a CANopen node AppNode. Assuming the CANopen stack is initialized and started before, we just need to stop and re-initialize the stack to reset the node.
 

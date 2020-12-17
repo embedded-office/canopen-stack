@@ -9,11 +9,11 @@ This function returns the current node ID of the CANopen device.
 
 <!--more-->
 
-### Description
+## Description
 
 There should be always a valid node ID within the CANopen Stack. The default node ID is set in the node specification.
 
-#### Prototype
+### Prototype
 
 ```c
 uint8_t CONmtGetNodeId(CO_NMT *nmt);
@@ -31,7 +31,7 @@ uint8_t CONmtGetNodeId(CO_NMT *nmt);
 - `>0` : current NMT node ID
 - `=0` : an error is detected
 
-### Example
+## Example
 
 The following example shows how to get the node ID of the CANopen node AppNode:
 

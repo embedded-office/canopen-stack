@@ -9,7 +9,7 @@ This function sets the requested CANopen Node-ID within the NMT module.
 
 <!--more-->
 
-### Description
+## Description
 
 The following errors are detected within this function:
 - **CO_ERR_NMT_MODE** - the CANopen device is not in INIT mode
@@ -17,9 +17,9 @@ The following errors are detected within this function:
 
 If one of these errors is detected, this function call will change nothing.
 
-***Important: After successful operation, the function CONmtReset() must be called to re-initialize the internal SDO and PDO tables.***
+***Important: After the successful operation, the function CONmtReset() must be called to re-initialize the internal SDO and PDO tables.***
 
-#### Prototype
+### Prototype
 
 ```c
 void CONmtSetNodeId(CO_NMT *nmt, uint8_t nodeId);
@@ -36,7 +36,7 @@ void CONmtSetNodeId(CO_NMT *nmt, uint8_t nodeId);
 
 - none
 
-### Example
+## Example
 
 The following example shows how to set a dynamically determined node-ID for the CANopen node AppNode:
 

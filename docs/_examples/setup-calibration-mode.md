@@ -3,19 +3,19 @@ layout: article
 title: Setup calibration mode
 ---
 
-When dealing with analog values, there is often a calibration of the hardware required to achieve the best accuracy. This example situation is a good reason for implementing a manufacturer specific factory area.
+When dealing with analog values, there is often a calibration of the hardware required to achieve the best accuracy. This example situation is a good reason for implementing a manufacturer-specific factory area.
 
 <!--more-->
 
 ## Example Goal
 
-The example focus is the user object for CAN triggered write access to a manufacturer specific area. 
+The example focus is the user object for CAN triggered write access to a manufacturer-specific area. 
 
 ## Object Type Idea
 
 The main idea is a collection of object entries, which are writable after a simple identification mechanism. 
 
-For a tiny usecase we assume to achieve a simple calibration mechanism. Th eapplication uses the calibration values to transform input values with a formular:
+For a tiny use-case we assume to achieve a simple calibration mechanism. The application uses the calibration values to transform input values with a formula:
 
 ```c
 adcValue = (adcRaw * calFactor) / calDivisor + calOffset;
@@ -33,11 +33,11 @@ We define some manufacturer specific entries in the object dictionary:
 | 2F09h | 3        | SIGNED32   | Read Write | 1     | Cal. Divisor       |
 | 2F00h | 4        | SIGNED32   | Read Write | 0     | Cal. Offset        |
 
-To achieve the permanent calibration after setting the values, the subindizes 2 to 4 must be storable in NVM.
+To achieve the permanent calibration after setting the values, the subindex 2 to 4 must be storable in NVM.
 
-The Number of Entries is a constant, which is read only for the CAN network and conforms to the standard way of defining subindex 0 of an array.
+The Number of Entries is a constant, which is read-only for the CAN network and conforms to the standard way of defining subindex 0 of an array.
 
-The key to get the wanted functionality is the entry at subindex 1. This object entry accepts a write access of a calibration key value. With the correct key, this operation enables the write access to the other calibration object entries from subindex 2 to 4. A wrong key disables the write access.
+The key to get the wanted functionality is the entry at subindex 1. This object entry accepts write access of a calibration key value. With the correct key, this operation enables the write access to the other calibration object entries from subindex 2 to 4. A wrong key disables the write access.
 
 ## Implement Object Type
 
@@ -51,7 +51,7 @@ const CO_OBJ_TYPE COTCal = { 0, 0, 0, CalWrite };
 #define CO_TCAL ((CO_OBJ_TYPE*)&COTCal)
 ```
 
-The write function is called, when the CAN network writes to the related object entry via a SDO request. We typically send an error, because the calibration data is read only per default:
+The write function is called when the CAN network writes to the related object entry via SDO request. We typically send an error, because the calibration data is read-only per default:
 
 ```c
 int16_t CalWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
@@ -125,7 +125,7 @@ const CO_PARA CalParaObj = {
 };
 ```
 
-Finaly, in the standard paramter store/restore entries, we use a separate subindex for the calibration values (for example: subindex #2):
+Finally, in the standard parameter store/restore entries, we use a separate subindex for the calibration values (for example: subindex #2):
 
 ```c
 const CO_OBJ ExampleObjDir[] = {
@@ -151,4 +151,4 @@ const CO_OBJ ExampleObjDir[] = {
 };
 ```
 
-Well, that's it. Now we have a (unsecure) protected calibration area for manufacturer specific data. This concept is a starting point for more secure solutions with advanced algorithms.
+Well, that's it. Now we have an (unsecured) protected calibration area for manufacturer-specific data. This concept is a starting point for more secure solutions with advanced algorithms.

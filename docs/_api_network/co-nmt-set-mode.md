@@ -9,7 +9,7 @@ This function sets the requested NMT state machine mode.
 
 <!--more-->
 
-### Description
+## Description
 
 The possible values of the device mode CO_MODE are:
 
@@ -22,7 +22,7 @@ The possible values of the device mode CO_MODE are:
 | CO_STOP | device in STOP mode |
 
 
-#### Prototype
+### Prototype
 
 ```c
 void CONmtSetMode(CO_NMT *nmt, CO_MODE mode);
@@ -39,9 +39,9 @@ void CONmtSetMode(CO_NMT *nmt, CO_MODE mode);
 
 - none
 
-### Example
+## Example
 
-The following example shows how to switch the CANopen node AppNode in operational mode without a CANopen master network command:
+The following example shows how to switch the CANopen node AppNode in the operational mode without a CANopen master network command:
 
 ```c
     :

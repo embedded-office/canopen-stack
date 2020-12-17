@@ -9,11 +9,11 @@ This function resets the CAN interface and flushes all already buffered CAN fram
 
 <!--more-->
 
-### Description
+## Description
 
 This function resets the interface ONLY. Be careful in calling this function for an active CANopen node on this interface. This can result in unpredictable behavior of the overall system.
 
-#### Prototype
+### Prototype
 
 ```c
 void COIfCanReset(CO_IF *cif);
@@ -29,7 +29,7 @@ void COIfCanReset(CO_IF *cif);
 
 - none
 
-### Example
+## Example
 
 The following example shows how to reset the interface of the CANopen node AppNode:
 

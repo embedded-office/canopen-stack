@@ -9,11 +9,11 @@ This function is the main communication processing.
 
 <!--more-->
 
-### Description
+## Description
 
 This function is responsible for performing the necessary response to a received CAN frame.
 
-#### Prototype
+### Prototype
 
 ```c
 void CONodeProcess(CO_NODE *node);
@@ -29,9 +29,9 @@ void CONodeProcess(CO_NODE *node);
 
 - none
 
-### Example
+## Example
 
-The function `CONodeProcess()` is most likely called in the background function loop. When using a RTOS, the CANopen node processing from within a separate task is possible, too. In this case, the blocking mode is suitable for most applications:
+The function `CONodeProcess()` is most likely called in the background function loop. When using an RTOS, the CANopen node processing from within a separate task is possible, too. In this case, the blocking mode is suitable for most applications:
 
 ```c
 void CanRxTask(void *arg_p)

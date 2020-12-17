@@ -21,4 +21,4 @@ The [API functions document area](/docs/api/node/) contains all API functions fo
 
 ### Hardware Connection
 
-The [hardware connection document area](/docs/hardware/interface/) describes the hardware dependent part of the API functions. *Note: the CAN drivers itself are not part of this repository*
+The [hardware connection document area](/docs/hardware/interface/) describes the hardware-dependent part of the API functions. *Note: the CAN drivers itself are not part of this repository*

@@ -9,7 +9,7 @@ This function returns the current CANopen NMT state machine mode.
 
 <!--more-->
 
-### Description
+## Description
 
 The possible values of the reset type CO_MODE are:
 
@@ -22,7 +22,7 @@ The possible values of the reset type CO_MODE are:
 | CO_STOP | device in STOP mode |
 
 
-#### Prototype
+### Prototype
 
 ```c
 CO_MODE CONmtGetMode(CO_NMT *nmt);
@@ -39,9 +39,9 @@ CO_MODE CONmtGetMode(CO_NMT *nmt);
 - `>0` : current NMT mode
 - `=0` : an error is detected
 
-### Example
+## Example
 
-The following example shows how to perform operations only in operational mode of the CANopen node AppNode:
+The following example shows how to perform operations only in the operational mode of the CANopen node AppNode:
 
 ```c
     CO_MODE mode;

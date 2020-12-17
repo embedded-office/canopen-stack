@@ -11,7 +11,7 @@ aside:
 
 The main interface within the CANopen network is the object dictionary of the CANopen nodes. The object dictionary of a node is accessible from the network as well as from the node application.
 
-The definition of the object dictionary table is done with an array of object entries of type `CO_OBJ`. A small example is shown below:
+The definition of the object dictionary table is done with an array of object entries of the type `CO_OBJ`. A small example is shown below:
 
 ```c
   const CO_OBJ DemoObjDir[] = {
@@ -32,7 +32,7 @@ The update of the provided basic and system object types within the object dicti
 
 The read and write access of basic object entries is symmetrical. Therefore the description is reduced to read access. The data width of basic objects is 8bit (byte), 16bit (word) or 32bit (long). All widths are handled in the same way, therefore the description is reduced to 32bit (long) object entries.
 
-For a simple read access of a (hypothetical) 32bit object entry with an index=0x1234 and subindex=0x56, the service call is:
+For simple read access of a (hypothetical) 32bit object entry with an index=0x1234 and subindex=0x56, the service call is:
 
 ```c
   CODirRdLong(&demo.Dir, CO_DEV(0x1234,0x56), &value);
@@ -52,7 +52,7 @@ sequenceDiagram
     D-->>-A: value
 ```
  
-For multiple accesses to the same object entry, the following sequence reduces the performance overhead, which is based on searching within the object dictionary. The object read and write functions can take a previously searched object entry as first argument:
+For multiple accesses to the same object entry, the following sequence reduces the performance overhead, which is based on searching within the object dictionary. The object read and write functions can take a previously searched object entry as the first argument:
 
 ```c
   CO_OBJ *obj = CODirFind(&demo.Dir, CO_DEV(0x1234,0x56));
@@ -72,7 +72,7 @@ The CANopen stack provides service functions, a callback interface and a system 
   } DemoParaMem;
 ```
 
-The parameter group object holds all necessary information, which are needed for the parameter handling. This structure may be placed into ROM, because it holds only constant values.
+The parameter group object holds all necessary information, which are needed for the parameter handling. This structure may be placed into ROM because it holds only constant values.
 
 ```c
   const CO_PARA {
@@ -132,7 +132,7 @@ The CANopen stack provides a system object type for managing domains. The domain
   uint8_t DemoDomainMem[DEMO_DOMAIN_SIZE];    /* domain memory area */
 ```
 
-The domain object holds all necessary information, which are needed for the domain handling.
+The domain object holds all necessary information, which is needed for domain handling.
 
 ```c
   const CO_DOMAIN {
@@ -141,7 +141,7 @@ The domain object holds all necessary information, which are needed for the doma
   } DemoDomainObj;
 ```
 
-To enable the usage of this domain to the CAN network side, the domain object must be added to the object directory. See the following object entry with index=0x2345 and subindex=0 as example:
+To enable the usage of this domain to the CAN network side, the domain object must be added to the object directory. See the following object entry with index=0x2345 and subindex=0 as an example:
 
 ```c
   const CO_OBJ DemoObjDir[] = {
@@ -153,7 +153,7 @@ To enable the usage of this domain to the CAN network side, the domain object mu
 
 ### String Objects
 
-The CANopen stack provides a system object type for managing strings. The strings are assumed to be read only data. The recommended way to allocate this string memory is shown in the following example:
+The CANopen stack provides a system object type for managing strings. The strings are assumed to be read-only data. The recommended way to allocate this string memory is shown in the following example:
 
 ```c
   const uint8_t DemoString[] = "Hello World!";    /* string memory */
@@ -168,7 +168,7 @@ The string object holds all necessary information, which are needed for the stri
   } DemoStringObj;
 ```
 
-To enable the usage of this string to the CAN network side, the string must be added to the object directory. See the following object entry with index=0x3456 and subindex=0 as example:
+To enable the usage of this string to the CAN network side, the string must be added to the object directory. See the following object entry with index=0x3456 and subindex=0 as an example:
 
 ```c
   const CO_OBJ DemoObjDir[] = {
@@ -195,9 +195,9 @@ An example user type (called "DemoType") is declared with the following structur
   };
 ```
 
-If a new user type don't need to have special behavior on accessing (e.g. get size, control, read data or write data), the corresponding type function can be set to 0 to switch this access to basic behavior.
+If a new user type didn't need to have special behavior on accessing (e.g. get-size, control, read-data or write-data), the corresponding type function can be set to 0 to switch this access to basic behavior.
 
-The following list shows the type function prototypes. The return value of the size type function (e.g. `DemoSize()`) shall return the size of the user type in bytes. The other type functions shall return `CO_ERR_NONE` after successful operation. If an error is detected the corresponding error codes must be returned: `CO_ERR_TYPE_RD`, `CO_ERR_TYPE_WR` or `CO_ERR_TYPE_CTRL`.
+The following list shows the type function prototypes. The return value of the size type function (e.g. `DemoSize()`) shall return the size of the user type in bytes. The other type functions shall return `CO_ERR_NONE` after the successful operation. If an error is detected the corresponding error codes must be returned: `CO_ERR_TYPE_RD`, `CO_ERR_TYPE_WR` or `CO_ERR_TYPE_CTRL`.
 
 ```c
   uint32_t DemoSize (CO_OBJ *obj, uint32_t width);
@@ -206,7 +206,7 @@ The following list shows the type function prototypes. The return value of the s
   CO_ERR   DemoCtrl (CO_OBJ *obj, uint16_t id, uint32_t para);
 ```
 
-To enable the usage of this demo type to the CAN network side, the demo object must be added to the object directory. See the following object entry with index=0x6789 and subindex=0 as example:
+To enable the usage of this demo type to the CAN network side, the demo object must be added to the object directory. See the following object entry with index=0x6789 and subindex=0 as an example:
 
 ```c
   #define CO_TDEMO  ((CO_OBJ_TYPE*)&DemoType)

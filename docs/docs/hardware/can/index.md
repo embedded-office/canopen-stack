@@ -14,12 +14,12 @@ The CAN driver contains a set of functions, which are called at specific locatio
 
 | driver function | calling location                               |
 | --------------- | ---------------------------------------------- |
-| `Init()`        | during start of node and bit timing switching  |
-| `Enable()`      | during start of node and bit timing switching  |
-| `Send()`        | when node needs to send a CAN message          |
-| `Read()`        | when node processing is started                |
-| `Reset()`       | when NMT resets the communication              |
-| `Close()`       | when node is stopped and bit timing switching  |
+| `Init()`        | during the start of node and bit timing switching  |
+| `Enable()`      | during the start of node and bit timing switching  |
+| `Send()`        | when the node needs to send a CAN message          |
+| `Read()`        | when the node processing is started                |
+| `Reset()`       | when NMT resets the communication                  |
+| `Close()`       | when the node is stopped and bit timing switching  |
 
 
 #### CAN Init
@@ -32,7 +32,7 @@ void DrvCanInit(void);
 
 The function initializes the internal driver variables for managing the CAN communication and prepares the CAN controller for operation.
 
-*Note: the CAN controller must not active on the network, because at this calling time the bit timing is not known.*
+*Note: the CAN controller must not active on the network because at this calling time the bit timing is not known.*
 
 
 #### CAN Enable
@@ -61,15 +61,15 @@ int16_t DrvCanSend(CO_IF_FRM *frm);
 
 #### CAN Read
 
-This driver function is called when the CANopen node processing is started. This function is intended to receive all messages from the CAN network. The function returns the number processed bytes `sizeof(CO_IF_FRM)` on success, `(int16_t)0` in case of no receiption, or `(int16_t)-1` when an error is detected.
+This driver function is called when the CANopen node processing is started. This function is intended to receive all messages from the CAN network. The function returns the number processed bytes `sizeof(CO_IF_FRM)` on success, `(int16_t)0` in case of no reception, or `(int16_t)-1` when an error is detected.
 
 ```c
 int16_t DrvCanRead(CO_IF_FRM *frm);
 ```
 
-*Note: you must ensure that the messages are processed in the same order as they arrived from the CAN bus. Check the behavior of your CAN controller when you want to use multiple message buffers for a queued receiption.*
+*Note: you must ensure that the messages are processed in the same order as they arrived from the CAN bus. Check the behavior of your CAN controller when you want to use multiple message buffers for a queued reception.*
 
-**Attention:** For evaluation, demonstration, or testing purpose this CAN read function may poll for a new CAN frame. In this special case, the additional return value with no received CAN frame is possible. Don't use the polling mode in production; you should use interrupt driven CAN communication (ideally with some kind of CAN frame queueing). The CAN polling is not suitable for robust CANopen communication.
+**Attention:** For evaluation, demonstration, or testing purpose this CAN read function may poll for a new CAN frame. In this special case, the additional return value with no received CAN frame is possible. Don't use the polling mode in production; you should use interrupt-driven CAN communication (ideally with some kind of CAN frame queueing). The CAN polling is not suitable for robust CANopen communication.
 {:.warning}
 
 #### CAN Reset
@@ -92,9 +92,9 @@ void DrvCanClose(void);
 
 ### CAN Driver Integration
 
-During design of the driver interface for usage with the CANopen stack, we want to decouple the CANopen library from the driver implementation. At the same time, we want to keep the overal usage as easy as possible.
+During the design of the driver interface for usage with the CANopen stack, we want to decouple the CANopen library from the driver implementation. At the same time, we want to keep the overall usage as easy as possible.
 
-The solution for this requirements is the implementation of the CAN driver function as static functions within a single file and an allocated interface structure of type `CO_IF_CAN_DRV`:
+The solution for this requirement is the implementation of the CAN driver function as static functions within a single file and an allocated interface structure of type `CO_IF_CAN_DRV`:
 
 ```c
 #include "co_if.h"
@@ -116,7 +116,7 @@ const CO_IF_CAN_DRV <MyDeviceDriverName>CanDriver = {
 };
 ```
 
-With this kind of implementation, the usage is simply the import of the interface structure as external symbol, and we are ready to go:
+With this kind of implementation, the usage is simply the import of the interface structure as an external symbol, and we are ready to go:
 
 ```c
   :

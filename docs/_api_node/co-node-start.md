@@ -9,11 +9,11 @@ This function will finish the initialization phase.
 
 <!--more-->
 
-### Description
+## Description
 
-The node will change into PRE-OPERATIONAL state and is ready for communication.
+The node will change into the PRE-OPERATIONAL state and is ready for communication.
 
-#### Prototype
+### Prototype
 
 ```c
 void CONodeStart(CO_NODE *node);
@@ -29,7 +29,7 @@ void CONodeStart(CO_NODE *node);
 
 - none
 
-### Example
+## Example
 
 The following example shows the typical startup of a CANopen node AppNode with the specification AppSpec:
 

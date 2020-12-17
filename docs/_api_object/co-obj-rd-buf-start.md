@@ -9,16 +9,16 @@ This function starts the read operation at the beginning of the byte stream from
 
 <!--more-->
 
-### Description
+## Description
 
-The function is used together with `COObjRdBufCont()` to read a object entry with a size greater than 4.
+The function is used together with `COObjRdBufCont()` to read an object entry with a size greater than 4.
 
-#### Prototype
+### Prototype
 
 ```c
 int16_t COObjRdBufStart(CO_OBJ  *obj,
                         void    *buffer,
-                        uint8_t  len);
+                        uint8_t  length);
 ```
 
 #### Arguments
@@ -27,16 +27,16 @@ int16_t COObjRdBufStart(CO_OBJ  *obj,
 | --- | --- |
 | obj | pointer to object entry |
 | buffer | pointer to destination memory |
-| len | length of destination buffer |
+| length | length of destination buffer |
 
 #### Returned Value
 
 - `==CO_ERR_NONE` : successful operation
 - `!=CO_ERR_NONE` : an error is detected (see [CONodeGetErr()](/api_node/co-node-get-err))
 
-### Example
+## Example
 
-The following example reads the byte-stream of the hypothetical application specific object entry "[1234:56]" within the object directory of the CANopen node AppNode.
+The following example reads the byte-stream of the hypothetical application-specific object entry "[1234:56]" within the object directory of the CANopen node AppNode.
 
 ```c
     uint8_t  buffer[10];

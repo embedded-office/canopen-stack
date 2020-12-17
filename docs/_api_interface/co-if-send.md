@@ -5,15 +5,15 @@ sidebar:
   nav: docs
 ---
 
-This function sends the given CAN frame on the interface without delay.
+This function sends the given CAN frame to the interface without delay.
 
 <!--more-->
 
-### Description
+## Description
 
 The send function may be used within the application to transmit additional messages on the CANopen interface.
 
-#### Prototype
+### Prototype
 
 ```c
 int16_t COIfCanSend(CO_IF *cif, CO_IF_FRM *frm);
@@ -31,9 +31,9 @@ int16_t COIfCanSend(CO_IF *cif, CO_IF_FRM *frm);
 - `>0` : size of `CO_IF_FRM` on success
 - `<0` : an error is detected
 
-### Example
+## Example
 
-The following example show how to call the transmit function for the interface of the CANopen node AppNode:
+The following example shows how to call the transmit function for the interface of the CANopen node AppNode:
 
 ```c
     CO_IF_FRM  frame;

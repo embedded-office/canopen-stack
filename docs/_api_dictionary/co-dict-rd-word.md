@@ -9,14 +9,14 @@ This function reads a 16bit value from the object dictionary.
 
 <!--more-->
 
-### Description
+## Description
 
 The object entry is addressed with the given key and the value will be written to the given destination pointer.
 
-#### Prototype
+### Prototype
 
 ```c
-int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val);
+int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *value);
 ```
 
 #### Arguments
@@ -25,16 +25,16 @@ int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val);
 | --- | --- |
 | cod | pointer to the object dictionary |
 | key | object entry key; should be generated with `CO_DEV` |
-| val | pointer to value destination |
+| value | pointer to value destination |
 
 #### Returned Value
 
 - `== CO_ERR_NONE` : successful operation
 - `!= CO_ERR_NONE` : an error is detected
 
-### Example
+## Example
 
-The following example reads the current value of the hypothetical application specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
+The following example reads the current value of the hypothetical application-specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
 
 ```c
     int16_t   err;

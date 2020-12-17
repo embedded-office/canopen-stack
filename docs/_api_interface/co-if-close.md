@@ -9,11 +9,11 @@ This function closes the CAN interface.
 
 <!--more-->
 
-### Description
+## Description
 
 This function closes the interface ONLY. Be careful in calling this function for an active CANopen node on this interface. This can result in unpredictable behavior of the overall system.
 
-#### Prototype
+### Prototype
 
 ```c
 void COIfCanClose(CO_IF *cif);
@@ -29,7 +29,7 @@ void COIfCanClose(CO_IF *cif);
 
 - none
 
-### Example
+## Example
 
 The following example shows how to close the interface of the CANopen node AppNode:
 

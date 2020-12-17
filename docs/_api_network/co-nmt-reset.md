@@ -9,7 +9,7 @@ This function resets the CANopen device with the given type.
 
 <!--more-->
 
-### Description
+## Description
 
 The possible values of the reset type CO_NMT_RESET are:
 
@@ -18,7 +18,7 @@ The possible values of the reset type CO_NMT_RESET are:
 | CO_RESET_NODE | reset node (application and communication) |
 | CO_RESET_COM | reset communication |
 
-#### Prototype
+### Prototype
 
 ```c
 void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type);
@@ -35,7 +35,7 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type);
 
 - none
 
-### Example
+## Example
 
 The following example shows how to request a communication reset of the CANopen node AppNode:
 

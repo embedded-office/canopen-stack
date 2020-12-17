@@ -9,16 +9,16 @@ This function starts the write operation at the beginning of the given object en
 
 <!--more-->
 
-### Description
+## Description
 
-The function is used together with `COObjWrBufCont()` to write a object entry with a size greater than 4.
+The function is used together with `COObjWrBufCont()` to write an object entry with a size greater than 4.
 
-#### Prototype
+### Prototype
 
 ```c
 int16_t COObjWrBufStart(CO_OBJ  *obj,
                         void    *buffer,
-                        uint8_t  len);
+                        uint8_t  length);
 ```
 
 #### Arguments
@@ -27,16 +27,16 @@ int16_t COObjWrBufStart(CO_OBJ  *obj,
 | --- | --- |
 | obj | pointer to object entry |
 | buffer | pointer to source memory |
-| len | length of source buffer |
+| length | length of source buffer |
 
 #### Returned Value
 
 - `==CO_ERR_NONE` : successful operation
 - `!=CO_ERR_NONE` : an error is detected (see [CONodeGetErr()](/api_node/co-node-get-err))
 
-### Example
+## Example
 
-The following example writes a byte-stream to the hypothetical application specific object entry "[1234:56]" within the object directory of the CANopen node AppNode.
+The following example writes a byte-stream to the hypothetical application-specific object entry "[1234:56]" within the object directory of the CANopen node AppNode.
 
 ```c
     CPU_INT08U  buffer[10] = { 'H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd' };

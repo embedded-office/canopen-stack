@@ -9,11 +9,11 @@ This function calculates the number of required timer ticks for a given time int
 
 <!--more-->
 
-### Description
+## Description
 
-This function is used within the CANopen stack for calculating timeouts, event times and other needed time intervals.
+This function is used within the CANopen stack for calculating timeouts, event-times and other needed time intervals.
 
-#### Prototype
+### Prototype
 
 ```c
 int32_t COTmrGetTicks(CO_TMR   *tmr,
@@ -26,15 +26,15 @@ int32_t COTmrGetTicks(CO_TMR   *tmr,
 | Parameter | Description |
 | --- | --- |
 | tmr | pointer to timer object |
-| time | time interval as value of given units |
+| time | time interval as a value of given units |
 | unit | unit of given time (`CO_TMR_UNIT_1MS` or `CO_TMR_UNIT_100US`) |
 
 #### Returned Value
 
-- `>0` : timer ticks for given time interval
+- `>0` : timer ticks for the given time interval
 - `=0` : given time interval is not possible with the used timer
 
-### Example
+## Example
 
 The following example calculates the number of ticks for 10.7ms and for 2.5s.
 
@@ -61,4 +61,4 @@ The following example calculates the number of ticks for 10.7ms and for 2.5s.
     :
 ```
 
-*Note: The example assumes that the CANopen node is already initialized with `CONodeInit()`, because the specified frequency in the specification structure is the foundation for these calculations.*
+*Note: The example assumes that the CANopen node is already initialized with `CONodeInit()` because the specified frequency in the specification structure is the foundation for these calculations.*

@@ -5,19 +5,13 @@ sidebar:
   nav: docs
 articles:
   data_source: site.api_node
-  type: brief
+  type: table
   show_excerpt: true
 ---
 
 <div class="article__content" markdown="1">
 
-  ---
-
-  This area describes the API functions of the CANopen core module. These functions are implemented within the source file: `co_core.c/h`
-
-  <!--more-->
-
-  The class `CO_NODE` is defined within `co_core.h` and is responsible for the overall node management functions. The node is the central data point of an CANopen device. The following data members are in this class:
+  The class `CO_NODE` is defined within `co_core.h` and is responsible for the overall node management functions. The node is the central data point of a CANopen device. The following data members are in this class:
 
   | Data Member | Type | Description |
   | --- | --- | --- |
@@ -54,5 +48,7 @@ articles:
   ```
 
   Note, that in all application source files, which needs to call one or more CANopen API functions, the header file `co_core.h` must be included.
+
+  The following table describes the API functions of the CANopen core module. These functions are implemented within the source file: `co_core.c/h`
 
 </div>

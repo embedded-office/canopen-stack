@@ -9,11 +9,11 @@ This function returns the size of the given object entry.
 
 <!--more-->
 
-### Description
+## Description
 
 The argument width is most likely given '0' (=unknown) when getting the size of an object entry. The intended use of this argument is for write access of dynamic sizes of user type objects (e.g. firmware loading with a maximum size).
 
-#### Prototype
+### Prototype
 
 ```c
 uint32_t COObjGetSize(CO_OBJ *obj, uint32_t width);
@@ -31,9 +31,9 @@ uint32_t COObjGetSize(CO_OBJ *obj, uint32_t width);
 - `>0` : object entry size in bytes
 - `=0` : an error is detected
 
-### Example
+## Example
 
-The following example gets the size of the hypothetical application specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
+The following example gets the size of the hypothetical application-specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
 
 ```c
     uint32_t  size;

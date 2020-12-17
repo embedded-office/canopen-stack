@@ -9,17 +9,17 @@ This function creates the defined action and links this action into the event ti
 
 <!--more-->
 
-### Description
+## Description
 
 This function is used within the CANopen stack for timed actions. It is possible to use timed actions in the application, too.
 
-#### Prototype
+### Prototype
 
 ```c
 int16_t COTmrCreate(CO_TMR      *tmr,
-                    uint32_t     startTicks,
-                    uint32_t     cycleTicks,
-                    CO_TMR_FUNC  func,
+                    uint32_t     start,
+                    uint32_t     cycle,
+                    CO_TMR_FUNC  function,
                     void        *para);
 ```
 
@@ -28,9 +28,9 @@ int16_t COTmrCreate(CO_TMR      *tmr,
 | Parameter | Description |
 | --- | --- |
 | tmr | pointer to timer object |
-| startTicks | delta time in ticks for the first timer event |
-| cycleTicks | if != 0, the delta time in ticks for the cyclic timer events |
-| func | pointer to the action callback function |
+| start | delta time in ticks for the first timer-event |
+| cycle | if != 0, the delta time in ticks for the cyclic timer events |
+| function | pointer to the action callback function |
 | para | pointer to the callback function parameter |
 
 #### Returned Value
@@ -38,7 +38,7 @@ int16_t COTmrCreate(CO_TMR      *tmr,
 - `>=0` : action identifier (successful operation)
 - `<0` : an error is detected
 
-### Example
+## Example
 
 The following example installs a cyclic called function `AppCyclicFunc()` to the CANopen node AppNode. The timed function will be called the first time after 10ms and then every 25ms with the parameter: 0xcafe.
 

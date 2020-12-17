@@ -49,7 +49,7 @@ This directory tree contains the embedded source code of the CANopen Stack. The 
 
 ### Directory: docs
 
-This directory tree contains the complete documentation, which is presented as a GitHub project page. The project page is automatically generated and deployed, when there is a push into the `docs` directory tree in the master branch.
+This directory tree contains the complete documentation, which is presented as a GitHub project page. The project page is automatically generated and deployed when there is a push into the `docs` directory tree in the master branch.
 
 The README within the docs directory explains how to setup a local environment for writing the documentation with immediate feedback on saving a change. Thanks Jekyll for this nice feature!
 
@@ -63,6 +63,6 @@ This directory tree contains example projects which you can take for inspiration
 
 ### Directory: testsuite
 
-This directory tree contains a test application running on host and checking the behavior of the CANOpen Stack with a simulated CAN interface.
+This directory tree contains a test application running on the host and checking the behavior of the CANOpen Stack with a simulated CAN interface.
 
 The README within the repository root explains how to setup a local development environment, which is able to run all tests after enhancements.

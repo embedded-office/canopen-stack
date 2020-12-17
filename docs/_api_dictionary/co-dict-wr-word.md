@@ -9,14 +9,14 @@ This function writes a 16bit value to the given object dictionary.
 
 <!--more-->
 
-### Description
+## Description
 
 The object entry is addressed with the given key.
 
-#### Prototype
+### Prototype
 
 ```c
-int16_t CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val);
+int16_t CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t value);
 ```
 
 #### Arguments
@@ -25,16 +25,16 @@ int16_t CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val);
 | --- | --- |
 | cod | pointer to the object dictionary |
 | key | object entry key; should be generated with `CO_DEV` |
-| val | the source value |
+| value | the source value |
 
 #### Returned Value
 
 - `== CO_ERR_NONE` : successful operation
 - `!= CO_ERR_NONE` : an error is detected
 
-### Example
+## Example
 
-The following example writes the value to the hypothetical application specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
+The following example writes the value to the hypothetical application-specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
 
 ```c
     int16_t   err;

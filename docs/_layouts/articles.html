@@ -31,6 +31,8 @@ layout: page
 
 {%- assign _type = page.articles.type | default: layout.articles.type -%}
 
+{{ content }}
+
 {%- if _articles -%}
 
   <div class="layout--articles">
@@ -49,6 +51,23 @@ layout: page
       {%- assign _show_info = __return -%}
 
       {%- include article-list.html articles=_articles type='brief' show_info=_show_info -%}
+
+    {%- elsif _type == 'table' -%}
+      {%- include snippets/assign.html
+        target=site.data.variables.default.page.articles.show_info
+        source0=layout.articles.show_info source1=page.articles.show_info -%}
+      {%- assign _show_info = __return -%}
+
+      {%- include snippets/assign.html
+        target=site.data.variables.default.page.articles.show_excerpt
+        source0=layout.articles.show_excerpt source1=page.articles.show_excerpt -%}
+      {%- assign _show_excerpt = __return -%}
+
+      {%- assign _excerpt_type = page.articles.excerpt_type | default: layout.articles.excerpt_type -%}
+
+      {%- include article-list.html articles=_articles type='table'
+        show_info=_show_info
+        show_excerpt=_show_excerpt excerpt_type=_excerpt_type -%}
 
     {%- else -%}
       {%- include snippets/assign.html
@@ -85,5 +104,3 @@ layout: page
 
   </div>
 {%- endif -%}
-
-{{ content }}

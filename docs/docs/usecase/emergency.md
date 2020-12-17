@@ -30,7 +30,7 @@ The emergency error codes and the properties of the emergency errors are specifi
   };
 ```
 
-When using the emergency errors, the emergency code is the key for the service functions. Additional to the specific emergency code, user data may be stored or transmitted with each emergency change event. The user data is typical a local structure which will be given as parameter to the service functions. Due to the fact, that the user data for transmission and internal history has different sizes, the following structure is provided for the user data fields:
+When using emergency errors, the emergency code is the key for the service functions. Additional to the specific emergency code, user data may be stored or transmitted with each emergency change event. The user data is allocated as a local structure which will be given as a parameter to the service functions. Due to the fact, that the user data for transmission and internal history has different sizes, the following structure is provided for the user data fields:
 
 ```c
   CO_EMCY_USR DemoEmcyUsr = {
@@ -44,7 +44,7 @@ When using the emergency errors, the emergency code is the key for the service f
 
 ### Emergency Event
 
-The application can focus on the detection of the system situations, which shall rise an emergency event. For setting and clearing the emergency #0 on a application specific emergency condition, the typical sequence is:
+The application can focus on the detection of system situations, which shall rise an emergency event. For setting and clearing an emergency #0 on an application-specific emergency condition, the typical sequence is:
 
 ```c
   if (DemoEmcyCondition == TRUE) {
@@ -74,7 +74,7 @@ sequenceDiagram
 
 ### Emergency State
 
-The CANopen stack provides service functions to get internal information of the emergency error management. This simplifies the realization of a central error management within the CANopen device.
+The CANopen stack provides service functions to get internal information of the emergency error management. This simplifies the realization of central error management within the CANopen device.
 
 The following example returns the number of currently active emergency errors:
 
