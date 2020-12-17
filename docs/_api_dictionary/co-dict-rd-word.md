@@ -16,7 +16,7 @@ The object entry is addressed with the given key and the value will be written t
 ### Prototype
 
 ```c
-int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *value);
+CO_ERR CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *value);
 ```
 
 #### Arguments
@@ -37,7 +37,7 @@ int16_t CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *value);
 The following example reads the current value of the hypothetical application-specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
 
 ```c
-    int16_t   err;
+    CO_ERR    err;
     uint16_t  value;
     :
     err = CODictRdWord (&(Appnode.Dict), CO_DEV(0x1234, 0x56), &value);

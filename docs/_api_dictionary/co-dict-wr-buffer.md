@@ -16,10 +16,10 @@ The object entry is addressed with the given key and the bytes will be read from
 ### Prototype
 
 ```c
-int16_t CODictWrBuffer(CO_DICT  *cod,
-                       uint32_t  key,
-                       uint8_t  *buffer,
-                       uint32_t  length);
+CO_ERR CODictWrBuffer(CO_DICT  *cod,
+                      uint32_t  key,
+                      uint8_t  *buffer,
+                      uint32_t  length);
 ```
 
 #### Arguments
@@ -41,7 +41,7 @@ int16_t CODictWrBuffer(CO_DICT  *cod,
 The following example writes the value to the hypothetical application-specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
 
 ```c
-    int16_t  err;
+    CO_ERR   err;
     uint8_t  buffer[10] = { 'a','b','c','d','e','f','g','h','i', 0 };
     :
     err = CODictWrBuffer (&(Appnode.Dict), CO_DEV(0x1234, 0x56), buffer, 10);

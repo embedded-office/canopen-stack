@@ -16,7 +16,7 @@ The object entry is addressed with the given key.
 ### Prototype
 
 ```c
-int16_t CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t value);
+CO_ERR CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t value);
 ```
 
 #### Arguments
@@ -37,7 +37,7 @@ int16_t CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t value);
 The following example writes the value to the hypothetical application-specific object entry "[1234:56]" within the object dictionary of the CANopen node AppNode.
 
 ```c
-    int16_t  err;
+    CO_ERR    err;
     uint32_t  value = 0x30;
     :
     err = CODictWrLong (&(Appnode.Dict), CO_DEV(0x1234, 0x56), value);
