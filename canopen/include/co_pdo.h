@@ -38,7 +38,6 @@ extern "C" {
 #define CO_TPDO_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
     
 #define CO_RPDO_COBID_OFF    ((uint32_t)1 << 31)    /*!< marked as unused    */
-#define CO_RPDO_COBID_REMOTE ((uint32_t)1 << 30)    /*!< RTR is not allowed  */
 #define CO_RPDO_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
 
 #define CO_TPDO_FLG___E     0x01   /*!< PDO event occured                    */
