@@ -7,7 +7,9 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
-no changes
+### Fixed
+
+- Fix broken RPDO communication setup [cjardin112/master](https://github.com/cjardin112).
 
 ## [4.1.4] - 2020-12-15
 
