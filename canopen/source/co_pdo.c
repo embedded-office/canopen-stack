@@ -579,10 +579,6 @@ CO_ERR CORPdoReset(CO_RPDO *pdo, uint16_t num)
         pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
         return (CO_ERR_RPDO_COM_OBJ);
     }
-    if ((id & CO_RPDO_COBID_REMOTE) == 0) {
-        pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
-        return (CO_ERR_RPDO_COM_OBJ);
-    }
     if ((id & CO_RPDO_COBID_EXT) != 0) {
         pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
         return (CO_ERR_RPDO_COM_OBJ);
