@@ -109,7 +109,9 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
         CONmtInit(nmt, nmt->Node);
         COSdoInit(nmt->Node->Sdo, nmt->Node);
         COIfCanReset(&nmt->Node->If);
-        COEmcyReset(&nmt->Node->Emcy, 1);
+        if(nmt->Node->Emcy.Root != 0) {
+            COEmcyReset(&nmt->Node->Emcy, 1);
+        }
         COSyncInit(&nmt->Node->Sync, nmt->Node);
         if (nobootup == 0) {
             CONmtBootup(nmt);
