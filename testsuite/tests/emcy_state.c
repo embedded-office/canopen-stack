@@ -249,7 +249,7 @@ TS_DEF_MAIN(TS_Emcy_NoTxOnNmtReset)
     CO_NODE   node;
 
     TS_CreateMandatoryDir();
-    // TS_CreateEmcy();
+    TS_CreateEmcy();
     TS_CreateNode(&node,0);
 
     /* register EMCY-ID #1 without user info */
