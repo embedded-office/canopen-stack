@@ -185,26 +185,31 @@ void COEmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
     uint16_t  n;
     uint32_t  size;
 
-    if ((root == 0) || (node == 0) || (emcy == 0)) {
+    if ((node == 0) || (emcy == 0)) {
         CONodeFatalError();
         return;
     }
+
+    /* initialize emcy structure */
     emcy->Root = root;
     emcy->Node = node;
-
     for (n=0; n < CO_EMCY_STORAGE; n++) {
         emcy->Err[n] = 0;
     }
     for (n=0; n < CO_EMCY_REG_NUM; n++) {
         emcy->Cnt[n] = 0;
     }
-    obj = CODictFind(&node->Dict, CO_DEV(0x1014,0));
-    if (obj == 0) {
-        node->Error = CO_ERR_CFG_1014_0;
-    } else {
-        size = COObjGetSize(obj, node, CO_LONG);
-        if (size == 0) {
+
+    /* check object dictionary */
+    if (root != 0) {
+        obj = CODictFind(&node->Dict, CO_DEV(0x1014,0));
+        if (obj == 0) {
             node->Error = CO_ERR_CFG_1014_0;
+        } else {
+            size = COObjGetSize(obj, node, CO_LONG);
+            if (size == 0) {
+                node->Error = CO_ERR_CFG_1014_0;
+            }
         }
     }
     obj = CODictFind(&node->Dict, CO_DEV(0x1001,0));
@@ -217,6 +222,7 @@ void COEmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
         }
     }
 
+    /* emcy history initialization */
     COEmcyHistInit(emcy);
 }
 
@@ -239,7 +245,6 @@ int16_t COEmcyCheck(CO_EMCY *emcy)
         return (result);
     }
     if (emcy->Root == 0) {
-        node->Error = CO_ERR_EMCY_BAD_ROOT;
         return (result);
     }
     result = 0;
