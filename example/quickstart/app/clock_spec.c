@@ -101,6 +101,17 @@ static struct CO_IF_DRV_T AppDriver = {
     &DummyNvmDriver
 };
 
+/* Specify the EMCY error codes with the corresponding
+ * error register bit. There is a collection of defines
+ * for the predefined emergency codes CO_EMCY_CODE...
+ * and for the error register bits CO_EMCY_REG... for
+ * readability. You can use plain numbers, too.
+ */
+static CO_EMCY_TBL AppEmcyTbl[APP_ERR_ID_NUM] = {
+    { CO_EMCY_REG_GENERAL, CO_EMCY_CODE_GEN_ERR          }, /* APP_ERR_CODE_SOMETHING */
+    { CO_EMCY_REG_TEMP   , CO_EMCY_CODE_TEMP_AMBIENT_ERR }  /* APP_ERR_CODE_HAPPENS   */
+};
+
 /******************************************************************************
 * PUBLIC VARIABLES
 ******************************************************************************/
@@ -113,7 +124,7 @@ struct CO_NODE_SPEC_T AppSpec = {
     APP_BAUDRATE,            /* default Baudrate               */
     &ClockOD[0],             /* pointer to object dictionary   */
     APP_OBJ_N,               /* object dictionary max length   */
-    NULL,                    /* no EMCY info fields (unused)   */
+    &AppEmcyTbl[0],          /* EMCY code & register bit table */
     &TmrMem[0],              /* pointer to timer memory blocks */
     APP_TMR_N,               /* number of timer memory blocks  */
     APP_TICKS_PER_SEC,       /* timer clock frequency in Hz    */

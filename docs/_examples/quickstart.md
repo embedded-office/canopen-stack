@@ -14,8 +14,6 @@ create a *CANopen Clock*. While this clock node is not intended for serious
 applications, the example illustrates the key principles of development using
 the CANopen Stack.
 
-[1]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/
-
 <!--more-->
 
 
@@ -35,8 +33,6 @@ To keep the software as simple as possible, we will use a static object dictiona
 In this case, the object dictionary is an array of object entries, declared as
 a constant array of object entries of type `CO_OBJ`. The object dictionary is
 declared in the file [clock_spec.c][2]:
-
-[2]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L50
 
 ```c
   :
@@ -236,8 +232,6 @@ How we get these values is explained in section [configuration of PDO mapping][3
 This way of defining the payload for PDOs is part of the CiA301 standard and
 leads us to the following lines in the object dictionary:
 
-[3]: /docs/usecase/configuration#pdo-mapping-value
-
 
 ```c
   :
@@ -248,6 +242,37 @@ leads us to the following lines in the object dictionary:
   :
 ```
 
+### EMCY Error Specification
+
+We use in the application abstract EMCY error identifiers (`0` to `Number of EMCY - 1`). To simplify maintenance, we should define these identifiers as enumerations. Refer to the file [clock_spec.h][9] for more detail:
+
+```c
+enum {
+    APP_ERR_ID_SOMETHING = 0,
+    APP_ERR_ID_HAPPENS,
+
+    APP_ERR_ID_NUM            /* number of EMCY error identifiers in application */
+};
+```
+
+**Info:** With these enumerations in place, we can call the EMCY service functions in our application (e.g. in timer callback function like: `COEmcySet(&node->Emcy, APP_ERR_ID_HOT, 0);`).
+{:.info}
+
+#### EMCY Codes and Error Register Bits
+
+The CANopen stack behavior for each of these EMCY error identifier is defined in a EMCY table. Here we define the EMCY code and the error register bit correlation. We don't use them in the simple clock application, but an example definition is shown in [clock_spec.c][10]:
+
+```c
+static CO_EMCY_TBL AppEmcyTbl[APP_ERR_ID_NUM] = {
+    { CO_EMCY_REG_GENERAL, CO_EMCY_CODE_GEN_ERR          }, /* APP_ERR_CODE_SOMETHING */
+    { CO_EMCY_REG_TEMP   , CO_EMCY_CODE_TEMP_AMBIENT_ERR }  /* APP_ERR_CODE_HOT       */
+};
+```
+
+The constants `CO_EMCY_REG_...` for the error register bits and `CO_EMCY_CODE_...` for the EMCY code base values are the specified values out of the CANopen specification.
+
+**Warning:** When using pure numbers, check the possible range for the error register bits (8bit) and the EMCY code (16bit).
+{:.warning}
 
 ### Node Specification
 
@@ -257,9 +282,6 @@ constant, reducing RAM usage. The CANopen node needs some memory buffers for
 dynamic operations. These two buffers are statically allocated, and a pointer is
 stored inside the `CO_NODE_SPEC` struct. Refer to the file [clock_spec.c][4]
 for more detail:
-
-[4]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L21
-
 
 ```c
 #include "co_core.h"
@@ -289,7 +311,7 @@ CO_NODE_SPEC AppSpec = {
     APP_BAUDRATE,            /* default Baudrate               */
     (CO_OBJ *)&ClockOD[0],   /* pointer to object dictionary   */
     APP_OBJ_N,               /* object dictionary max length   */
-    NULL,                    /* no EMCY info fields (unused)   */
+    &AppEmcyTbl[0],          /* EMCY code & register bit table */
     &TmrMem[0],              /* pointer to timer memory blocks */
     APP_TMR_N,               /* number of timer memory blocks  */
     APP_TICKS_PER_SEC,       /* timer clock frequency in Hz    */
@@ -308,10 +330,6 @@ The application code is implemented in the file [clock_app.c][5].
 This file is responsible for the CANopen Stack startup as well as the
 application-specific clock function. Let's start with the CANopen Stack
 [startup][6]:
-
-[5]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L21
-[6]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L48
-
 
 ```c
 #include "co_core.h"
@@ -363,9 +381,6 @@ void main(int argc, char *argv[])
 
 The timer callback function [AppClock()][7] includes the main functionality of
 the clock node:
-
-[7]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L84
-
 
 ```c
 /* timer callback function */
@@ -427,8 +442,6 @@ static void AppClock(void *p_arg)
 Next, you will need to add drivers to your project to interface the stack with
 your hardware, as shown in [clock_spec.c][8]:
 
-[8]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L94
-
 
 ```c
    :
@@ -467,3 +480,15 @@ void App_TmrIsrHandler(void)
     COTmrService(&Clk.Tmr);
 }
 ```
+
+
+[1]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/
+[2]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L50
+[3]: /docs/usecase/configuration#pdo-mapping-value
+[4]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L21
+[5]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c
+[6]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L90
+[7]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L36
+[8]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L98
+[9]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.h#L34
+[10]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L110

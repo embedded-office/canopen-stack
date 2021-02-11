@@ -27,6 +27,8 @@
 
 /* allocate memory for the emergency code mapping table */
 static CO_EMCY_TBL EmcyCode[EMCY_CODE_MAX];
+/* allocate memory for the number of registered emergency codes */
+static uint8_t EmcyNum;
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
@@ -48,6 +50,7 @@ void EmcyResetTable(void)
         EmcyCode[idx].Code = 0;
         EmcyCode[idx].Reg  = 0;
     }
+    EmcyNum = 0;
 }
 
 /*---------------------------------------------------------------------------*/
@@ -58,7 +61,12 @@ void EmcyResetTable(void)
 /*---------------------------------------------------------------------------*/
 CO_EMCY_TBL *EmcyGetTable(void)
 {
-    return (&EmcyCode[0]);
+    CO_EMCY_TBL *result = NULL;
+
+    if (EmcyNum > 0) {
+        result = &EmcyCode[0];
+    }
+    return (result);
 }
 
 /*---------------------------------------------------------------------------*/
@@ -76,6 +84,7 @@ uint32_t EmcyAddCode(int16_t code, uint8_t reg)
         if (EmcyCode[n].Code == 0) {
             EmcyCode[n].Code = code;
             EmcyCode[n].Reg  = reg;
+            EmcyNum++;
             break;
         }
     }

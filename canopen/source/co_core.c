@@ -54,9 +54,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     COSdoInit(node->Sdo, node);
     COTPdoClear(node->TPdo, node);
     CORPdoClear(node->RPdo, node);
-    if (spec->EmcyCode != 0) {
-        COEmcyInit(&node->Emcy, node, spec->EmcyCode); 
-    }
+    COEmcyInit(&node->Emcy, node, spec->EmcyCode); 
     COSyncInit(&node->Sync, node);
     COLssInit(&node->Lss, node);
     COIfCanEnable(&node->If, node->Baudrate);

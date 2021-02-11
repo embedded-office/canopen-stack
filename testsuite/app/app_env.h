@@ -399,6 +399,14 @@ extern uint32_t  TS_TmrCallCnt;
 void TS_CanIsr(void);
 
 /*---------------------------------------------------------------------------*/
+/*! \brief CANOPEN EMCY DEFINITION
+*
+* \details Create the CANopen EMCY definitions for testing.
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateEmcy(void);
+
+/*---------------------------------------------------------------------------*/
 /*! \brief CANOPEN NODE SPECIFICATION
 *
 * \details Create the CANopen node specification for testing.
