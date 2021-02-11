@@ -36,6 +36,7 @@ TS_DEF_MAIN(TS_Emcy_TxUserData)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
+    TS_CreateEmcy();
     TS_CreateNode(&node,0);
 
     usr.Emcy[0] = 0x11;
@@ -74,6 +75,7 @@ TS_DEF_MAIN(TS_Emcy_TxChangedId)
     uint32_t     emcy_id = 0x00000101;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
+    TS_CreateEmcy();
     TS_CreateNode(&node,0);
 
     (void)CODictWrLong(&node.Dict,CO_DEV(0x1014,0),emcy_id);
@@ -98,6 +100,7 @@ TS_DEF_MAIN(TS_Emcy_GetStatusNoError)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
+    TS_CreateEmcy();
     TS_CreateNode(&node,0);
 
     err = COEmcyGet(&node.Emcy, 1);                   /* get status of EMCY error #1              */
@@ -117,6 +120,7 @@ TS_DEF_MAIN(TS_Emcy_GetStatusError)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
+    TS_CreateEmcy();
     TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
@@ -139,6 +143,7 @@ TS_DEF_MAIN(TS_Emcy_TotalNumNoError)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
+    TS_CreateEmcy();
     TS_CreateNode(&node,0);
 
     num = COEmcyCnt(&node.Emcy);                      /* get total number of EMCY errors          */
@@ -159,6 +164,7 @@ TS_DEF_MAIN(TS_Emcy_TotalNumError)
     CO_NODE        node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
+    TS_CreateEmcy();
     TS_CreateNode(&node,0);
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */

@@ -98,6 +98,41 @@ void TS_CanIsr(void)
     CONodeProcess(TS_TestNode);
 }
 
+/*
+* \details Set the CANopen specification for the test specific environment:
+*
+*          **constant settings:**
+*          - emergency: module 'app_emcy' with 4 pre-defined errors:
+*            + error #0: CO_EMCY_CODE_GEN_ERR / CO_EMCY_REG_GENERAL
+*            + error #1: CO_EMCY_CODE_CUR_ERR / CO_EMCY_REG_CURRENT
+*            + error #2: CO_EMCY_CODE_VOL_ERR / CO_EMCY_REG_VOLTAGE
+*            + error #3: CO_EMCY_CODE_TEMP_ERR / CO_EMCY_REG_TEMP
+*
+*          **object dictionary settings:**
+*          - 1003:0 - Emergency number of errors (local variable)
+*          - 1003:X - TS_EMCY_HIST_MAX error history fields (local variables)
+*          - 1014:0 - COB-ID EMCY message (local variable)
+*/
+void TS_CreateEmcy(void)
+{
+    uint8_t n;
+
+    EmcyAddCode(CO_EMCY_CODE_GEN_ERR,  CO_EMCY_REG_GENERAL);
+    EmcyAddCode(CO_EMCY_CODE_CUR_ERR,  CO_EMCY_REG_CURRENT);
+    EmcyAddCode(CO_EMCY_CODE_VOL_ERR,  CO_EMCY_REG_VOLTAGE);
+    EmcyAddCode(CO_EMCY_CODE_TEMP_ERR, CO_EMCY_REG_TEMP   );
+
+    TS_ODAdd(OBJ1003_0(&TS_Obj1003_0));
+    TS_Obj1003_0 = 0;
+    for (n = 1; n < TS_EMCY_HIST_MAX; n++) {
+        TS_ODAdd(OBJ1003_X(n, &TS_Obj1003[n]));
+        TS_Obj1003[n] = 0;
+    }
+
+    TS_ODAdd(OBJ1014_0(&TS_Obj1014_0));
+    TS_Obj1014_0 = 0x80;
+}
+
 /*---------------------------------------------------------------------------*/
 /*! \brief REQ-ENV-0110
 *
@@ -110,11 +145,6 @@ void TS_CanIsr(void)
 *
 *          **managed in dynamic application modules:**
 *          - object dictionary: module 'app_dir' with size TS_OD_MAX
-*          - emergency: module 'app_emcy' with 4 pre-defined errors:
-*            + error #0: CO_EMCY_CODE_GEN_ERR / CO_EMCY_REG_GENERAL
-*            + error #1: CO_EMCY_CODE_CUR_ERR / CO_EMCY_REG_CURRENT
-*            + error #2: CO_EMCY_CODE_VOL_ERR / CO_EMCY_REG_VOLTAGE
-*            + error #3: CO_EMCY_CODE_TEMP_ERR / CO_EMCY_REG_TEMP
 *
 *          **local memory allocations:**
 *          - timer: TS_TMR_N timers of type CO_TMR_MEM
@@ -132,11 +162,6 @@ void TS_CreateSpec(CO_NODE *node, CO_NODE_SPEC *spec, uint32_t freq)
     spec->Dict      = ODGetDict(&TS_ODDyn);
     spec->DictLen   = TS_OD_MAX;
 
-    EmcyResetTable();
-    EmcyAddCode(CO_EMCY_CODE_GEN_ERR,  CO_EMCY_REG_GENERAL);
-    EmcyAddCode(CO_EMCY_CODE_CUR_ERR,  CO_EMCY_REG_CURRENT);
-    EmcyAddCode(CO_EMCY_CODE_VOL_ERR,  CO_EMCY_REG_VOLTAGE);
-    EmcyAddCode(CO_EMCY_CODE_TEMP_ERR, CO_EMCY_REG_TEMP   );
     spec->EmcyCode = EmcyGetTable();
 
     spec->TmrMem   = &TmrMem[0];
@@ -204,10 +229,7 @@ void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data)
 * \details Clear object dictionary and append the following object entries:
 *          - 1000:0 - Device type (constant 0)
 *          - 1001:0 - Error register (local variable)
-*          - 1003:0 - Emergency number of errors (local variable)
-*          - 1003:X - TS_EMCY_HIST_MAX error history fields (local variables)
 *          - 1005:0 - COB-ID SYNC message (constant 0x80)
-*          - 1014:0 - COB-ID EMCY message (local variable)
 *          - 1017:0 - Producer heartbeat time (loval variable)
 *          - 1018:0 - Identity object (constant 4)
 *          - 1018:X - 1..4: Identity object values (constant 0)
@@ -226,15 +248,7 @@ void TS_CreateMandatoryDir(void)
     TS_ODAdd(OBJ1000_0(0));
     TS_ODAdd(OBJ1001_0(&TS_Obj1001_0));
     TS_Obj1001_0 = 0;
-    TS_ODAdd(OBJ1003_0(&TS_Obj1003_0));
-    TS_Obj1003_0 = 0;
-    for (n = 1; n < TS_EMCY_HIST_MAX; n++) {
-        TS_ODAdd(OBJ1003_X(n, &TS_Obj1003[n]));
-        TS_Obj1003[n] = 0;
-    }
     TS_ODAdd(OBJ1005_0(0x80));
-    TS_ODAdd(OBJ1014_0(&TS_Obj1014_0));
-    TS_Obj1014_0 = 0x80;
     TS_ODAdd(OBJ1017_0(&TS_Obj1017_0));
     TS_Obj1017_0 = 0;
     TS_ODAdd(OBJ1018_0(4));
@@ -250,6 +264,7 @@ void TS_CreateMandatoryDir(void)
         TS_Obj12xx_2[n] = 0x580 + (n * 0x10);
     }
     
+    EmcyResetTable();
     DomInit();
 }
 
