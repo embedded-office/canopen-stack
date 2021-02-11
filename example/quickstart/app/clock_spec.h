@@ -28,6 +28,18 @@ extern "C" {
 #include "co_core.h"
 
 /******************************************************************************
+* PUBLIC DEFINES
+******************************************************************************/
+
+/* Specify the EMCY-IDs for the application */
+enum EMCY_CODES {
+    APP_ERR_ID_SOMETHING = 0,
+    APP_ERR_ID_HOT,
+
+    APP_ERR_ID_NUM            /* number of EMCY error codes in application */
+};
+
+/******************************************************************************
 * PUBLIC SYMBOLS
 ******************************************************************************/
 

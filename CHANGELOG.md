@@ -7,8 +7,14 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
+### Added
+
+- Allow disabling the EMCY module by setting NULL for emcy code table.
+
 ### Fixed
 
+- Explain how to setup EMCY in quickstart example (even if not used in this application).
+- Fix NMT reset when EMCY is not used (no EMCY code table).
 - Fix broken RPDO communication setup [cjardin112/master](https://github.com/cjardin112).
 
 ## [4.1.4] - 2020-12-15
