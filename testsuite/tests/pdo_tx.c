@@ -34,15 +34,15 @@
 TS_DEF_MAIN(TS_TPdo_8x1Byte)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map[8]  = { 0x25000B08, 0x25000C08, 0x25000D08, 0x25000E08,
-                                    0x25000F08, 0x25001008, 0x25001108, 0x25001208 };
-    uint8_t     tpdo_type    = 1;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 8;
-    uint8_t     data[8]      = { 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98};
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map[8]  = { 0x25000B08, 0x25000C08, 0x25000D08, 0x25000E08,
+                               0x25000F08, 0x25001008, 0x25001108, 0x25001208 };
+    uint8_t   tpdo_type    = 1;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 8;
+    uint8_t   data[8]      = { 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98};
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -83,14 +83,14 @@ TS_DEF_MAIN(TS_TPdo_8x1Byte)
 TS_DEF_MAIN(TS_TPdo_4x2Byte)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map[4]  = { 0x25001510, 0x25001610, 0x25001710, 0x25001810 };
-    uint8_t     tpdo_type    = 1;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 4;
-    uint16_t     data[4]      = { 0x8182, 0x8384, 0x8586, 0x8788 };
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map[4]  = { 0x25001510, 0x25001610, 0x25001710, 0x25001810 };
+    uint8_t   tpdo_type    = 1;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 4;
+    uint16_t  data[4]      = { 0x8182, 0x8384, 0x8586, 0x8788 };
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -123,14 +123,14 @@ TS_DEF_MAIN(TS_TPdo_4x2Byte)
 TS_DEF_MAIN(TS_TPdo_2x4Byte)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map[2]  = { 0x25001F20, 0x25002020 };
-    uint8_t     tpdo_type    = 1;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 2;
-    uint32_t     data[2]      = { 0x71727374, 0x75767778 };
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map[2]  = { 0x25001F20, 0x25002020 };
+    uint8_t   tpdo_type    = 1;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 2;
+    uint32_t  data[2]      = { 0x71727374, 0x75767778 };
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -159,16 +159,16 @@ TS_DEF_MAIN(TS_TPdo_2x4Byte)
 TS_DEF_MAIN(TS_TPdo_1_2_4Byte)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map[3]  = { 0x25000B08, 0x25001510, 0x25001F20 };
-    uint8_t     tpdo_type    = 1;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 3;
-    uint8_t     data8        = 0x91;
-    uint16_t     data16       = 0x8182;
-    uint32_t     data32       = 0x71727374;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map[3]  = { 0x25000B08, 0x25001510, 0x25001F20 };
+    uint8_t   tpdo_type    = 1;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 3;
+    uint8_t   data8        = 0x91;
+    uint16_t  data16       = 0x8182;
+    uint32_t  data32       = 0x71727374;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -199,12 +199,12 @@ TS_DEF_MAIN(TS_TPdo_1_2_4Byte)
 TS_DEF_MAIN(TS_TPdo_NoData)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint8_t     tpdo_type    = 1;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 0;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint8_t   tpdo_type    = 1;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -229,14 +229,14 @@ TS_DEF_MAIN(TS_TPdo_NoData)
 TS_DEF_MAIN(TS_TPdo_After3Sync)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 3;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 3;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -272,14 +272,14 @@ TS_DEF_MAIN(TS_TPdo_After3Sync)
 TS_DEF_MAIN(TS_TPdo_OnChangeAfterSync)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 0;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 0;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -314,16 +314,16 @@ TS_DEF_MAIN(TS_TPdo_OnChangeAfterSync)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_TPdo_After240Sync)
 {
-    uint8_t     n;
+    uint8_t   n;
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 240;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 240;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -355,17 +355,17 @@ TS_DEF_MAIN(TS_TPdo_After240Sync)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_TPdo_Type254ViaObj)
 {
-    CO_OBJ        *obj;
-    uint16_t     n;
+    CO_OBJ   *obj;
+    uint16_t  n;
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 254;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 254;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -399,17 +399,17 @@ TS_DEF_MAIN(TS_TPdo_Type254ViaObj)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_TPdo_Type255ViaObj)
 {
-    CO_OBJ        *obj;
-    uint16_t     n;
+    CO_OBJ   *obj;
+    uint16_t  n;
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 255;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -442,16 +442,16 @@ TS_DEF_MAIN(TS_TPdo_Type255ViaObj)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_TPdo_Type254ViaNum)
 {
-    uint16_t     n;
+    uint16_t  n;
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 254;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 254;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -483,16 +483,16 @@ TS_DEF_MAIN(TS_TPdo_Type254ViaNum)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_TPdo_Type255ViaNum)
 {
-    uint16_t     n;
+    uint16_t  n;
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 255;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -524,14 +524,14 @@ TS_DEF_MAIN(TS_TPdo_Type255ViaNum)
 TS_DEF_MAIN(TS_TPdo_Tmr)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 255;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 200;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 200;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -570,14 +570,14 @@ TS_DEF_MAIN(TS_TPdo_Tmr)
 TS_DEF_MAIN(TS_TPdo_TmrAndNum)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 255;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 200;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 200;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -629,14 +629,14 @@ TS_DEF_MAIN(TS_TPdo_TmrAndNum)
 TS_DEF_MAIN(TS_TPdo_Inhibit)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 255;
-    uint16_t     tpdo_inhibit = 1000;
-    uint16_t     tpdo_evtime  = 200;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 1000;
+    uint16_t  tpdo_evtime  = 200;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -690,14 +690,14 @@ TS_DEF_MAIN(TS_TPdo_Inhibit)
 TS_DEF_MAIN(TS_TPdo_TmrAndInhibit)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 255;
-    uint16_t     tpdo_inhibit = 1000;
-    uint16_t     tpdo_evtime  = 60;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 1000;
+    uint16_t  tpdo_evtime  = 60;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -746,14 +746,14 @@ TS_DEF_MAIN(TS_TPdo_TmrAndInhibit)
 TS_DEF_MAIN(TS_TPdo_ChangeTmr)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map     = 0x25000B08;
-    uint8_t     tpdo_type    = 255;
-    uint16_t     tpdo_inhibit = 1000;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 1;
-    uint8_t     data8        = 0x91;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 1000;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -864,14 +864,14 @@ TS_DEF_MAIN(TS_TPdo_TmrFastest)
 TS_DEF_MAIN(TS_TPdo_Async)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     tpdo_id      = 0x40000180;
-    uint32_t     tpdo_map[2]  = { 0x25002920, 0x25002A20 };
-    uint8_t     tpdo_type    = 1;
-    uint16_t     tpdo_inhibit = 0;
-    uint16_t     tpdo_evtime  = 0;
-    uint8_t     tpdo_len     = 2;
-    uint32_t     data[2]      = { 0x71727374, 0x75767778 };
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map[2]  = { 0x25002920, 0x25002A20 };
+    uint8_t   tpdo_type    = 1;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 2;
+    uint32_t  data[2]      = { 0x71727374, 0x75767778 };
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
@@ -891,6 +891,70 @@ TS_DEF_MAIN(TS_TPdo_Async)
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TC25
+*
+*          This testcase will check the PDO timing in the case, that operational mode
+*          is requested while we are already in operational mode.
+*          - PDO #0 (2 separate longs in content)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_TPdo_SwitchToOpWhileInOp)
+{
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 255;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 200;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
+
+    TS_CreateMandatoryDir();
+    TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
+    TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (uintptr_t)&data8);
+    TS_CreateNode(&node,0);
+
+                                                      /* wait more than 1 event timer time        */
+    TS_Wait(&node, 300);                              /* wait 300ms                               */
+    TS_NMT_SEND(0x01, 1);                             /* set node-id 0x01 to operational          */
+
+    TS_Wait(&node, 200);                              /* wait 200ms                               */
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_PDO0 (frm, 0x181, 1);                         /* check PDO #0 (Id and DLC)                */
+    CHK_BYTE (frm, 0, 0x91);
+
+    TS_Wait(&node, 190);                              /* wait 190ms                               */
+    CHK_NOCAN(&frm)                                   /* check for a single CAN frame             */
+
+    TS_Wait(&node, 10);                               /* wait 10ms                                */
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_PDO0 (frm, 0x181, 1);                         /* check PDO #0 (Id and DLC)                */
+    CHK_BYTE (frm, 0, 0x91);
+
+    TS_NMT_SEND(0x01, 1);                             /* set node-id 0x01 to operational again    */
+
+    TS_Wait(&node, 190);                              /* wait 190ms                               */
+    CHK_NOCAN(&frm)                                   /* check for a single CAN frame             */
+
+    TS_Wait(&node, 10);                               /* wait 10ms                                */
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_PDO0 (frm, 0x181, 1);                         /* check PDO #0 (Id and DLC)                */
+    CHK_BYTE (frm, 0, 0x91);
+
+    TS_Wait(&node, 190);                              /* wait 190ms                               */
+    CHK_NOCAN(&frm)                                   /* check for a single CAN frame             */
+
+    TS_Wait(&node, 10);                               /* wait 10ms                                */
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_PDO0 (frm, 0x181, 1);                         /* check PDO #0 (Id and DLC)                */
+    CHK_BYTE (frm, 0, 0x91);
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -898,7 +962,7 @@ TS_DEF_MAIN(TS_TPdo_Async)
 SUITE_PDO_TX()
 {
     TS_Begin(__FILE__);
-    
+
 //    CanDiagnosticOn(0);
 
     TS_RUNNER(TS_TPdo_8x1Byte);
@@ -920,6 +984,7 @@ SUITE_PDO_TX()
     TS_RUNNER(TS_TPdo_ChangeTmr);
     TS_RUNNER(TS_TPdo_TmrFastest);
     TS_RUNNER(TS_TPdo_Async);
+    TS_RUNNER(TS_TPdo_SwitchToOpWhileInOp);
 
 //    CanDiagnosticOff(0);
 
