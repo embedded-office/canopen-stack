@@ -41,7 +41,7 @@
 *   - tgl1   : bad first toggle bit
 *   - tgl2   : bad second toggle bit
 *
-* #### Test Definition 
+* #### Test Definition
 *
 * test-function                 | obj    | size    | prop    | req    | type
 * ----------------------------- | ------ | ------- | ------- | ------ | ----
@@ -82,20 +82,20 @@
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegRd_42ByteDomain)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    uint32_t     id;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 2;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
- 
+
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
     TS_SDO_SEND (0x40, idx, sub, size);
 
@@ -136,13 +136,13 @@ TS_DEF_MAIN(TS_SegRd_42ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegRd_43ByteDomain)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    uint32_t     id;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 43;
-    uint16_t     idx  = 0x2520;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 43;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 3;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -191,13 +191,13 @@ TS_DEF_MAIN(TS_SegRd_43ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegRd_41ByteDomain)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    uint32_t     id;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 41;
-    uint16_t     idx  = 0x2520;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 41;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -206,7 +206,7 @@ TS_DEF_MAIN(TS_SegRd_41ByteDomain)
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
-    TS_SDO_SEND (0x40, idx, sub, size); 
+    TS_SDO_SEND (0x40, idx, sub, size);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_SDO0 (frm, 0x41);                             /* check SDO #0 response (Id and DLC)       */
@@ -244,14 +244,15 @@ TS_DEF_MAIN(TS_SegRd_41ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegRd_23ByteString)
 {
-    CO_IF_FRM  frm;
-    uint8_t    tgl;
-    CO_NODE    node;
-    uint32_t   size = 23;
-    uint16_t   idx  = 0x2530;
-    uint8_t    sub  = 2;
-    CO_OBJ_STR Str23;
-    char      *strPtr = "abcdefghijklmnopqrstuvw";
+    CO_IF_FRM   frm;
+    uint8_t     tgl;
+    CO_NODE     node;
+    uint32_t    size = 23;
+    uint16_t    idx  = 0x2530;
+    uint8_t     sub  = 2;
+    CO_OBJ_STR  Str23;
+    char       *strPtr = "abcdefghijklmnopqrstuvw";
+
     Str23.Offset = 0;
     Str23.Start  = (uint8_t *)strPtr;
                                                       /*------------------------------------------*/
@@ -269,7 +270,7 @@ TS_DEF_MAIN(TS_SegRd_23ByteString)
 
                                                       /*===== FIRST SEGMENTED UPLOAD =============*/
     tgl = 0x00;                                       /* start with toggle bit 0                  */
-    TS_SDO_SEND((0x60 | tgl), 0, 0, 0); 
+    TS_SDO_SEND((0x60 | tgl), 0, 0, 0);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_SDO0 (frm, tgl);                              /* check SDO #0 response (Id and DLC)       */
@@ -277,7 +278,7 @@ TS_DEF_MAIN(TS_SegRd_23ByteString)
 
                                                       /*===== SECOND SEGMENTED UPLOAD ============*/
     tgl ^= 0x10;                                      /* update toggle bit                        */
-    TS_SDO_SEND((0x60 | tgl), 0, 0, 0); 
+    TS_SDO_SEND((0x60 | tgl), 0, 0, 0);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_SDO0 (frm, tgl);                              /* check SDO #0 response (Id and DLC)       */
@@ -315,17 +316,17 @@ TS_DEF_MAIN(TS_SegRd_23ByteString)
 TS_DEF_MAIN(TS_SegRd_BadCmd)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 41;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 6;
+    CO_NODE   node;
+    uint32_t  size = 41;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
-    TS_SDO_SEND (0xF0, idx, sub, 0); 
+    TS_SDO_SEND (0xF0, idx, sub, 0);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_SDO0 (frm, 0x80);                             /* check SDO #0 response (Id and DLC)       */
@@ -348,10 +349,10 @@ TS_DEF_MAIN(TS_SegRd_BadCmd)
 TS_DEF_MAIN(TS_SegRd_ObjNotExist)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 41;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 41;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -382,10 +383,10 @@ TS_DEF_MAIN(TS_SegRd_ObjNotExist)
 TS_DEF_MAIN(TS_SegRd_SubIdxNotExist)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 41;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 41;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -416,10 +417,10 @@ TS_DEF_MAIN(TS_SegRd_SubIdxNotExist)
 TS_DEF_MAIN(TS_SegRd_WriteOnly)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 8;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 8;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ_____W, size);
@@ -449,9 +450,9 @@ TS_DEF_MAIN(TS_SegRd_WriteOnly)
 TS_DEF_MAIN(TS_SegRd_DomainNullPtr)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 9;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 9;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (uintptr_t)0);
@@ -481,12 +482,12 @@ TS_DEF_MAIN(TS_SegRd_DomainNullPtr)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegRd_Bad1stToggleBit)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 2;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -495,7 +496,7 @@ TS_DEF_MAIN(TS_SegRd_Bad1stToggleBit)
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
-    TS_SDO_SEND (0x40, idx, sub, size); 
+    TS_SDO_SEND (0x40, idx, sub, size);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_SDO0 (frm, 0x41);                             /* check SDO #0 response (Id and DLC)       */
@@ -527,14 +528,15 @@ TS_DEF_MAIN(TS_SegRd_Bad1stToggleBit)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegRd_Bad2ndToggleBit)
 {
-    CO_IF_FRM  frm;
-    uint8_t    tgl;
-    CO_NODE    node;
-    uint32_t   size   = 23;
-    uint16_t   idx    = 0x2530;
-    uint8_t    sub    = 2;
-    CO_OBJ_STR Str23;
-    char      *strPtr = "abcdefghijklmnopqrstuvw";
+    CO_IF_FRM   frm;
+    uint8_t     tgl;
+    CO_NODE     node;
+    uint32_t    size   = 23;
+    uint16_t    idx    = 0x2530;
+    uint8_t     sub    = 2;
+    CO_OBJ_STR  Str23;
+    char       *strPtr = "abcdefghijklmnopqrstuvw";
+
     Str23.Offset = 0;
     Str23.Start  = (uint8_t *)strPtr;
                                                       /*------------------------------------------*/
@@ -578,7 +580,7 @@ TS_DEF_MAIN(TS_SegRd_Bad2ndToggleBit)
 SUITE_SEG_UP()
 {
     TS_Begin(__FILE__);
-    
+
 //    CanDiagnosticOn(0);
 
     TS_RUNNER(TS_SegRd_42ByteDomain);

@@ -263,7 +263,7 @@ void TS_CreateMandatoryDir(void)
         TS_ODAdd(OBJ12XX_2(n, &TS_Obj12xx_2[n]));
         TS_Obj12xx_2[n] = 0x580 + (n * 0x10);
     }
-    
+
     EmcyResetTable();
     DomInit();
 }
@@ -469,8 +469,6 @@ void TS_SendBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t seglost)
         }
         if (seg != seglost) {
             TS_SEG_SEND(seg, idx);                       /* send SDO request */
-        } else {
-            TS_SDO_SEND(0, 0, 0, 0);                     /* send SDO request */
         }
         idx += 7;
         seg  = (seg + 1) & 0x7F;           /* calculate next segment counter */

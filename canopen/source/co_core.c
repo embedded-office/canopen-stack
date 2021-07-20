@@ -161,8 +161,11 @@ void CONodeProcess(CO_NODE *node)
     if ((allowed & CO_SDO_ALLOWED) != 0) {
         srv = COSdoCheck(node->Sdo, &frm);
         if (srv != 0) {
-            (void)COSdoResponse(srv);
-            (void)COIfCanSend(&node->If, &frm);
+            CO_ERR err = COSdoResponse(srv);
+            if ((err == CO_ERR_NONE     ) ||
+                (err == CO_ERR_SDO_ABORT)) {
+                (void)COIfCanSend(&node->If, &frm);
+            }
             allowed = 0;
         }
     }

@@ -35,13 +35,13 @@
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_42ByteDomain)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    uint32_t     id;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2300;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2300;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -87,13 +87,13 @@ TS_DEF_MAIN(TS_SegWr_42ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_43ByteDomain)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    uint32_t     id;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 43;
-    uint16_t     idx  = 0x2300;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 43;
+    uint16_t    idx  = 0x2300;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -142,13 +142,13 @@ TS_DEF_MAIN(TS_SegWr_43ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_41ByteDomain)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    uint32_t     id;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 41;
-    uint16_t     idx  = 0x2300;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 41;
+    uint16_t    idx  = 0x2300;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -172,7 +172,7 @@ TS_DEF_MAIN(TS_SegWr_41ByteDomain)
         tgl ^= 0x10;                                  /* prepare the toggle bit for next request  */
     }
                                                       /*===== LAST SEGMENTED DOWNLOAD  ===========*/
-    TS_SEG_SEND((0x01 | tgl), id); 
+    TS_SEG_SEND((0x01 | tgl), id);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_SDO0 (frm, (0x20 | tgl));                     /* check SDO #0 response (Id and DLC)       */
@@ -195,13 +195,13 @@ TS_DEF_MAIN(TS_SegWr_41ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_46ByteDomain)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    uint32_t     id;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 46;
-    uint16_t     idx  = 0x2300;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 46;
+    uint16_t    idx  = 0x2300;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -212,7 +212,7 @@ TS_DEF_MAIN(TS_SegWr_46ByteDomain)
     TS_SDO_SEND (0x21, idx, sub, size);
 
     CHK_SDO0_OK(idx, sub);
- 
+
                                                       /*===== SEGMENTED DOWNLOAD  ================*/
     tgl = 0x00;                                       /* start with toggle bit 0                  */
     for (id = 0; id < (size-7); id += 7) {
@@ -248,13 +248,13 @@ TS_DEF_MAIN(TS_SegWr_46ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_44ByteDomain)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    uint32_t     id;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 44;
-    uint16_t     idx  = 0x2300;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 44;
+    uint16_t    idx  = 0x2300;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -302,10 +302,10 @@ TS_DEF_MAIN(TS_SegWr_44ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_BadCmd)
 {
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2300;
-    uint8_t     sub  = 1;
+    CO_NODE  node;
+    uint32_t size = 42;
+    uint16_t idx  = 0x2300;
+    uint8_t  sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -332,10 +332,10 @@ TS_DEF_MAIN(TS_SegWr_BadCmd)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_ObjNotExist)
 {
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE  node;
+    uint32_t size = 42;
+    uint16_t idx  = 0x2100;
+    uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -362,10 +362,10 @@ TS_DEF_MAIN(TS_SegWr_ObjNotExist)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_SubIdxNotExist)
 {
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE  node;
+    uint32_t size = 42;
+    uint16_t idx  = 0x2100;
+    uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -394,10 +394,10 @@ TS_DEF_MAIN(TS_SegWr_SubIdxNotExist)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_ReadOnly)
 {
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE  node;
+    uint32_t size = 42;
+    uint16_t idx  = 0x2100;
+    uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____R_, size);
@@ -424,10 +424,10 @@ TS_DEF_MAIN(TS_SegWr_ReadOnly)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_LenTooHigh)
 {
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE  node;
+    uint32_t size = 42;
+    uint16_t idx  = 0x2100;
+    uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -447,33 +447,53 @@ TS_DEF_MAIN(TS_SegWr_LenTooHigh)
 *
 * \ingroup TS_CO
 *
-*      This testcase will check the Abort code " Data type does not match, length of service parameter too low. "
-*                                   Abort code 0x06070013
-*
-*
+*         This testcase will check the segmented download of an array with size = 41 to the
+*         Domainbuffer with size = 42
 */
 /*------------------------------------------------------------------------------------------------*/
-#if DISABLED
-TS_DEF_MAIN(TS_SegWr_LenTooLow)
+TS_DEF_MAIN(TS_SegWr_42ByteDomain_41Byte)
 {
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_IF_FRM   frm;
+    uint8_t     tgl;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2300;
+    uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
     TS_CreateNode(&node,0);
 
     size--;
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0x21, idx, sub, size);
 
-    CHK_SDO0_ERR(idx, sub, 0x06070013);
+    CHK_SDO0_OK(idx, sub);
+
+                                                      /*===== SEGMENTED DOWNLOAD  ================*/
+    tgl = 0x00;                                       /* start with toggle bit 0                  */
+    for (id = 0; id < (size-7); id += 7) {
+        TS_SEG_SEND(tgl, id);
+
+        CHK_CAN  (&frm);                              /* check for a CAN frame                    */
+        CHK_SDO0 (frm, (0x20 | tgl));                 /* check SDO #0 response (Id and DLC)       */
+        CHK_ZERO (frm);                               /* check data area                          */
+                                                      /*------------------------------------------*/
+        tgl ^= 0x10;                                  /* prepare the toggle bit for next request  */
+    }
+                                                      /*===== LAST SEGMENTED DOWNLOAD  ===========*/
+    TS_SEG_SEND((0x01 | tgl), id);
+
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_SDO0 (frm, (0x20 | tgl));                     /* check SDO #0 response (Id and DLC)       */
+    CHK_ZERO (frm);                                   /* check data area                          */
+
+    CHK_DOM_FULL(dom, 0);                             /* check content of domain                  */
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
@@ -487,10 +507,10 @@ TS_DEF_MAIN(TS_SegWr_LenTooLow)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_DomainNullPtr)
 {
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE  node;
+    uint32_t size = 42;
+    uint16_t idx  = 0x2100;
+    uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (uintptr_t)0);
@@ -516,12 +536,12 @@ TS_DEF_MAIN(TS_SegWr_DomainNullPtr)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_BadToggleBit)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2300;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2300;
     uint8_t     sub  = 1;
     uint8_t     id;
                                                       /*------------------------------------------*/
@@ -569,12 +589,12 @@ TS_DEF_MAIN(TS_SegWr_BadToggleBit)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_RestartTransfer)
 {
-    CO_IF_FRM frm;
+    CO_IF_FRM   frm;
     uint8_t     tgl;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2300;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2300;
     uint8_t     sub  = 1;
     uint8_t     id;
                                                       /*------------------------------------------*/
@@ -650,7 +670,7 @@ SUITE_SEG_DOWN()
     TS_RUNNER(TS_SegWr_SubIdxNotExist);
     TS_RUNNER(TS_SegWr_ReadOnly);
     TS_RUNNER(TS_SegWr_LenTooHigh);
-//    TS_RUNNER(TS_SegWr_LenTooLow);
+    TS_RUNNER(TS_SegWr_42ByteDomain_41Byte);
     TS_RUNNER(TS_SegWr_DomainNullPtr);
     TS_RUNNER(TS_SegWr_BadToggleBit);
     TS_RUNNER(TS_SegWr_RestartTransfer);
