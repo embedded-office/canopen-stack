@@ -25,7 +25,7 @@ extern "C" {
 * INCLUDES
 ******************************************************************************/
 
-#include "co_core.h"
+#include "app_dict.h"
 
 /******************************************************************************
 * PUBLIC DEFINES
@@ -40,10 +40,10 @@ enum EMCY_CODES {
 };
 
 /******************************************************************************
-* PUBLIC SYMBOLS
+* PUBLIC FUNCTIONS
 ******************************************************************************/
 
-extern struct CO_NODE_SPEC_T AppSpec;
+void ClkStartNode(CO_NODE *node);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

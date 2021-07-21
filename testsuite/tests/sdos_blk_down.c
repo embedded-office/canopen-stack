@@ -84,11 +84,11 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_43ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 43;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 43;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -135,11 +135,11 @@ TS_DEF_MAIN(TS_BlkWr_43ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_41ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 41;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 41;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -185,11 +185,11 @@ TS_DEF_MAIN(TS_BlkWr_41ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_994ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 994;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 994;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -242,11 +242,11 @@ TS_DEF_MAIN(TS_BlkWr_994ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_995ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 995;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 995;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -299,11 +299,11 @@ TS_DEF_MAIN(TS_BlkWr_995ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_993ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 993;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 993;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -357,11 +357,11 @@ TS_DEF_MAIN(TS_BlkWr_993ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_42ByteDomain_NoLen)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -409,11 +409,11 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_NoLen)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_43ByteDomain_NoLen)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 43;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 43;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -460,11 +460,11 @@ TS_DEF_MAIN(TS_BlkWr_43ByteDomain_NoLen)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_41ByteDomain_NoLen)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 41;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 41;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -511,11 +511,11 @@ TS_DEF_MAIN(TS_BlkWr_41ByteDomain_NoLen)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_1000ByteDomain_NoLen)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 1000;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 1000;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -568,14 +568,13 @@ TS_DEF_MAIN(TS_BlkWr_1000ByteDomain_NoLen)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
-#if DISABLE
 TS_DEF_MAIN(TS_BlkWr_LostSeg)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -591,7 +590,7 @@ TS_DEF_MAIN(TS_BlkWr_LostSeg)
     CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
-    TS_SendBlk(0x00, 6, 1, 3);                        /* transmit segments in (last) block        */
+    TS_SendBlk(0x00, 6, 1, 3);                        /* transmit segment 1 and 2; 3 is lost      */
 
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
@@ -599,7 +598,7 @@ TS_DEF_MAIN(TS_BlkWr_LostSeg)
     CHK_NEXTBLK (frm, CO_SDO_BUF_SEG);                /* check next block size                    */
 
                                                       /*===== RE-SEND FAILED BLOCK DOWNLOAD ======*/
-    TS_SendBlk(0x0E, 4, 1, 0);                        /* transmit segments in (last) block        */
+    TS_SendBlk(0x0E, 4, 1, 0);                        /* transmit segment 1 to 4                  */
 
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
@@ -616,7 +615,6 @@ TS_DEF_MAIN(TS_BlkWr_LostSeg)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
@@ -629,11 +627,11 @@ TS_DEF_MAIN(TS_BlkWr_LostSeg)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_890ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 890;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 890;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -680,11 +678,11 @@ TS_DEF_MAIN(TS_BlkWr_890ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_889ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 889;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 889;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -731,11 +729,11 @@ TS_DEF_MAIN(TS_BlkWr_889ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_46ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 46;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 46;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -781,11 +779,11 @@ TS_DEF_MAIN(TS_BlkWr_46ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_44ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 44;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 44;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -833,10 +831,10 @@ TS_DEF_MAIN(TS_BlkWr_44ByteDomain)
 TS_DEF_MAIN(TS_BlkWr_BadCmd)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 44;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 1;
+    CO_NODE   node;
+    uint32_t  size = 44;
+    uint16_t  idx  = 0x2100;
+    uint8_t   sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -866,10 +864,10 @@ TS_DEF_MAIN(TS_BlkWr_BadCmd)
 TS_DEF_MAIN(TS_BlkWr_ObjNotExist)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2100;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -900,10 +898,10 @@ TS_DEF_MAIN(TS_BlkWr_ObjNotExist)
 TS_DEF_MAIN(TS_BlkWr_SubIdxNotExist)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2100;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -934,10 +932,10 @@ TS_DEF_MAIN(TS_BlkWr_SubIdxNotExist)
 TS_DEF_MAIN(TS_BlkWr_ReadOnly)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2100;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____R_, size);
@@ -964,14 +962,13 @@ TS_DEF_MAIN(TS_BlkWr_ReadOnly)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
-#if DISABLED
 TS_DEF_MAIN(TS_BlkWr_LenTooHigh)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2100;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -988,7 +985,6 @@ TS_DEF_MAIN(TS_BlkWr_LenTooHigh)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
@@ -1003,9 +999,9 @@ TS_DEF_MAIN(TS_BlkWr_LenTooHigh)
 TS_DEF_MAIN(TS_BlkWr_DomainNullPtr)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2100;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (uintptr_t)0);
@@ -1036,13 +1032,13 @@ TS_DEF_MAIN(TS_BlkWr_DomainNullPtr)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_TwoDomains)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom1  = 0;
-    CO_OBJ_DOM        *dom2  = 0;
-    uint32_t     size1 = 42;
-    uint32_t     size2 = 43;
-    uint16_t     idx   = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom1  = 0;
+    CO_OBJ_DOM *dom2  = 0;
+    uint32_t    size1 = 42;
+    uint32_t    size2 = 43;
+    uint16_t    idx   = 0x2100;
     uint8_t     sub1  = 0;
     uint8_t     sub2  = 1;
                                                       /*------------------------------------------*/
@@ -1127,11 +1123,11 @@ TS_DEF_MAIN(TS_BlkWr_TwoDomains)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_455ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 455;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 455;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -1181,11 +1177,11 @@ TS_DEF_MAIN(TS_BlkWr_455ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_42ByteDomain_35Byte)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -1234,14 +1230,13 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_35Byte)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
-#if DISABLED
 TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2100;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -1258,7 +1253,6 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
@@ -1267,17 +1261,18 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte)
 *
 *         This testcase will check the block download of an array with size = 49 to the
 *         Domainbuffer with size = 42, without size indicated
+*         This testcase will check the Abort code " Data type doesn't match, length too high.  "
+*                                   Abort code 0x06070012
 *
 */
 /*------------------------------------------------------------------------------------------------*/
-#if DISABLED
 TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte_NoLen)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2100;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -1301,7 +1296,6 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte_NoLen)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
@@ -1317,14 +1311,14 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte_NoLen)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkWr_ExpWrAfter43ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom;
-    uint32_t     size = 43;
-    uint16_t     idx  = 0x2100;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    uint32_t    size = 43;
+    uint16_t    idx  = 0x2100;
     uint8_t     sub  = 0;
-    uint32_t     val  = 0;
-    uint16_t     idx2 = 0x2200;
+    uint32_t    val  = 0;
+    uint16_t    idx2 = 0x2200;
     uint8_t     sub2 = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -1389,7 +1383,7 @@ SUITE_BLK_DOWN()
     TS_RUNNER(TS_BlkWr_43ByteDomain_NoLen);
     TS_RUNNER(TS_BlkWr_41ByteDomain_NoLen);
     TS_RUNNER(TS_BlkWr_1000ByteDomain_NoLen);
-//    TS_RUNNER(TS_BlkWr_LostSeg);
+    TS_RUNNER(TS_BlkWr_LostSeg);
     TS_RUNNER(TS_BlkWr_890ByteDomain);
     TS_RUNNER(TS_BlkWr_889ByteDomain);
     TS_RUNNER(TS_BlkWr_46ByteDomain);
@@ -1398,15 +1392,14 @@ SUITE_BLK_DOWN()
     TS_RUNNER(TS_BlkWr_ObjNotExist);
     TS_RUNNER(TS_BlkWr_SubIdxNotExist);
     TS_RUNNER(TS_BlkWr_ReadOnly);
-//    TS_RUNNER(TS_BlkWr_LenTooHigh);
+    TS_RUNNER(TS_BlkWr_LenTooHigh);
     TS_RUNNER(TS_BlkWr_DomainNullPtr);
     TS_RUNNER(TS_BlkWr_TwoDomains);
     TS_RUNNER(TS_BlkWr_455ByteDomain);
     TS_RUNNER(TS_BlkWr_42ByteDomain_35Byte);
-//    TS_RUNNER(TS_BlkWr_42ByteDomain_49Byte);
-//    TS_RUNNER(TS_BlkWr_42ByteDomain_49Byte_NoLen);
+    TS_RUNNER(TS_BlkWr_42ByteDomain_49Byte);
+    TS_RUNNER(TS_BlkWr_42ByteDomain_49Byte_NoLen);
     TS_RUNNER(TS_BlkWr_ExpWrAfter43ByteDomain);
-
 
 //    CanDiagnosticOff(0);
 

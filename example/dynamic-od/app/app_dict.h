@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef APP_CLOCK_H_
-#define APP_CLOCK_H_
+#ifndef APP_DICT_H_
+#define APP_DICT_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -28,25 +28,25 @@ extern "C" {
 #include "co_core.h"
 
 /******************************************************************************
-* PUBLIC DEFINES
+* PUBLIC TYPEDEF
 ******************************************************************************/
 
-/* Specify the EMCY-IDs for the application */
-enum EMCY_CODES {
-    APP_ERR_ID_SOMETHING = 0,
-    APP_ERR_ID_HOT,
-
-    APP_ERR_ID_NUM            /* number of EMCY error codes in application */
-};
+typedef struct {
+    CO_OBJ   *Root;
+    uint32_t  Length;
+    uint32_t  Used;
+} OD_DYN;
 
 /******************************************************************************
-* PUBLIC SYMBOLS
+* PUBLIC FUNCTIONS
 ******************************************************************************/
 
-extern struct CO_NODE_SPEC_T AppSpec;
+void ODInit(OD_DYN *self, CO_OBJ *root, uint32_t length);
+void ODAddUpdate(OD_DYN *self, uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data);
+void ODSetSpec(OD_DYN *self, CO_NODE_SPEC *spec);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 
-#endif /* APP_CLOCK_H_ */
+#endif /* APP_DICT_H_ */

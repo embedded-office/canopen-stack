@@ -24,7 +24,7 @@ extern "C" {
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
-    
+
 #ifndef CO_ERR_BASE
 #define CO_ERR_BASE    0x0100    /*!< First CANopen stack error code         */
 #endif
@@ -95,7 +95,8 @@ typedef enum CO_ERR_T {
     CO_ERR_RPDO_COM_OBJ,         /*!< config error in RPDO communication     */
     CO_ERR_RPDO_MAP_OBJ,         /*!< config error in RPDO mapping           */
 
-    CO_ERR_SDO_ABORT,            /*!< error during in SDO request            */
+    CO_ERR_SDO_SILENT,           /*!< no SDO response (e.g. block transfer)  */
+    CO_ERR_SDO_ABORT,            /*!< error in SDO request with ABORT resp.  */
     CO_ERR_SDO_READ,             /*!< error during in SDO block reading      */
     CO_ERR_SDO_WRITE,            /*!< error during in SDO block writing      */
 

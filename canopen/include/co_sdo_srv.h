@@ -39,10 +39,11 @@ extern "C" {
 #define CO_SDO_ERR_SEQ_NUM      0x05040003    /*!< Invalid Sequence number                */
 #define CO_SDO_ERR_RD           0x06010001    /*!< Attempt to read a write only object    */
 #define CO_SDO_ERR_WR           0x06010002    /*!< Attempt to write a read only object    */
-#define CO_SDO_ERR_OBJ          0x06020000    /*!< Object doesn't exist in dictionary      */
+#define CO_SDO_ERR_OBJ          0x06020000    /*!< Object doesn't exist in dictionary     */
+#define CO_SDO_ERR_HW_ACCESS    0x06060000    /*!< Access failed due to an hardware error */
 #define CO_SDO_ERR_LEN_HIGH     0x06070012    /*!< Length of parameter too high           */
 #define CO_SDO_ERR_LEN_SMALL    0x06070013    /*!< Length of parameter too small          */
-#define CO_SDO_ERR_SUB          0x06090011    /*!< Subindex doesn't exist in dictionary    */
+#define CO_SDO_ERR_SUB          0x06090011    /*!< Subindex doesn't exist in dictionary   */
 #define CO_SDO_ERR_RANGE        0x06090030    /*!< Value range of parameter exceeded      */
 #define CO_SDO_ERR_TOS          0x08000020    /*!< Data can't be transfered or stored     */
 #define CO_SDO_ERR_TOS_STATE    0x08000022    /*!< Data can't be transfered or stored,    */
@@ -72,7 +73,7 @@ extern "C" {
 *    designed to provide the feature of changing a SDO identifier.
 */
 extern const CO_OBJ_TYPE COTSdoId;
-    
+
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
@@ -127,6 +128,7 @@ typedef struct CO_SDO_BLK_T {
     uint32_t                Len;        /*!< remaining block length in byte  */
     uint8_t                 SegNum;     /*!< number of segments in block     */
     uint8_t                 SegCnt;     /*!< current segment number          */
+    uint8_t                 SegOk;      /*!< last successfull sent segment   */
     uint8_t                 LastValid;  /*!< valid bytes in last segment     */
 
 } CO_SDO_BLK;
@@ -261,10 +263,14 @@ CO_ERR COSdoGetObject(CO_SDO *srv, uint16_t mode);
 * \param width
 *    Parameter size in byte (or 0 if unknown)
 *
-* \retval  =0    Abort for known width
+* \param strict
+*    Controls the lower boundary check. If this argument is false, a width
+*    smaller than the object size is allowed.
+*
+* \retval  =0    Invalid width, abort frame in SDO server is set
 * \retval  >0    Size of Object
 */
-uint32_t COSdoGetSize(CO_SDO *srv, uint32_t width);
+uint32_t COSdoGetSize(CO_SDO *srv, uint32_t width, bool strict);
 
 /*! \brief  EXPEDITED UPLOAD PROTOCOL
 *

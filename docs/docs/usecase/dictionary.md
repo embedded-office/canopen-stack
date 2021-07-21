@@ -51,7 +51,7 @@ sequenceDiagram
     O-->>-D: value
     D-->>-A: value
 ```
- 
+
 For multiple accesses to the same object entry, the following sequence reduces the performance overhead, which is based on searching within the object dictionary. The object read and write functions can take a previously searched object entry as the first argument:
 
 ```c
@@ -205,6 +205,23 @@ The following list shows the type function prototypes. The return value of the s
   CO_ERR   DemoWrite(CO_OBJ *obj, void *buf, uint32_t len);
   CO_ERR   DemoCtrl (CO_OBJ *obj, uint16_t id, uint32_t para);
 ```
+
+**Note:** The parameter `len` in the functions `DemoRead()` and `DemoWrite()` is the length of the data, given via the pointer `buf`. If you want to use the width of the object entry, you can use the following snippet:
+
+```c
+CO_ERR DemoRead(CO_OBJ *obj, void *buf, uint32_t len)
+{
+    uint32_t width = CO_GET_SIZE(obj->Key);
+
+    /* now you can handle your data with:
+    *  - size (number of valid buffer data)
+    *  - width (number of object entry data)
+    *  Note: you can trust, that the indicated SDO transfer size (if given)
+    *        is equal to the width (checked by the SDO server)
+    */
+}
+```
+
 
 To enable the usage of this demo type to the CAN network side, the demo object must be added to the object directory. See the following object entry with index=0x6789 and subindex=0 as an example:
 

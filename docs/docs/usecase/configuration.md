@@ -126,7 +126,7 @@ The single parameters are most likely used within the object directory. The exam
 
 ### Domain Definition
 
-This chapter describes the specification of an object with the type `domain`. The domains are highly application-specific and are usable in a wide range. 
+This chapter describes the specification of an object with the type `domain`. The domains are highly application-specific and are usable in a wide range.
 
 Example:
 
@@ -155,7 +155,7 @@ Note: The standard type implementation `CO_TDOMAIN` assumes, that the domain mem
 
 ### Heartbeat Consumer Definition
 
-This chapter describes the specification of a heartbeat consumer object. 
+This chapter describes the specification of a heartbeat consumer object.
 
 Example:
 
@@ -312,16 +312,18 @@ The object entry type structure reference [`CO_OBJ_TYPE *`] shall be set to one 
 | `CO_TASYNC`     | Asynchronous PDO signal entry         |
 | `CO_TDOMAIN`    | Domain entry                          |
 | `CO_TEMCY`      | EMCY history entry                    |
+| `CO_TEMCYID`    | Dynamic EMCY COB-ID                   |
 | `CO_TEVENT`     | PDO event timer entry                 |
 | `CO_THB_PROD`*) | Heartbeat producer entry              |
 | `CO_THB_CONS`   | Heartbeat consumer entry              |
 | `CO_TPARA`      | Parameter group store/restore entry   |
-| `CO_TPDOID`     | Dynamic PDO identifier entry          |
+| `CO_TPDOID`     | Dynamic PDO COB-ID entry              |
 | `CO_TPDOMAP`    | Dynamic PDO mapping entry             |
 | `CO_TPDONUM`    | Dynamic PDO number of mapping entries |
 | `CO_TPDOTYPE`   | Dynamic PDO transmission type entry   |
-| `CO_TSDOID`     | Dynamic SDO identifier entry          |
+| `CO_TSDOID`     | Dynamic SDO COB-ID entry              |
 | `CO_TSTRING`    | Unlimited read-only string            |
+| `CO_TSYNCID`    | Dynamic SYNC COB-ID                   |
 
 *) Note: The object type `CO_THEARTBEAT` is obsolete and replaced by the new `CO_THB_PROD`. We keep the previous type for compatibility reasons, but you should change your object type to the new one.
 
@@ -336,6 +338,7 @@ The object data reference [`uintptr_t`] shall be set in dependence to the object
 | `CO_TASYNC`   | N/A            | address of variable                       |
 | `CO_TDOMAIN`  | N/A            | address of domain info structure          |
 | `CO_TEMCY`    | N/A            | address of EMCY history entry             |
+| `CO_TEMCYID`  | N/A            | address of variable                       |
 | `CO_TEVENT`   | N/A            | address of variable                       |
 | `CO_THB_PROD` | N/A            | address of variable                       |
 | `CO_THB_CONS` | N/A            | address of heartbeat consumer structure   |
@@ -346,6 +349,7 @@ The object data reference [`uintptr_t`] shall be set in dependence to the object
 | `CO_TPDOTYPE` | N/A            | address of variable                       |
 | `CO_TSDOID`   | N/A            | address of variable                       |
 | `CO_TSTRING`  | N/A            | address of string info structure          |
+| `CO_TSYNCID`  | N/A            | address of variable                       |
 
 #### PDO Mapping Value
 
@@ -379,6 +383,33 @@ const CO_OBJ AppObjDir[] = {
 ```
 
 *Note: this CANopen stack supports the mapping of 8, 16 or 32bits.*
+
+### Transmit PDO Communication
+
+This chapter describes the PDO communication record for a transmit PDO. The object record contains the following object entries:
+
+| Index:sub  | Type         | Object Type                        | Description                             |
+| ---------- | ------------ | ---------------------------------- | --------------------------------------- |
+| `1800h:00` | `UNSIGNED8`  | `const`                            | *Communication Object TPDO #0*          |
+| `1800h:01` | `UNSIGNED32` | `const` or `rw` with `CO_TPDOID`   | COB-ID used by TPDO                     |
+| `1800h:02` | `UNSIGNED8`  | `const` or `rw` with `CO_TPDOTYPE` | Transmission type                       |
+| `1800h:03` | `UNSIGNED16` | `const` or `rw`                    | Inhibit time with LSB 100us (0=disable) |
+| `1800h:04` | n/a          | n/a                                | reserved, shall not be implemented      |
+| `1800h:05` | `UNSIGNED16` | `const` or `rw` with `CO_TEVENT`   | Event timer LSB 1ms (0=disable)         |
+{:.fullwidth}
+
+The index identifies which PDO is configured (1800h: TPDO #0, 1801h: TPDO #1, ..., 19ffh: TPDO #511). The object type is `const` in case of static communication settings. When the communication settings are parameters or dynamic variables, the listed object types ensures the correct change behavior for these records.
+
+The encoding for the transmission type (subindex 2) is standardized:
+
+| Value    | Description                            |
+| -------- | -------------------------------------- |
+| 00h      | acyclic                                |
+| 01h..F0h | cyclic every n-th SYNC (1..240)        |
+| F1h..FDh | reserved                               |
+| FEh      | event-driven (manufacturer specific)   |
+| FFh      | event-driven (device profile specific) |
+
 
 ### Timer Memory Block
 
@@ -419,11 +450,11 @@ Example:
 };
 ```
 
-This example specifies the basic node information for the example node. Each entry is a part of the configuration. This structure is only required during the startup of the CANopen stack. 
+This example specifies the basic node information for the example node. Each entry is a part of the configuration. This structure is only required during the startup of the CANopen stack.
 
 If SDO block and segmented transfer is disabled, e.g. the SDO transfer buffer is not used, the last entry in the node specification can be set to `NULL`.
 
-The following example creates a single CANopen node: 
+The following example creates a single CANopen node:
 
 ```c
 extern const CO_NODE_SPEC AppSpec;

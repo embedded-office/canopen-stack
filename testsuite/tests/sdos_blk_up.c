@@ -26,10 +26,10 @@
 
 void TS_ChkBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t valid)
 {
-    CO_IF_FRM frm;                               /* Local: virtual CAN frame                 */
-    uint8_t seg;                                   /* Local: segment counter                   */
-    uint32_t idx;                                   /* Local: free running data index           */
-    uint8_t num = 7;
+    CO_IF_FRM frm;
+    uint8_t   seg;
+    uint32_t  idx;
+    uint8_t   num = 7;
 
     seg = 1;                                          /* initialize sequence counter              */
     idx = start;
@@ -59,11 +59,11 @@ void TS_ChkBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t valid)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_42ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 2;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -110,11 +110,11 @@ TS_DEF_MAIN(TS_BlkRd_42ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_43ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 43;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 43;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 3;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -161,11 +161,11 @@ TS_DEF_MAIN(TS_BlkRd_43ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_41ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 41;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 41;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -212,11 +212,11 @@ TS_DEF_MAIN(TS_BlkRd_41ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_994ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 994;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 994;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -264,11 +264,11 @@ TS_DEF_MAIN(TS_BlkRd_994ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_995ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 995;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 995;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -316,11 +316,11 @@ TS_DEF_MAIN(TS_BlkRd_995ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_993ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 993;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 993;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -368,11 +368,11 @@ TS_DEF_MAIN(TS_BlkRd_993ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_890ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 890;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 890;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -420,11 +420,11 @@ TS_DEF_MAIN(TS_BlkRd_890ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_889ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 889;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 889;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -469,11 +469,11 @@ TS_DEF_MAIN(TS_BlkRd_889ByteDomain)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_888ByteDomain)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 888;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 888;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -518,19 +518,71 @@ TS_DEF_MAIN(TS_BlkRd_888ByteDomain)
 *
 */
 /*------------------------------------------------------------------------------------------------*/
-#if DISABLED
 TS_DEF_MAIN(TS_BlkRd_LostMiddleSeg)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 994;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 26;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    DomFill(dom, 0);
+    DomFill(dom, 'a');
+    TS_CreateNode(&node,0);
+
+                                                      /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
+    TS_SDO_SEND (0xA0, idx, sub, 3);                  /* 3 segments per block (21 bytes)          */
+
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xC2);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
+    CHK_DATA    (frm, size);                          /* check block size                         */
+
+                                                      /*===== INIT BLOCK UPLOAD (PHASE II) =======*/
+    TS_SDO_SEND (0xA3, 0x0000, 0, 0);
+
+                                                      /*===== BLOCK UPLOAD =======================*/
+    TS_ChkBlk  ('a', 3, 0, 0);                        /* 3 blocks (a-g,h-n,o-u)                   */
+    TS_ACKBLK_SEND(0xA2, 2, 3);                       /* ack for segment 1-2 (segment 3: lost)    */
+
+    TS_ChkBlk  ('o', 2, 1, 5);                        /* 2 blocks (o-u,v-z) (last block: 5 bytes) */
+    TS_ACKBLK_SEND(0xA2, 2, 3);                       /* ack for segment 3-4                      */
+
+                                                      /*===== END BLOCK UPLOAD ===================*/
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xC9);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_ZERO    (frm);                                /* check cleared data area                  */
+
+    TS_EBLK_SEND(0xA1, 0x00000000);
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
+*          This testcase will check the block upload of an array with size = 26 Bytes and
+*          check the failured block upload of loosing a segment in the middle of the transfer
+*          (Go-Back-N ARQ)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_BlkRd_LostLastSeg)
+{
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 26;
+    uint16_t    idx  = 0x2520;
+    uint8_t     sub  = 6;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomFill(dom, 'a');
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
@@ -545,22 +597,21 @@ TS_DEF_MAIN(TS_BlkRd_LostMiddleSeg)
     TS_SDO_SEND (0xA3, 0x0000, 0, 0);
 
                                                       /*===== BLOCK UPLOAD =======================*/
-    TS_ChkBlk  (0x00, 127, 0, 7);                     /* check received block                     */
-    TS_ACKBLK_SEND(0xA2,  15, CO_SDO_BUF_SEG);
+    TS_ChkBlk  ('a', 4, 1, 5);                        /* 4 received blocks (last block: 5 bytes)  */
+    TS_ACKBLK_SEND(0xA2, 2, CO_SDO_BUF_SEG);          /* ack for segment 1-2 (segment 3-4: lost)  */
 
-    TS_ChkBlk  (0x10, 127, 1, 7);                     /* check received block                     */
-    TS_ACKBLK_SEND(0xA2, 127, CO_SDO_BUF_SEG);
+    TS_ChkBlk  ('o', 2, 1, 5);                        /* 2 received blocks (last block: 5 bytes)  */
+    TS_ACKBLK_SEND(0xA2, 2, CO_SDO_BUF_SEG);          /* ack for segment 3-4                      */
 
                                                       /*===== END BLOCK UPLOAD ===================*/
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
-    CHK_SDO0    (frm, 0xC1);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_SDO0    (frm, 0xC9);                          /* check SDO #0 response (Id and DLC)       */
     CHK_ZERO    (frm);                                /* check cleared data area                  */
 
     TS_EBLK_SEND(0xA1, 0x00000000);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TESTCASE DESCRIPTION
@@ -575,11 +626,11 @@ TS_DEF_MAIN(TS_BlkRd_LostMiddleSeg)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_LostFirstSeg)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 994;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 994;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -631,10 +682,10 @@ TS_DEF_MAIN(TS_BlkRd_LostFirstSeg)
 TS_DEF_MAIN(TS_BlkRd_BadCmd)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 6;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -664,10 +715,10 @@ TS_DEF_MAIN(TS_BlkRd_BadCmd)
 TS_DEF_MAIN(TS_BlkRd_ObjNotExist)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 6;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -675,7 +726,7 @@ TS_DEF_MAIN(TS_BlkRd_ObjNotExist)
 
     idx++;
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
-    TS_SDO_SEND (0xA0, idx, sub, 127); 
+    TS_SDO_SEND (0xA0, idx, sub, 127);
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     CHK_SDO0 (frm, 0x80);                             /* check SDO #0 response (Id and DLC)       */
@@ -698,10 +749,10 @@ TS_DEF_MAIN(TS_BlkRd_ObjNotExist)
 TS_DEF_MAIN(TS_BlkRd_SubIdxNotExist)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -733,10 +784,10 @@ TS_DEF_MAIN(TS_BlkRd_SubIdxNotExist)
 TS_DEF_MAIN(TS_BlkRd_WriteOnly)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 1;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ_____W, size);
@@ -766,9 +817,9 @@ TS_DEF_MAIN(TS_BlkRd_WriteOnly)
 TS_DEF_MAIN(TS_BlkRd_DomainNullPtr)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 9;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 9;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (uintptr_t)0);
@@ -798,10 +849,10 @@ TS_DEF_MAIN(TS_BlkRd_DomainNullPtr)
 TS_DEF_MAIN(TS_BlkRd_LenTooHigh)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 6;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -831,10 +882,10 @@ TS_DEF_MAIN(TS_BlkRd_LenTooHigh)
 TS_DEF_MAIN(TS_BlkRd_LenTooLow)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint32_t     size = 42;
-    uint16_t     idx  = 0x2520;
-    uint8_t     sub  = 6;
+    CO_NODE   node;
+    uint32_t  size = 42;
+    uint16_t  idx  = 0x2520;
+    uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     DomCreate(idx, sub, CO_OBJ____RW, size);
@@ -865,11 +916,11 @@ TS_DEF_MAIN(TS_BlkRd_LenTooLow)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_LenTooLowAfterRestart)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 994;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 994;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -919,11 +970,11 @@ TS_DEF_MAIN(TS_BlkRd_LenTooLowAfterRestart)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_LenTooHighAfterRestart)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 994;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 994;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -972,11 +1023,11 @@ TS_DEF_MAIN(TS_BlkRd_LenTooHighAfterRestart)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_BadSeqNbrAfterRestart)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom ;
-    uint32_t     size = 994;
-    uint16_t     idx  = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 994;
+    uint16_t    idx  = 0x2520;
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
@@ -1026,13 +1077,13 @@ TS_DEF_MAIN(TS_BlkRd_BadSeqNbrAfterRestart)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_BlkRd_TwoDomains)
 {
-    CO_IF_FRM frm;
-    CO_NODE        node;
-    CO_OBJ_DOM        *dom1  = 0;
-    CO_OBJ_DOM        *dom2  = 0;
-    uint32_t     size1 = 42;
-    uint32_t     size2 = 43;
-    uint16_t     idx   = 0x2520;
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom1  = 0;
+    CO_OBJ_DOM *dom2  = 0;
+    uint32_t    size1 = 42;
+    uint32_t    size2 = 43;
+    uint16_t    idx   = 0x2520;
     uint8_t     sub1  = 2;
     uint8_t     sub2  = 3;
                                                       /*------------------------------------------*/
@@ -1069,7 +1120,6 @@ TS_DEF_MAIN(TS_BlkRd_TwoDomains)
 
     TS_EBLK_SEND(0xA1, 0x00000000);
 
-    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_NO_ERR  (&node);                              /* check error free stack execution         */
 
 
@@ -1102,6 +1152,60 @@ TS_DEF_MAIN(TS_BlkRd_TwoDomains)
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
+*         This testcase will check the block upload of an array with size = 42 from  Domainbuffer
+*         entry
+*
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_BlkRd_BlkWr_BlkRd)
+{
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 10;
+    uint16_t    idx  = 0x2520;
+    uint8_t     sub  = 2;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomFill(dom, 'a');
+    TS_CreateNode(&node,0);
+
+    TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);     /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_SDO_SEND (0xA3, 0x0000, 0, 0);                 /*===== INIT BLOCK UPLOAD (PHASE II) =======*/
+                                                      /*===== BLOCK UPLOAD =======================*/
+    TS_ChkBlk('a', 2, 1, 3);                          /* block (a-g, h-j) (last block: 3 bytes)   */
+    TS_ACKBLK_SEND(0xA2, 2, CO_SDO_BUF_SEG);          /*===== ACKNOWLEDGE BLOCK ==================*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_EBLK_SEND(0xA1, 0x00000000);                   /*===== END BLOCK UPLOAD ===================*/
+
+    TS_SDO_SEND (0xC2, idx, sub, size);               /*===== INIT BLOCK DOWNLOAD ================*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+                                                      /*===== BLOCK DOWNLOAD =====================*/
+    TS_SendBlk(0x00, 2, 1, 3);                        /* block (0-6, 7-9) (last block: 3 bytes)   */
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_EBLK_SEND(0xC1, 0x00000000);                   /*===== END BLOCK DOWNLOAD =================*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+
+    TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);     /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_SDO_SEND (0xA3, 0x0000, 0, 0);                 /*===== INIT BLOCK UPLOAD (PHASE II) =======*/
+                                                      /*===== BLOCK UPLOAD =======================*/
+    TS_ChkBlk(0x00, 2, 1, 3);                         /* block (0-6, 7-9) (last block: 3 bytes)   */
+    TS_ACKBLK_SEND(0xA2, 2, CO_SDO_BUF_SEG);          /*===== ACKNOWLEDGE BLOCK ==================*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_EBLK_SEND(0xA1, 0x00000000);                   /*===== END BLOCK UPLOAD ===================*/
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -1109,7 +1213,7 @@ TS_DEF_MAIN(TS_BlkRd_TwoDomains)
 SUITE_BLK_UP()
 {
     TS_Begin(__FILE__);
-    
+
 //    CanDiagnosticOn(0);
 
     TS_RUNNER(TS_BlkRd_42ByteDomain);
@@ -1121,7 +1225,8 @@ SUITE_BLK_UP()
     TS_RUNNER(TS_BlkRd_890ByteDomain);
     TS_RUNNER(TS_BlkRd_889ByteDomain);
     TS_RUNNER(TS_BlkRd_888ByteDomain);
-//    TS_RUNNER(TS_BlkRd_LostMiddleSeg);
+    TS_RUNNER(TS_BlkRd_LostMiddleSeg);
+    TS_RUNNER(TS_BlkRd_LostLastSeg);
     TS_RUNNER(TS_BlkRd_LostFirstSeg);
     TS_RUNNER(TS_BlkRd_BadCmd);
     TS_RUNNER(TS_BlkRd_ObjNotExist);
@@ -1134,6 +1239,7 @@ SUITE_BLK_UP()
     TS_RUNNER(TS_BlkRd_LenTooHighAfterRestart);
     TS_RUNNER(TS_BlkRd_BadSeqNbrAfterRestart);
     TS_RUNNER(TS_BlkRd_TwoDomains);
+    TS_RUNNER(TS_BlkRd_BlkWr_BlkRd);
 
 //    CanDiagnosticOff(0);
 

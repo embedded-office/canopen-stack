@@ -94,11 +94,11 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
     }
 
     if (type == CO_RESET_NODE) {
-        CONodeParaLoad(nmt->Node, CO_RESET_NODE);     
+        CONodeParaLoad(nmt->Node, CO_RESET_NODE);
     }
 
     if (type <= CO_RESET_COM) {
-        CONodeParaLoad(nmt->Node, CO_RESET_COM);      
+        CONodeParaLoad(nmt->Node, CO_RESET_COM);
         err = COLssLoad(&nmt->Node->Baudrate, &nmt->Node->NodeId);
         if (err != CO_ERR_NONE) {
             nmt->Node->Error = CO_ERR_LSS_LOAD;
@@ -126,11 +126,11 @@ void CONmtSetMode(CO_NMT *nmt, CO_MODE mode)
         CONodeFatalError();
         return;
     }
-    if (mode == CO_OPERATIONAL) {
-        COTPdoInit(nmt->Node->TPdo, nmt->Node);
-        CORPdoInit(nmt->Node->RPdo, nmt->Node);
-    }
     if (nmt->Mode != mode) {
+        if (mode == CO_OPERATIONAL) {
+            COTPdoInit(nmt->Node->TPdo, nmt->Node);
+            CORPdoInit(nmt->Node->RPdo, nmt->Node);
+        }
         CONmtModeChange(nmt, mode);
     }
     nmt->Mode    = mode;

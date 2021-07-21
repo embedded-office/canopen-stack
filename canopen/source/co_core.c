@@ -54,7 +54,7 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     COSdoInit(node->Sdo, node);
     COTPdoClear(node->TPdo, node);
     CORPdoClear(node->RPdo, node);
-    COEmcyInit(&node->Emcy, node, spec->EmcyCode); 
+    COEmcyInit(&node->Emcy, node, spec->EmcyCode);
     COSyncInit(&node->Sync, node);
     COLssInit(&node->Lss, node);
     COIfCanEnable(&node->If, node->Baudrate);
@@ -149,21 +149,23 @@ void CONodeProcess(CO_NODE *node)
         allowed = 0;
     } else {
         allowed = node->Nmt.Allowed;
-    }
-
-    result = COLssCheck(&node->Lss, &frm);
-    if (result != 0) {
-        if (result > 0) {
-            (void)COIfCanSend(&node->If, &frm);
+        result  = COLssCheck(&node->Lss, &frm);
+        if (result != 0) {
+            if (result > 0) {
+                (void)COIfCanSend(&node->If, &frm);
+            }
+            allowed = 0;
         }
-        allowed = 0;
     }
 
     if ((allowed & CO_SDO_ALLOWED) != 0) {
         srv = COSdoCheck(node->Sdo, &frm);
         if (srv != 0) {
-            (void)COSdoResponse(srv);
-            (void)COIfCanSend(&node->If, &frm);
+            CO_ERR err = COSdoResponse(srv);
+            if ((err == CO_ERR_NONE     ) ||
+                (err == CO_ERR_SDO_ABORT)) {
+                (void)COIfCanSend(&node->If, &frm);
+            }
             allowed = 0;
         }
     }

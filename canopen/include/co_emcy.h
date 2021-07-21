@@ -34,8 +34,13 @@ extern "C" {
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
-    
-#define CO_TEMCY      (CO_OBJ_TYPE *)&COTEmcy  /*!< Object Type EMCY History */
+
+#define CO_EMCY_COBID_OFF    ((uint32_t)1 << 31)    /*!< marked as unused    */
+#define CO_EMCY_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
+#define CO_EMCY_COBID_MASK   ((uint32_t)0x1FFFFFFF) /*!< identifier mask     */
+
+#define CO_TEMCY   ((const CO_OBJ_TYPE *)&COTEmcy)    /*!< EMCY History      */
+#define CO_TEMCYID ((const CO_OBJ_TYPE *)&COTEmcyId)  /*!< Dynamic COB-ID    */
 
 #define CO_EMCY_STORAGE  (1+((CO_EMCY_N-1)/8))  /*!< bytes for CO_EMCY_N bit */
 
@@ -96,7 +101,7 @@ extern "C" {
 /******************************************************************************
 * PUBLIC CONSTANTS
 ******************************************************************************/
-    
+
 /*! \brief OBJECT TYPE EMCY HISTORY
 *
 *    This type is responsible for the access to the EMCY history.
@@ -318,7 +323,7 @@ int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err);
 * \retval  =1    the error state has changed
 */
 int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state);
-    
+
 /*! \brief  SEND EMCY MESSAGE
 *
 *    This function transmits the EMCY message to the configured CANbus.
@@ -458,6 +463,29 @@ CO_ERR COTypeEmcyRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, u
 * \retval  CO_ERR_TYPE_WR     an error is detected and function aborted
 */
 CO_ERR COTypeEmcyWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+
+/*! \brief EMCY COB-ID WRITE ACCESS
+*
+*    This function is responsible for the correct write access for the
+*    EMCY COB-ID object entry (1014h). The access to bit 0 to 29 is only
+*    allowed when bit 31 is set to 1.
+*
+* \param obj
+*    EMCY COB-ID object entry reference
+*
+* \param node
+*    reference to parent node
+*
+* \param buf
+*    Pointer to buffer memory
+*
+* \param len
+*    Length of buffer memory
+*
+* \retval  CO_ERR_NONE        EMCY COB-ID object entry is written
+* \retval  CO_ERR_OBJ_RANGE   an error is detected and function aborted
+*/
+CO_ERR COTypeEmcyIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
