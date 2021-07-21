@@ -1152,6 +1152,60 @@ TS_DEF_MAIN(TS_BlkRd_TwoDomains)
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
+*         This testcase will check the block upload of an array with size = 42 from  Domainbuffer
+*         entry
+*
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_BlkRd_BlkWr_BlkRd)
+{
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 10;
+    uint16_t    idx  = 0x2520;
+    uint8_t     sub  = 2;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomFill(dom, 'a');
+    TS_CreateNode(&node,0);
+
+    TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);     /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_SDO_SEND (0xA3, 0x0000, 0, 0);                 /*===== INIT BLOCK UPLOAD (PHASE II) =======*/
+                                                      /*===== BLOCK UPLOAD =======================*/
+    TS_ChkBlk('a', 2, 1, 3);                          /* block (a-g, h-j) (last block: 3 bytes)   */
+    TS_ACKBLK_SEND(0xA2, 2, CO_SDO_BUF_SEG);          /*===== ACKNOWLEDGE BLOCK ==================*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_EBLK_SEND(0xA1, 0x00000000);                   /*===== END BLOCK UPLOAD ===================*/
+
+    TS_SDO_SEND (0xC2, idx, sub, size);               /*===== INIT BLOCK DOWNLOAD ================*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+                                                      /*===== BLOCK DOWNLOAD =====================*/
+    TS_SendBlk(0x00, 2, 1, 3);                        /* block (0-6, 7-9) (last block: 3 bytes)   */
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_EBLK_SEND(0xC1, 0x00000000);                   /*===== END BLOCK DOWNLOAD =================*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+
+    TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);     /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_SDO_SEND (0xA3, 0x0000, 0, 0);                 /*===== INIT BLOCK UPLOAD (PHASE II) =======*/
+                                                      /*===== BLOCK UPLOAD =======================*/
+    TS_ChkBlk(0x00, 2, 1, 3);                         /* block (0-6, 7-9) (last block: 3 bytes)   */
+    TS_ACKBLK_SEND(0xA2, 2, CO_SDO_BUF_SEG);          /*===== ACKNOWLEDGE BLOCK ==================*/
+    CHK_CAN     (&frm);                               /* consume response frame                   */
+    TS_EBLK_SEND(0xA1, 0x00000000);                   /*===== END BLOCK UPLOAD ===================*/
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -1185,6 +1239,7 @@ SUITE_BLK_UP()
     TS_RUNNER(TS_BlkRd_LenTooHighAfterRestart);
     TS_RUNNER(TS_BlkRd_BadSeqNbrAfterRestart);
     TS_RUNNER(TS_BlkRd_TwoDomains);
+    TS_RUNNER(TS_BlkRd_BlkWr_BlkRd);
 
 //    CanDiagnosticOff(0);
 
