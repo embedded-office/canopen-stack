@@ -29,7 +29,7 @@
 
 #define CO_VER_MAJOR          4
 #define CO_VER_MINOR          1
-#define CO_VER_BUILD          5
+#define CO_VER_BUILD          6
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
