@@ -126,7 +126,7 @@ The single parameters are most likely used within the object directory. The exam
 
 ### Domain Definition
 
-This chapter describes the specification of an object with the type `domain`. The domains are highly application-specific and are usable in a wide range. 
+This chapter describes the specification of an object with the type `domain`. The domains are highly application-specific and are usable in a wide range.
 
 Example:
 
@@ -155,7 +155,7 @@ Note: The standard type implementation `CO_TDOMAIN` assumes, that the domain mem
 
 ### Heartbeat Consumer Definition
 
-This chapter describes the specification of a heartbeat consumer object. 
+This chapter describes the specification of a heartbeat consumer object.
 
 Example:
 
@@ -380,6 +380,33 @@ const CO_OBJ AppObjDir[] = {
 
 *Note: this CANopen stack supports the mapping of 8, 16 or 32bits.*
 
+### Transmit PDO Communication
+
+This chapter describes the PDO communication record for a transmit PDO. The object record contains the following object entries:
+
+| Index:sub  | Type         | Object Type                        | Description                             |
+| ---------- | ------------ | ---------------------------------- | --------------------------------------- |
+| `1800h:00` | `UNSIGNED8`  | `const`                            | *Communication Object TPDO #0*          |
+| `1800h:01` | `UNSIGNED32` | `const` or `rw` with `CO_TPDOID`   | COB-ID used by TPDO                     |
+| `1800h:02` | `UNSIGNED8`  | `const` or `rw` with `CO_TPDOTYPE` | Transmission type                       |
+| `1800h:03` | `UNSIGNED16` | `const` or `rw`                    | Inhibit time with LSB 100us (0=disable) |
+| `1800h:04` | n/a          | n/a                                | reserved, shall not be implemented      |
+| `1800h:05` | `UNSIGNED16` | `const` or `rw`                    | Event timer LSB 1ms (0=disable)         |
+{:.fullwidth}
+
+The index identifies which PDO is configured (1800h: TPDO #0, 1801h: TPDO #1, ..., 19ffh: TPDO #511). The object type is `const` in case of static communication settings. When the communication settings are parameters or dynamic variables, the listed object types ensures the correct change behavior for these records.
+
+The encoding for the transmission type (subindex 2) is standardized:
+
+| Value    | Description                            |
+| -------- | -------------------------------------- |
+| 00h      | acyclic                                |
+| 01h..F0h | cyclic every n-th SYNC (1..240)        |
+| F1h..FDh | reserved                               |
+| FEh      | event-driven (manufacturer specific)   |
+| FFh      | event-driven (device profile specific) |
+
+
 ### Timer Memory Block
 
 This chapter describes the allocation of the data memory, required by the CANopen timer module. The presented source code lines represent the default and must not be changed. The typical need on changing this memory allocation is to place this memory to a specific place in internal or external RAM.
@@ -419,11 +446,11 @@ Example:
 };
 ```
 
-This example specifies the basic node information for the example node. Each entry is a part of the configuration. This structure is only required during the startup of the CANopen stack. 
+This example specifies the basic node information for the example node. Each entry is a part of the configuration. This structure is only required during the startup of the CANopen stack.
 
 If SDO block and segmented transfer is disabled, e.g. the SDO transfer buffer is not used, the last entry in the node specification can be set to `NULL`.
 
-The following example creates a single CANopen node: 
+The following example creates a single CANopen node:
 
 ```c
 extern const CO_NODE_SPEC AppSpec;
