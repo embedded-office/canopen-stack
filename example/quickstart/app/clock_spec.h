@@ -49,4 +49,4 @@ extern struct CO_NODE_SPEC_T AppSpec;
 }
 #endif
 
-#endif /* CO_IF_H_ */
+#endif /* APP_CLOCK_H_ */
