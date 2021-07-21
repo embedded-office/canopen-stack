@@ -36,7 +36,7 @@ extern "C" {
 #define CO_TPDO_COBID_OFF    ((uint32_t)1 << 31)    /*!< marked as unused    */
 #define CO_TPDO_COBID_REMOTE ((uint32_t)1 << 30)    /*!< RTR is not allowed  */
 #define CO_TPDO_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
-    
+
 #define CO_RPDO_COBID_OFF    ((uint32_t)1 << 31)    /*!< marked as unused    */
 #define CO_RPDO_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
 
@@ -47,7 +47,7 @@ extern "C" {
 #define CO_TPDO_FLG_S_E     0x05   /*!< PDO synced + event occured           */
 #define CO_TPDO_FLG_SI_     0x06   /*!< PDO synced + TX inhibited            */
 #define CO_TPDO_FLG_SIE     0x07   /*!< PDO synved + event occured + TX inh. */
-    
+
 #define CO_RPDO_FLG__E      0x01                    /*!< enabled RPDO        */
 #define CO_RPDO_FLG_S_      0x02                    /*!< synchronized RPDO   */
 
@@ -58,7 +58,7 @@ extern "C" {
 #define CO_TEVENT   ((const CO_OBJ_TYPE *)&COTEvent)   /*!< TPDO Event Timer     */
 #define CO_TPDONUM  ((const CO_OBJ_TYPE *)&COTPdoMapN) /*!< Dynamic Map Numbers  */
 #define CO_TPDOMAP  ((const CO_OBJ_TYPE *)&COTPdoMap)  /*!< Dynamic Mapping      */
-#define CO_TPDOID   ((const CO_OBJ_TYPE *)&COTPdoId)   /*!< Dynamic Identifier   */
+#define CO_TPDOID   ((const CO_OBJ_TYPE *)&COTPdoId)   /*!< Dynamic COB-ID       */
 #define CO_TPDOTYPE ((const CO_OBJ_TYPE *)&COTPdoType) /*!< Dynamic Transm. Type */
 
 /******************************************************************************

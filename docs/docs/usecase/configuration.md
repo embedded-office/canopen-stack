@@ -312,16 +312,18 @@ The object entry type structure reference [`CO_OBJ_TYPE *`] shall be set to one 
 | `CO_TASYNC`     | Asynchronous PDO signal entry         |
 | `CO_TDOMAIN`    | Domain entry                          |
 | `CO_TEMCY`      | EMCY history entry                    |
+| `CO_TEMCYID`    | Dynamic EMCY COB-ID                   |
 | `CO_TEVENT`     | PDO event timer entry                 |
 | `CO_THB_PROD`*) | Heartbeat producer entry              |
 | `CO_THB_CONS`   | Heartbeat consumer entry              |
 | `CO_TPARA`      | Parameter group store/restore entry   |
-| `CO_TPDOID`     | Dynamic PDO identifier entry          |
+| `CO_TPDOID`     | Dynamic PDO COB-ID entry              |
 | `CO_TPDOMAP`    | Dynamic PDO mapping entry             |
 | `CO_TPDONUM`    | Dynamic PDO number of mapping entries |
 | `CO_TPDOTYPE`   | Dynamic PDO transmission type entry   |
-| `CO_TSDOID`     | Dynamic SDO identifier entry          |
+| `CO_TSDOID`     | Dynamic SDO COB-ID entry              |
 | `CO_TSTRING`    | Unlimited read-only string            |
+| `CO_TSYNCID`    | Dynamic SYNC COB-ID                   |
 
 *) Note: The object type `CO_THEARTBEAT` is obsolete and replaced by the new `CO_THB_PROD`. We keep the previous type for compatibility reasons, but you should change your object type to the new one.
 
@@ -336,6 +338,7 @@ The object data reference [`uintptr_t`] shall be set in dependence to the object
 | `CO_TASYNC`   | N/A            | address of variable                       |
 | `CO_TDOMAIN`  | N/A            | address of domain info structure          |
 | `CO_TEMCY`    | N/A            | address of EMCY history entry             |
+| `CO_TEMCYID`  | N/A            | address of variable                       |
 | `CO_TEVENT`   | N/A            | address of variable                       |
 | `CO_THB_PROD` | N/A            | address of variable                       |
 | `CO_THB_CONS` | N/A            | address of heartbeat consumer structure   |
@@ -346,6 +349,7 @@ The object data reference [`uintptr_t`] shall be set in dependence to the object
 | `CO_TPDOTYPE` | N/A            | address of variable                       |
 | `CO_TSDOID`   | N/A            | address of variable                       |
 | `CO_TSTRING`  | N/A            | address of string info structure          |
+| `CO_TSYNCID`  | N/A            | address of variable                       |
 
 #### PDO Mapping Value
 

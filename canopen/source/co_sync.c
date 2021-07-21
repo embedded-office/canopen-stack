@@ -19,8 +19,13 @@
 ******************************************************************************/
 
 #include "co_sync.h"
-
 #include "co_core.h"
+
+/******************************************************************************
+* GLOBAL CONSTANTS
+******************************************************************************/
+
+const CO_OBJ_TYPE COTSyncId = { 0, 0, 0, COTypeSyncIdWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -172,4 +177,37 @@ void COSyncRestart(CO_SYNC *sync)
             sync->TSync[i] = 0;
         }
     }
+}
+
+/*
+* see function definition
+*/
+CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+{
+    CO_ERR    result = CO_ERR_NONE;
+    uint32_t  nid;
+    uint32_t  oid;
+
+    (void)len;
+    (void)node;
+    nid = *(uint32_t*)buf;
+    (void)COObjRdDirect(obj, &oid, CO_LONG);
+
+    /* currently generating SYNCs is not supported */
+    if((nid & CO_SYNC_COBID_OFF) != (uint32_t)0) {
+        result = CO_ERR_OBJ_RANGE;
+    }
+
+    /* when current entry is generating SYNCs, bits 0 to 29 shall not be changed */
+    if ((oid & CO_SYNC_COBID_OFF) != (uint32_t)0) {
+        if ((nid & CO_SYNC_COBID_MASK) != (oid & CO_SYNC_COBID_MASK)) {
+            result = CO_ERR_OBJ_RANGE;
+        } else {
+            result = COObjWrDirect(obj, &nid, CO_LONG);
+        }
+    } else {
+        result = COObjWrDirect(obj, &nid, CO_LONG);
+    }
+
+    return (result);
 }

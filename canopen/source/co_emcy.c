@@ -26,6 +26,7 @@
 ******************************************************************************/
 
 const CO_OBJ_TYPE COTEmcy = { 0, 0, COTypeEmcyRead, COTypeEmcyWrite };
+const CO_OBJ_TYPE COTEmcyId = { 0, 0, 0, COTypeEmcyIdWrite };
 
 /******************************************************************************
 * FUNCTIONS
@@ -312,7 +313,7 @@ int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state)
 */
 void COEmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
 {
-    CO_IF_FRM    frm; 
+    CO_IF_FRM    frm;
     CO_NODE     *node;
     CO_DICT      *dir;
     CO_EMCY_TBL *data;
@@ -521,6 +522,34 @@ CO_ERR COTypeEmcyWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, 
             COEmcyHistReset(emcy);
             result = CO_ERR_NONE;
         }
+    }
+
+    return (result);
+}
+
+/*
+* see function definition
+*/
+CO_ERR COTypeEmcyIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+{
+    CO_ERR    result = CO_ERR_NONE;
+    uint32_t  nid;
+    uint32_t  oid;
+
+    (void)len;
+    (void)node;
+    nid = *(uint32_t*)buf;
+    (void)COObjRdDirect(obj, &oid, CO_LONG);
+
+    /* when current entry is active, bits 0 to 29 shall not be changed */
+    if ((oid & CO_EMCY_COBID_OFF) == (uint32_t)0) {
+        if ((nid & CO_EMCY_COBID_MASK) != (oid & CO_EMCY_COBID_MASK)) {
+            result = CO_ERR_OBJ_RANGE;
+        } else {
+            result = COObjWrDirect(obj, &nid, CO_LONG);
+        }
+    } else {
+        result = COObjWrDirect(obj, &nid, CO_LONG);
     }
 
     return (result);
