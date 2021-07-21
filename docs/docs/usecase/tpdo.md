@@ -35,7 +35,7 @@ For a constant timer based sending as defined in the CiA standards we need to pr
     {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
     {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0xfe},
     {CO_KEY(0x1800, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0},
-    {CO_KEY(0x1800, 5, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)60},
+    {CO_KEY(0x1800, 5, CO_UNSIGNED32|CO_OBJ_D__R_), CO_TEVENT, (uintptr_t)60},
   :
 ```
 
