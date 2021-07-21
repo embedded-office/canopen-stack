@@ -7,7 +7,25 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
-nothing
+- none
+
+## [4.1.6] - 2012-07-21
+
+### Added
+
+- Explain the possible PDO transmission options
+- Add Example which describes how to setup and use a dynamic object dictionary
+- Add type functions for EMCY COB-ID (1014) and SYNC COB-ID (1005)
+
+### Changed
+
+- Clarify the arguments in type functions read() and write()
+
+### Fixed
+
+- PDO Timer Config when entering the OPERATE state multiple times
+- Fix the random bogus frame passed to function when no CAN frame is received
+- Fix issues in SDO block upload and download protocol
 
 ## [4.1.5] - 2021-02-11
 
@@ -113,7 +131,8 @@ nothing
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.5...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.6...HEAD
+[4.1.6]: https://github.com/embedded-office/canopen-stack/compare/v4.1.5...v4.1.6
 [4.1.5]: https://github.com/embedded-office/canopen-stack/compare/v4.1.4...v4.1.5
 [4.1.4]: https://github.com/embedded-office/canopen-stack/compare/v4.1.3...v4.1.4
 [4.1.3]: https://github.com/embedded-office/canopen-stack/compare/v4.1.2...v4.1.3
