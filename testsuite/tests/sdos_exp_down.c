@@ -42,7 +42,7 @@
 *   - ok     : correct SDO request
 *   - badcmd : bad SDO command in request
 *
-* #### Test Definition 
+* #### Test Definition
 *
 * test-function                  | obj    | size    | prop    | req    | type
 * ------------------------------ | ------ | ------- | ------- | ------ | ----
@@ -75,6 +75,22 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
+#define MY_TYPE  ((CO_OBJ_TYPE *)&MyType)
+
+static CO_ERR MyTypeWriteErr(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+{
+    CO_ERR err = CO_ERR_TYPE_WR;
+
+    COObjTypeUserSDOAbort(obj, node, 0x11223344);
+
+    (void)size;
+    (void)buf;
+
+    return (err);
+}
+
+static const CO_OBJ_TYPE MyType = { 0, 0, 0, MyTypeWriteErr };
+
 /*------------------------------------------------------------------------------------------------*/
 /*!
 * \brief    Write a parameter byte to object dictionary
@@ -96,10 +112,10 @@
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_1BytePara)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 1;
-    uint8_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2510;
+    uint8_t  sub  = 1;
+    uint8_t  val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -138,10 +154,10 @@ TS_DEF_MAIN(TS_ExpWr_1BytePara)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_2BytePara)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 2;
-    uint16_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2510;
+    uint8_t  sub  = 2;
+    uint16_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -180,10 +196,10 @@ TS_DEF_MAIN(TS_ExpWr_2BytePara)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_4BytePara)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 3;
-    uint32_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2510;
+    uint8_t  sub  = 3;
+    uint32_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -222,10 +238,10 @@ TS_DEF_MAIN(TS_ExpWr_4BytePara)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_1ByteVar)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2500;
-    uint8_t     sub  = 1;
-    uint8_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2500;
+    uint8_t  sub  = 1;
+    uint8_t  val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -264,10 +280,10 @@ TS_DEF_MAIN(TS_ExpWr_1ByteVar)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_2ByteVar)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2500;
-    uint8_t     sub  = 2;
-    uint16_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2500;
+    uint8_t  sub  = 2;
+    uint16_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -306,10 +322,10 @@ TS_DEF_MAIN(TS_ExpWr_2ByteVar)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_4ByteVar)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2500;
-    uint8_t     sub  = 3;
-    uint32_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2500;
+    uint8_t  sub  = 3;
+    uint32_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -321,7 +337,7 @@ TS_DEF_MAIN(TS_ExpWr_4ByteVar)
 
     /* -- CHECK -- */
     CHK_SDO0_OK(idx, sub);
-    
+
     TS_ASSERT(0x44434241 == val);
 
     CHK_NO_ERR(&node);
@@ -348,10 +364,10 @@ TS_DEF_MAIN(TS_ExpWr_4ByteVar)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_2ByteVar_NoLen)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2500;
-    uint8_t     sub  = 1;
-    uint8_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2500;
+    uint8_t  sub  = 1;
+    uint8_t  val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -389,10 +405,10 @@ TS_DEF_MAIN(TS_ExpWr_2ByteVar_NoLen)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_BadCmd)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 3;
-    uint32_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2510;
+    uint8_t  sub  = 3;
+    uint32_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -429,10 +445,10 @@ TS_DEF_MAIN(TS_ExpWr_BadCmd)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_ObjNotExist)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 1;
-    uint32_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2100;
+    uint8_t  sub  = 1;
+    uint32_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -469,10 +485,10 @@ TS_DEF_MAIN(TS_ExpWr_ObjNotExist)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_SubIdxNotExist)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2100;
-    uint8_t     sub  = 0;
-    uint32_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2100;
+    uint8_t  sub  = 0;
+    uint32_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -509,10 +525,10 @@ TS_DEF_MAIN(TS_ExpWr_SubIdxNotExist)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_ReadOnly)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 6;
-    uint16_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2510;
+    uint8_t  sub  = 6;
+    uint16_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -548,10 +564,10 @@ TS_DEF_MAIN(TS_ExpWr_ReadOnly)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_LenTooHigh)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 2;
-    uint16_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2510;
+    uint8_t  sub  = 2;
+    uint16_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -587,10 +603,10 @@ TS_DEF_MAIN(TS_ExpWr_LenTooHigh)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_LenTooLow)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 2;
-    uint16_t     val  = 0;
+    CO_NODE  node;
+    uint16_t idx  = 0x2510;
+    uint8_t  sub  = 2;
+    uint16_t val  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -627,9 +643,9 @@ TS_DEF_MAIN(TS_ExpWr_LenTooLow)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_ExpWr_DataNullPtr)
 {
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 7;
+    CO_NODE  node;
+    uint16_t idx  = 0x2510;
+    uint8_t  sub  = 7;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -641,6 +657,47 @@ TS_DEF_MAIN(TS_ExpWr_DataNullPtr)
 
     /* -- CHECK -- */
     CHK_SDO0_ERR(idx, sub, 0x08000020);
+
+    CHK_NO_ERR(&node);
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*!
+* \brief    Try to write with an error in type function to an object dictionary
+*
+* \details  This test checks, that the type function write() can abort with a user defined code.
+*
+* ####      Test Preparation
+*           1. Prepare object dictionary including a variable of type MY_TYPE.
+*
+* ####      Test Steps
+*           1. Send SDO expedited download request initiating a type error
+*
+* ####      Test Checks
+*           1. Check, that SDO server response is correct
+*           2. Check, that value is not written in object dictionary
+*           3. Check, that CANopen stack executes this error free
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_ExpWr_UserWriteErr)
+{
+    CO_NODE  node;
+    uint16_t idx  = 0x2500;
+    uint8_t  sub  = 1;
+    uint8_t  val  = 0;
+
+    /* -- PREPARATION -- */
+    TS_CreateMandatoryDir();
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), MY_TYPE, (uintptr_t)&val);
+    TS_CreateNode(&node,0);
+
+    /* -- TEST -- */
+    TS_SDO_SEND (0x2F, idx, sub, 0);
+
+    /* -- CHECK -- */
+    CHK_SDO0_ERR(idx, sub, 0x11223344);
+
+    TS_ASSERT(0 == val);
 
     CHK_NO_ERR(&node);
 }
@@ -670,6 +727,8 @@ SUITE_EXP_DOWN()
     TS_RUNNER(TS_ExpWr_LenTooHigh);
     TS_RUNNER(TS_ExpWr_LenTooLow);
     TS_RUNNER(TS_ExpWr_DataNullPtr);
+
+    TS_RUNNER(TS_ExpWr_UserWriteErr);
 
 //    CanDiagnosticOff(0);
 

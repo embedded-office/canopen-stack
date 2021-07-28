@@ -122,7 +122,8 @@ CO_SDO *COSdoCheck(CO_SDO *srv, CO_IF_FRM *frm)
         while ((n < CO_SDOS_N) && (result == 0)) {
             if (CO_GET_ID(frm) == srv[n].RxId) {
                 CO_SET_ID(frm, srv[n].TxId);
-                srv[n].Frm = frm;
+                srv[n].Frm   = frm;
+                srv[n].Abort = 0;
                 if (srv[n].Obj == 0) {
                     srv[n].Idx = CO_GET_WORD(frm, 1);
                     srv[n].Sub = CO_GET_BYTE(frm, 3);
@@ -318,7 +319,11 @@ CO_ERR COSdoUploadExpedited(CO_SDO *srv)
         nodeid = srv->Node->NodeId;
         err    = COObjRdValue(srv->Obj, srv->Node, (void *)&data, CO_LONG, nodeid);
         if (err != CO_ERR_NONE) {
-            COSdoAbort(srv, CO_SDO_ERR_TOS);
+            if (srv->Abort > 0) {
+                COSdoAbort(srv, srv->Abort);
+            } else {
+                COSdoAbort(srv, CO_SDO_ERR_TOS);
+            }
             return (result);
         } else {
             cmd = (uint8_t)0x43u | (uint8_t)(((4u - size) & 0x3u) << 2u);
@@ -363,7 +368,9 @@ CO_ERR COSdoDownloadExpedited(CO_SDO *srv)
         data   = CO_GET_LONG(srv->Frm, 4);
         err    = COObjWrValue(srv->Obj, srv->Node, (void*)&data, CO_LONG, nodeid);
         if (err != CO_ERR_NONE) {
-            if (err == CO_ERR_OBJ_RANGE) {
+            if (srv->Abort > 0) {
+                COSdoAbort(srv, srv->Abort);
+            } else if (err == CO_ERR_OBJ_RANGE) {
                 COSdoAbort(srv, CO_SDO_ERR_RANGE);
             } else if (err == CO_ERR_OBJ_MAP_TYPE) {
                 COSdoAbort(srv, CO_SDO_ERR_OBJ_MAP);

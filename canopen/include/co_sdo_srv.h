@@ -144,6 +144,7 @@ typedef struct CO_SDO_T {
     CO_IF_FRM          *Frm;     /*!< SDO request/response CAN frame         */
     uint32_t            RxId;    /*!< SDO request CAN identifier             */
     uint32_t            TxId;    /*!< SDO response CAN identifier            */
+    uint32_t            Abort;   /*!< SDO abort code overwrite, when >0      */
     uint16_t            Idx;     /*!< Extracted Multiplexer Index            */
     uint8_t             Sub;     /*!< Extracted Multiplexer Subindex         */
     struct CO_SDO_BUF_T Buf;     /*!< Transfer buffer management structure   */
