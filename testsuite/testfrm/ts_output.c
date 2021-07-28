@@ -37,10 +37,12 @@ void TS_PutChar(void *arg, char character)
     (void)arg;
     putchar((int)character);
 #else
-/* 
+/*
 * \note  The testsuite is running with MSVC compiler on the windows host, only. You may
 *        adjust the settings ts_types.h and provide an output channel here to get the tests
 *        running on your target, too.
 */
+    (void)arg;
+    (void)character;
 #endif
 }

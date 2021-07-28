@@ -295,7 +295,7 @@ static void TS_SummaryInit(void)
 static int32_t TS_Summary(void)
 {
     int32_t result = TestData.Sum.FailCnt;
-    
+
     TS_Printf("-----------------------\n");
     TS_Printf("    S U M M A R Y\n");
     TS_Printf("-----------------------\n");
@@ -308,7 +308,7 @@ static int32_t TS_Summary(void)
     } else {
         TS_Printf("FAIL\n");
     }
-    
+
     if (!TS_IsAllEnabled()) {
         TS_Printf("Info: Some Tests are disabled.\n");
     }
@@ -514,7 +514,6 @@ void TS_Init (void)
 int32_t TS_Start (void)
 {
     int32_t            result = 0;
-#if defined ( _MSC_VER )
     const TS_INFOFUNC *test;
     TS_INFO            Info;
 
@@ -534,13 +533,6 @@ int32_t TS_Start (void)
     }
 
     result = TS_Summary();                            /* show test summary statistic              */
-#else
-/* 
-* \note  The testsuite is running with MSVC compiler on the windows host, only. You may
-*        adjust the settings in ts_types.h and provide an output channel in ts_output.c
-*        to get the tests running on your target, too.
-*/
-#endif
 
     return (result);
 }

@@ -26,7 +26,7 @@ target_sources(Canopen
     source/co_if_nvm.c
     source/co_if_timer.c
     source/co_if.c
-    source/co_lss.c 
+    source/co_lss.c
     source/co_nmt.c
     source/co_obj.c
     source/co_para.c
@@ -40,11 +40,7 @@ target_sources(Canopen
 #---
 # enable warnings and tread as errors
 #
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-  if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-    # tread all files as C files 
-    target_compile_options(Canopen PRIVATE /TC)
-  endif()
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   # enable all warnings
   target_compile_options(Canopen PRIVATE -Wall
                                          -Wextra

@@ -18,7 +18,7 @@
 * INCLUDES
 ******************************************************************************/
 
-/* TODO: rename the include file name to match the naming convention: 
+/* TODO: rename the include file name to match the naming convention:
  *   co_can_<device>.h
  */
 #include "co_can_dummy.h"
@@ -44,7 +44,7 @@ static void    DrvCanClose  (void);
 * PUBLIC VARIABLE
 ******************************************************************************/
 
-/* TODO: rename the variable to match the naming convention: 
+/* TODO: rename the variable to match the naming convention:
  *   <device>CanDriver
  */
 const CO_IF_CAN_DRV DummyCanDriver = {
@@ -67,17 +67,23 @@ static void DrvCanInit(void)
 
 static void DrvCanEnable(uint32_t baudrate)
 {
+    (void)baudrate;
+
     /* TODO: set the given baudrate to the CAN controller */
 }
 
 static int16_t DrvCanSend(CO_IF_FRM *frm)
 {
+    (void)frm;
+
     /* TODO: wait for free CAN message slot and send the given CAN frame */
     return (0u);
 }
 
 static int16_t DrvCanRead (CO_IF_FRM *frm)
 {
+    (void)frm;
+
     /* TODO: wait for a CAN frame and read CAN frame from the CAN controller */
     return (0u);
 }

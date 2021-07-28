@@ -40,14 +40,15 @@ typedef enum DEF_TEST_GROUPS_E {                      /*---- Test Groups -------
     DEF_G_NUM                                         /*!< Number of Groups                       */
 } DEF_TEST_GROUPS;
 
-typedef enum DEF_CORE_SUITES_E {                      /*---- Core Component Test Suites ----------*/ 
+typedef enum DEF_CORE_SUITES_E {                      /*---- Core Component Test Suites ----------*/
     DEF_S_CORE_TMR,                                   /*!< Suite: Highspeed Timer                 */
     DEF_S_GET_TICKS,                                  /*!< Suite: CoTmrGetTicks()                 */
+    DEF_S_MIN_TIME,                                   /*!< Suite: COTmrGetMinTime()               */
 
     DEF_S_CORE_NUM                                    /*!< Number of Suites in Group              */
 } DEF_CORE_SUITES;
 
-typedef enum DEF_SDOS_SUITES_E {                      /*---- SDO Server Test Suites --------------*/ 
+typedef enum DEF_SDOS_SUITES_E {                      /*---- SDO Server Test Suites --------------*/
     DEF_S_EXP_UP,                                     /*!< Suite: SDO Expedited Upload            */
     DEF_S_EXP_DOWN,                                   /*!< Suite: SDO Expedited Download          */
     DEF_S_SEG_UP,                                     /*!< Suite: SDO Segmented Upload            */
@@ -58,7 +59,7 @@ typedef enum DEF_SDOS_SUITES_E {                      /*---- SDO Server Test Sui
     DEF_S_SDOS_NUM                                    /*!< Number of Suites in Group              */
 } DEF_SDOS_SUITES;
 
-typedef enum DEF_PDO_SUITES_E {                       /*---- PDO Communication Test Suites -------*/ 
+typedef enum DEF_PDO_SUITES_E {                       /*---- PDO Communication Test Suites -------*/
     DEF_S_PDO_TX,                                     /*!< Suite: PDO Transmit                    */
     DEF_S_PDO_RX,                                     /*!< Suite: PDO Receive                     */
     DEF_S_PDO_DYN,                                    /*!< Suite: Dynamic PDO Configuration       */
@@ -66,7 +67,7 @@ typedef enum DEF_PDO_SUITES_E {                       /*---- PDO Communication T
     DEF_S_PDO_NUM                                     /*!< Number of Suites in Group              */
 } DEF_PDO_SUITES;
 
-typedef enum DEF_NMT_SUITES_E {                       /*---- NMT Management Test Suites ----------*/ 
+typedef enum DEF_NMT_SUITES_E {                       /*---- NMT Management Test Suites ----------*/
     DEF_S_NMT_MGR,                                    /*!< Suite: NMT Management                  */
     DEF_S_NMT_HBP,                                    /*!< Suite: NMT Heartbeat Producer          */
     DEF_S_NMT_HBC,                                    /*!< Suite: NMT Heartbeat Consumer          */
@@ -75,7 +76,7 @@ typedef enum DEF_NMT_SUITES_E {                       /*---- NMT Management Test
     DEF_S_NMT_NUM                                     /*!< Number of Suites in Group              */
 } DEF_NMT_SUITES;
 
-typedef enum DEF_EMCY_SUITES_E {                      /*---- EMCY Management Test Suites ---------*/ 
+typedef enum DEF_EMCY_SUITES_E {                      /*---- EMCY Management Test Suites ---------*/
     DEF_S_EMCY_STATE,                                 /*!< Suite: EMCY Error States               */
     DEF_S_EMCY_ERR,                                   /*!< Suite: EMCY Error Register Object      */
     DEF_S_EMCY_HIST,                                  /*!< Suite: EMCY Error History Object       */
@@ -88,8 +89,9 @@ typedef enum DEF_EMCY_SUITES_E {                      /*---- EMCY Management Tes
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define SUITE_CORE_TMR()   TS_DEF_SUITE(DEF_G_CORE, DEF_S_CORE_TMR)  /*!< \addtogroup core_tmr      Core Timer Test  */
-#define SUITE_GET_TICKS()  TS_DEF_SUITE(DEF_G_CORE, DEF_S_GET_TICKS) /*!< \addtogroup co_tmr      Timer Service Test  */
+#define SUITE_CORE_TMR()   TS_DEF_SUITE(DEF_G_CORE, DEF_S_CORE_TMR)  /*!< \addtogroup core_tmr    Core Timer Test     */
+#define SUITE_GET_TICKS()  TS_DEF_SUITE(DEF_G_CORE, DEF_S_GET_TICKS) /*!< \addtogroup co_get_tick Timer Service Test  */
+#define SUITE_MIN_TIME()   TS_DEF_SUITE(DEF_G_CORE, DEF_S_MIN_TIME)  /*!< \addtogroup co_min_tmr  Get Timer Min Time  */
 
 #define SUITE_EXP_UP()     TS_DEF_SUITE(DEF_G_SDOS, DEF_S_EXP_UP)    /*!< \addtogroup sdos_exp_up   SDO Server Test: Expedited Upload   */
 #define SUITE_EXP_DOWN()   TS_DEF_SUITE(DEF_G_SDOS, DEF_S_EXP_DOWN)  /*!< \addtogroup sdos_exp_down SDO Server Test: Expedited Download */
