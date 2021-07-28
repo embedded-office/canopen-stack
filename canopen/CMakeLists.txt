@@ -36,17 +36,3 @@ target_sources(Canopen
     source/co_tmr.c
     source/co_ver.c
 )
-
-#---
-# enable warnings and tread as errors
-#
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  # enable all warnings
-  target_compile_options(Canopen PRIVATE -Wall
-                                         -Wextra
-                                         -Wpedantic
-                                         -Werror)
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  target_compile_options(Canopen PRIVATE /W4
-                                         /WX)
-endif()
