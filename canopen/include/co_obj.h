@@ -852,6 +852,25 @@ CO_ERR COObjRdType(CO_OBJ *obj, struct CO_NODE_T *node, void *dst, uint32_t len,
 */
 CO_ERR COObjWrType(CO_OBJ *obj, struct CO_NODE_T *node, void *src, uint32_t len, uint32_t off);
 
+/*! \brief TYPE SPECIFIC SDO ABORT CODE
+*
+*    This function is responsible to set a user defined SDO abort code
+*    for the current transfer of an SDO server. This function is useful,
+*    when detecting an error within a type read od write function during
+*    an SDO transfer. If no SDO transfer is active, this function will
+*    do nothing.
+*
+* \param obj
+*    String object entry reference
+*
+* \param node
+*    reference to parent node
+*
+* \param abort
+*    Requested abort code (or 0 for standardized abort code)
+*/
+void COObjTypeUserSDOAbort(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t abort);
+
 /*! \brief STRING OBJECT SIZE
 *
 *    This function is responsible to calculate and return the size of the

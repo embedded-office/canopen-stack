@@ -200,16 +200,16 @@ If a new user type didn't need to have special behavior on accessing (e.g. get-s
 The following list shows the type function prototypes. The return value of the size type function (e.g. `DemoSize()`) shall return the size of the user type in bytes. The other type functions shall return `CO_ERR_NONE` after the successful operation. If an error is detected the corresponding error codes must be returned: `CO_ERR_TYPE_RD`, `CO_ERR_TYPE_WR` or `CO_ERR_TYPE_CTRL`.
 
 ```c
-  uint32_t DemoSize (CO_OBJ *obj, uint32_t width);
-  CO_ERR   DemoRead (CO_OBJ *obj, void *buf, uint32_t len);
-  CO_ERR   DemoWrite(CO_OBJ *obj, void *buf, uint32_t len);
-  CO_ERR   DemoCtrl (CO_OBJ *obj, uint16_t id, uint32_t para);
+  uint32_t DemoSize (CO_OBJ *obj, CO_NODE *node, uint32_t width);
+  CO_ERR   DemoRead (CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len);
+  CO_ERR   DemoWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len);
+  CO_ERR   DemoCtrl (CO_OBJ *obj, CO_NODE *node, uint16_t id, uint32_t para);
 ```
 
 **Note:** The parameter `len` in the functions `DemoRead()` and `DemoWrite()` is the length of the data, given via the pointer `buf`. If you want to use the width of the object entry, you can use the following snippet:
 
 ```c
-CO_ERR DemoRead(CO_OBJ *obj, void *buf, uint32_t len)
+CO_ERR DemoRead(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len)
 {
     uint32_t width = CO_GET_SIZE(obj->Key);
 
@@ -253,4 +253,19 @@ sequenceDiagram
     T-->>-O: value
     O-->>-D: value
     D-->>-A: value
+```
+
+When you need to control the ABORT codes of SDO expedited transfers, you can use the function `COObjTypeUserSDOAbort()` to set a user defined SDO abort code within your type functions:
+
+```c
+CO_ERR DemoWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len)
+{
+    :
+  if (/* your write error condition */) {
+      /* the given abort code is considered in SDO transfers only! */
+      COObjTypeUserSDOAbort(obj, node, 0x12345678);
+      return CO_ERR_TYPE_WR;
+  }
+    :
+}
 ```

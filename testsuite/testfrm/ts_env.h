@@ -112,7 +112,7 @@ extern "C" {
 *
 *             #### Test Execution Context
 *
-*             Test execution takes place in the main() function. This implies the C runtime 
+*             Test execution takes place in the main() function. This implies the C runtime
 *             stack is used for running the test framework. When creating test case functions,
 *             the test framework provides different runtime contexts for test execution.
 *
@@ -186,7 +186,7 @@ extern "C" {
 */
 /*------------------------------------------------------------------------------------------------*/
 #define TS_GROUP_MAX   16
-    
+
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
@@ -289,6 +289,7 @@ typedef void(*TS_INFOFUNC)(TS_INFO *);
     }                                                                         \
     TEST_SECTION_DEF                                                          \
     static TEST_SECTION_PRE TS_INFOFUNC Ptr = TestSuiteInfo TEST_SECTION_SUF; \
+    uintptr_t UnusedDummy##group##suite = (uintptr_t)&Ptr;                    \
     static void TestSuiteRunner(void)
 
 /*------------------------------------------------------------------------------------------------*/
@@ -378,7 +379,7 @@ void TS_Finish (void);
 * \param   line
 *          Line number of check for expected value(s)
 */
-/*------------------------------------------------------------------------------------------------*/    
+/*------------------------------------------------------------------------------------------------*/
 void TS_Fail(TS_LITERAL message, TS_LINE line);
 
 /*------------------------------------------------------------------------------------------------*/

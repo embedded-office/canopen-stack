@@ -18,7 +18,7 @@
 * INCLUDES
 ******************************************************************************/
 
-/* TODO: rename the include file name to match the naming convention: 
+/* TODO: rename the include file name to match the naming convention:
  *   co_nvm_<device>.h
  */
 #include "co_nvm_dummy.h"
@@ -42,7 +42,7 @@ static uint32_t DrvNvmWrite (uint32_t start, uint8_t *buffer, uint32_t size);
 * PUBLIC VARIABLE
 ******************************************************************************/
 
-/* TODO: rename the variable to match the naming convention: 
+/* TODO: rename the variable to match the naming convention:
  *   <device>NvmDriver
  */
 const CO_IF_NVM_DRV DummyNvmDriver = {
@@ -62,12 +62,20 @@ static void DrvNvmInit(void)
 
 static uint32_t DrvNvmRead(uint32_t start, uint8_t *buffer, uint32_t size)
 {
+    (void)start;
+    (void)buffer;
+    (void)size;
+
     /* TODO: read a memory block from non-volatile memory into given buffer */
     return (0u);
 }
 
 static uint32_t DrvNvmWrite(uint32_t start, uint8_t *buffer, uint32_t size)
 {
+    (void)start;
+    (void)buffer;
+    (void)size;
+
     /* TODO: write content of given buffer into non-volatile memory */
     return (0u);
 }

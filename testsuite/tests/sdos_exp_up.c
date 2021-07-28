@@ -41,7 +41,7 @@
 *   - ok     : correct SDO request
 *   - badcmd : bad SDO command in request
 *
-* #### Test Definition 
+* #### Test Definition
 *
 * test-function                  | obj    | size    | prop    | req    | type
 * ------------------------------ | ------ | ------- | ------- | ------ | ----
@@ -74,6 +74,22 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
+#define MY_TYPE  ((CO_OBJ_TYPE *)&MyType)
+
+static CO_ERR MyTypeReadErr(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+{
+    CO_ERR err = CO_ERR_TYPE_RD;
+
+    COObjTypeUserSDOAbort(obj, node, 0x11223344);
+
+    (void)size;
+    (void)buf;
+
+    return (err);
+}
+
+static const CO_OBJ_TYPE MyType = { 0, 0, MyTypeReadErr, 0 };
+
 /*------------------------------------------------------------------------------------------------*/
 /*!
 * \brief    Read a parameter byte from object dictionary
@@ -96,10 +112,10 @@
 TS_DEF_MAIN(TS_ExpRd_1BytePara)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 1;
-    uint8_t     val  = 0x11;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2510;
+    uint8_t   sub  = 1;
+    uint8_t   val  = 0x11;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -141,10 +157,10 @@ TS_DEF_MAIN(TS_ExpRd_1BytePara)
 TS_DEF_MAIN(TS_ExpRd_2BytePara)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 2;
-    uint16_t     val  = 0x2221;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2510;
+    uint8_t   sub  = 2;
+    uint16_t  val  = 0x2221;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -152,7 +168,7 @@ TS_DEF_MAIN(TS_ExpRd_2BytePara)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    TS_SDO_SEND (0x40, idx, sub, 0x00000000); 
+    TS_SDO_SEND (0x40, idx, sub, 0x00000000);
 
     /* -- CHECK -- */
     CHK_CAN  (&frm);
@@ -186,10 +202,10 @@ TS_DEF_MAIN(TS_ExpRd_2BytePara)
 TS_DEF_MAIN(TS_ExpRd_4BytePara)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 3;
-    uint32_t     val  = 0x44434241;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2510;
+    uint8_t   sub  = 3;
+    uint32_t  val  = 0x44434241;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -231,10 +247,10 @@ TS_DEF_MAIN(TS_ExpRd_4BytePara)
 TS_DEF_MAIN(TS_ExpRd_1ByteVar)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2500;
-    uint8_t     sub  = 1;
-    uint8_t     val  = 0x11;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2500;
+    uint8_t   sub  = 1;
+    uint8_t   val  = 0x11;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -276,10 +292,10 @@ TS_DEF_MAIN(TS_ExpRd_1ByteVar)
 TS_DEF_MAIN(TS_ExpRd_2ByteVar)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2500;
-    uint8_t     sub  = 2;
-    uint16_t     val  = 0x2221;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2500;
+    uint8_t   sub  = 2;
+    uint16_t  val  = 0x2221;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -320,10 +336,10 @@ TS_DEF_MAIN(TS_ExpRd_2ByteVar)
 TS_DEF_MAIN(TS_ExpRd_4ByteVar)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2500;
-    uint8_t     sub  = 3;
-    uint32_t     val  = 0x44434241;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2500;
+    uint8_t   sub  = 3;
+    uint32_t  val  = 0x44434241;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -365,9 +381,9 @@ TS_DEF_MAIN(TS_ExpRd_4ByteVar)
 TS_DEF_MAIN(TS_ExpRd_4ByteConst)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2505;
-    uint8_t     sub  = 3;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2505;
+    uint8_t   sub  = 3;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -410,9 +426,9 @@ TS_DEF_MAIN(TS_ExpRd_4ByteConst)
 TS_DEF_MAIN(TS_ExpRd_4ByteConstNodeId)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2505;
-    uint8_t     sub  = 3;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2505;
+    uint8_t   sub  = 3;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -455,10 +471,10 @@ TS_DEF_MAIN(TS_ExpRd_4ByteConstNodeId)
 TS_DEF_MAIN(TS_ExpRd_2ByteParaNodeId)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 6;
-    uint16_t     val  = 0x2221;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2510;
+    uint8_t   sub  = 6;
+    uint16_t  val  = 0x2221;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -500,10 +516,10 @@ TS_DEF_MAIN(TS_ExpRd_2ByteParaNodeId)
 TS_DEF_MAIN(TS_ExpRd_BadCmd)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2510;
-    uint8_t     sub  = 3;
-    uint16_t     val  = 0x2221;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2510;
+    uint8_t   sub  = 3;
+    uint16_t  val  = 0x2221;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -546,9 +562,9 @@ TS_DEF_MAIN(TS_ExpRd_BadCmd)
 TS_DEF_MAIN(TS_ExpRd_ObjNotExist)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2180;
-    uint8_t     sub  = 0;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2180;
+    uint8_t   sub  = 0;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -589,10 +605,10 @@ TS_DEF_MAIN(TS_ExpRd_ObjNotExist)
 TS_DEF_MAIN(TS_ExpRd_SubIdxNotExist)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2505;
-    uint8_t     sub  = 0;
-    uint16_t     val  = 0x2221;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2505;
+    uint8_t   sub  = 0;
+    uint16_t  val  = 0x2221;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -635,10 +651,10 @@ TS_DEF_MAIN(TS_ExpRd_SubIdxNotExist)
 TS_DEF_MAIN(TS_ExpRd_WriteOnly)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2505;
-    uint8_t     sub  = 5;
-    uint16_t     val  = 0x2221;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2505;
+    uint8_t   sub  = 5;
+    uint16_t  val  = 0x2221;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -681,9 +697,9 @@ TS_DEF_MAIN(TS_ExpRd_WriteOnly)
 TS_DEF_MAIN(TS_ExpRd_DataNullPtr)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     idx  = 0x2500;
-    uint8_t     sub  = 4;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2500;
+    uint8_t   sub  = 4;
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
@@ -703,6 +719,51 @@ TS_DEF_MAIN(TS_ExpRd_DataNullPtr)
     CHK_NO_ERR(&node);
 }
 
+/*------------------------------------------------------------------------------------------------*/
+/*!
+* \brief    Response to a bad SDO expedited upload request command
+*
+* \details  This test will check, that the Abort code "Client/server command specifier not valid
+*           or unknown" (abort code 0x05040001) is sent to a SDO request with a bad command byte.
+*
+* ####      Test Preparation
+*           none
+*
+* ####      Test Steps
+*           1. Send SDO expedited upload request with bad command
+*
+* ####      Test Checks
+*           1. Check, that SDO server send a response
+*           2. Check, that SDO server aborts the request
+*           3. Check, that CANopen stack executes this error free
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_ExpRd_UserReadErr)
+{
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    uint16_t  idx  = 0x2510;
+    uint8_t   sub  = 3;
+    uint16_t  val  = 0x1234;
+
+    /* -- PREPARATION -- */
+    TS_CreateMandatoryDir();
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), MY_TYPE, (uintptr_t)&val);
+    TS_CreateNode(&node,0);
+
+    /* -- TEST -- */
+    TS_SDO_SEND (0x40, idx, sub, 0);
+
+    /* -- CHECK -- */
+    CHK_CAN  (&frm);
+
+    CHK_SDO0 (frm, 0x80);
+    CHK_MLTPX(frm, idx, sub);
+    CHK_DATA (frm, 0x11223344);
+
+    CHK_NO_ERR(&node);
+}
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -710,7 +771,7 @@ TS_DEF_MAIN(TS_ExpRd_DataNullPtr)
 SUITE_EXP_UP()
 {
     TS_Begin(__FILE__);
-    
+
 //    CanDiagnosticOn(0);
 
     TS_RUNNER(TS_ExpRd_1BytePara);
@@ -722,12 +783,14 @@ SUITE_EXP_UP()
     TS_RUNNER(TS_ExpRd_4ByteConst);
     TS_RUNNER(TS_ExpRd_4ByteConstNodeId);
     TS_RUNNER(TS_ExpRd_2ByteParaNodeId);
-    
+
     TS_RUNNER(TS_ExpRd_BadCmd);
     TS_RUNNER(TS_ExpRd_ObjNotExist);
     TS_RUNNER(TS_ExpRd_SubIdxNotExist);
     TS_RUNNER(TS_ExpRd_WriteOnly);
     TS_RUNNER(TS_ExpRd_DataNullPtr);
+
+    TS_RUNNER(TS_ExpRd_UserReadErr);
 
 //    CanDiagnosticOff(0);
 

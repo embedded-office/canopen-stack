@@ -440,6 +440,21 @@ CO_ERR COObjWrType(CO_OBJ *obj, CO_NODE *node, void *src, uint32_t len, uint32_t
 /*
 * see function definition
 */
+void COObjTypeUserSDOAbort(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t abort)
+{
+    uint8_t n;
+
+    for (n = 0; n < CO_SDOS_N; n++) {
+        if (node->Sdo[n].Obj == obj) {
+            node->Sdo[n].Abort = abort;
+            break;
+        }
+    }
+}
+
+/*
+* see function definition
+*/
 uint32_t COTypeStringSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
 {
     uint32_t    strlen = 0;

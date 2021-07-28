@@ -18,7 +18,7 @@
 * INCLUDES
 ******************************************************************************/
 
-/* TODO: rename the include file name to match the naming convention: 
+/* TODO: rename the include file name to match the naming convention:
  *   co_timer_<device>.h
  */
 #include "co_timer_dummy.h"
@@ -44,7 +44,7 @@ static void     DrvTimerStop   (void);
 * PUBLIC VARIABLE
 ******************************************************************************/
 
-/* TODO: rename the variable to match the naming convention: 
+/* TODO: rename the variable to match the naming convention:
  *   <device>TimerDriver
  */
 const CO_IF_TIMER_DRV DummyTimerDriver = {
@@ -62,6 +62,8 @@ const CO_IF_TIMER_DRV DummyTimerDriver = {
 
 static void DrvTimerInit(uint32_t freq)
 {
+    (void)freq;
+
     /* TODO: initialize timer, clear counter and keep timer stopped */
 }
 
@@ -84,6 +86,8 @@ static uint32_t DrvTimerDelay(void)
 
 static void DrvTimerReload(uint32_t reload)
 {
+    (void)reload;
+
     /* TODO: reload timer counter value with given reload value */
 }
 

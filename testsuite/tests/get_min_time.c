@@ -106,7 +106,7 @@ static void Setup(void)
     TS_CreateMandatoryDir();
 }
 
-SUITE_GET_TICKS()
+SUITE_MIN_TIME()
 {
     TS_Begin(__FILE__);
     TS_SetupCase(Setup, NULL);

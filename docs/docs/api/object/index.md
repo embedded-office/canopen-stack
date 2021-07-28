@@ -29,6 +29,7 @@ The object component provides an interface to the individual object entries.
         +COObjWrBufCont(source, length) int16_t
         +COObjWrBufStart(source, length) int16_t
         +COObjWrValue(source, width, nodeId) int16_t
+        +COObjTypeUserSDOAbort(node, code) void
       }
 ```
 

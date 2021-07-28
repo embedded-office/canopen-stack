@@ -7,7 +7,14 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
-- none
+none
+
+## [4.1.7] - 2012-07-28
+
+### Added
+
+- Introduce COObjTypeUserSDOAbort() to define amnufacturer specific SDO Abort codes within type functions
+- Add CMake toolchain files for ARM-GCC Cortex-M3, M4 and M7
 
 ## [4.1.6] - 2012-07-21
 
@@ -131,7 +138,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.6...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.7...HEAD
+[4.1.7]: https://github.com/embedded-office/canopen-stack/compare/v4.1.6...v4.1.7
 [4.1.6]: https://github.com/embedded-office/canopen-stack/compare/v4.1.5...v4.1.6
 [4.1.5]: https://github.com/embedded-office/canopen-stack/compare/v4.1.4...v4.1.5
 [4.1.4]: https://github.com/embedded-office/canopen-stack/compare/v4.1.3...v4.1.4
