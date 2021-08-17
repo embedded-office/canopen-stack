@@ -17,6 +17,7 @@ The function is used together with `COObjRdBufCont()` to read an object entry wi
 
 ```c
 int16_t COObjRdBufStart(CO_OBJ  *obj,
+                        CO_NODE *node,
                         void    *buffer,
                         uint8_t  length);
 ```
@@ -26,6 +27,7 @@ int16_t COObjRdBufStart(CO_OBJ  *obj,
 | Parameter | Description |
 | --- | --- |
 | obj | pointer to object entry |
+| node | pointer to parent node |
 | buffer | pointer to destination memory |
 | length | length of destination buffer |
 
@@ -43,12 +45,12 @@ The following example reads the byte-stream of the hypothetical application-spec
     int16_t  err;
     CO_OBJ  *entry;
     :
-    entry = CODirFind      (&(AppNode.Dir), CO_DEV(0x1234,0x56));
-    err   = COObjRdBufStart(entry, buffer, 10);
+    entry = CODictFind     (&(AppNode.Dict), CO_DEV(0x1234,0x56));
+    err   = COObjRdBufStart(entry, &AppNode, buffer, 10);
     if (err == CO_ERR_NONE) {
         do {
             /* read all packages from stream */
-            err = COObjRdBufCont(entry, buffer, 10);
+            err = COObjRdBufCont(entry, &AppNode, buffer, 10);
         } while (err == CO_ERR_NONE);
     } else {
         /* error during reading */

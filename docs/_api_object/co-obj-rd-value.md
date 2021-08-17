@@ -17,6 +17,7 @@ The access with this function to an object entry will be done with the casting o
 
 ```c
 int16_t COObjRdValue(CO_OBJ  *obj ,
+                     CO_NODE *node,
                      void    *value,
                      uint8_t  width,
                      uint8_t  nodeId);
@@ -27,6 +28,7 @@ int16_t COObjRdValue(CO_OBJ  *obj ,
 | Parameter | Description |
 | --- | --- |
 | obj | pointer to object entry |
+| node | pointer to parent node |
 | value | pointer to destination memory |
 | width | width of read value (must be 1, 2 or 4 and reflecting the width of the referenced variable, given by parameter value) |
 | nodeId | device node ID (only relevant in case of node ID dependent value) |
@@ -44,8 +46,8 @@ The following example gets the value of the hypothetical application-specific ob
     uint32_t  value;
     CO_OBJ   *entry;
     :
-    entry = CODirFind     (&(AppNode.Dir), CO_DEV(0x1234,0x56));
-    err   = COObjRdValue  (entry, &value, 4, 0);
+    entry = CODictFind    (&(AppNode.Dict), CO_DEV(0x1234,0x56));
+    err   = COObjRdValue  (entry, &AppNode, &value, 4, 0);
     :
 ```
 

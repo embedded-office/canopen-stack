@@ -17,6 +17,7 @@ The function is used together with `COObjWrBufStart()` to write an object entry 
 
 ```c
 int16_t COObjWrBufStart(CO_OBJ  *obj,
+                        CO_NODE *node,
                         void    *buffer,
                         uint8_t  length);
 ```
@@ -26,6 +27,7 @@ int16_t COObjWrBufStart(CO_OBJ  *obj,
 | Parameter | Description |
 | --- | --- |
 | obj | pointer to object entry |
+| node | pointer to parent node |
 | buffer | pointer to source memory |
 | length | length of source buffer |
 
@@ -43,12 +45,12 @@ The following example writes a byte-stream to the hypothetical application-speci
     CPU_INT16S  err;
     CO_OBJ     *entry;
     :
-    entry = CODirFind      (&(AppNode.Dir), CO_DEV(0x1234,0x56));
-    err   = COObjWrBufStart(entry, buffer, 10);
+    entry = CODictFind     (&(AppNode.Dict), CO_DEV(0x1234,0x56));
+    err   = COObjWrBufStart(entry, &AppNode, buffer, 10);
     if (err == CO_ERR_NONE) {
         do {
             /* stream bytes to object */
-            err = COObjWrBufCont(entry, buffer, 10);
+            err = COObjWrBufCont(entry, &AppNode, buffer, 10);
         } while (err == CO_ERR_NONE);
     } else {
         /* error during writing */
