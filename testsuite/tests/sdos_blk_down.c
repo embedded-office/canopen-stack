@@ -29,6 +29,56 @@
 *
 * \ingroup TS_CO
 *
+*         This testcase will check the block download of a basic data type
+*
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_BlkWr_Basic)
+{
+    CO_IF_FRM  frm;
+    CO_NODE    node;
+    uint16_t   idx  = 0x2510;
+    uint8_t    sub  = 3;
+    uint32_t   val  = 0;
+
+    /* -- PREPARATION -- */
+    TS_CreateMandatoryDir();
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
+    TS_CreateNode(&node,0);
+
+                                                      /*===== INIT BLOCK DOWNLOAD ================*/
+    TS_SDO_SEND (0xC2, idx, sub, 4);                  /* ccs=6, cc=0, s=1, cs=0                   */
+
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
+    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+
+                                                      /*===== BLOCK DOWNLOAD =====================*/
+    TS_SendBlk(0x00, 1, 1, 0);                        /* transmit segment in (last) block         */
+
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_ACKSEQ  (frm, 1);                             /* check acknowledged sequence number       */
+    CHK_NEXTBLK (frm, CO_SDO_BUF_SEG);                /* check next block size                    */
+
+                                                      /*===== END BLOCK DOWNLOAD =================*/
+    TS_EBLK_SEND(0xCD, 0x00000000);                   /* ccs=6, n=3, cs=1                         */
+
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xA1);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_ZERO    (frm);                                /* check cleared data area                  */
+
+    TS_ASSERT(0x03020100 == val);
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
 *         This testcase will check the block download of an array with size = 42 to the Domainbuffer
 *
 */
@@ -1373,6 +1423,7 @@ SUITE_BLK_DOWN()
 
 //    CanDiagnosticOn(0);
 
+    TS_RUNNER(TS_BlkWr_Basic);
     TS_RUNNER(TS_BlkWr_42ByteDomain);
     TS_RUNNER(TS_BlkWr_43ByteDomain);
     TS_RUNNER(TS_BlkWr_41ByteDomain);

@@ -52,6 +52,62 @@ void TS_ChkBlk(uint32_t start, uint8_t segnum, uint8_t last, uint8_t valid)
 *
 * \ingroup TS_CO
 *
+*         This testcase will check the block upload of a basic object entry
+*
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_BlkRd_Basic)
+{
+    CO_IF_FRM  frm;
+    CO_NODE    node;
+    uint16_t   idx  = 0x2510;
+    uint8_t    sub  = 2;
+    uint32_t   val  = 0x03020100;
+
+    /* -- PREPARATION -- */
+    TS_CreateMandatoryDir();
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
+    TS_CreateNode(&node,0);
+                                                      /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
+    TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);
+
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xC2);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
+    CHK_DATA    (frm, 4);                             /* check block size                         */
+
+                                                      /*===== INIT BLOCK UPLOAD (PHASE II) =======*/
+    TS_SDO_SEND (0xA3, 0x0000, 0, 0);
+
+                                                      /*===== BLOCK UPLOAD =======================*/
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    TS_ASSERT(0x81 == BYTE(frm,0));
+    TS_ASSERT(0x00 == BYTE(frm,1));
+    TS_ASSERT(0x01 == BYTE(frm,2));
+    TS_ASSERT(0x02 == BYTE(frm,3));
+    TS_ASSERT(0x03 == BYTE(frm,4));
+    TS_ASSERT(0x00 == BYTE(frm,5));
+    TS_ASSERT(0x00 == BYTE(frm,6));
+    TS_ASSERT(0x00 == BYTE(frm,7));
+
+                                                      /*===== ACKNOWLEDGE BLOCK ==================*/
+    TS_ACKBLK_SEND(0xA2, 1, CO_SDO_BUF_SEG);
+
+                                                      /*===== END BLOCK UPLOAD ===================*/
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xCD);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_ZERO    (frm);                                /* check cleared data area                  */
+
+    TS_EBLK_SEND(0xA1, 0x00000000);
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
 *         This testcase will check the block upload of an array with size = 42 from  Domainbuffer
 *         entry
 *
@@ -1216,6 +1272,7 @@ SUITE_BLK_UP()
 
 //    CanDiagnosticOn(0);
 
+    TS_RUNNER(TS_BlkRd_Basic);
     TS_RUNNER(TS_BlkRd_42ByteDomain);
     TS_RUNNER(TS_BlkRd_43ByteDomain);
     TS_RUNNER(TS_BlkRd_41ByteDomain);
