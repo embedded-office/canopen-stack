@@ -51,6 +51,7 @@ extern "C" {
 #define CO_SDO_ERR_OBJ_MAP      0x06040041    /*!< Object cannot be mapped to the PDO     */
 #define CO_SDO_ERR_OBJ_MAP_N    0x06040042    /*!< Number and length exceed PDO           */
 #define CO_SDO_ERR_PARA_INCOMP  0x06040043    /*!< parameter incompatibility reason       */
+#define CO_SDO_ERR_GENERAL      0x08000000    /*!< General error                          */
 
 #define CO_SDO_RD               1             /*!< Object read access                     */
 #define CO_SDO_WR               2             /*!< Object write access                    */

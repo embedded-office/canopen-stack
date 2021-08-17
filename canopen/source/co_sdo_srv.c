@@ -462,7 +462,14 @@ CO_ERR COSdoInitDownloadSegmented(CO_SDO *srv)
         /* setup SDO buffer */
         srv->Buf.Cur  = srv->Buf.Start;
         srv->Buf.Num  = 0;
-        result = COObjWrBufStart(srv->Obj, srv->Node, srv->Buf.Cur, 0);
+
+        if (srv->Obj->Type != 0) {
+            /* setup write offset for typed object entry */
+            result = COObjWrBufStart(srv->Obj, srv->Node, srv->Buf.Cur, 0);
+        } else if (size <= 4) {
+            /* no action for basic type entry */
+            result = CO_ERR_NONE;
+        }
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
             COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
@@ -517,8 +524,14 @@ CO_ERR COSdoDownloadSegmented(CO_SDO *srv)
     srv->Seg.Num += srv->Buf.Num;
 
     if ((cmd & 0x01) == 0x01) {
-        len    = (uint32_t)srv->Buf.Num;
-        result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
+        len = (uint32_t)srv->Buf.Num;
+        if (srv->Obj->Type != 0) {
+            /* write to current offset for typed object entry */
+            result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
+        } else if (len <= 4) {
+            /* write basic type entry */
+            result = COObjWrValue(srv->Obj, srv->Node, srv->Buf.Start, len, srv->Node->NodeId);
+        }
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
             COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
@@ -528,11 +541,20 @@ CO_ERR COSdoDownloadSegmented(CO_SDO *srv)
         srv->Seg.Num  = 0;
         srv->Obj      = 0;
     } else {
-        len    = (uint32_t)srv->Buf.Num;
-        result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
+        len = (uint32_t)srv->Buf.Num;
+        if (srv->Obj->Type != 0) {
+            /* write to current offset for typed object entry */
+            result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
+        } else {
+            result = CO_ERR_SDO_WRITE;
+        }
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
-            COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+            if (result == CO_ERR_SDO_WRITE) {
+                COSdoAbort(srv, CO_SDO_ERR_GENERAL);
+            } else {
+                COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+            }
             result = CO_ERR_SDO_ABORT;
         }
         srv->Buf.Cur  = srv->Buf.Start;

@@ -29,6 +29,77 @@
 *
 * \ingroup TS_CO
 *
+*         This testcase will check the segmented download of a basic data type
+*
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_SegWr_Basic)
+{
+    CO_IF_FRM  frm;
+    CO_NODE    node;
+    uint32_t   id;
+    uint16_t   idx  = 0x2510;
+    uint8_t    sub  = 1;
+    uint32_t   val  = 0;
+
+    /* -- PREPARATION -- */
+    TS_CreateMandatoryDir();
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
+    TS_CreateNode(&node,0);
+                                                      /*===== INIT SEGMENTED DOWNLOAD  ===========*/
+    TS_SDO_SEND (0x21, idx, sub, 4);
+
+    CHK_SDO0_OK(idx, sub);
+                                                      /*===== LAST SEGMENTED DOWNLOAD  ===========*/
+    TS_SEG_SEND(0x01, 0);
+
+    CHK_CAN  (&frm);
+    CHK_SDO0 (frm, 0x20);
+    CHK_ZERO (frm);
+
+    TS_ASSERT(0x03020100 == val);
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
+*         This testcase will check the aborted segmented download when last transfer is not
+*         marked correctly.
+*
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_SegWr_Basic_Bad)
+{
+    CO_IF_FRM  frm;
+    CO_NODE    node;
+    uint32_t   id;
+    uint16_t   idx  = 0x2510;
+    uint8_t    sub  = 1;
+    uint32_t   val  = 0;
+
+    /* -- PREPARATION -- */
+    TS_CreateMandatoryDir();
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
+    TS_CreateNode(&node,0);
+                                                      /*===== INIT SEGMENTED DOWNLOAD  ===========*/
+    TS_SDO_SEND (0x21, idx, sub, 4);
+
+    CHK_SDO0_OK(idx, sub);
+                                                      /*===== SEGMENTED DOWNLOAD  ================*/
+    TS_SEG_SEND(0x00, 0);
+    CHK_SDO0_ERR(idx, sub, 0x08000000);
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
 *         This testcase will check the segmented download of an array with size = 42 to the Domainbuffer
 *
 */
@@ -660,6 +731,8 @@ SUITE_SEG_DOWN()
 
 //    CanDiagnosticOn(0);
 
+    TS_RUNNER(TS_SegWr_Basic);
+    TS_RUNNER(TS_SegWr_Basic_Bad);
     TS_RUNNER(TS_SegWr_42ByteDomain);
     TS_RUNNER(TS_SegWr_43ByteDomain);
     TS_RUNNER(TS_SegWr_41ByteDomain);
