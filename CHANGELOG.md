@@ -7,7 +7,15 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
-none
+### Added
+
+- Detailed description of API function COObjTypeUserSDOAbort()
+
+### Fixed
+
+- Interface description and examples of API functions on Page "Object Entry"
+- SDO segmented download of basic data type
+- SDO block upload and download of basic data type
 
 ## [4.1.7] - 2012-07-28
 
