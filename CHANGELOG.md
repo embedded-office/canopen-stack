@@ -10,6 +10,7 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 ### Added
 
 - Detailed description of API function COObjTypeUserSDOAbort()
+- Example article explaining the usage with RTOS and baremetal
 
 ### Fixed
 
