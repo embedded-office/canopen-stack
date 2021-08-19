@@ -1,6 +1,7 @@
 ---
 layout: article
 title: Quickstart
+permalink: /quickstart/
 sidebar:
   nav: docs
 aside:
@@ -142,7 +143,7 @@ The following lines add the SDO server entries to the object dictionary:
 
 #### Application Object Entries
 
-Next, we need to add some application-specific object entries to support the 
+Next, we need to add some application-specific object entries to support the
 clock-functionality of the example:
 
 | Index:sub          | Type         | Access      | Value  | Description    |

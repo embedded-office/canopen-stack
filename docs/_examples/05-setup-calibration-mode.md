@@ -1,19 +1,24 @@
 ---
 layout: article
 title: Setup calibration mode
+permalink: /setup-calibration-mode/
+sidebar:
+  nav: docs
+aside:
+  toc: true
 ---
 
 When dealing with analog values, there is often a calibration of the hardware required to achieve the best accuracy. This example situation is a good reason for implementing a manufacturer-specific factory area.
 
 <!--more-->
 
-## Example Goal
+### Example Goal
 
-The example focus is the user object for CAN triggered write access to a manufacturer-specific area. 
+The example focus is the user object for CAN triggered write access to a manufacturer-specific area.
 
-## Object Type Idea
+### Object Type Idea
 
-The main idea is a collection of object entries, which are writable after a simple identification mechanism. 
+The main idea is a collection of object entries, which are writable after a simple identification mechanism.
 
 For a tiny use-case we assume to achieve a simple calibration mechanism. The application uses the calibration values to transform input values with a formula:
 
@@ -21,7 +26,7 @@ For a tiny use-case we assume to achieve a simple calibration mechanism. The app
 adcValue = (adcRaw * calFactor) / calDivisor + calOffset;
 ```
 
-### Object Entry Definitions
+#### Object Entry Definitions
 
 We define some manufacturer specific entries in the object dictionary:
 
@@ -39,7 +44,7 @@ The Number of Entries is a constant, which is read-only for the CAN network and 
 
 The key to get the wanted functionality is the entry at subindex 1. This object entry accepts write access of a calibration key value. With the correct key, this operation enables the write access to the other calibration object entries from subindex 2 to 4. A wrong key disables the write access.
 
-## Implement Object Type
+### Implement Object Type
 
 Lets implement the calibration user type as shown in the [CANopen Usage: User Object](/docs/usecase/dictionary#user-objects):
 
@@ -90,9 +95,9 @@ int16_t CalWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 }
 ```
 
-## Implement Object Entries
+### Implement Object Entries
 
-### Parameter Handling
+#### Parameter Handling
 
 First, we need to get a memory area for our calibration data. We get this area by creating a structure with the calibration data values:
 
@@ -135,7 +140,7 @@ const CO_OBJ ExampleObjDir[] = {
 };
 ```
 
-### Calibration Object Entry
+#### Calibration Object Entry
 
 We use our user type to define the calibration object entry:
 

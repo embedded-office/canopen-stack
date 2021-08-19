@@ -1,6 +1,7 @@
 ---
 layout: article
 title: Dynamic Object Dictionary - Part I
+permalink: /setup-dynamic-object-dictionary/
 sidebar:
   nav: docs
 aside:
