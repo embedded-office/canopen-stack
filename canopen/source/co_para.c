@@ -1,3 +1,4 @@
+
 /******************************************************************************
    Copyright 2020 Embedded Office GmbH & Co. KG
 
@@ -19,6 +20,7 @@
 ******************************************************************************/
 
 #include "co_core.h"
+#if USE_PARAMS
 
 /******************************************************************************
 * PRIVATE DEFINES
@@ -221,3 +223,4 @@ CO_ERR COTypeParaWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, 
     }
     return (CO_ERR_NONE);
 }
+#endif //USE_PARAMS

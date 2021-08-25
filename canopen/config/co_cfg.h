@@ -14,6 +14,9 @@
    limitations under the License.
 ******************************************************************************/
 
+#define USE_LSS 1
+#define USE_PARAMS 1
+
 #ifndef CO_CFG_H_
 #define CO_CFG_H_
 
