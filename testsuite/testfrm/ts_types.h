@@ -76,7 +76,11 @@ typedef unsigned int        uintptr_t;
 *        adjust the settings here and provide an output channel in ts_output.c to get
 *        the tests running on your target, too.
 */
+#if defined(__APPLE__) && defined(__MACH__)
+#define TEST_SECTION_PRE          __attribute__((section("__DATA,.test")))
+#else
 #define TEST_SECTION_PRE          __attribute__((section(".test")))
+#endif
 #define TEST_SECTION_DEF
 #define TEST_SECTION_SUF
 #define TEST_SECTION_START        __start_test
