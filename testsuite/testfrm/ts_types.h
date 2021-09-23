@@ -70,17 +70,27 @@ typedef unsigned int        uintptr_t;
 #define TEST_SECTION_END_ALLOC    __declspec(allocate(".test$z")) static const TS_INFOFUNC TEST_SECTION_END = (TS_INFOFUNC)0;
 #define STRUCT_PACKED_PRE         __pragma(pack(push, 1))
 #define STRUCT_PACKED_SUF         __pragma(pack(pop))
+
+#elif defined(__APPLE__) && defined(__MACH__)
+#define TEST_SECTION_PRE          __declspec(allocate("__TEST,.test$u"))
+#define TEST_SECTION_DEF          __attribute__((section ("__TEST,.test$a")))
+#define TEST_SECTION_SUF
+#define TEST_SECTION_START        __start_test
+#define TEST_SECTION_END          __stop_test
+#define TEST_SECTION_START_DEF    __attribute__((section ("__TEST,.test$a")))
+#define TEST_SECTION_START_ALLOC  __declspec(allocate("__TEST,.test$a")) static const TS_INFOFUNC TEST_SECTION_START = (TS_INFOFUNC)0;
+#define TEST_SECTION_END_DEF      __attribute__((section ("__TEST,.test$z")))
+#define TEST_SECTION_END_ALLOC    __declspec(allocate("__TEST,.test$z")) static const TS_INFOFUNC TEST_SECTION_END = (TS_INFOFUNC)0;
+#define STRUCT_PACKED_PRE
+#define STRUCT_PACKED_SUF
 #else
 /*
 * \note  The testsuite is running with MSVC compiler on the windows host, only. You may
 *        adjust the settings here and provide an output channel in ts_output.c to get
 *        the tests running on your target, too.
 */
-#if defined(__APPLE__) && defined(__MACH__)
-#define TEST_SECTION_PRE          __attribute__((section("__DATA,.test")))
-#else
+
 #define TEST_SECTION_PRE          __attribute__((section(".test")))
-#endif
 #define TEST_SECTION_DEF
 #define TEST_SECTION_SUF
 #define TEST_SECTION_START        __start_test

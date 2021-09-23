@@ -33,7 +33,7 @@
 /*------------------------------------------------------------------------------------------------*/
 void TS_PutChar(void *arg, char character)
 {
-#if defined ( _MSC_VER )
+#if defined ( _MSC_VER ) || (defined(__APPLE__) && defined(__MACH__))
     (void)arg;
     putchar((int)character);
 #else

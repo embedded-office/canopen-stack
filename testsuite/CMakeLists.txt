@@ -75,3 +75,7 @@ target_include_directories(CanopenTest
 # specify the dependencies for this application
 #
 target_link_libraries(CanopenTest Canopen CanopenDriver)
+
+if(CMAKE_C_COMPILER_ID STREQUAL "AppleClang")
+  set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fdeclspec")
+endif()
