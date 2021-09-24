@@ -36,9 +36,14 @@ typedef enum DEF_TEST_GROUPS_E {                      /*---- Test Groups -------
     DEF_G_NMT,                                        /*!< Group: NMT Management                  */
     DEF_G_EMCY,                                       /*!< Group: EMCY Management                 */
 
+    DEF_S_OD,                                         /*!< Group: Object Dictionary               */
 
     DEF_G_NUM                                         /*!< Number of Groups                       */
 } DEF_TEST_GROUPS;
+
+typedef enum DEF_OD_SUITE_E {
+    DEF_S_OD_API
+} DEF_OD_SUITE;
 
 typedef enum DEF_CORE_SUITES_E {                      /*---- Core Component Test Suites ----------*/
     DEF_S_CORE_TMR,                                   /*!< Suite: Highspeed Timer                 */
@@ -103,6 +108,8 @@ typedef enum DEF_EMCY_SUITES_E {                      /*---- EMCY Management Tes
 #define SUITE_PDO_TX()     TS_DEF_SUITE(DEF_G_PDO, DEF_S_PDO_TX)     /*!< \addtogroup pdo_tx  PDO Communication Test: PDO Transmit */
 #define SUITE_PDO_RX()     TS_DEF_SUITE(DEF_G_PDO, DEF_S_PDO_RX)     /*!< \addtogroup pdo_rx  PDO Communication Test: PDO Receive  */
 #define SUITE_PDO_DYN()    TS_DEF_SUITE(DEF_G_PDO, DEF_S_PDO_DYN)    /*!< \addtogroup pdo_dyn Dynamic PDO Configuration Test       */
+
+#define SUITE_OD_API()     TS_DEF_SUITE(DEF_S_OD, DEF_S_OD_API)    /*!< \addtogroup od_api Object Dictionary API TEst      */
 
 #define SUITE_NMT_MGR()    TS_DEF_SUITE(DEF_G_NMT, DEF_S_NMT_MGR)    /*!< \addtogroup nmt_mgr NMT Management            */
 #define SUITE_NMT_HBP()    TS_DEF_SUITE(DEF_G_NMT, DEF_S_NMT_HBP)    /*!< \addtogroup nmt_hbp NMT Heartbeat Producer    */
