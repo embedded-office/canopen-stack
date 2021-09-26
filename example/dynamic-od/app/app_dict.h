@@ -42,7 +42,7 @@ typedef struct {
 ******************************************************************************/
 
 void ODInit(OD_DYN *self, CO_OBJ *root, uint32_t length);
-void ODAddUpdate(OD_DYN *self, uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data);
+void ODAddUpdate(OD_DYN *self, uint32_t key, const CO_OBJ_TYPE *type, CO_DATA data);
 void ODSetSpec(OD_DYN *self, CO_NODE_SPEC *spec);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */

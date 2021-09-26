@@ -1004,7 +1004,7 @@ TS_DEF_MAIN(TS_BlkWr_DomainNullPtr)
     uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (uintptr_t)0);
+    TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, CO_DATA_INDIRECT(0));
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -1323,7 +1323,7 @@ TS_DEF_MAIN(TS_BlkWr_ExpWrAfter43ByteDomain)
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     dom = DomCreate(idx, sub, CO_OBJ____RW, size);
-    TS_ODAdd(CO_KEY(idx2, sub2, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
+    TS_ODAdd(CO_KEY(idx2, sub2, CO_UNSIGNED32|CO_OBJ____RW), 0, CO_DATA_INDIRECT(&val));
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT BLOCK DOWNLOAD ================*/

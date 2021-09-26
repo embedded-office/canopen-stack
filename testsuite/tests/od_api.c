@@ -46,9 +46,9 @@ uint8_t uint8_t_rw_indirect = 0x43;
 uint16_t uint16_t_rw_indirect = 0x8765;
 uint32_t uint32_t_rw_indirect = 0xfedcba09;
 
-#define MK_RO_KEY(type, typeCode) CO_KEY(type ## _I_RO_KEY, 0, typeCode | CO_OBJ____R_), 0, (uintptr_t)&type ## _ro_indirect
-#define MK_RW_KEY(type, typeCode) CO_KEY(type ## _I_RW_KEY, 0, typeCode | CO_OBJ____RW), 0, (uintptr_t)&type ## _rw_indirect
-#define MK_RW_D_KEY(type, typeCode) CO_KEY(type ## _D_RW_KEY, 0, typeCode | CO_OBJ_D__RW), 0, (uintptr_t) type ## _D_VALUE
+#define MK_RO_KEY(type, typeCode) CO_KEY(type ## _I_RO_KEY, 0, typeCode | CO_OBJ____R_), 0, CO_DATA_INDIRECT(&type ## _ro_indirect)
+#define MK_RW_KEY(type, typeCode) CO_KEY(type ## _I_RW_KEY, 0, typeCode | CO_OBJ____RW), 0, CO_DATA_INDIRECT(&type ## _rw_indirect)
+#define MK_RW_D_KEY(type, typeCode) CO_KEY(type ## _D_RW_KEY, 0, typeCode | CO_OBJ_D__RW), 0, CO_DATA_DIRECT(type ## _D_VALUE)
 
 #define TS_READ_RO_GET(type, getter) CO_NODE node; \
     int16_t result; type toRead; setup(&node); \
@@ -185,7 +185,7 @@ TS_DEF_MAIN(TS_OD_GetDirect)
     uint32_t    val;
     uint8_t    valByte;
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x2000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, 123);
+    TS_ODAdd(CO_KEY(0x2000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_DATA_DIRECT(123));
     TS_CreateNode(&node, 0);
 
     // result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
@@ -225,7 +225,7 @@ TS_DEF_MAIN(TS_OD_GetStringReadOnly)
     DO_RO(uint16_t, 0x1234);
     TS_CreateMandatoryDir();
     printf("Object: offset= %d data=%s\n", DemoStringObj.Offset, DemoStringObj.Start);
-    TS_ODAdd(CO_KEY(0x2001, 0, CO_STRING | CO_OBJ____R_), CO_TSTRING, (uintptr_t)&DemoStringObj);
+    TS_ODAdd(CO_KEY(0x2001, 0, CO_STRING | CO_OBJ____R_), CO_TSTRING, CO_DATA_INDIRECT(&DemoStringObj));
     TS_CreateNode(&node, 0);
     printf("HERE\n");
     obj = CODictFind(&node.Dict, CO_DEV(0x2001, 0));
@@ -249,7 +249,7 @@ TS_DEF_MAIN(TS_OD_GetIndirect)
     CO_NODE     node;
 
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x2002, 0, CO_UNSIGNED16 | CO_OBJ____RW), NULL, (uintptr_t)&val);
+    TS_ODAdd(CO_KEY(0x2002, 0, CO_UNSIGNED16 | CO_OBJ____RW), NULL, CO_DATA_INDIRECT(&val));
     TS_CreateNode(&node, 0);
 
     result = CODictRdWord(&node.Dict, CO_DEV(0x2002,0), &toRead);

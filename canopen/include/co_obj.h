@@ -473,6 +473,16 @@ struct CO_NODE_T;              /* Declaration of canopen node structure      */
 struct CO_OBJ_TYPE_T;          /* Declaration of object type structure       */
 struct CO_DICT_T;              /* Declaration of object dictionary structure */
 
+
+typedef union CO_DATA_T { 
+    uint32_t Direct;
+    intptr_t Indirect; 
+} CO_DATA;
+
+#define CO_DATA_DIRECT(val) ((CO_DATA){.Direct = (val)})
+#define CO_DATA_INDIRECT(ptr) (CO_DATA){.Indirect = (intptr_t)(ptr)}
+
+
 /*! \brief OBJECT ENTRY
 *
 *    This structure holds all data, needed for managing a single object
@@ -490,7 +500,7 @@ typedef struct CO_OBJ_T {
                                        /*   - 7: 1=direct (ptr is value if Type=0) */
     const struct CO_OBJ_TYPE_T *Type;  /*!< ==0: value access via Data-Ptr,        */
                                        /*   !=0: access via type structure         */
-    uintptr_t                   Data;  /*!< Address of value or data structure     */
+    CO_DATA                     Data;  /*!< Address of value or data structure     */
                                        /*   or data value for direct access        */
 } CO_OBJ;
 

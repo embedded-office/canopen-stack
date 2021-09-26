@@ -465,7 +465,7 @@ void TS_CreateNodeAutoStart(CO_NODE *node);
 *          object entry data according to user manual
 */
 /*---------------------------------------------------------------------------*/
-void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data);
+void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, CO_DATA data);
 
 /*---------------------------------------------------------------------------*/
 /*! \brief SETUP THE MANDATORY OBJECT ENTRIES OF AN OBJECT DICTIONARY
