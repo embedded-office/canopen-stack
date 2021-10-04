@@ -7,25 +7,32 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
+- nothing
+
+## [4.1.8] - 2021-10-04
+
 ### Added
 
-- Detailed description of API function COObjTypeUserSDOAbort()
+- Add the option to exclude LSS and/or parameters [Domen2242/configurable_features](https://github.com/Domen2242)
+- Detailed description of API function `COObjTypeUserSDOAbort()`
 - Example article explaining the usage with RTOS and baremetal
+- Example article explaining the firmware upload with user domains
 
 ### Fixed
 
 - Interface description and examples of API functions on Page "Object Entry"
 - SDO segmented download of basic data type
 - SDO block upload and download of basic data type
+- correct some Domain and String object definitions in documentation
 
-## [4.1.7] - 2012-07-28
+## [4.1.7] - 2021-07-28
 
 ### Added
 
-- Introduce COObjTypeUserSDOAbort() to define amnufacturer specific SDO Abort codes within type functions
+- Introduce `COObjTypeUserSDOAbort()` to define amnufacturer specific SDO Abort codes within type functions
 - Add CMake toolchain files for ARM-GCC Cortex-M3, M4 and M7
 
-## [4.1.6] - 2012-07-21
+## [4.1.6] - 2021-07-21
 
 ### Added
 
@@ -147,7 +154,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.7...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.8...HEAD
+[4.1.8]: https://github.com/embedded-office/canopen-stack/compare/v4.1.7...v4.1.8
 [4.1.7]: https://github.com/embedded-office/canopen-stack/compare/v4.1.6...v4.1.7
 [4.1.6]: https://github.com/embedded-office/canopen-stack/compare/v4.1.5...v4.1.6
 [4.1.5]: https://github.com/embedded-office/canopen-stack/compare/v4.1.4...v4.1.5
