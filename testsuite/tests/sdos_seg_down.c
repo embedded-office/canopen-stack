@@ -37,7 +37,6 @@ TS_DEF_MAIN(TS_SegWr_Basic)
 {
     CO_IF_FRM  frm;
     CO_NODE    node;
-    uint32_t   id;
     uint16_t   idx  = 0x2510;
     uint8_t    sub  = 1;
     uint32_t   val  = 0;
@@ -75,9 +74,7 @@ TS_DEF_MAIN(TS_SegWr_Basic)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_SegWr_Basic_Bad)
 {
-    CO_IF_FRM  frm;
     CO_NODE    node;
-    uint32_t   id;
     uint16_t   idx  = 0x2510;
     uint8_t    sub  = 1;
     uint32_t   val  = 0;
