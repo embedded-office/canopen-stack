@@ -135,10 +135,11 @@ The CANopen stack provides a system object type for managing domains. The domain
 The domain object holds all necessary information, which is needed for domain handling.
 
 ```c
-  const CO_DOMAIN {
+  CO_OBJ_DOM DemoDomainObj = {
+      0,                     /* variable for read position     */
       DEMO_DOMAIN_SIZE,      /* size of domain memory          */
       &DemoDomainMem[0]      /* start address of domain memory */
-  } DemoDomainObj;
+  };
 ```
 
 To enable the usage of this domain to the CAN network side, the domain object must be added to the object directory. See the following object entry with index=0x2345 and subindex=0 as an example:
@@ -162,10 +163,10 @@ The CANopen stack provides a system object type for managing strings. The string
 The string object holds all necessary information, which are needed for the string handling.
 
 ```c
-  const CO_STRING {
-      0,                  /* variable for read position     */
-      &DemoString[0]      /* start address of string memory */
-  } DemoStringObj;
+  CO_OBJ_STR DemoStringObj = {
+      0,                     /* variable for read position     */
+      &DemoString[0]         /* start address of string memory */
+  };
 ```
 
 To enable the usage of this string to the CAN network side, the string must be added to the object directory. See the following object entry with index=0x3456 and subindex=0 as an example:
@@ -206,23 +207,6 @@ The following list shows the type function prototypes. The return value of the s
   CO_ERR   DemoCtrl (CO_OBJ *obj, CO_NODE *node, uint16_t id, uint32_t para);
 ```
 
-**Note:** The parameter `len` in the functions `DemoRead()` and `DemoWrite()` is the length of the data, given via the pointer `buf`. If you want to use the width of the object entry, you can use the following snippet:
-
-```c
-CO_ERR DemoRead(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len)
-{
-    uint32_t width = CO_GET_SIZE(obj->Key);
-
-    /* now you can handle your data with:
-    *  - size (number of valid buffer data)
-    *  - width (number of object entry data)
-    *  Note: you can trust, that the indicated SDO transfer size (if given)
-    *        is equal to the width (checked by the SDO server)
-    */
-}
-```
-
-
 To enable the usage of this demo type to the CAN network side, the demo object must be added to the object directory. See the following object entry with index=0x6789 and subindex=0 as an example:
 
 ```c
@@ -255,7 +239,32 @@ sequenceDiagram
     D-->>-A: value
 ```
 
-When you need to control the ABORT codes of SDO expedited transfers, you can use the function `COObjTypeUserSDOAbort()` to set a user defined SDO abort code within your type functions:
+
+**Implementation Note:**
+*The parameter `len` in the functions `DemoRead()` and `DemoWrite()` is the length of the data, given via the
+pointer `buf`. If you want to use the width of the object entry, you can use the following snippet:*
+
+```c
+CO_ERR DemoRead(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len)
+{
+    uint32_t width = CO_GET_SIZE(obj->Key);
+
+    /* now you can handle your data with:
+    *  - size (number of valid buffer data)
+    *  - width (number of object entry data)
+    *  Note: you can trust, that the indicated SDO transfer size (if given)
+    *        is equal to the width (checked by the SDO server)
+    */
+}
+```
+
+
+**Implementation Note:**
+*The internal call to `DemoCtrl` is performed with the control id `CO_CTRL_SET_OFF` to set the working offset in domain, string and similar object types.*
+
+
+**Implementation Note:**
+*When you need to control the ABORT codes of SDO expedited transfers, you can use the function `COObjTypeUserSDOAbort()` to set a user defined SDO abort code within your type functions:*
 
 ```c
 CO_ERR DemoWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len)

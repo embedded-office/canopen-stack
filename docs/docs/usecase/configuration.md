@@ -131,7 +131,8 @@ This chapter describes the specification of an object with the type `domain`. Th
 Example:
 
 ```c
-const CO_DOM AppDomain = {
+CO_OBJ_DOM AppDomain = {
+    0,
     sizeof(APP_PARA_MEM),
     &AppParaObj
 };
@@ -140,6 +141,8 @@ const CO_DOM AppDomain = {
 This example defines a domain information object for the already allocated memory space of the variable AppParaObj (a variable within the application parameter example). This allows access to the complete application parameter set with SDO segmented or block transfers from within the CANopen network.
 
 The following descriptions explains the details of the structure members:
+
+- The domain offset [`uint32_t`] shall be set to 0 to access the first byte of the domain
 
 - The domain size [`uint32_t`] in bytes shall be set to the number of bytes within the domain memory area
 
