@@ -1,22 +1,27 @@
 ---
 layout: article
 title: Write serial number
+permalink: /write-serial-number/
+sidebar:
+  nav: docs
+aside:
+  toc: true
 ---
 
 In the production line, the devices should be programmed with the identical firmware image. The object entry 1018 holds optionally a serial number which sould be unique for each device. We need a one-time programmable object entry.
 
 <!--more-->
 
-## Example Goal
+### Example Goal
 
 The main idea is a manufacturer specific data type, which allows writing into a FLASH memory area if the current FLASH memory area is empty.
 
-## Object Type Idea
+### Object Type Idea
 
 The main idea is an object entry, which is directly mapped to FLASH cells. The type checks on a write access for empty FLASH cells and allows writing with a FLASH write algorithm if FLASH cells are empty.
 
 
-### Object Entry Definitions
+#### Object Entry Definitions
 
 We define some manufacturer specific entries in the object dictionary:
 
@@ -26,7 +31,7 @@ We define some manufacturer specific entries in the object dictionary:
 
 The key to get the wanted functionality is the object type for the entry at subindex 4. This object type accepts a single permanent write access if the current value is `0xFFFFFFFF`.
 
-## Implement Object Type
+### Implement Object Type
 
 Lets implement the one time programmable (OTP) user type as shown in the [CANopen Usage: User Object](/docs/usecase/dictionary#user-objects):
 
@@ -50,7 +55,7 @@ int16_t OtpWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 
   if (serial == 0xFFFFFFFF) {
     /* call your hardware specific FLASH algorithm with
-     * - start address in FLASH 
+     * - start address in FLASH
      * - new serial value
      * - length of constant
      */
@@ -61,7 +66,7 @@ int16_t OtpWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 }
 ```
 
-## Implement Object Entries
+### Implement Object Entries
 
 
 We use our user type to define the calibration object entry:

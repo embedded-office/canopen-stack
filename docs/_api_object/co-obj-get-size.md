@@ -16,7 +16,9 @@ The argument width is most likely given '0' (=unknown) when getting the size of 
 ### Prototype
 
 ```c
-uint32_t COObjGetSize(CO_OBJ *obj, uint32_t width);
+uint32_t COObjGetSize(CO_OBJ *obj,
+                      CO_NODE *node,
+                      uint32_t width);
 ```
 
 #### Arguments
@@ -24,6 +26,7 @@ uint32_t COObjGetSize(CO_OBJ *obj, uint32_t width);
 | Parameter | Description |
 | --- | --- |
 | obj | pointer to object entry |
+| node | pointer to parent node |
 | width | expected object size in byte (or 0 if unknown) |
 
 #### Returned Value
@@ -39,7 +42,7 @@ The following example gets the size of the hypothetical application-specific obj
     uint32_t  size;
     CO_OBJ   *entry;
     :
-    entry = CODirFind    (&(AppNode.Dir), CO_DEV(0x1234,0x56));
-    size  = COObjGetSize (entry, 0);
+    entry = CODictFind   (&(AppNode.Dict), CO_DEV(0x1234,0x56));
+    size  = COObjGetSize (entry, &AppNode, 0);
     :
 ```
