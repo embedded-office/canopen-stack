@@ -14,7 +14,7 @@ docs:
       - title:  Installation
         url:    /docs/start/installation
       - title:  Quickstart
-        url:    /examples/quickstart
+        url:    /quickstart
       - title:  Structure
         url:    /docs/start/structure
   - title:      CANopen Usage
