@@ -36,10 +36,14 @@ extern "C" {
 #include "co_sdo_srv.h"
 #include "co_pdo.h"
 #include "co_sync.h"
+#if USE_LSS
 #include "co_lss.h"
+#endif //USE_LSS
 #include "co_err.h"
 #include "co_obj.h"
+#if USE_PARAMS
 #include "co_para.h"
+#endif //USE_PARAMS
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -62,7 +66,9 @@ typedef struct CO_NODE_T {
     struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */
     struct CO_TPDO_LINK_T  TMap[CO_TPDO_N * 8];  /*!< TPDO mapping links     */
     struct CO_SYNC_T       Sync;                 /*!< SYNC management        */
+#if USE_LSS
     struct CO_LSS_T        Lss;                  /*!< LSS slave handling     */
+#endif //USE_LSS
     enum   CO_ERR_T        Error;                /*!< detected error code    */
     uint32_t               Baudrate;             /*!< default CAN baudrate   */
     uint8_t                NodeId;               /*!< default Node-ID        */
@@ -160,6 +166,7 @@ CO_ERR CONodeGetErr(CO_NODE *node);
 */
 void CONodeProcess(CO_NODE *node);
 
+#if USE_PARAMS
 /*! \brief LOAD PARAMETER FROM NVM
 *
 *    This function is responsible for the loading of all parameter groups
@@ -182,6 +189,7 @@ void CONodeProcess(CO_NODE *node);
 * \retval  !=CO_ERR_NONE    an error is detected and function aborted
 */
 CO_ERR CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type);
+#endif //USE_PARAMS
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

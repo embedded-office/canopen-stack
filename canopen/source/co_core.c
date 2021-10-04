@@ -37,26 +37,32 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     node->NodeId   = spec->NodeId;
     node->Error    = CO_ERR_NONE;
     node->Nmt.Tmr  = -1;
+#if USE_LSS
     err = COLssLoad(&node->Baudrate, &node->NodeId);
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_LSS_LOAD;
         return;
     }
+#endif //USE_LSS
     COIfInit(&node->If, node, spec->TmrFreq);
     COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum, spec->TmrFreq);
     err = CODictInit(&node->Dict, node, spec->Dict, spec->DictLen);
     if (err < 0) {
         return;
     }
+#if USE_PARAMS
     CONodeParaLoad(node, CO_RESET_COM);
     CONodeParaLoad(node, CO_RESET_NODE);
+#endif //USE_PARAMS
     CONmtInit(&node->Nmt, node);
     COSdoInit(node->Sdo, node);
     COTPdoClear(node->TPdo, node);
     CORPdoClear(node->RPdo, node);
     COEmcyInit(&node->Emcy, node, spec->EmcyCode);
     COSyncInit(&node->Sync, node);
+#if USE_LSS
     COLssInit(&node->Lss, node);
+#endif //USE_LSS
     COIfCanEnable(&node->If, node->Baudrate);
 }
 
@@ -95,7 +101,7 @@ CO_ERR CONodeGetErr(CO_NODE *node)
 
     return (result);
 }
-
+#if USE_PARAMS
 /*
 * see function definition
 */
@@ -132,7 +138,7 @@ CO_ERR CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
 
     return (result);
 }
-
+#endif //USE_PARAMS
 /*
 * see function definition
 */
@@ -149,6 +155,7 @@ void CONodeProcess(CO_NODE *node)
         allowed = 0;
     } else {
         allowed = node->Nmt.Allowed;
+#if USE_LSS
         result  = COLssCheck(&node->Lss, &frm);
         if (result != 0) {
             if (result > 0) {
@@ -156,6 +163,7 @@ void CONodeProcess(CO_NODE *node)
             }
             allowed = 0;
         }
+#endif //USE_LSS
     }
 
     if ((allowed & CO_SDO_ALLOWED) != 0) {

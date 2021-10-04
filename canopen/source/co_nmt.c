@@ -82,7 +82,9 @@ const CO_OBJ_TYPE COTNmtHbProd = { 0, 0, 0, COTypeNmtHbProdWrite };
 void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 {
     uint8_t nobootup = 1;
+#if USE_LSS
     int16_t err;
+#endif //USE_LSS
 
     if (nmt == 0) {
         CONodeFatalError();
@@ -93,18 +95,24 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
         nobootup = 0;
     }
 
+#if USE_PARAMS
     if (type == CO_RESET_NODE) {
         CONodeParaLoad(nmt->Node, CO_RESET_NODE);
     }
+#endif //USE_PARAMS
 
     if (type <= CO_RESET_COM) {
+#if USE_PARAMS
         CONodeParaLoad(nmt->Node, CO_RESET_COM);
+#endif //USE_PARAMS
+#if USE_LSS
         err = COLssLoad(&nmt->Node->Baudrate, &nmt->Node->NodeId);
         if (err != CO_ERR_NONE) {
             nmt->Node->Error = CO_ERR_LSS_LOAD;
             return;
         }
         COLssInit(&nmt->Node->Lss, nmt->Node);
+#endif //USE_LSS
         COTmrClear(&nmt->Node->Tmr);
         CONmtInit(nmt, nmt->Node);
         COSdoInit(nmt->Node->Sdo, nmt->Node);

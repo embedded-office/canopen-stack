@@ -19,6 +19,7 @@
 ******************************************************************************/
 
 #include "co_core.h"
+#if USE_LSS
 
 /******************************************************************************
 * GLOBAL CONSTANTS
@@ -507,3 +508,4 @@ int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm)
     }
     return result;
 }
+#endif //USE_LSS
