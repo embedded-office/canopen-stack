@@ -7,7 +7,13 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
+### Added
+
 - nothing
+
+### Fixed
+
+- fix navigation link in sidebar to quickstart example
 
 ## [4.1.8] - 2021-10-04
 
