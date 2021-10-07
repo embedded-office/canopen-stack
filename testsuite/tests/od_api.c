@@ -19,7 +19,6 @@
 ******************************************************************************/
 
 #include "def_suite.h"
-#include <stdio.h>
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -53,25 +52,21 @@ uint32_t uint32_t_rw_indirect = 0xfedcba09;
 #define TS_READ_RO_GET(type, getter) CO_NODE node; \
     int16_t result; type toRead; setup(&node); \
     result = getter(&node.Dict, CO_DEV(type ## _I_RO_KEY, 0), &toRead); \
-    printf("Result of " #type " = %d Read: %0x Expected: %0x\n", result, toRead, type ## _ro_indirect); \
     TS_ASSERT(CO_ERR_NONE == result); TS_ASSERT(toRead == type ## _ro_indirect);
 
 #define TS_READ_RW_GET(type, getter) CO_NODE node; \
     int16_t result; type toRead; setup(&node); \
     result = getter(&node.Dict, CO_DEV(type ## _I_RW_KEY, 0), &toRead); \
-    printf("Result of " #type " = %d Read: %0x Expected: %0x\n", result, toRead, type ## _rw_indirect); \
     TS_ASSERT(CO_ERR_NONE == result); TS_ASSERT(toRead == type ## _rw_indirect);
 
 #define TS_D_READ(type, getter) CO_NODE node; \
     int16_t result; type toRead; setup(&node); \
     result = getter(&node.Dict, CO_DEV(type ## _D_RW_KEY, 0), &toRead); \
-    printf("Result of " #type " = %d Read: %0x Expected: %0x\n", result, toRead, type ## _D_VALUE); \
     TS_ASSERT(CO_ERR_NONE == result); TS_ASSERT(toRead == type ## _D_VALUE);
 
 #define TS_WRITE_RW(type, setter, newValue) CO_NODE node; \
     int16_t result; type toWrite = newValue; setup(&node); \
     result = setter(&node.Dict, CO_DEV(type ## _I_RW_KEY, 0), toWrite); \
-    printf("Result of " #type " = %d Write: %0x Expected: %0x\n", result, toWrite, type ## _rw_indirect); \
     TS_ASSERT(CO_ERR_NONE == result); TS_ASSERT(toWrite == type ## _rw_indirect);
 
 #define TS_D_WRITE(type, setter, getter, newValue) CO_NODE node; \
@@ -83,12 +78,10 @@ uint32_t uint32_t_rw_indirect = 0xfedcba09;
 #define TS_WRITE_RO(type, setter, newValue) CO_NODE node; \
     int16_t result; type toWrite = newValue; setup(&node); \
     result = setter(&node.Dict, CO_DEV(type ## _I_RO_KEY, 0), toWrite); \
-    printf("Result of " #type " = %d Write: %0x Expected: %0x\n", result, toWrite, type ## _ro_indirect); \
     TS_ASSERT(CO_ERR_NONE == result); TS_ASSERT(toWrite != type ## _ro_indirect);
 
 void setup(CO_NODE *node) {
     TS_CreateMandatoryDir();
-    // TS_ODAdd(CO_KEY(uint8_t_I_RO_KEY, 0, CO_UNSIGNED8|CO_OBJ_D__R_), 0, 123);
     TS_ODAdd(MK_RO_KEY(uint8_t, CO_UNSIGNED8));
     TS_ODAdd(MK_RO_KEY(uint16_t, CO_UNSIGNED16));
     TS_ODAdd(MK_RO_KEY(uint32_t, CO_UNSIGNED32));
@@ -99,8 +92,6 @@ void setup(CO_NODE *node) {
     TS_ODAdd(MK_RW_D_KEY(uint16_t, CO_UNSIGNED16));
     TS_ODAdd(MK_RW_D_KEY(uint32_t, CO_UNSIGNED32));
     TS_CreateNode(node, 0);
-    // for(int i =0; i < 64; i++) 
-        // printf("%d = %0x\n", i, node->Dict.Root[i].Key);
 }
 
 
@@ -190,14 +181,10 @@ TS_DEF_MAIN(TS_OD_GetDirect)
 
     // result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
     result = CODictRdByte(&node.Dict, CO_DEV(0x1018,0), &valByte);
-    printf("REsult = %d\n", result);
-    printf("Val = %d\n", valByte);
     TS_ASSERT(CO_ERR_NONE == result);
     TS_ASSERT(valByte == 4);
 
     result = CODictRdLong(&node.Dict, CO_DEV(0x2000,0), &val);
-    printf("Result = %d\n", result);
-    printf("Val = %d\n", val);
     TS_ASSERT(CO_ERR_NONE == result);
     TS_ASSERT(val == 123);
 
@@ -210,10 +197,6 @@ CO_OBJ_STR DemoStringObj = {
     &DemoString[0] /* start address of string memory */
  };
 
-
-#define DO_RO(type, val) printf(#type " is %x expected %x\n", type ## _ro_indirect, val ); \
-    printf("--MARK---\n");
-
 TS_DEF_MAIN(TS_OD_GetStringReadOnly)
 {
     int16_t     result;
@@ -222,22 +205,15 @@ TS_DEF_MAIN(TS_OD_GetStringReadOnly)
     uint32_t    size;
     CO_OBJ      *obj;
 
-    DO_RO(uint16_t, 0x1234);
     TS_CreateMandatoryDir();
-    printf("Object: offset= %d data=%s\n", DemoStringObj.Offset, DemoStringObj.Start);
     TS_ODAdd(CO_KEY(0x2001, 0, CO_STRING | CO_OBJ____R_), CO_TSTRING, CO_DATA_INDIRECT(&DemoStringObj));
     TS_CreateNode(&node, 0);
-    printf("HERE\n");
     obj = CODictFind(&node.Dict, CO_DEV(0x2001, 0));
     if (obj != NULL) {
         size = COObjGetSize(obj, &node, (uint32_t)0);
-        printf("Size = %d\n", size);
     }
     result = CODictRdBuffer(&node.Dict, CO_DEV(0x2001,0), &buf[0], 32);
     buf[size]=0;
-    printf("Result: %d\n", result);
-    printf("Offset: %d\n", DemoStringObj.Offset);
-    printf("Result: %s\n", buf);
     TS_ASSERT(strcmp(buf, DemoString) == 0);
     CHK_NO_ERR(&node); /* check error free stack execution         */
 }
@@ -280,6 +256,7 @@ SUITE_OD_API()
     TS_RUNNER(TS_uint8_t_ReadWriteWrite);
     TS_RUNNER(TS_uint16_t_ReadWriteWrite);
     TS_RUNNER(TS_uint32_t_ReadWriteWrite);
+    // Need to accept write and check for update
     // TS_RUNNER(TS_uint8_t_ReadOnlyWrite);
     // TS_RUNNER(TS_uint16_t_ReadOnlyWrite);
     // TS_RUNNER(TS_uint32_t_ReadOnlyWrite);
