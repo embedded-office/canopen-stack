@@ -9,7 +9,7 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ### Added
 
-- nothing
+- add callback `CONmtResetRequest()` for handling specific application and/or communication reset features
 
 ### Fixed
 
