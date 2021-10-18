@@ -27,7 +27,7 @@ void COTmrUnlock(void);
 * MANDATORY CALLBACK FUNCTIONS
 ******************************************************************************/
 
-void CONodeFatalError(void) 
+void CONodeFatalError(void)
 {
     volatile uint8_t debugExit = 0u;
 
@@ -73,6 +73,16 @@ void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
 
     /* Optional: place here some code, which is called
      * when a NMT mode change is initiated.
+     */
+}
+
+void CONmtResetRequest(CO_NMT *nmt, CO_NMT_RESET reset)
+{
+    (void)nmt;
+    (void)reset;
+
+    /* Optional: place here some code, which is called
+     * when a NMT reset is requested by the network.
      */
 }
 

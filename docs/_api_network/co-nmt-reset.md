@@ -5,7 +5,7 @@ sidebar:
   nav: docs
 ---
 
-This function resets the CANopen device with the given type. 
+This function resets the CANopen device with the given type.
 
 <!--more-->
 
@@ -15,6 +15,7 @@ The possible values of the reset type CO_NMT_RESET are:
 
 | Value | Description |
 | --- | --- |
+| CO_RESET_INVALID | invalid reset type (for testing) |
 | CO_RESET_NODE | reset node (application and communication) |
 | CO_RESET_COM | reset communication |
 

@@ -17,7 +17,7 @@ This chapter gives an overview of the component Callback Interface. The listed f
 This mandatory function is called, after detecting a fatal error within the stack, and no way out of the situation (*panic*). The function is intended to allow the implementation of a pre-defined shutdown sequence and setting the device in a safe state.
 
 ```c
-void CONodeFatalError(void) 
+void CONodeFatalError(void)
 {
     /* Place here your fatal error handling.
      * There is most likely a programming error.
@@ -155,6 +155,27 @@ void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
 | --- | --- |
 | nmt | reference to NMT structure |
 | mode | the new mode |
+
+
+### NMT Reset Request
+
+This optional function is called when the NMT reset is requested via CAN network. The nmt object pointer is checked to be valid before the CANopen stack calls this function.
+
+```c
+void CONmtResetRequest(CO_NMT *nmt, CO_NMT_RESET reset)
+{
+    /* Optional: place here some code, which is called
+     * when a NMT reset is requested by the network.
+     */
+}
+```
+
+**Arguments**
+
+| Parameter | Description |
+| --- | --- |
+| nmt | reference to NMT structure |
+| reset | the requested reset type |
 
 
 ### Heartbeat Consumer Error Event
