@@ -58,6 +58,10 @@ void TS_CallbackInit(TS_CALLBACK *cb)
     cb->NmtModeChange_ArgMode = CO_INVALID;
     cb->NmtModeChange_Called = 0;
 
+    cb->NmtResetRequest_ArgNmt = 0;
+    cb->NmtResetRequest_ArgReset = CO_RESET_INVALID;
+    cb->NmtResetRequest_Called = 0;
+
     cb->NmtHbConsEvent_ArgNmt = 0;
     cb->NmtHbConsEvent_ArgNodeId = 0;
     cb->NmtHbConsEvent_Called = 0;
@@ -149,6 +153,15 @@ void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
         TsCallbacks->NmtModeChange_ArgNmt  = nmt;
         TsCallbacks->NmtModeChange_ArgMode = mode;
         TsCallbacks->NmtModeChange_Called++;
+    }
+}
+
+void CONmtResetRequest(CO_NMT *nmt, CO_NMT_RESET reset)
+{
+    if (TsCallbacks != 0) {
+        TsCallbacks->NmtResetRequest_ArgNmt   = nmt;
+        TsCallbacks->NmtResetRequest_ArgReset = reset;
+        TsCallbacks->NmtResetRequest_Called++;
     }
 }
 

@@ -76,7 +76,8 @@ struct CO_HBCONS_T;           /* Declaration of heartbeat consumer structure */
 *    This enumeration holds all possible reset types.
 */
 typedef enum CO_NMT_RESET_T {
-    CO_RESET_NODE = 0,           /*!< reset application (and communication)  */
+    CO_RESET_INVALID = 0,        /*!< invalid reset type (for testing)       */
+    CO_RESET_NODE,               /*!< reset application (and communication)  */
     CO_RESET_COM,                /*!< reset communication                    */
     CO_RESET_NUM                 /*!< number of reset types                  */
 

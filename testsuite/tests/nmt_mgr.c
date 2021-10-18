@@ -21,6 +21,12 @@
 #include "def_suite.h"
 
 /******************************************************************************
+* PRIVATE VARIABLES
+******************************************************************************/
+
+static TS_CALLBACK NmtMgrCb;
+
+/******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
@@ -249,6 +255,79 @@ TS_DEF_MAIN(TS_Nmt_NoNmtInInit)
     CHK_MODE(&node.Nmt, CO_INIT);                     /* check, that mode is unchanged            */
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TC10
+*
+*          This testcase will check:
+*          - that NMT reset callback is called after application reset
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_Nmt_ResetNode)
+{
+    CO_IF_FRM frm;
+    CO_NODE        node;
+    CO_NODE_SPEC   spec;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    TS_CreateSpec(&node, &spec, 0);
+
+    CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
+    CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
+
+    CONodeStart(&node);                               /* Start communication                      */
+    CHK_CAN   (&frm);                                 /* check for a CAN frame                    */
+    CHK_BOOTUP(frm, 1);                               /* check for BootUp message of Node-ID #1   */
+
+    TS_NMT_SEND(129, 1);                              /* request application reset on Node #1     */
+    CHK_CAN   (&frm);                                 /* check for a CAN frame                    */
+    CHK_BOOTUP(frm, 1);                               /* check for BootUp message of Node-ID #1   */
+
+    CHK_CB_NMT_RESET_REQUEST(&NmtMgrCb, 1);
+    CHK_MODE(&node.Nmt, CO_PREOP);                    /* check, that mode is unchanged            */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TC10
+*
+*          This testcase will check:
+*          - that NMT reset callback is called after communication reset
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_Nmt_ResetCom)
+{
+    CO_IF_FRM frm;
+    CO_NODE        node;
+    CO_NODE_SPEC   spec;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    TS_CreateSpec(&node, &spec, 0);
+
+    CONodeInit(&node, &spec);                         /* Init with Node-ID in Specification       */
+    CHK_NOCAN (&frm);                                 /* check, that no BootUp message is sent    */
+
+    CONodeStart(&node);                               /* Start communication                      */
+    CHK_CAN   (&frm);                                 /* check for a CAN frame                    */
+    CHK_BOOTUP(frm, 1);                               /* check for BootUp message of Node-ID #1   */
+
+    TS_NMT_SEND(130, 1);                              /* request communication reset on Node #1   */
+    CHK_CAN   (&frm);                                 /* check for a CAN frame                    */
+    CHK_BOOTUP(frm, 1);                               /* check for BootUp message of Node-ID #1   */
+
+    CHK_CB_NMT_RESET_REQUEST(&NmtMgrCb, 1);
+    CHK_MODE(&node.Nmt, CO_PREOP);                    /* check, that mode is unchanged            */
+}
+
+static void NmtMgrSetup(void)
+{
+    TS_CallbackInit(&NmtMgrCb);
+}
+
+static void NmtMgrCleanup(void)
+{
+    TS_CallbackDeInit();
+}
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -256,7 +335,8 @@ TS_DEF_MAIN(TS_Nmt_NoNmtInInit)
 SUITE_NMT_MGR()
 {
     TS_Begin(__FILE__);
-    
+    TS_SetupCase(NmtMgrSetup, NmtMgrCleanup);
+
 //    CanDiagnosticOn(0);
 
     TS_RUNNER(TS_Nmt_Bootup);
@@ -268,6 +348,8 @@ SUITE_NMT_MGR()
     TS_RUNNER(TS_Nmt_NoSdoInInit);
     TS_RUNNER(TS_Nmt_NoEmcyInInit);
     TS_RUNNER(TS_Nmt_NoNmtInInit);
+    TS_RUNNER(TS_Nmt_ResetNode);
+    TS_RUNNER(TS_Nmt_ResetCom);
 
 //    CanDiagnosticOff(0);
 
