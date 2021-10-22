@@ -14,6 +14,7 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 ### Fixed
 
 - fix navigation link in sidebar to quickstart example
+- correct restarting of block transfer after aborting a running transfer by a client restart
 
 ## [4.1.8] - 2021-10-04
 
