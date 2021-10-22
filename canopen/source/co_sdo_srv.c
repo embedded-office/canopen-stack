@@ -172,6 +172,7 @@ CO_ERR COSdoResponse(CO_SDO *srv)
             result = COSdoAckUploadBlock(srv);
         } else {
             COSdoAbort(srv, CO_SDO_ERR_CMD);
+            COSdoAbortReq(srv);
         }
         return (result);
     }
@@ -213,6 +214,7 @@ CO_ERR COSdoResponse(CO_SDO *srv)
     /* invalid or unknown command */
     } else {
         COSdoAbort(srv, CO_SDO_ERR_CMD);
+        COSdoAbortReq(srv);
     }
 
     /* set DLC for the SDO response */
