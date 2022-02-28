@@ -44,7 +44,10 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
         return;
     }
 
-    sync->Node = node;
+    sync->Node  = node;
+    sync->Tmr   = -1;
+    sync->Cycle = 0;
+
     for (i = 0; i < CO_TPDO_N; i++) {
         sync->TSync[i] = 0;
         sync->TPdo[i]  = (CO_TPDO *)0;
@@ -57,6 +60,7 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_CFG_1005_0;
         sync->CobId = 0;
+        return;
     }
 }
 
@@ -153,7 +157,7 @@ int16_t COSyncUpdate(CO_SYNC *sync, CO_IF_FRM *frm)
     int16_t result = -1;
     uint8_t i;
 
-    if (frm->Identifier == sync->CobId) {
+    if (frm->Identifier == (sync->CobId & CO_SYNC_COBID_MASK)) {
         for (i = 0; i < CO_TPDO_N; i++) {
             if (sync->TPdo[i] != 0) {
                 sync->TSync[i]++;
@@ -182,30 +186,125 @@ void COSyncRestart(CO_SYNC *sync)
 /*
 * see function definition
 */
-CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
-{
-    CO_ERR    result = CO_ERR_NONE;
-    uint32_t  nid;
-    uint32_t  oid;
+void COSyncProdActivate(CO_SYNC *sync) {
+    uint32_t ticks, time;
+    CO_ERR   err;
+    CO_NODE *node;
+    int16_t  tid;
 
-    (void)len;
-    (void)node;
-    nid = *(uint32_t*)buf;
-    (void)COObjRdDirect(obj, &oid, CO_LONG);
+    node = sync->Node;
 
-    /* currently generating SYNCs is not supported */
-    if((nid & CO_SYNC_COBID_OFF) != (uint32_t)0) {
-        result = CO_ERR_OBJ_RANGE;
+    err = CODictRdLong(&node->Dict, CO_DEV(0x1006, 0), &sync->Cycle);
+    if (err != CO_ERR_NONE) {
+        node->Error = CO_ERR_CFG_1006_0;
+        sync->Cycle = 0;
+        return;
     }
 
+    if ((sync->Cycle == 0) || ((sync->CobId & CO_SYNC_COBID_OFF) == 0)) {
+        /* SYNC producer is disabled */
+        return;
+    }
+
+    time = COTmrGetMinTime(&node->Tmr, CO_TMR_UNIT_1MS);
+    if ((time * 1000) > sync->Cycle) {
+        /* Provided timer driver has small resolution for configured value */
+        return;
+    }
+
+    if (sync->Tmr >= 0) {
+        tid = COTmrDelete(&node->Tmr, sync->Tmr);
+        if (tid < 0) {
+            node->Error = CO_ERR_TMR_DELETE;
+        }
+    }
+
+    time = (sync->Cycle / 1000);
+    if (time > 0) {
+        ticks = COTmrGetTicks(&node->Tmr, time, CO_TMR_UNIT_1MS);
+        sync->Tmr = COTmrCreate(&node->Tmr,
+            ticks,
+            ticks,
+            COSyncProdSend,
+            sync);
+        if (sync->Tmr < 0) {
+            node->Error = CO_ERR_TMR_CREATE;
+        }
+    } else {
+        sync->Tmr = -1;
+    }
+}
+
+/*
+* see function definition
+*/
+void COSyncProdDeactivate(CO_SYNC *sync) {
+    int16_t tid;
+
+    if (sync->Tmr >= 0) {
+        tid       = COTmrDelete(&sync->Node->Tmr, sync->Tmr);
+        sync->Tmr = -1;
+        if (tid < 0) {
+            sync->Node->Error = CO_ERR_TMR_DELETE;
+        }
+    }
+}
+
+/*
+* see function definition
+*/
+void COSyncProdSend(void *parg) {
+    CO_IF_FRM  frm;
+    CO_SYNC   *sync;
+
+    sync = (CO_SYNC *) parg;
+
+    CO_SET_ID(&frm, (sync->CobId & CO_SYNC_COBID_MASK));
+    CO_SET_DLC(&frm, 0);
+
+    (void)COIfCanSend(&sync->Node->If, &frm);
+}
+
+/*
+* see function definition
+*/
+CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len) {
+    CO_ERR result = CO_ERR_NONE;
+    CO_SYNC *sync;
+    uint32_t nid;
+    uint32_t oid;
+
+    (void) len;
+
+    sync = &node->Sync;
+    nid = *(uint32_t*) buf;
+    (void) COObjRdDirect(obj, &oid, CO_LONG);
+
     /* when current entry is generating SYNCs, bits 0 to 29 shall not be changed */
-    if ((oid & CO_SYNC_COBID_OFF) != (uint32_t)0) {
+    if ((oid & CO_SYNC_COBID_OFF) != (uint32_t) 0) {
         if ((nid & CO_SYNC_COBID_MASK) != (oid & CO_SYNC_COBID_MASK)) {
             result = CO_ERR_OBJ_RANGE;
         } else {
+            /* SYNC producer deactivation */
+            if ((nid & CO_SYNC_COBID_OFF) == 0) {
+                COSyncProdDeactivate(sync);
+            }
+            sync->CobId = nid;
             result = COObjWrDirect(obj, &nid, CO_LONG);
         }
     } else {
+        /* SYNC producer activation */
+        if (((nid & CO_SYNC_COBID_OFF) != 0)) {
+            sync->CobId = nid;
+            COSyncProdActivate(sync);
+            if (sync->Tmr < 0) {
+                /* Unable to start timer, return back the old COB-ID and report error */
+                sync->CobId = oid;
+                result      = CO_ERR_OBJ_RANGE;
+                return (result);
+            }
+        }
+        sync->CobId = nid;
         result = COObjWrDirect(obj, &nid, CO_LONG);
     }
 

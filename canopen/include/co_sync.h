@@ -44,6 +44,18 @@ extern "C" {
 #define CO_TSYNCID ((const CO_OBJ_TYPE *)&COTSyncId)  /*!< Dynamic COB-ID    */
 
 /******************************************************************************
+* PUBLIC CONSTANTS
+******************************************************************************/
+
+/*! \brief OBJECT TYPE SYNC COB-ID
+*
+*    This object type specializes the general handling of object for the
+*    object dictionary entry 0x1005. This entries is designed to provide
+*    the sync cob-id value and sync producer functionality.
+*/
+extern const CO_OBJ_TYPE COTSyncId;
+
+/******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
 
@@ -55,6 +67,8 @@ typedef struct CO_SYNC_T {
     struct CO_NODE_T *Node;             /*!< link to parent node             */
     uint32_t          CobId;            /*!< SYNC message identifier         */
     uint32_t          Time;             /*!< SYNC time (num of SYNCs)        */
+    int16_t           Tmr;              /*!< SYNC producer timer ID          */
+    uint32_t          Cycle;            /*!< SYNC producer cycle time (us)   */
     CO_IF_FRM         RFrm[CO_RPDO_N];  /*!< synchronous RPDO CAN frame      */
     struct CO_RPDO_T *RPdo[CO_RPDO_N];  /*!< Pointer to synchronous RPDO     */
     struct CO_TPDO_T *TPdo[CO_TPDO_N];  /*!< Pointer to synchronous TPDO     */
@@ -158,6 +172,37 @@ int16_t COSyncUpdate(CO_SYNC *sync, CO_IF_FRM *frm);
 *    Pointer to SYNC object
 */
 void COSyncRestart(CO_SYNC *sync);
+
+/*! \brief ACTIVATE SYNC PRODUCER
+*
+*    This function is used to activate SYNC producer functionality.
+*    It's called on NMT Start Pre-Operational or sync COB-ID update
+*    (1005h) with bit 30 set to 1.
+*
+* \param sync
+*    Pointer to SYNC object
+*/
+void COSyncProdActivate(CO_SYNC *sync);
+
+/*! \brief ACTIVATE SYNC PRODUCER
+*
+*    This function is used to deactivate SYNC producer functionality.
+*    It's called on sync COB-ID update (1005h) with bit 30 set to 0.
+*
+* \param sync
+*    Pointer to SYNC object
+*/
+void COSyncProdDeactivate(CO_SYNC *sync);
+
+/*! \brief SYNC PRODUCER TRANSMISSION TRIGGER
+ *
+ *   This function is used for periodic transmission of SYNC frames
+ *   in case node is configured as SYNC producer.
+ *
+ * \param parg
+ *    reference to SYNC structure
+ */
+void COSyncProdSend(void *parg);
 
 /*! \brief SYNC COB-ID WRITE ACCESS
 *
