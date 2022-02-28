@@ -102,6 +102,7 @@ typedef enum CO_ERR_T {
     CO_ERR_SDO_WRITE,            /*!< error during in SDO block writing      */
 
     CO_ERR_SYNC_MSG,             /*!< error during receive synchronous PDO   */
+    CO_ERR_SYNC_RES,             /*!< SYNC cycle is out of resolution        */
 
     CO_ERR_IF_CAN_INIT,          /*!< error during initialization            */
     CO_ERR_IF_CAN_ENABLE,        /*!< error during enabling CAN interface    */

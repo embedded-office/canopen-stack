@@ -27,6 +27,8 @@
 
 const CO_OBJ_TYPE COTSyncId = { 0, 0, 0, COTypeSyncIdWrite };
 
+const CO_OBJ_TYPE COTSyncCycle = { 0, 0, 0, COTypeSyncCycleWrite };
+
 /******************************************************************************
 * FUNCTIONS
 ******************************************************************************/
@@ -209,6 +211,7 @@ void COSyncProdActivate(CO_SYNC *sync) {
     time = COTmrGetMinTime(&node->Tmr, CO_TMR_UNIT_1MS);
     if ((time * 1000) > sync->Cycle) {
         /* Provided timer driver has small resolution for configured value */
+        node->Error = CO_ERR_SYNC_RES;
         return;
     }
 
@@ -291,14 +294,20 @@ CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf
             }
             sync->CobId = nid;
             result = COObjWrDirect(obj, &nid, CO_LONG);
+            if (result != CO_ERR_NONE) {
+                result = CO_ERR_OBJ_RANGE;
+            }
         }
     } else {
         /* SYNC producer activation */
         if (((nid & CO_SYNC_COBID_OFF) != 0)) {
             sync->CobId = nid;
             COSyncProdActivate(sync);
-            if (sync->Tmr < 0) {
-                /* Unable to start timer, return back the old COB-ID and report error */
+            if (node->Error == CO_ERR_SYNC_RES) {
+                /*
+                 * Unable to start timer, return back
+                 * the old COB-ID and report error
+                 */
                 sync->CobId = oid;
                 result      = CO_ERR_OBJ_RANGE;
                 return (result);
@@ -306,6 +315,54 @@ CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf
         }
         sync->CobId = nid;
         result = COObjWrDirect(obj, &nid, CO_LONG);
+        if (result != CO_ERR_NONE) {
+            result = CO_ERR_OBJ_RANGE;
+        }
+    }
+
+    return (result);
+}
+
+CO_ERR COTypeSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len) {
+    CO_ERR   result;
+    CO_SYNC *sync;
+    uint32_t nus, ous;
+
+
+    (void) len;
+    result  = CO_ERR_NONE;
+    sync    = &node->Sync;
+    nus     = *(uint32_t *) buf;
+    ous     = 0;
+
+    /*
+     * Fetch old settings (will be restored in
+     * case producer reactivation went wrong
+     */
+    (void) COObjRdDirect(obj, &ous, CO_LONG);
+
+    result = COObjWrDirect(obj, &nus, CO_LONG);
+    if (result != CO_ERR_NONE) {
+        /* Oops, write access went wrong */
+        return CO_ERR_OBJ_RANGE;
+    }
+
+    /* Reactivate sync producer with new cycle value */
+    if ((sync->CobId & CO_SYNC_COBID_OFF) != 0) {
+        COSyncProdActivate(sync);
+        if (node->Error == CO_ERR_SYNC_RES) {
+            /*
+             * Restore old SYNC cycle value because used timer has
+             * resolution that is not able to produce SYNCs with new
+             * cycle.
+             *
+             * Object write access was successful once already,
+             * no result check is needed.
+             */
+            (void) COObjWrDirect(obj, &ous, CO_LONG);
+            sync->Cycle = ous;
+            result      = CO_ERR_OBJ_RANGE;
+        }
     }
 
     return (result);
