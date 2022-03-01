@@ -26,6 +26,15 @@
 #define CO_SDOS_N               1
 #endif
 
+/*! \brief DEFAULT SDO CLIENT
+*
+*    This configuration define specifies how many SDO clients the library
+*    will support.
+*/
+#ifndef CO_CSDO_N
+#define CO_CSDO_N               1
+#endif
+
 /*! \brief DEFAULT EMERGENCY CODES
 *
 *    This configuration define specifies how many emergency codes the library
