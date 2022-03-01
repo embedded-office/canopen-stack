@@ -64,7 +64,7 @@ typedef struct CO_NODE_T {
     struct CO_TMR_T        Tmr;                  /*!< Timer manager          */
     struct CO_SDO_T        Sdo[CO_SDOS_N];       /*!< SDO Server Array       */
     uint8_t               *SdoBuf;               /*!< SDO Transfer Buffer    */
-    struct CO_CSDO_T      *CSdo[CO_CSDO_N];      /*!< SDO client array       */
+    struct CO_CSDO_T       CSdo[CO_CSDO_N];      /*!< SDO client array       */
     uint8_t               *CSdoBuf;              /*!< SDO client tfer buffer */
     struct CO_RPDO_T       RPdo[CO_RPDO_N];      /*!< RPDO Array             */
     struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */

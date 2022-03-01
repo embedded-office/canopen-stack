@@ -27,6 +27,7 @@ extern "C"{
 
 #include "co_types.h"
 #include "co_cfg.h"
+#include "co_obj.h"
 
 /******************************************************************************
 * PUBLIC DEFINES
