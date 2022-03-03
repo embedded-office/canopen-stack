@@ -48,7 +48,7 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
 
     sync->Node  = node;
     sync->Tmr   = -1;
-    sync->Cycle = 0;
+    sync->Cycle =  0;
 
     for (i = 0; i < CO_TPDO_N; i++) {
         sync->TSync[i] = 0;
@@ -60,9 +60,7 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
     }
     err = CODictRdLong(&node->Dict, CO_DEV(0x1005, 0), &sync->CobId);
     if (err != CO_ERR_NONE) {
-        node->Error = CO_ERR_CFG_1005_0;
         sync->CobId = 0;
-        return;
     }
 }
 
@@ -196,21 +194,35 @@ void COSyncProdActivate(CO_SYNC *sync) {
 
     node = sync->Node;
 
+    if ((sync->CobId & CO_SYNC_COBID_ON) == 0) {
+        /* 
+         * SYNC producer is disabled, activation is skipped 
+         * and system is accepted as is.
+         */
+        return;
+    }
+
     err = CODictRdLong(&node->Dict, CO_DEV(0x1006, 0), &sync->Cycle);
     if (err != CO_ERR_NONE) {
+        /*
+         * In case of enabled SYNC producer, entry 1006h is mandatory
+         * and invalid read operation results in configuration error.
+         */
         node->Error = CO_ERR_CFG_1006_0;
         sync->Cycle = 0;
         return;
     }
 
-    if ((sync->Cycle == 0) || ((sync->CobId & CO_SYNC_COBID_OFF) == 0)) {
-        /* SYNC producer is disabled */
-        return;
-    }
-
     time = COTmrGetMinTime(&node->Tmr, CO_TMR_UNIT_1MS);
     if ((time * 1000) > sync->Cycle) {
-        /* Provided timer driver has small resolution for configured value */
+        /* 
+         * Provided timer driver has small resolution for configured 
+         * value, it is not possible to handle SYNCs on requested 
+         * communication cycle.
+         * 
+         * TODO: refactor SYNC producer to use highest possible 
+         * resolution of COTmr API (which is currently 100 us).
+         */
         node->Error = CO_ERR_SYNC_RES;
         return;
     }
@@ -259,8 +271,15 @@ void COSyncProdDeactivate(CO_SYNC *sync) {
 void COSyncProdSend(void *parg) {
     CO_IF_FRM  frm;
     CO_SYNC   *sync;
+    CO_NMT    *nmt; 
 
     sync = (CO_SYNC *) parg;
+    nmt  = (CO_NMT  *) &sync->Node->Nmt;
+
+    /* Do not transmit SYNC frames in case of NMT mode that does now allow it */
+    if ((nmt->Allowed & CO_SYNC_ALLOWED) == 0) {
+        return;
+    }
 
     CO_SET_ID(&frm, (sync->CobId & CO_SYNC_COBID_MASK));
     CO_SET_DLC(&frm, 0);
@@ -284,12 +303,12 @@ CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf
     (void) COObjRdDirect(obj, &oid, CO_LONG);
 
     /* when current entry is generating SYNCs, bits 0 to 29 shall not be changed */
-    if ((oid & CO_SYNC_COBID_OFF) != (uint32_t) 0) {
+    if ((oid & CO_SYNC_COBID_ON) != (uint32_t) 0) {
         if ((nid & CO_SYNC_COBID_MASK) != (oid & CO_SYNC_COBID_MASK)) {
             result = CO_ERR_OBJ_RANGE;
         } else {
             /* SYNC producer deactivation */
-            if ((nid & CO_SYNC_COBID_OFF) == 0) {
+            if ((nid & CO_SYNC_COBID_ON) == 0) {
                 COSyncProdDeactivate(sync);
             }
             sync->CobId = nid;
@@ -300,7 +319,7 @@ CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf
         }
     } else {
         /* SYNC producer activation */
-        if (((nid & CO_SYNC_COBID_OFF) != 0)) {
+        if (((nid & CO_SYNC_COBID_ON) != 0)) {
             sync->CobId = nid;
             COSyncProdActivate(sync);
             if (node->Error == CO_ERR_SYNC_RES) {
@@ -348,7 +367,7 @@ CO_ERR COTypeSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     }
 
     /* Reactivate sync producer with new cycle value */
-    if ((sync->CobId & CO_SYNC_COBID_OFF) != 0) {
+    if ((sync->CobId & CO_SYNC_COBID_ON) != 0) {
         COSyncProdActivate(sync);
         if (node->Error == CO_ERR_SYNC_RES) {
             /*

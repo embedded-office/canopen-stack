@@ -34,15 +34,15 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_SYNC_COBID_OFF    ((uint32_t)1 << 30)    /*!< generator flag      */
-#define CO_SYNC_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
-#define CO_SYNC_COBID_MASK   ((uint32_t)0x1FFFFFFF) /*!< identifier mask     */
+#define CO_SYNC_COBID_ON     ((uint32_t)1 << 30)    /*!< generator flag         */
+#define CO_SYNC_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format        */
+#define CO_SYNC_COBID_MASK   ((uint32_t)0x1FFFFFFF) /*!< identifier mask        */
 
-#define CO_SYNC_FLG_TX       (0x01) /*!< message type indication  TPDO       */
-#define CO_SYNC_FLG_RX       (0x02) /*!< message type indication: RPDO       */
+#define CO_SYNC_FLG_TX       (0x01) /*!< message type indication  TPDO          */
+#define CO_SYNC_FLG_RX       (0x02) /*!< message type indication: RPDO          */
 
-#define CO_TSYNCID ((const CO_OBJ_TYPE *)&COTSyncId) /*!< Dynamic COB-ID     */
-#define CO_TSYNCCT ((const CO_OBJ_TYPE *)&COTSyncCycle) /*!< Dynamic cycle   */
+#define CO_TSYNCID    ((const CO_OBJ_TYPE *)&COTSyncId) /*!< Dynamic COB-ID     */
+#define CO_TSYNCCYCLE ((const CO_OBJ_TYPE *)&COTSyncCycle) /*!< Dynamic cycle   */
 
 /******************************************************************************
 * PUBLIC CONSTANTS
@@ -56,6 +56,12 @@ extern "C" {
 */
 extern const CO_OBJ_TYPE COTSyncId;
 
+/*! \brief OBJECT TYPE SYNC COMMUNICATION CYCLE
+*
+*    This object type specializes the general handling of object for the
+*    object dictionary entry 0x1006. This entries is designed to provide
+*    the sync communication cycle value.
+*/
 extern const CO_OBJ_TYPE COTSyncCycle;
 
 /******************************************************************************
