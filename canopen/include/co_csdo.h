@@ -43,6 +43,7 @@ typedef enum {
     CO_CSDO_STATE_INVALID       = 0, /*!< SDO client is not enabled          */
     CO_CSDO_STATE_IDLE          = 1, /*!< SDO client is idle                 */
     CO_CSDO_STATE_BUSY          = 2, /*!< SDO client handling transfer       */
+
 } CO_CSDO_STATE;
 
 /*! \brief SDO CLIENT TRANSFER TYPE
@@ -56,6 +57,7 @@ typedef enum {
     CO_CSDO_TRANSFER_NONE       = 0, /*!< No transfer is currently ongoing   */
     CO_CSDO_TRANSFER_UPLOAD     = 1, /*!< SDO upload is being executed       */
     CO_CSDO_TRANSFER_DOWNLOAD   = 2, /*!< SDO download is being executed     */
+
 } CO_CSDO_TRANSFER_TYPE;
 
 struct CO_CSDO_T;
@@ -134,8 +136,8 @@ typedef struct CO_CSDO_TRANSFER_T {
     uint8_t                 Sub;        /*!< Accessed dictionary subindex    */
     int16_t                 Tmr;        /*!< Identifier of timeout timer     */
     uint32_t                Timeout;    /*!< Timeout value in milliseconds   */
-    CO_CSDO_DN_CALLBACK_T   OnDownload; /*!< Notification for download       */
-    CO_CSDO_UP_CALLBACK_T   OnUpload;   /*!< Notification for upload         */
+    void                   *Callback;   /*!< Notification callback           */
+
 } CO_CSDO_TRANSFER;
 
 /*! \brief SDO CLIENT
@@ -152,6 +154,7 @@ typedef struct CO_CSDO_T {
     CO_CSDO_STATE           State;      /*!< Current CSDO state              */
     CO_CSDO_TRANSFER        Tfer;       /*!< Current CSDO transfer info      */
     CO_SDO_BUF              Buf;        /*!< Transfer buffer structure       */
+
 } CO_CSDO;
 
 /******************************************************************************
@@ -183,11 +186,8 @@ CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num);
  * \param csdo
  *   Reference to SDO client
  *
- * \param index
- *   Dictionary index
- *
- * \param sub
- *   Dictionary subindex
+ * \param key
+ *   Dictionary key (index and subindex)
  *
  * \param callback
  *   Notification callback on tranfer end (complete or abort)
@@ -200,8 +200,7 @@ CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num);
  *
  */
 CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
-                           uint16_t index,
-                           uint8_t sub,
+                           uint32_t key,
                            CO_CSDO_UP_CALLBACK_T callback,
                            uint32_t timeout);
 
@@ -213,11 +212,8 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
  * \param csdo
  *   Reference to SDO client
  *
- * \param index
- *   Dictionary index
- *
- * \param sub
- *   Dictionary subindex
+ * \param key
+ *   Dictionary key (index and subindex)
  *
  * \param value
  *   Value to be downloaded to server
@@ -236,8 +232,7 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
  *
  */
 CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
-                             uint16_t index,
-                             uint8_t sub,
+                             uint32_t key,
                              void *value,
                              uint32_t size,
                              CO_CSDO_DN_CALLBACK_T callback,
