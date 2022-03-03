@@ -96,6 +96,8 @@ typedef enum CO_ERR_T {
     CO_ERR_RPDO_MAP_OBJ,         /*!< config error in RPDO mapping           */
 
     CO_ERR_SDO_SILENT,           /*!< no SDO response (e.g. block transfer)  */
+    CO_ERR_SDO_OFF,              /*!< SDO client is disabled                 */
+    CO_ERR_SDO_BUSY,             /*!< SDO client transfer is ongoing         */
     CO_ERR_SDO_ABORT,            /*!< error in SDO request with ABORT resp.  */
     CO_ERR_SDO_READ,             /*!< error during in SDO block reading      */
     CO_ERR_SDO_WRITE,            /*!< error during in SDO block writing      */
