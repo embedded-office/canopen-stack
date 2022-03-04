@@ -62,6 +62,8 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
     if (err != CO_ERR_NONE) {
         sync->CobId = 0;
     }
+
+    COSyncProdActivate(sync);
 }
 
 /*

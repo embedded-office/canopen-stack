@@ -138,9 +138,6 @@ void CONmtSetMode(CO_NMT *nmt, CO_MODE mode)
         if (mode == CO_OPERATIONAL) {
             COTPdoInit(nmt->Node->TPdo, nmt->Node);
             CORPdoInit(nmt->Node->RPdo, nmt->Node);
-        } else if (mode == CO_PREOP) {
-            /* Activate SYNC producer if possible */
-            COSyncProdActivate(&nmt->Node->Sync);
         }
         CONmtModeChange(nmt, mode);
     }
