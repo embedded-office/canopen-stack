@@ -215,8 +215,8 @@ void COSyncProdActivate(CO_SYNC *sync) {
         return;
     }
 
-    time = COTmrGetMinTime(&node->Tmr, CO_TMR_UNIT_1MS);
-    if ((time * 1000) > sync->Cycle) {
+    time = COTmrGetMinTime(&node->Tmr, CO_TMR_UNIT_100US);
+    if ((time * 100) > sync->Cycle) {
         /* 
          * Provided timer driver has small resolution for configured 
          * value, it is not possible to handle SYNCs on requested 
@@ -236,9 +236,9 @@ void COSyncProdActivate(CO_SYNC *sync) {
         }
     }
 
-    time = (sync->Cycle / 1000);
+    time = (sync->Cycle / 100);
     if (time > 0) {
-        ticks = COTmrGetTicks(&node->Tmr, time, CO_TMR_UNIT_1MS);
+        ticks = COTmrGetTicks(&node->Tmr, time, CO_TMR_UNIT_100US);
         sync->Tmr = COTmrCreate(&node->Tmr,
             ticks,
             ticks,
