@@ -34,14 +34,35 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_SYNC_COBID_OFF    ((uint32_t)1 << 30)    /*!< generator flag      */
-#define CO_SYNC_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
-#define CO_SYNC_COBID_MASK   ((uint32_t)0x1FFFFFFF) /*!< identifier mask     */
+#define CO_SYNC_COBID_ON     ((uint32_t)1 << 30)    /*!< generator flag         */
+#define CO_SYNC_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format        */
+#define CO_SYNC_COBID_MASK   ((uint32_t)0x1FFFFFFF) /*!< identifier mask        */
 
-#define CO_SYNC_FLG_TX    0x01    /*!< message type indication  TPDO         */
-#define CO_SYNC_FLG_RX    0x02    /*!< message type indication: RPDO         */
+#define CO_SYNC_FLG_TX       (0x01) /*!< message type indication  TPDO          */
+#define CO_SYNC_FLG_RX       (0x02) /*!< message type indication: RPDO          */
 
-#define CO_TSYNCID ((const CO_OBJ_TYPE *)&COTSyncId)  /*!< Dynamic COB-ID    */
+#define CO_TSYNCID    ((const CO_OBJ_TYPE *)&COTSyncId) /*!< Dynamic COB-ID     */
+#define CO_TSYNCCYCLE ((const CO_OBJ_TYPE *)&COTSyncCycle) /*!< Dynamic cycle   */
+
+/******************************************************************************
+* PUBLIC CONSTANTS
+******************************************************************************/
+
+/*! \brief OBJECT TYPE SYNC COB-ID
+*
+*    This object type specializes the general handling of object for the
+*    object dictionary entry 0x1005. This entries is designed to provide
+*    the sync cob-id value and sync producer functionality.
+*/
+extern const CO_OBJ_TYPE COTSyncId;
+
+/*! \brief OBJECT TYPE SYNC COMMUNICATION CYCLE
+*
+*    This object type specializes the general handling of object for the
+*    object dictionary entry 0x1006. This entries is designed to provide
+*    the sync communication cycle value.
+*/
+extern const CO_OBJ_TYPE COTSyncCycle;
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -55,6 +76,8 @@ typedef struct CO_SYNC_T {
     struct CO_NODE_T *Node;             /*!< link to parent node             */
     uint32_t          CobId;            /*!< SYNC message identifier         */
     uint32_t          Time;             /*!< SYNC time (num of SYNCs)        */
+    int16_t           Tmr;              /*!< SYNC producer timer ID          */
+    uint32_t          Cycle;            /*!< SYNC producer cycle time (us)   */
     CO_IF_FRM         RFrm[CO_RPDO_N];  /*!< synchronous RPDO CAN frame      */
     struct CO_RPDO_T *RPdo[CO_RPDO_N];  /*!< Pointer to synchronous RPDO     */
     struct CO_TPDO_T *TPdo[CO_TPDO_N];  /*!< Pointer to synchronous TPDO     */
@@ -159,6 +182,37 @@ int16_t COSyncUpdate(CO_SYNC *sync, CO_IF_FRM *frm);
 */
 void COSyncRestart(CO_SYNC *sync);
 
+/*! \brief ACTIVATE SYNC PRODUCER
+*
+*    This function is used to activate SYNC producer functionality.
+*    It's called on NMT Start Pre-Operational or sync COB-ID update
+*    (1005h) with bit 30 set to 1.
+*
+* \param sync
+*    Pointer to SYNC object
+*/
+void COSyncProdActivate(CO_SYNC *sync);
+
+/*! \brief ACTIVATE SYNC PRODUCER
+*
+*    This function is used to deactivate SYNC producer functionality.
+*    It's called on sync COB-ID update (1005h) with bit 30 set to 0.
+*
+* \param sync
+*    Pointer to SYNC object
+*/
+void COSyncProdDeactivate(CO_SYNC *sync);
+
+/*! \brief SYNC PRODUCER TRANSMISSION TRIGGER
+ *
+ *   This function is used for periodic transmission of SYNC frames
+ *   in case node is configured as SYNC producer.
+ *
+ * \param parg
+ *    reference to SYNC structure
+ */
+void COSyncProdSend(void *parg);
+
 /*! \brief SYNC COB-ID WRITE ACCESS
 *
 *    This function is responsible for the correct write access for the
@@ -181,6 +235,29 @@ void COSyncRestart(CO_SYNC *sync);
 * \retval  CO_ERR_OBJ_RANGE   an error is detected and function aborted
 */
 CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
+
+/*! \brief SYNC COMMUNICATION CYCLE WRITE ACCESS
+*
+*    This function is responsible for the correct write access for the
+*    SYNC communication cycle object entry (1006h). Value is presented
+*    as number of microseconds.
+*
+* \param obj
+*    SYNC communication cycle entry reference
+*
+* \param node
+*    reference to parent node
+*
+* \param buf
+*    Pointer to buffer memory
+*
+* \param len
+*    Length of buffer memory
+*
+* \retval  CO_ERR_NONE        SYNC COB-ID object entry is written
+* \retval  CO_ERR_OBJ_RANGE   an error is detected and function aborted
+*/
+CO_ERR COTypeSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS
