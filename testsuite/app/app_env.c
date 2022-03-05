@@ -60,6 +60,8 @@ static uint8_t TS_Obj1001_0;
 static uint8_t TS_Obj1003_0;
 /* object entry variables for 0x1003:1..x (the emergency history) */
 static uint32_t TS_Obj1003[TS_EMCY_HIST_MAX];
+/* object entry variables for 0x1005:0 (the SYNC COB-ID) */
+static uint32_t TS_Obj1005_0;
 /* object entry variables for 0x12xx:1 (the SDOS request COB-ID) */
 static uint32_t TS_Obj12xx_1[TS_SDOS_N];
 /* object entry variables for 0x12xx:2 (the SDOS response COB-ID) */
@@ -229,7 +231,7 @@ void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data)
 * \details Clear object dictionary and append the following object entries:
 *          - 1000:0 - Device type (constant 0)
 *          - 1001:0 - Error register (local variable)
-*          - 1005:0 - COB-ID SYNC message (constant 0x80)
+*          - 1005:0 - COB-ID SYNC message (local variable)
 *          - 1017:0 - Producer heartbeat time (loval variable)
 *          - 1018:0 - Identity object (constant 4)
 *          - 1018:X - 1..4: Identity object values (constant 0)
@@ -248,7 +250,8 @@ void TS_CreateMandatoryDir(void)
     TS_ODAdd(OBJ1000_0(0));
     TS_ODAdd(OBJ1001_0(&TS_Obj1001_0));
     TS_Obj1001_0 = 0;
-    TS_ODAdd(OBJ1005_0(0x80));
+    TS_ODAdd(OBJ1005_0(&TS_Obj1005_0));
+    TS_Obj1005_0 = 0x80;
     TS_ODAdd(OBJ1017_0(&TS_Obj1017_0));
     TS_Obj1017_0 = 0;
     TS_ODAdd(OBJ1018_0(4));
@@ -266,6 +269,23 @@ void TS_CreateMandatoryDir(void)
 
     EmcyResetTable();
     DomInit();
+}
+
+/*---------------------------------------------------------------------------*/
+/*! \brief REQ-ENV-0151
+*
+* \details Clear object dictionary and append the following object entries:
+*          - 1005:0 - COB-ID SYNC message (parameter id)
+*          - 1006:0 - Communication cycle period (parameter period)
+*
+* \note    Parameter, used as object entries must be initialized by
+*          calling function.
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateSyncPeriod(uint32_t *id, uint32_t *period)
+{
+    TS_ODAdd(OBJ1005_0(id));
+    TS_ODAdd(OBJ1006_0(period));
 }
 
 /*---------------------------------------------------------------------------*/
