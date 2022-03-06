@@ -251,6 +251,9 @@ extern "C" {
                              TS_ASSERT(8     == (f).DLC);        \
                              TS_ASSERT((c)   == BYTE((f),0))
 
+#define CHK_SYNC(f,i)        TS_ASSERT((i)  == (f).Identifier); \
+                             TS_ASSERT(0    == (f).DLC)
+
 #define CHK_SDO0_OK(i,s)     { CO_IF_FRM f;                                                 \
                                TS_ASSERT(1     == SimCanGetFrm((uint8_t*)(&f),sizeof(CO_IF_FRM)));\
                                TS_ASSERT(0x581 == (f).Identifier);                          \
@@ -475,6 +478,20 @@ void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data);
 */
 /*---------------------------------------------------------------------------*/
 void TS_CreateMandatoryDir(void);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief ADD SYNC PRODUCER COMMUNICATION SETTINGS TO OBJECT DICTIONARY
+*
+* \details Append the object entries for SYNC producer communication settings.
+*
+* \param   id
+*          Reference to COB-ID for SYNC
+*
+* \param   period
+*          Reference to SYNC time period variable
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateSyncPeriod(uint32_t *id, uint32_t *period);
 
 /*---------------------------------------------------------------------------*/
 /*! \brief ADD RPDO #N COMMUNICATION SETTINGS TO OBJECT DICTIONARY

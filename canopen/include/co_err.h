@@ -66,6 +66,7 @@ typedef enum CO_ERR_T {
     CO_ERR_CFG_1003_0,           /*!< entry 1003:0 is bad/not existing       */
     CO_ERR_CFG_1003_1,           /*!< entry 1003:1 is bad/not existing       */
     CO_ERR_CFG_1005_0,           /*!< entry 1005:0 is bad/not existing       */
+    CO_ERR_CFG_1006_0,           /*!< entry 1006:0 is bad/not existing       */
     CO_ERR_CFG_1010_0,           /*!< entry 1010:0 is bad/not existing       */
     CO_ERR_CFG_1011_0,           /*!< entry 1011:0 is bad/not existing       */
     CO_ERR_CFG_1014_0,           /*!< entry 1014:0 is bad/not existing       */
@@ -103,6 +104,7 @@ typedef enum CO_ERR_T {
     CO_ERR_SDO_WRITE,            /*!< error during in SDO block writing      */
 
     CO_ERR_SYNC_MSG,             /*!< error during receive synchronous PDO   */
+    CO_ERR_SYNC_RES,             /*!< SYNC cycle is out of resolution        */
 
     CO_ERR_IF_CAN_INIT,          /*!< error during initialization            */
     CO_ERR_IF_CAN_ENABLE,        /*!< error during enabling CAN interface    */

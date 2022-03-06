@@ -65,6 +65,7 @@ target_sources(CanopenTest
     tests/sdos_exp_up.c
     tests/sdos_seg_down.c
     tests/sdos_seg_up.c
+    tests/sync_prod.c
 )
 target_include_directories(CanopenTest
   PRIVATE
