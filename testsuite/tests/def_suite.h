@@ -35,7 +35,7 @@ typedef enum DEF_TEST_GROUPS_E {                      /*---- Test Groups -------
     DEF_G_PDO,                                        /*!< Group: PDO Communication               */
     DEF_G_NMT,                                        /*!< Group: NMT Management                  */
     DEF_G_EMCY,                                       /*!< Group: EMCY Management                 */
-
+    DEF_G_SYNC,                                       /*!< Group: SYNC Communication              */
 
     DEF_G_NUM                                         /*!< Number of Groups                       */
 } DEF_TEST_GROUPS;
@@ -85,6 +85,12 @@ typedef enum DEF_EMCY_SUITES_E {                      /*---- EMCY Management Tes
     DEF_S_EMCY_NUM                                    /*!< Number of Suites in Group              */
 } DEF_EMCY_SUITES;
 
+typedef enum DEF_SYNC_SUITES_E {                      /*---- SYNC Communication Test Suites ------*/
+    DEF_S_SYNC_PROD,                                  /*!< Suite: SYNC Producer                   */
+
+    DEF_S_SYNC_NUM                                    /*!< Number of Suites in Group              */
+} DEF_SYNC_SUITES;
+
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -114,5 +120,6 @@ typedef enum DEF_EMCY_SUITES_E {                      /*---- EMCY Management Tes
 #define SUITE_EMCY_HIST()  TS_DEF_SUITE(DEF_G_EMCY, DEF_S_EMCY_HIST)  /*!< \addtogroup emcy_hist  EMCY Error History Test         */
 #define SUITE_EMCY_API()   TS_DEF_SUITE(DEF_G_EMCY, DEF_S_EMCY_API)   /*!< \addtogroup emcy_api   EMCY Application Interface Test */
 
+#define SUITE_SYNC_PROD()  TS_DEF_SUITE(DEF_G_SYNC, DEF_S_SYNC_PROD)  /*!< \addtogroup sync_prod  SYNC Producer Test */
 
 #endif /* DEF_SUITE_H_ */

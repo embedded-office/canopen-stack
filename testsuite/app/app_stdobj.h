@@ -99,8 +99,19 @@ extern "C" {
 */
 /*---------------------------------------------------------------------------*/
 #define OBJ1005_0(val)                             \
-    CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), \
-    0, (uintptr_t)(val)
+    CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ____RW), \
+    CO_TSYNCID, (uintptr_t)(val)
+
+/*---------------------------------------------------------------------------*/
+/*! \brief OBJECT 1006h:0 - COMMUNICATION CYCLE PERIOD
+*
+* \param   val
+*          This period value defines the SYNC interval in us.
+*/
+/*---------------------------------------------------------------------------*/
+#define OBJ1006_0(val)                             \
+    CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ____RW), \
+    CO_TSYNCCYCLE, (uintptr_t)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1014h:0 - COB-ID EMCY MESSAGE
@@ -196,7 +207,7 @@ extern "C" {
     0, (uintptr_t)(val)
 
 /*---------------------------------------------------------------------------*/
-/*! \brief OBJECT 1200h:1 - SDO SERVER PARAMETER COB-ID CLIENT TO SERVER (RX) 
+/*! \brief OBJECT 1200h:1 - SDO SERVER PARAMETER COB-ID CLIENT TO SERVER (RX)
 *
 * \param   srv
 *          Constant value for SDO server (0 to 127)
