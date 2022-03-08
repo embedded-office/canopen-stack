@@ -1,0 +1,57 @@
+name: Website
+
+# trigger workflow when creating a release and during this work pushing
+# a tag of with the value 'vx.y.z' (x,y,z are numbers) to the git repo
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    name: Deploy Website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Extract Version Tag
+        id: extract
+        run: echo ::set-output name=version::${GITHUB_REF#refs/*/v}
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Upgrade pip
+        run: |
+          # install pip=>20.1 to use "pip cache dir"
+          python3 -m pip install --upgrade pip
+      - name: Get pip cache dir
+        id: pip-cache
+        run: echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/website/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: python3 -m pip install -r ./website/requirements.txt
+
+      - name: Build Website
+        run: mkdocs build
+
+      - name: Copy Website to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          tag_name: ${{ steps.prepare_tag.outputs.deploy_tag_name }}
+          full_commit_message: 'Deploy Website ${{ steps.extract.outputs.version }}'

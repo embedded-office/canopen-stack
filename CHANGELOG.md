@@ -11,6 +11,10 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 - add callback `CONmtResetRequest()` for handling specific application and/or communication reset features
 
+### Changed
+
+- change static website generator to [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+
 ### Fixed
 
 - fix navigation link in sidebar to quickstart example

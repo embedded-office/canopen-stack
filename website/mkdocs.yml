@@ -1,0 +1,122 @@
+# ref link: https://canopen-stack.org/
+#===================================================================================#
+# Site Information
+#===================================================================================#
+site_name: CANopen Stack
+repo_name: "canopen-stack"
+repo_url: https://github.com/embedded-office/canopen-stack/
+site_url: https://canopen-stack.org/
+site_description: CANopen Stack Documentation
+site_author: Embedded Office
+copyright: Copyright &copy; by <a href="https://www.embedded-office.com/">Embedded Office</a>
+
+#===================================================================================#
+# Mkdocs Theme (Material Mkdocs) + Extras
+#===================================================================================#
+theme:
+  name: material
+  custom_dir: material
+  language: en
+  icon:
+    logo: material/memory
+  favicon: assets/images/favicon/favicon.ico
+  font:
+    text: Roboto
+    code: Roboto Mono
+  features:
+    - navigation.tabs
+    - navigation.instant
+    - header.autohide
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+
+extra:
+  social:
+    - icon: material/home
+      link: 'https://canopen-stack.org/'
+    - icon: material/github
+      link: 'https://github.com/embedded-office/canopen-stack/'
+    - icon: material/linkedin
+      link: 'https://www.linkedin.com/company/embedded-office/'
+
+#===================================================================================#
+# Mkdocs Markdown Extentions, Plugins & extras
+#===================================================================================#
+markdown_extensions:
+  - admonition
+  - abbr
+  - attr_list
+  - def_list
+  - footnotes
+  - meta
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.smartsymbols
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - toc:
+      permalink: "#"
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+plugins:
+  - search
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+#===================================================================================#
+# Mkdocs Navigation Tree
+#===================================================================================#
+nav:
+  - Home: "index.md"
+  - Quickstart:
+    - Install Environment: "start/installation.md"
+    - Repository Structure: "start/structure.md"
+    - Quickstart Example: "start/quickstart.md"
+  - CANopen Usage:
+    - Device Architecture: "usage/architecture.md"
+    - CANopen Stack Overview: "usage/overview.md"
+    - Controlling the Node: "usage/control.md"
+    - Using Object Dictionary: "usage/dictionary.md"
+    - Triggering TPDO: "usage/tpdo.md"
+    - Emergency Errors: "usage/emergency.md"
+    - Timed Actions: "usage/actions.md"
+    - Callback Interface: "usage/callbacks.md"
+    - Configuration: "usage/configuration.md"
+  - API Functions:
+    - CANopen Node: "api/node.md"
+    - Object Dictionary: "api/dictionary.md"
+    - Emergency: "api/emergency.md"
+    - Network Management: "api/network.md"
+    - Object Entry: "api/object.md"
+    - TPDO Event: "api/tpdo.md"
+    - CAN Interface: "api/interface.md"
+    - Timer Handling: "api/timer.md"
+    - Parameter Storage: "api/parameter.md"
+  - Examples:
+    - Firmware Upload: "examples/flash-user-domain.md"
+    - Calibration Mode: "examples/setup-calibration-mode.md"
+    - Write Serial Number: "examples/write-serial-number.md"
+    - Dynamic Dictionary I: "examples/setup-dynamic-object-dictionary.md"
+    - Dynamic Dictionary II: "examples/use-dynamic-object-dictionary.md"
+    - RTOS and Baremetal: "examples/usage-with-rtos-and-baremetal.md"
+  - Hardware Connection:
+    - CAN Driver: "hardware/can.md"
+    - Timer Driver: "hardware/timer.md"
+    - NVM Driver: "hardware/nvm.md"
+  - License: "license.md"
