@@ -4,12 +4,47 @@ This directory contains the whole content for the **CANopen Stack Project** webs
 
 ## Contribution
 
-In case you want to enhance the website content, you need to fetch the Docker image: `squidfunk/mkdocs-material`
+In case you want to enhance the website content, you need to install MkDocs:
+
+### Prepare Environment
 
 ```bash
-# get docker image
-$ docker pull squidfunk/mkdocs-material:8.2.5
+# ensure python3 is installed (on my machine at time of writing: 3.9.x)
+$ py --version
 
-# start development server in repository root (unix, powershell)
-$ docker run --rm -it -v ${PWD}\website:/docs -p 8000:8000 squidfunk/mkdocs-material:8.2.5
+# install static website generator: MkDocs
+$ py -m pip install -r ./website/requirements.txt
 ```
+
+### Local server
+
+During writing new content, a hot-reloading website is helpful. Start your server on your local machine:
+
+```bash
+# start development server in repository root (unix, powershell)
+$ mkdocs serve --config-file ./website/mkdocs.yml
+```
+
+### Deploy website manually
+
+When deployment of the website via commandline is required, you can do it by typing
+
+TODO: check and describe the commands for website version management
+
+```bash
+# deploy a new website version
+$ TODO: mike ...
+
+# manage the alias 'latest'
+$ TODO: mike ...
+
+# list all website versions
+$ TODO: mike ...
+
+# delete a website version
+$ TODO: mike ...
+```
+
+### Automatic deployment
+
+The GitHub Action `website.yml` is defined to deploy (or overwrite) a website version. This action is triggered when a new version tag is created (naming pattern `v*.*.*`).
