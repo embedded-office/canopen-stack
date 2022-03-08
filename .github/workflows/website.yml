@@ -50,8 +50,8 @@ jobs:
 
       - name: Build Website
         run: |
-          mike set-default --config-file ./${MKDOCS} --push latest
           mike deploy --config-file ./${MKDOCS} --push --update-aliases ${{ steps.extract.outputs.version }} latest
+          mike set-default --config-file ./${MKDOCS} --push latest
 
       - name: Copy Website to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3

@@ -78,6 +78,8 @@ markdown_extensions:
 
 plugins:
   - search
+  - mike:
+      version_selector: false
 
 extra_css:
   - assets/stylesheets/extra.css

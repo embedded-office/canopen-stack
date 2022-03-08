@@ -11,5 +11,5 @@ In case you want to enhance the website content, you need to fetch the Docker im
 $ docker pull squidfunk/mkdocs-material:8.2.5
 
 # start development server in repository root (unix, powershell)
-$ docker run --rm -it -v ${PWD}\docs:/docs -p 8000:8000 squidfunk/mkdocs-material:8.2.5
+$ docker run --rm -it -v ${PWD}\website:/docs -p 8000:8000 squidfunk/mkdocs-material:8.2.5
 ```
