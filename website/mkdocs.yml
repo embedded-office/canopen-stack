@@ -45,6 +45,9 @@ extra:
       link: 'https://github.com/embedded-office/canopen-stack/'
     - icon: material/linkedin
       link: 'https://www.linkedin.com/company/embedded-office/'
+  version:
+    provider: mike
+    default: latest
 
 #===================================================================================#
 # Mkdocs Markdown Extentions, Plugins & extras

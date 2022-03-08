@@ -7,6 +7,11 @@ on:
     tags:
       - 'v*'
 
+env:
+  REQUIREMENTS: website/requirements.txt
+  MKDOC: website/mkdocs.yml
+  WEBSITE: website/site
+
 jobs:
   deploy:
     name: Deploy Website
@@ -36,21 +41,23 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/website/requirements.txt') }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/${REQUIREMENTS}') }}
           restore-keys: |
             ${{ runner.os }}-pip-
 
       - name: Install dependencies
-        run: python3 -m pip install -r ./website/requirements.txt
+        run: python3 -m pip install -r ./${REQUIREMENTS}
 
       - name: Build Website
-        run: mkdocs build
+        run: |
+          mike set-default --config-file ./${MKDOCS} --push latest
+          mike deploy --config-file ./${MKDOCS} --push --update-aliases ${{ steps.extract.outputs.version }} latest
 
       - name: Copy Website to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./site
+          publish_dir: ./${WEBSITE}
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           tag_name: ${{ steps.prepare_tag.outputs.deploy_tag_name }}
