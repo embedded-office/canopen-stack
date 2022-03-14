@@ -42,12 +42,16 @@ CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num) {
 }
 
 CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
-                           uint32_t key,
-                           CO_CSDO_UP_CALLBACK_T callback,
+                           uint32_t index,
+                           uint8_t sub,
+                           uint8_t *buf,
+                           uint32_t size,
+                           CO_CSDO_CALLBACK_T callback,
                            uint32_t timeout) {
     CO_IF_FRM frm;
 
-    if ((csdo == 0) || (callback == 0)) {
+    if ((csdo == 0) || (callback == 0) ||
+        (buf  == 0) || (size     == 0)) {
         /*
          * Invalid argument
          *
@@ -75,13 +79,12 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
     /* Update transfer info */
     csdo->Tfer.Type             = CO_CSDO_TRANSFER_UPLOAD;
     csdo->Tfer.Abort            = 0;
-    csdo->Tfer.Idx              = CO_GET_IDX(key);
-    csdo->Tfer.Sub              = CO_GET_SUB(key);
-    csdo->Tfer.Timeout          = timeout;
-    csdo->Tfer.Callback         = (void*) callback;
-    /* Reset buffer */
-    csdo->Buf.Cur               = csdo->Buf.Start;
-    csdo->Buf.Num               = 0;
+    csdo->Tfer.Idx              = index;
+    csdo->Tfer.Sub              = sub;
+    csdo->Tfer.Buf              = buf;
+    csdo->Tfer.Size             = size;
+    csdo->Tfer.Tmt              = timeout;
+    csdo->Tfer.Call             = callback;
 
     /* Transmit transfer initiation directly */
     CO_SET_ID   (&frm, csdo->TxId       );
@@ -96,15 +99,17 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
 }
 
 CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
-                             uint32_t key,
-                             void *value,
+                             uint32_t index,
+                             uint8_t sub,
+                             uint8_t *buf,
                              uint32_t size,
-                             CO_CSDO_DN_CALLBACK_T callback,
+                             CO_CSDO_CALLBACK_T callback,
                              uint32_t timeout) {
     CO_IF_FRM   frm;
     uint8_t     cmd;
+    uint8_t     n;
 
-    if ((csdo == 0) || (value    == 0) ||
+    if ((csdo == 0) || (buf      == 0) ||
         (size == 0) || (callback == 0)) {
         /*
          * Invalid argument
@@ -141,39 +146,19 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
     /* Update transfer info */
     csdo->Tfer.Type             = CO_CSDO_TRANSFER_DOWNLOAD;
     csdo->Tfer.Abort            = 0;
-    csdo->Tfer.Idx              = CO_GET_IDX(key);
-    csdo->Tfer.Sub              = CO_GET_SUB(key);
-    csdo->Tfer.Timeout          = timeout;
-    csdo->Tfer.Callback         = (void*) callback;
-    /* Reset buffer */
-    csdo->Buf.Cur               = csdo->Buf.Start;
-    csdo->Buf.Num               = 0;
+    csdo->Tfer.Idx              = index;
+    csdo->Tfer.Sub              = sub;
+    csdo->Tfer.Buf              = buf;
+    csdo->Tfer.Size             = size;
+    csdo->Tfer.Tmt              = timeout;
+    csdo->Tfer.Call             = callback;
 
-#if 1 /* TODO: Move this whole block to INITIATE SDO DOWNLOAD function */
-
-    switch (size) {
-    case 1:
-        CO_SET_BYTE(&frm, *(uint8_t* ) value, 4);
-        break;
-    case 2:
-        CO_SET_WORD(&frm, *(uint16_t* )value, 4);
-        break;
-    case 3:
-        CO_SET_BYTE(&frm, *(uint8_t* ) value, 4);
-        CO_SET_BYTE(&frm, *(uint8_t* ) value + 1, 5);
-        CO_SET_BYTE(&frm, *(uint8_t* ) value + 2, 6);
-        break;
-    case 4:
-        CO_SET_LONG(&frm, *(uint32_t* )value, 4);
-        break;
-    default:
-        return CO_ERR_BAD_ARG;
+    for (n = 4; n < 8; n++) {
+        CO_SET_BYTE(&frm, *buff++, n);
     }
 
     cmd = ((0x23) | ((4 - size) << 2));
     CO_SET_BYTE(&frm, cmd, 0);
-
-#endif /* 1 */
 
     /* Transmit transfer initiation directly */
     CO_SET_ID   (&frm, csdo->TxId       );
@@ -200,7 +185,6 @@ void COCSdoInit(CO_CSDO *csdo, struct CO_NODE_T *node) {
 
 void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
     CO_CSDO    *csdonum;
-    uint32_t    offset;
     int16_t     tid;
 
     if (csdo == 0) {
@@ -210,7 +194,10 @@ void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
         return;
     }
 
-    /* TODO: Transmit abort request if SDO client is reset during transfer */
+    if (csdo->State == CO_CSDO_STATE_BUSY) {
+        /* Abort ongoing trasfer */
+        COCSdoAbort(csdo, CO_SDO_ERR_TOS_STATE);
+    }
 
     /* Reset handle */
     csdonum                     = &csdo[num];
@@ -220,12 +207,6 @@ void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
     csdonum->TxId               = CO_SDO_ID_OFF;
     csdonum->State              = CO_CSDO_STATE_INVALID;
 
-    /* Reset transfer buffer instance */
-    offset                      = num * CO_SDO_BUF_BYTE;
-    csdonum->Buf.Start          = &node->CSdoBuf[offset];
-    csdonum->Buf.Cur            = &node->CSdoBuf[offset];
-    csdonum->Buf.Num            = 0;
-
     /* Reset transfer context */
     csdonum->Tfer.Csdo          = csdonum;
     csdonum->Tfer.Type          = CO_CSDO_TRANSFER_NONE;
@@ -233,8 +214,8 @@ void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
     csdonum->Tfer.Idx           = 0;
     csdonum->Tfer.Sub           = 0;
 
-    csdonum->Tfer.Timeout       = 0;
-    csdonum->Tfer.Callback      = 0;
+    csdonum->Tfer.Tmt           = 0;
+    csdonum->Tfer.Call          = 0;
 
     if (csdonum->Tfer.Tmr >= 0) {
         tid = COTmrDelete(&node->Tmr, csdonum->Tfer.Tmr);
@@ -285,11 +266,28 @@ CO_CSDO *COCSdoCheck(CO_CSDO *csdo, CO_IF_FRM *frm) {
     if (frm != 0) {
         n = 0;
         while ((n < CO_CSDO_N) && (result == 0)) {
-            if (CO_GET_ID(frm) == csdo[n].RxId) {
+            /*
+             * Match configured COB-ID
+             * and current client state.
+             * Idle client state means
+             * that it did not initiate
+             * any transfer (or timed out),
+             * which means we are not
+             * interested in response
+             * anymore.
+             */
+            if ((CO_GET_ID(frm) == csdo[n].RxId) &&
+                (csdo[n].State  == CO_CSDO_STATE_BUSY)) {
+                /*
+                 * Update frame with COB-ID
+                 * and return client handle
+                 * for further processing.
+                 */
                 CO_SET_ID(frm, csdo[n].TxId);
                 csdo[n].Frm         = frm;
                 csdo[n].Tfer.Abort  = 0;
                 result = &csdo[n];
+                break;
             }
             n++;
         }
@@ -299,7 +297,38 @@ CO_CSDO *COCSdoCheck(CO_CSDO *csdo, CO_IF_FRM *frm) {
 }
 
 CO_ERR COCSdoResponse(CO_CSDO *csdo) {
-    return CO_ERR_SDO_SILENT;
+    CO_ERR      result = CO_ERR_SDO_SILENT;
+    uint16_t    index;
+    uint8_t     cmd, sub;
+
+    cmd = CO_GET_BYTE(csdo->Frm, 0);
+
+    if (cmd == 0x80) {
+        /* SDO abort protocol */
+        index   = CO_GET_WORD(csdo->Frm, 1);
+        sub     = CO_GET_BYTE(csdo->Frm, 3);
+        if ((index == csdo->Tfer.Idx) &&
+            (sub   == csdo->Tfer.Sub)) {
+            csdo->Tfer.Abort = CO_GET_LONG(csdo->Frm, 4);
+            COCSdoTransferFinalize(csdo);
+            return (result);
+        }
+    }
+
+    /*
+     * Only expedited transfers are supported right now
+     */
+    if (cmd == 0x60) {
+        result = COCSdoDownloadExpedited(csdo);
+        return (result);
+    }
+    else if ((cmd & 0x43) != 0) {
+        result = COCSdoUploadExpedited(csdo);
+        return (result);
+    } else {
+        COCSdoAbort(csdo, CO_SDO_ERR_PARA_INCOMP);
+    }
+    return (result);
 }
 
 CO_ERR COCSdoUploadExpedited(CO_CSDO *csdo) {
@@ -323,15 +352,15 @@ void COCSdoTimeout(void *parg) {
 }
 
 void COCSdoAbort(CO_CSDO *csdo, uint32_t err) {
-    CO_IF_FRM frm;
+    CO_IF_FRM frm = {0};
 
     /*
-     * In case of timeout, frame is not assigned
-     * to SDO client handle. A local instance of
-     * frame will be attached and transmitted
+     * In some cases, frame is not assigned
+     * to SDO client handle. A local instance
+     * of frame will be attached and transmitted
      * directly during function call.
      */
-    if (err == CO_SDO_ERR_TIMEOUT) {
+    if (csdo->Frm == 0) {
         csdo->Frm = &frm;
         CO_SET_ID(csdo->Frm, csdo->TxId);
     }
@@ -342,6 +371,7 @@ void COCSdoAbort(CO_CSDO *csdo, uint32_t err) {
     CO_SET_WORD(csdo->Frm, csdo->Tfer.Idx, 1);
     CO_SET_BYTE(csdo->Frm, csdo->Tfer.Sub, 3);
     CO_SET_LONG(csdo->Frm,            err, 4);
+    CO_SET_DLC (csdo->Frm,                 8);
 
     if (err == CO_SDO_ERR_TIMEOUT) {
         (void)COIfCanSend(&csdo->Node->If, csdo->Frm);
@@ -349,13 +379,10 @@ void COCSdoAbort(CO_CSDO *csdo, uint32_t err) {
 }
 
 void COCSdoTransferFinalize(CO_CSDO *csdo) {
-    CO_CSDO_DN_CALLBACK_T   download;
-    CO_CSDO_UP_CALLBACK_T   upload;
+    CO_CSDO_CALLBACK_T      call;
     uint16_t                idx;
     uint8_t                 sub;
     uint32_t                code;
-    void                   *data;
-    uint32_t                size;
     int16_t                 tid;
 
     if (csdo->State == CO_CSDO_STATE_BUSY) {
@@ -363,30 +390,21 @@ void COCSdoTransferFinalize(CO_CSDO *csdo) {
         idx         = csdo->Tfer.Idx;
         sub         = csdo->Tfer.Sub;
         code        = csdo->Tfer.Abort;
-        if (csdo->Tfer.Type == CO_CSDO_TRANSFER_UPLOAD) {
-            /* Fetch additional information regarding stored data */
-            data    = csdo->Buf.Cur;
-            size    = csdo->Buf.Num;
-            /* Execute user callback */
-            if (csdo->Tfer.Callback != 0) {
-                upload = (CO_CSDO_UP_CALLBACK_T) csdo->Tfer.Callback;
-                upload(csdo, idx, sub, code, data, size);
-            }
-        } else if (csdo->Tfer.Type == CO_CSDO_TRANSFER_DOWNLOAD) {
-            /* Execute user callback */
-            if (csdo->Tfer.Callback != 0) {
-                download = (CO_CSDO_DN_CALLBACK_T) csdo->Tfer.Callback;
-                download(csdo,idx, sub, code);
-            }
+        call        = csdo->Tfer.Call;
+
+        if (call != 0) {
+            call(csdo, idx, sub, code);
         }
 
         /* Reset finished transfer information */
-        csdo->Tfer.Type          = CO_CSDO_TRANSFER_NONE;
-        csdo->Tfer.Abort         = 0;
-        csdo->Tfer.Idx           = 0;
-        csdo->Tfer.Sub           = 0;
-        csdo->Tfer.Timeout       = 0;
-        csdo->Tfer.Callback      = 0;
+        csdo->Tfer.Type         = CO_CSDO_TRANSFER_NONE;
+        csdo->Tfer.Abort        = 0;
+        csdo->Tfer.Idx          = 0;
+        csdo->Tfer.Sub          = 0;
+        csdo->Tfer.Buf          = 0;
+        csdo->Tfer.Size         = 0;
+        csdo->Tfer.Tmt          = 0;
+        csdo->Tfer.Call         = 0;
 
         if (csdo->Tfer.Tmr >= 0) {
             tid = COTmrDelete(&csdo->Node->Tmr, csdo->Tfer.Tmr);

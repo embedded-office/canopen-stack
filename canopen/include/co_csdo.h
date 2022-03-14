@@ -64,45 +64,7 @@ struct CO_CSDO_T;
 
 /*! \brief
  *
- *   Notification on SDO client upload complete operation. User
- *   can validate received data, copy them from SDO buffer or
- *   directly process them.
- *
- * \warning
- *   Requesting another SDO client transfer on same SDO client
- *   in this callback is FORBIDDEN and will be ignored. This is
- *   because SDO client has not been released for another transfer
- *   yet during execution of this callback.
- *
- * \param csdo
- *   Reference to SDO client that initiated transfer
- *
- * \param index
- *   Dictionary index
- *
- * \param sub
- *   Dictionary subindex
- *
- * \param code
- *   Abort code of transfer (=0 if transfer was successful)
- *
- * \param data
- *   Reference to uploaded data
- *
- * \param size
- *   Size of uploaded data in bytes
- *
- */
-typedef void (*CO_CSDO_UP_CALLBACK_T)(struct CO_CSDO_T *csdo,
-                                      uint16_t          index,
-                                      uint8_t           sub,
-                                      uint32_t          code,
-                                      void             *data,
-                                      uint32_t          size);
-
-/*! \brief
- *
- *   Notification on SDO client download complete operation.
+ *   Notification on SDO client transfer complete operation.
  *
  * \param csdo
  *   Reference to SDO client that initiated transfer
@@ -117,10 +79,10 @@ typedef void (*CO_CSDO_UP_CALLBACK_T)(struct CO_CSDO_T *csdo,
  *   Abort code of transfer (=0 if transfer was successful)
  *
  */
-typedef void (*CO_CSDO_DN_CALLBACK_T)(struct CO_CSDO_T *csdo,
-                                      uint16_t          index,
-                                      uint8_t           sub,
-                                      uint32_t          code);
+typedef void (*CO_CSDO_CALLBACK_T)(struct CO_CSDO_T *csdo,
+                                   uint16_t          index,
+                                   uint8_t           sub,
+                                   uint32_t          code);
 
 /*! \brief SDO CLIENT TRANSFER
  *
@@ -134,9 +96,12 @@ typedef struct CO_CSDO_TRANSFER_T {
     uint32_t                Abort;      /*!< Abort code of transfer          */
     uint16_t                Idx;        /*!< Accessed dictionary index       */
     uint8_t                 Sub;        /*!< Accessed dictionary subindex    */
+    uint32_t                Tmt;        /*!< Timeout value in milliseconds   */
+    uint8_t                *Buf;        /*!< Reference to transfered data    */
+    uint32_t                Size;       /*!< Transfered data size            */
     int16_t                 Tmr;        /*!< Identifier of timeout timer     */
-    uint32_t                Timeout;    /*!< Timeout value in milliseconds   */
-    void                   *Callback;   /*!< Notification callback           */
+    CO_CSDO_CALLBACK_T      Call;       /*!< Notification callback           */
+
 
 } CO_CSDO_TRANSFER;
 
@@ -153,7 +118,6 @@ typedef struct CO_CSDO_T {
     uint32_t                TxId;       /*!< Identifier for CSDO requests    */
     CO_CSDO_STATE           State;      /*!< Current CSDO state              */
     CO_CSDO_TRANSFER        Tfer;       /*!< Current CSDO transfer info      */
-    CO_SDO_BUF              Buf;        /*!< Transfer buffer structure       */
 
 } CO_CSDO;
 
@@ -186,8 +150,16 @@ CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num);
  * \param csdo
  *   Reference to SDO client
  *
- * \param key
- *   Dictionary key (index and subindex)
+ * \param index
+ *   Dictionary index
+ *
+ * \param sub
+ *   Dictionary subindex
+ * \param buf
+ *   Reference to data to be downloaded to server
+ *
+ * \param size
+ *   Size of downloaded data
  *
  * \param callback
  *   Notification callback on tranfer end (complete or abort)
@@ -200,8 +172,11 @@ CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num);
  *
  */
 CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
-                           uint32_t key,
-                           CO_CSDO_UP_CALLBACK_T callback,
+                           uint32_t index,
+                           uint8_t sub,
+                           uint8_t *buf,
+                           uint32_t size,
+                           CO_CSDO_CALLBACK_T callback,
                            uint32_t timeout);
 
 /*! \brief
@@ -212,14 +187,17 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
  * \param csdo
  *   Reference to SDO client
  *
- * \param key
- *   Dictionary key (index and subindex)
+ * \param index
+ *   Dictionary index
  *
- * \param value
- *   Value to be downloaded to server
+ * \param sub
+ *   Dictionary subindex
+ *
+ * \param buf
+ *   Reference to data to be downloaded to server
  *
  * \param size
- *   Size of downloaded value
+ *   Size of downloaded data
  *
  * \param callback
  *   Notification callback on tranfer end (complete or abort)
@@ -232,10 +210,11 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
  *
  */
 CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
-                             uint32_t key,
-                             void *value,
+                             uint32_t index,
+                             uint8_t sub,
+                             uint8_t *buf,
                              uint32_t size,
-                             CO_CSDO_DN_CALLBACK_T callback,
+                             CO_CSDO_CALLBACK_T callback,
                              uint32_t timeout);
 
 /******************************************************************************
