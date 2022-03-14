@@ -31,7 +31,8 @@ target_sources(Canopen
     source/co_obj.c
     source/co_para.c
     source/co_pdo.c
-    source/co_sdo_srv.c
+    source/co_ssdo.c
+    source/co_csdo.c
     source/co_sync.c
     source/co_tmr.c
     source/co_ver.c

@@ -263,6 +263,8 @@ CO_CSDO *COCSdoCheck(CO_CSDO *csdo, CO_IF_FRM *frm) {
     CO_CSDO    *result;
     uint8_t     n;
 
+    result = 0;
+
     if (frm != 0) {
         n = 0;
         while ((n < CO_CSDO_N) && (result == 0)) {
