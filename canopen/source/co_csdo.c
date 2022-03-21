@@ -48,7 +48,8 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
                            uint32_t size,
                            CO_CSDO_CALLBACK_T callback,
                            uint32_t timeout) {
-    CO_IF_FRM frm;
+    CO_IF_FRM frm = {0};
+    uint32_t ticks;
 
     if ((csdo == 0) || (callback == 0) ||
         (buf  == 0) || (size     == 0)) {
@@ -92,6 +93,9 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
     CO_SET_BYTE (&frm, 0x40          , 0);
     CO_SET_WORD (&frm, csdo->Tfer.Idx, 1);
     CO_SET_BYTE (&frm, csdo->Tfer.Sub, 3);
+
+    ticks = COTmrGetTicks(&(csdo->Node->Tmr), timeout, CO_TMR_UNIT_1MS);
+    csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
 
     (void)COIfCanSend(&csdo->Node->If, &frm);
 
@@ -154,7 +158,7 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
     csdo->Tfer.Call             = callback;
 
     for (n = 4; n < 8; n++) {
-        CO_SET_BYTE(&frm, *buff++, n);
+        CO_SET_BYTE(&frm, *buf++, n);
     }
 
     cmd = ((0x23) | ((4 - size) << 2));
@@ -178,6 +182,7 @@ void COCSdoInit(CO_CSDO *csdo, struct CO_NODE_T *node) {
     uint8_t n;
 
     for (n = 0; n < CO_CSDO_N; n++) {
+        node->CSdo[n].Tfer.Tmr = -1;
         COCSdoReset(csdo, n, node);
         COCSdoEnable(csdo, n);
     }
@@ -224,7 +229,6 @@ void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
             return;
         }
     }
-    csdonum->Tfer.Tmr           = -1;
 }
 
 void COCSdoEnable(CO_CSDO *csdo, uint8_t num) {
@@ -334,11 +338,32 @@ CO_ERR COCSdoResponse(CO_CSDO *csdo) {
 }
 
 CO_ERR COCSdoUploadExpedited(CO_CSDO *csdo) {
-    return CO_ERR_NONE;
+    CO_ERR      result = CO_ERR_SDO_SILENT;
+    uint32_t    width;
+    uint8_t     cmd, n;
+
+    cmd = CO_GET_BYTE(csdo->Frm, 0);
+    width = 4 - ((cmd >> 2) & 0x03);
+    if ((width > 0) && (width <= 4)) {
+        if (width > csdo->Tfer.Size) {
+            COCSdoAbort(csdo, CO_SDO_ERR_MEM);
+        } else {
+            for (n = 0; n < width; n++) {
+                csdo->Tfer.Buf[n] = CO_GET_BYTE(csdo->Frm, n + 4);
+            }
+        }
+    }
+    COCSdoTransferFinalize(csdo);
+    return (result);
 }
 
 CO_ERR COCSdoDownloadExpedited(CO_CSDO *csdo) {
-    return CO_ERR_NONE;
+    /*
+     * No need for further processing,
+     * release finished transfer.
+     */
+    COCSdoTransferFinalize(csdo);
+    return CO_ERR_SDO_SILENT;
 }
 
 void COCSdoTimeout(void *parg) {
@@ -407,15 +432,7 @@ void COCSdoTransferFinalize(CO_CSDO *csdo) {
         csdo->Tfer.Size         = 0;
         csdo->Tfer.Tmt          = 0;
         csdo->Tfer.Call         = 0;
-
-        if (csdo->Tfer.Tmr >= 0) {
-            tid = COTmrDelete(&csdo->Node->Tmr, csdo->Tfer.Tmr);
-            if (tid < 0) {
-                csdo->Node->Error = CO_ERR_TMR_DELETE;
-            } else {
-                csdo->Tfer.Tmr   = -1;
-            }
-        }
+        csdo->Tfer.Tmr          = -1;
 
         /* Release SDO client for next request */
         csdo->State = CO_CSDO_STATE_IDLE;

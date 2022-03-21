@@ -65,7 +65,6 @@ typedef struct CO_NODE_T {
     struct CO_SDO_T        Sdo[CO_SDOS_N];       /*!< SDO Server Array       */
     uint8_t               *SdoBuf;               /*!< SDO Transfer Buffer    */
     struct CO_CSDO_T       CSdo[CO_CSDO_N];      /*!< SDO client array       */
-    uint8_t               *CSdoBuf;              /*!< SDO client tfer buffer */
     struct CO_RPDO_T       RPdo[CO_RPDO_N];      /*!< RPDO Array             */
     struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */
     struct CO_TPDO_LINK_T  TMap[CO_TPDO_N * 8];  /*!< TPDO mapping links     */
@@ -95,7 +94,6 @@ typedef struct CO_NODE_SPEC_T {
     uint32_t               TmrFreq;      /*!< timer clock frequency in Hz    */
     CO_IF_DRV             *Drv;          /*!< linked interface drivers       */
     uint8_t               *SdoBuf;       /*!< SDO Transfer Buffer Memory     */
-    uint8_t               *CSdoBuf;      /*!< SDO client Transfer Memory     */
 
 } CO_NODE_SPEC;
 

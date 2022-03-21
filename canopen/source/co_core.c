@@ -33,7 +33,6 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 
     node->If.Drv   = spec->Drv;
     node->SdoBuf   = spec->SdoBuf;
-    node->CSdoBuf  = spec->CSdoBuf;
     node->Baudrate = spec->Baudrate;
     node->NodeId   = spec->NodeId;
     node->Error    = CO_ERR_NONE;
