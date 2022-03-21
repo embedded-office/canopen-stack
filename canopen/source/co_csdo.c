@@ -410,7 +410,6 @@ void COCSdoTransferFinalize(CO_CSDO *csdo) {
     uint16_t                idx;
     uint8_t                 sub;
     uint32_t                code;
-    int16_t                 tid;
 
     if (csdo->State == CO_CSDO_STATE_BUSY) {
         /* Fetch transfer information */
@@ -435,6 +434,7 @@ void COCSdoTransferFinalize(CO_CSDO *csdo) {
         csdo->Tfer.Tmr          = -1;
 
         /* Release SDO client for next request */
+        csdo->Frm   = 0;
         csdo->State = CO_CSDO_STATE_IDLE;
     }
 }
