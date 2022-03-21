@@ -154,7 +154,7 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
     csdo->Tfer.Call             = callback;
 
     for (n = 4; n < 8; n++) {
-        CO_SET_BYTE(&frm, *buff++, n);
+        CO_SET_BYTE(&frm, *buf++, n);
     }
 
     cmd = ((0x23) | ((4 - size) << 2));
