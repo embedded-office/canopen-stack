@@ -33,7 +33,9 @@ extern "C" {
 #include "co_emcy.h"
 #include "co_nmt.h"
 #include "co_tmr.h"
-#include "co_sdo_srv.h"
+#include "co_sdo.h"
+#include "co_ssdo.h"
+#include "co_csdo.h"
 #include "co_pdo.h"
 #include "co_sync.h"
 #if USE_LSS
@@ -62,6 +64,7 @@ typedef struct CO_NODE_T {
     struct CO_TMR_T        Tmr;                  /*!< Timer manager          */
     struct CO_SDO_T        Sdo[CO_SDOS_N];       /*!< SDO Server Array       */
     uint8_t               *SdoBuf;               /*!< SDO Transfer Buffer    */
+    struct CO_CSDO_T       CSdo[CO_CSDO_N];      /*!< SDO client array       */
     struct CO_RPDO_T       RPdo[CO_RPDO_N];      /*!< RPDO Array             */
     struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */
     struct CO_TPDO_LINK_T  TMap[CO_TPDO_N * 8];  /*!< TPDO mapping links     */
