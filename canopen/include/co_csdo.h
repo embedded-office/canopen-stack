@@ -150,11 +150,9 @@ CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num);
  * \param csdo
  *   Reference to SDO client
  *
- * \param index
- *   Dictionary index
+ * \param key
+ *    object entry key; should be generated with the macro CO_DEV()
  *
- * \param sub
- *   Dictionary subindex
  * \param buf
  *   Reference to data to be downloaded to server
  *
@@ -172,8 +170,7 @@ CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num);
  *
  */
 CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
-                           uint32_t index,
-                           uint8_t sub,
+                           uint32_t key,
                            uint8_t *buf,
                            uint32_t size,
                            CO_CSDO_CALLBACK_T callback,
@@ -187,11 +184,8 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
  * \param csdo
  *   Reference to SDO client
  *
- * \param index
- *   Dictionary index
- *
- * \param sub
- *   Dictionary subindex
+ * \param key
+ *    object entry key; should be generated with the macro CO_DEV()
  *
  * \param buf
  *   Reference to data to be downloaded to server
@@ -210,8 +204,7 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
  *
  */
 CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
-                             uint32_t index,
-                             uint8_t sub,
+                             uint32_t key,
                              uint8_t *buf,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
