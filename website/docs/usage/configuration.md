@@ -10,18 +10,18 @@ Example:
 
 ```c
 typedef struct COM_PARA_MEM_T {
-    uint16_t Heartbeat_1017_0;
+  uint16_t Heartbeat_1017_0;
 } COM_PARA_MEM;
 
 typedef struct APP_PARA_MEM_T {
-    uint32_t DemoLong;
-    uint16_t DemoWord;
-    uint8_t  DemoByte;
+  uint32_t DemoLong;
+  uint16_t DemoWord;
+  uint8_t  DemoByte;
 } APP_PARA_MEM;
 
 typedef struct ALL_PARA_MEM_T {
-    COM_PARA_MEM Com;
-    APP_PARA_MEM App;
+  COM_PARA_MEM Com;
+  APP_PARA_MEM App;
 } ALL_PARA_MEM;
 ```
 
@@ -41,33 +41,33 @@ Example:
 
 ```c
 static const CO_PARA AllParaObj = {
-    0L,                            /* placement in non-volatile memory */
-    sizeof(ALL_PARA_MEM),
-    (uint8_t *)&Para,
-    (uint8_t *)&ParaDef,
-    CO_RESET_NODE,
-    (void *)"all.txt",
-    CO_PARA___E
+  0L,                            /* placement in non-volatile memory */
+  sizeof(ALL_PARA_MEM),
+  (uint8_t *)&Para,
+  (uint8_t *)&ParaDef,
+  CO_RESET_NODE,
+  (void *)"all.txt",
+  CO_PARA___E
 };
 
 static const CO_PARA ComParaObj = {
-    0L,                            /* placement in non-volatile memory */
-    sizeof(COM_PARA_MEM),
-    (uint8_t *)&Para.Com,
-    (uint8_t *)&ParaDef.Com,
-    CO_RESET_COM,
-    (void *)"com.txt",
-    CO_PARA___E
+  0L,                            /* placement in non-volatile memory */
+  sizeof(COM_PARA_MEM),
+  (uint8_t *)&Para.Com,
+  (uint8_t *)&ParaDef.Com,
+  CO_RESET_COM,
+  (void *)"com.txt",
+  CO_PARA___E
 };
 
 static const CO_PARA AppParaObj = {
-    sizeof(COM_PARA_MEM),          /* placement in non-volatile memory */
-    sizeof(APP_PARA_MEM),
-    (uint8_t *)&Para.App,
-    (uint8_t *)&ParaDef.App,
-    CO_RESET_NODE,
-    (void *)"app.txt",
-    CO_PARA___E
+  sizeof(COM_PARA_MEM),          /* placement in non-volatile memory */
+  sizeof(APP_PARA_MEM),
+  (uint8_t *)&Para.App,
+  (uint8_t *)&ParaDef.App,
+  CO_RESET_NODE,
+  (void *)"app.txt",
+  CO_PARA___E
 };
 ```
 
@@ -125,9 +125,9 @@ Example:
 
 ```c
 CO_OBJ_DOM AppDomain = {
-    0,
-    sizeof(APP_PARA_MEM),
-    &AppParaObj
+  0,
+  sizeof(APP_PARA_MEM),
+  &AppParaObj
 };
 ```
 
@@ -189,10 +189,10 @@ Example:
 
 ```c
 const CO_EMCY_TBL AppEmcyCode[CO_EMCY_N] = {
-    { CO_EMCY_REG_GENERAL, CO_EMCY_CODE_GEN_ERR  + 0x01 }, /* APP_EMCY_1 */
-    { CO_EMCY_REG_CURRENT, CO_EMCY_CODE_CUR_ERR  + 0x01 }, /* APP_EMCY_2 */
-    { CO_EMCY_REG_VOLTAGE, CO_EMCY_CODE_VOL_ERR  + 0x01 }, /* APP_EMCY_3 */
-    { CO_EMCY_REG_TEMP   , CO_EMCY_CODE_TEMP_ERR + 0x01 }  /* APP_EMCY_4 */
+  { CO_EMCY_REG_GENERAL, CO_EMCY_CODE_GEN_ERR  + 0x01 }, /* APP_EMCY_1 */
+  { CO_EMCY_REG_CURRENT, CO_EMCY_CODE_CUR_ERR  + 0x01 }, /* APP_EMCY_2 */
+  { CO_EMCY_REG_VOLTAGE, CO_EMCY_CODE_VOL_ERR  + 0x01 }, /* APP_EMCY_3 */
+  { CO_EMCY_REG_TEMP   , CO_EMCY_CODE_TEMP_ERR + 0x01 }  /* APP_EMCY_4 */
 };
 ```
 
@@ -232,11 +232,11 @@ This chapter describes the configuration table representing the CANopen object d
 
 ```c
 const CO_OBJ AppObjDir[] = {
-    { <ObjEntryKey_0>, <ObjTypeRef_0>, <ObjData_0> }, /* first object entry */
-          :
-    { <ObjEntryKey_N>, <ObjTypeRef_N>, <ObjData_N> }, /* last object entry  */
+  { <ObjEntryKey_0>, <ObjTypeRef_0>, <ObjData_0> }, /* first object entry */
+      :
+  { <ObjEntryKey_N>, <ObjTypeRef_N>, <ObjData_N> }, /* last object entry  */
 
-    CO_OBJ_DIR_ENDMARK
+  CO_OBJ_DIR_ENDMARK
 };
 ```
 
@@ -369,14 +369,14 @@ uint8_t MyData = 0u;
 
 /* object dictionary */
 const CO_OBJ AppObjDir[] = {
-      :
-    /* PDO mapping entry */
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x02, 8)},
-      :
-    /* mapped object entry */
-    {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&MyData},
-      :
-    CO_OBJ_DIR_ENDMARK
+    :
+  /* PDO mapping entry */
+  {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x02, 8)},
+    :
+  /* mapped object entry */
+  {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&MyData},
+    :
+  CO_OBJ_DIR_ENDMARK
 };
 ```
 
@@ -434,17 +434,17 @@ This chapter describes the basic node specification. This table must be existent
 Example:
 
 ```c
-  const CO_NODE_SPEC AppSpec = {
-    (uint8_t      ) 0x01,              /* pre-defined Node-ID            */
-    (uint32_t     ) Baudrate,          /* default baudrate               */
-    (CO_OBJ      *)&AppObjDir,         /* start of object directory      */
-    (uint16_t     ) APP_OBJ_N,         /* number of objects in directory */
-    (CO_EMCY_TBL *)&AppEmcyCode,       /* start of emergency code table  */
-    (CO_TMR_MEM  *)&AppTmrMem,         /* start of timer manager memory  */
-    (uint16_t     ) APP_TMR_N,         /* max. number of timers/actions  */
-    (uint32_t     ) APP_TICKS_PER_SEC, /* timer clock frequency in Hz    */
-    (CO_IF_DRV    )&AppDrv,            /* hardware interface drivers     */
-    (uint8_t     *)&AppSdoBuf          /* start of SDO transfer buffer   */
+const CO_NODE_SPEC AppSpec = {
+  (uint8_t      ) 0x01,              /* pre-defined Node-ID            */
+  (uint32_t     ) Baudrate,          /* default baudrate               */
+  (CO_OBJ      *)&AppObjDir,         /* start of object directory      */
+  (uint16_t     ) APP_OBJ_N,         /* number of objects in directory */
+  (CO_EMCY_TBL *)&AppEmcyCode,       /* start of emergency code table  */
+  (CO_TMR_MEM  *)&AppTmrMem,         /* start of timer manager memory  */
+  (uint16_t     ) APP_TMR_N,         /* max. number of timers/actions  */
+  (uint32_t     ) APP_TICKS_PER_SEC, /* timer clock frequency in Hz    */
+  (CO_IF_DRV    )&AppDrv,            /* hardware interface drivers     */
+  (uint8_t     *)&AppSdoBuf          /* start of SDO transfer buffer   */
 };
 ```
 
@@ -460,12 +460,12 @@ extern const CO_NODE_SPEC AppSpec;
 
 void StartNode (void)
 {
-    CONodeInit(&AppNode, (CO_NODE_SPEC *)&AppSpec);
+  CONodeInit(&AppNode, (CO_NODE_SPEC *)&AppSpec);
 
-    if (CONodeGetErr(&AppNode) != CO_ERR_NONE) {
+  if (CONodeGetErr(&AppNode) != CO_ERR_NONE) {
 
-        /* error handling */
+    /* error handling */
 
-    }
+  }
 };
 ```

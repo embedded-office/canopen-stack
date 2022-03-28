@@ -102,12 +102,12 @@ static void    DrvCanReset  (void);
 static void    DrvCanClose  (void);
    :
 const CO_IF_CAN_DRV <MyDeviceDriverName>CanDriver = {
-    DrvCanInit,
-    DrvCanEnable,
-    DrvCanRead,
-    DrvCanSend,
-    DrvCanReset,
-    DrvCanClose
+  DrvCanInit,
+  DrvCanEnable,
+  DrvCanRead,
+  DrvCanSend,
+  DrvCanReset,
+  DrvCanClose
 };
 ```
 

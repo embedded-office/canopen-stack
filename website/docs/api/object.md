@@ -334,12 +334,12 @@ int16_t COObjWrBufStart(CO_OBJ  *obj,
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| obj | pointer to object entry |
-| node | pointer to parent node |
-| buffer | pointer to source memory |
-| length | length of source buffer |
+| Parameter | Description              |
+| --------- | ------------------------ |
+| obj       | pointer to object entry  |
+| node      | pointer to parent node   |
+| buffer    | pointer to source memory |
+| length    | length of source buffer  |
 
 **Returned Value**
 
@@ -371,13 +371,13 @@ int16_t COObjWrValue(CO_OBJ  *obj ,
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| obj | pointer to object entry |
-| node | pointer to parent node |
-| value | pointer to source memory |
-| width | width of write value (must be 1, 2 or 4 and reflecting the width of the referenced variable, given by parameter value) |
-| nodeId | device node ID (only relevant in case of node ID dependent value) |
+| Parameter | Description                                                                                                            |
+| --------- | ---------------------------------------------------------------------------------------------------------------------- |
+| obj       | pointer to object entry                                                                                                |
+| node      | pointer to parent node                                                                                                 |
+| value     | pointer to source memory                                                                                               |
+| width     | width of write value (must be 1, 2 or 4 and reflecting the width of the referenced variable, given by parameter value) |
+| nodeId    | device node ID (only relevant in case of node ID dependent value)                                                      |
 
 **Returned Value**
 

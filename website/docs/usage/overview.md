@@ -12,11 +12,11 @@ An *autonomous external request* is initiated by an external device and is handl
 
 ```mermaid
 sequenceDiagram
-    participant C as CAN Network
-    participant N as CANopen Stack
-    participant A as Application
-    C->>+N: external request
-    N-->>-C: response
+  participant C as CAN Network
+  participant N as CANopen Stack
+  participant A as Application
+  C->>+N: external request
+  N-->>-C: response
 ```
 
 *An example for this type of request is the SDO access to an object entry.*
@@ -42,8 +42,8 @@ sequenceDiagram
 
 The Callback functions are documented in the CANopen usage category Callback:
 
-| Category                              | Content                               |
-| ------------------------------------- | ------------------------------------- |
+| Category                               | Content                               |
+| -------------------------------------- | ------------------------------------- |
 | [Callback Interface](/usage/callbacks) | description of all callback functions |
 
 ### Internal request
@@ -52,11 +52,11 @@ An *internal request* is an API function call initiated by the application.
 
 ```mermaid
 sequenceDiagram
-    participant C as CAN Network
-    participant N as CANopen Stack
-    participant A as Application
-    A->>+N: API function call
-    N-->>-A: return
+  participant C as CAN Network
+  participant N as CANopen Stack
+  participant A as Application
+  A->>+N: API function call
+  N-->>-A: return
 ```
 
 *An example for this type of request is the update of a value in an object entry.*

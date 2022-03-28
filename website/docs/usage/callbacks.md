@@ -12,11 +12,11 @@ This **mandatory** function is called, after detecting a fatal error within the 
 ```c
 void CONodeFatalError(void)
 {
-    /* Place here your fatal error handling.
-     * There is most likely a programming error.
-     * !! Please don't ignore this errors. !!
-     */
-    for (;;);
+  /* Place here your fatal error handling.
+   * There is most likely a programming error.
+   * !! Please don't ignore this errors. !!
+   */
+  for (;;);
 }
 ```
 
@@ -28,26 +28,26 @@ These **mandatory** function pair is called during timer management and is the r
 ```c
 void COTmrLock(void)
 {
-    /* This function helps to guarantee the consistancy
-     * of the internal timer management while interrupted
-     * by the used timer interrupt. Most likely you need
-     * at this point on of the following mechanisms:
-     * - disable the used hardware timer interrupt
-     * - get a 'timer-mutex' from your RTOS (ensure to
-     *   call COTmrService() in a timer triggered task)
-     */
+  /* This function helps to guarantee the consistancy
+   * of the internal timer management while interrupted
+   * by the used timer interrupt. Most likely you need
+   * at this point on of the following mechanisms:
+   * - disable the used hardware timer interrupt
+   * - get a 'timer-mutex' from your RTOS (ensure to
+   *   call COTmrService() in a timer triggered task)
+   */
 }
 
 void COTmrUnlock(void)
 {
-    /* This function helps to guarantee the consistancy
-     * of the internal timer management while interrupted
-     * by the used timer interrupt. Most likely you need
-     * at this point on of the following mechanisms:
-     * - (re)enable the used hardware timer interrupt
-     * - release the 'timer-mutex' from your RTOS (ensure
-     *   to call COTmrService() in a timer triggered task)
-     */
+  /* This function helps to guarantee the consistancy
+   * of the internal timer management while interrupted
+   * by the used timer interrupt. Most likely you need
+   * at this point on of the following mechanisms:
+   * - (re)enable the used hardware timer interrupt
+   * - release the 'timer-mutex' from your RTOS (ensure
+   *   to call COTmrService() in a timer triggered task)
+   */
 }
 ```
 
@@ -59,18 +59,18 @@ This **optional** function is called for each CAN frame, which is not consumed (
 ```c
 void COIfCanReceive(CO_IF_FRM *frm)
 {
-    /* Optional: place here some code, which is called
-     * when you need to handle CAN messages, which are
-     * not part of the CANopen protocol.
-     */
+  /* Optional: place here some code, which is called
+   * when you need to handle CAN messages, which are
+   * not part of the CANopen protocol.
+   */
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| frm | The received CAN frame |
+| Parameter | Description            |
+| --------- | ---------------------- |
+| frm       | The received CAN frame |
 
 
 ### COLssStore()
@@ -80,20 +80,20 @@ This **optional** function is called with new configuration data, which is set b
 ```c
 int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
 {
-    /* Optional: place here some code, which is called
-     * when LSS client is in use and the CANopen node
-     * needs to store updated values.
-     */
-    return (0u);
+  /* Optional: place here some code, which is called
+   * when LSS client is in use and the CANopen node
+   * needs to store updated values.
+   */
+  return (0u);
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| baudrate | The configured baudrate for storage |
-| nodeId | The configured node id for storage |
+| Parameter | Description                         |
+| --------- | ----------------------------------- |
+| baudrate  | The configured baudrate for storage |
+| nodeId    | The configured node id for storage  |
 
 **Returned Value**
 
@@ -108,20 +108,20 @@ This **optional** function is called during reset communication to load the stor
 ```c
 int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
 {
-    /* Optional: place here some code, which is called
-     * when LSS client is in use and the CANopen node
-     * is initialized.
-     */
-    return (0u);
+  /* Optional: place here some code, which is called
+   * when LSS client is in use and the CANopen node
+   * is initialized.
+   */
+  return (0u);
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| baudrate | Reference to the baudrate, which should be set to storage value |
-| nodeId | Reference to the baudrate, which should be set to storage value |
+| Parameter | Description                                                     |
+| --------- | --------------------------------------------------------------- |
+| baudrate  | Reference to the baudrate, which should be set to storage value |
+| nodeId    | Reference to the node-id, which should be set to storage value  |
 
 **Returned Value**
 
@@ -136,18 +136,18 @@ This **optional** function is called when the NMT mode is changed. The nmt objec
 ```c
 void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
 {
-    /* Optional: place here some code, which is called
-     * when a NMT mode change is initiated.
-     */
+  /* Optional: place here some code, which is called
+   * when a NMT mode change is initiated.
+   */
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| nmt | reference to NMT structure |
-| mode | the new mode |
+| Parameter | Description                |
+| --------- | -------------------------- |
+| nmt       | reference to NMT structure |
+| mode      | the new mode               |
 
 
 ### CONmtResetRequest()
@@ -157,18 +157,18 @@ This **optional** function is called when the NMT reset is requested via CAN net
 ```c
 void CONmtResetRequest(CO_NMT *nmt, CO_NMT_RESET reset)
 {
-    /* Optional: place here some code, which is called
-     * when a NMT reset is requested by the network.
-     */
+  /* Optional: place here some code, which is called
+   * when a NMT reset is requested by the network.
+   */
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| nmt | reference to NMT structure |
-| reset | the requested reset type |
+| Parameter | Description                |
+| --------- | -------------------------- |
+| nmt       | reference to NMT structure |
+| reset     | the requested reset type   |
 
 
 ### CONmtHbConsEvent()
@@ -178,19 +178,19 @@ This **optional** function is called when a heartbeat consumer monitor timer ela
 ```c
 void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId)
 {
-    /* Optional: place here some code, which is called
-     * called when heartbeat consumer is in use and
-     * detects an error on monitored node(s).
-     */
+  /* Optional: place here some code, which is called
+   * called when heartbeat consumer is in use and
+   * detects an error on monitored node(s).
+   */
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| nmt | reference to NMT structure |
-| nodeId | The nodeId of the missed heartbeat message |
+| Parameter | Description                                |
+| --------- | ------------------------------------------ |
+| nmt       | reference to NMT structure                 |
+| nodeId    | The nodeId of the missed heartbeat message |
 
 
 ### CONmtHbConsChange()
@@ -200,20 +200,20 @@ This **optional** function is called when a heartbeat consumer monitor detects a
 ```c
 void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
 {
-    /* Optional: place here some code, which is called
-     * when heartbeat consumer is in use and detects a
-     * NMT state change on monitored node(s).
-     */
+  /* Optional: place here some code, which is called
+   * when heartbeat consumer is in use and detects a
+   * NMT state change on monitored node(s).
+   */
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| nmt | reference to NMT structure |
-| nodeId | The nodeId of the monitored node |
-| mode | The new received node state of the monitored node |
+| Parameter | Description                                       |
+| --------- | ------------------------------------------------- |
+| nmt       | reference to NMT structure                        |
+| nodeId    | The nodeId of the monitored node                  |
+| mode      | The new received node state of the monitored node |
 
 
 ### COPdoTransmit()
@@ -223,18 +223,18 @@ This **optional** function is called just before the PDO transmission will send 
 ```c
 void COPdoTransmit(CO_IF_FRM *frm)
 {
-    /* Optional: place here some code, which is called
-     * just before a PDO is transmitted. You may adjust
-     * the given CAN frame which is send afterwards.
-     */
+  /* Optional: place here some code, which is called
+   * just before a PDO is transmitted. You may adjust
+   * the given CAN frame which is send afterwards.
+   */
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| frm | Pointer to PDO message frame |
+| Parameter | Description                  |
+| --------- | ---------------------------- |
+| frm       | Pointer to PDO message frame |
 
 
 ### COPdoReceive()
@@ -244,21 +244,21 @@ This **optional** function is called just before the PDO reception will distribu
 ```c
 int16_t COPdoReceive(CO_IF_FRM *frm)
 {
-    /* Optional: place here some code, which is called
-     * right after receiving a PDO. You may adjust
-     * the given CAN frame which is written into the
-     * object dictionary afterwards or suppress the
-     * write operation.
-     */
-    return(0u);
+  /* Optional: place here some code, which is called
+   * right after receiving a PDO. You may adjust
+   * the given CAN frame which is written into the
+   * object dictionary afterwards or suppress the
+   * write operation.
+   */
+  return(0u);
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| frm | Pointer to received PDO message frame |
+| Parameter | Description                           |
+| --------- | ------------------------------------- |
+| frm       | Pointer to received PDO message frame |
 
 **Returned Value**
 
@@ -273,18 +273,18 @@ This **optional** function is called after a synchronized PDO is received and th
 ```c
 void COPdoSyncUpdate(CO_RPDO *pdo)
 {
-    /* Optional: place here some code, which is called
-     * right after the object dictionary update due to
-     * a synchronized PDO.
-     */
+  /* Optional: place here some code, which is called
+   * right after the object dictionary update due to
+   * a synchronized PDO.
+   */
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| pdo | Pointer to received and synchronous processed RPDO |
+| Parameter | Description                                        |
+| --------- | -------------------------------------------------- |
+| pdo       | Pointer to received and synchronous processed RPDO |
 
 
 ### COParaDefault()
@@ -294,18 +294,18 @@ This **optional** function will be called during restoring the default values of
 ```c
 int16_t COParaDefault(CO_PARA *pg)
 {
-    /* Optional: place here some code, which is called
-     * when a parameter group is restored to factory
-     * settings.
-     */
+  /* Optional: place here some code, which is called
+   * when a parameter group is restored to factory
+   * settings.
+   */
 }
 ```
 
 **Arguments**
 
-| Parameter | Description |
-| --- | --- |
-| pg | Ptr to parameter group info |
+| Parameter | Description                 |
+| --------- | --------------------------- |
+| pg        | Ptr to parameter group info |
 
 **Returned Value**
 

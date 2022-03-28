@@ -24,11 +24,11 @@ For a constant timer based sending as defined in the CiA standards we need to pr
 
 ```c
   :
-    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
-    {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0xfe},
-    {CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)0},
-    {CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_), CO_TEVENT, (uintptr_t)60},
+{CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},
+{CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
+{CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0xfe},
+{CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)0},
+{CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_), CO_TEVENT, (uintptr_t)60},
   :
 ```
 
@@ -40,9 +40,9 @@ The CiA standard defines synchronous PDO transfers, too. This allows the transmi
 
 ```c
   :
-    {CO_KEY(0x1807, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
-    {CO_KEY(0x1807, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
-    {CO_KEY(0x1807, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0x4},
+{CO_KEY(0x1807, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
+{CO_KEY(0x1807, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
+{CO_KEY(0x1807, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0x4},
   :
 ```
 
@@ -53,7 +53,7 @@ In this example, the TPDO #7 is triggered after the receiption of every 4-th SYN
 Transmit with the application API function call is the foundation for other internal possibilities. You may use this in your application, too. For example you can transmit a PDO when a complex logical expression between multiple objects is valid.
 
 ```c
-  COTPdoTrigPdo(&demo.TPdo, 2);      /* trigger TPDO #2 */
+COTPdoTrigPdo(&demo.TPdo, 2);      /* trigger TPDO #2 */
 ```
 
 ### Object Trigger
@@ -61,20 +61,20 @@ Transmit with the application API function call is the foundation for other inte
 For triggering the transmission of all TPDOs, which has an active mapping entry to a given object directory entry, the service call is:
 
 ```c
-  COTPdoTrigObj(&demo.TPdo, obj);    /* trigger TPDOs via object */
+COTPdoTrigObj(&demo.TPdo, obj);    /* trigger TPDOs via object */
 ```
 
 The following diagram shows the internal behavior of this service.
 
 ```mermaid
 sequenceDiagram
-    participant A as Application
-    participant P as demo.TPdo
-    A->>+P: COTPdoTrigObj()
-    loop all PDOs with mapped object
-    P->>P: trigger PDO transmission
-    end
-    P-->>-A: ok
+  participant A as Application
+  participant P as demo.TPdo
+  A->>+P: COTPdoTrigObj()
+  loop all PDOs with mapped object
+  P->>P: trigger PDO transmission
+  end
+  P-->>-A: ok
 ```
 
 ### Object Change
@@ -83,15 +83,15 @@ The transmit on change of an object entry is described in the quickstart. This t
 
 ```c
   :
-    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
-    {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)254}
-    {CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)100}
+{CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
+{CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
+{CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)254}
+{CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)100}
   :
-    {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)1},
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x01, 32)},
+{CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)1},
+{CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x01, 32)},
   :
-    {CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TASYNC, (uintptr_t)&MyValue},
+{CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TASYNC, (uintptr_t)&MyValue},
   :
 ```
 
