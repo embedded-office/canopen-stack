@@ -9,16 +9,18 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ### Added
 
-- add callback `CONmtResetRequest()` for handling specific application and/or communication reset features
+- Add callback `CONmtResetRequest()` for handling specific application and/or communication reset features
+- Add feature: SYNC producer
+- Add feature: SDO client (limited to expedited transfers)
 
 ### Changed
 
-- change static website generator to [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
+- Change static website generator to [Material for MkDocs](https://squidfunk.github.io/mkdocs-material/)
 
 ### Fixed
 
-- fix navigation link in sidebar to quickstart example
-- correct restarting of block transfer after aborting a running transfer by a client restart
+- Fix navigation link in sidebar to quickstart example
+- Correct restarting of block transfer after aborting a running transfer by a client restart
 
 ## [4.1.8] - 2021-10-04
 
