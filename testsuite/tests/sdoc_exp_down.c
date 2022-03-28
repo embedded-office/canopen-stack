@@ -64,6 +64,7 @@ TS_DEF_MAIN(TS_CSdoWr_1Byte)
                                 &val, sizeof(val),
                                 TS_AppCSdoCallback,
                                 timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
@@ -97,7 +98,7 @@ TS_DEF_MAIN(TS_CSdoWr_1Word)
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
     uint32_t  timeout = 1000;
-    uint16_t   val = 0x4455;
+    uint16_t  val = 0x4455;
     CO_ERR    err;
 
     /* -- PREPARATION -- */
@@ -111,6 +112,7 @@ TS_DEF_MAIN(TS_CSdoWr_1Word)
                                 (uint8_t *)&val, sizeof(val),
                                 TS_AppCSdoCallback,
                                 timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
@@ -158,6 +160,7 @@ TS_DEF_MAIN(TS_CSdoWr_1Long)
                                 (uint8_t *)&val, sizeof(val),
                                 TS_AppCSdoCallback,
                                 timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
@@ -206,6 +209,7 @@ TS_DEF_MAIN(TS_CSdoWr_Timeout)
                                 &val, sizeof(val),
                                 TS_AppCSdoCallback,
                                 timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
@@ -258,6 +262,7 @@ TS_DEF_MAIN(TS_CSdoWr_About)
                                 &val, sizeof(val),
                                 TS_AppCSdoCallback,
                                 timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);

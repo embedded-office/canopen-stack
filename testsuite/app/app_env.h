@@ -322,8 +322,8 @@ extern "C" {
 
 #define CHK_LONG(f,p,v)      TS_ASSERT((uint32_t)(v) == LONG((f),(p)))
 
-#define CHK_MLTPX(f,i,s)     TS_ASSERT((i) == WORD(f,1)); \
-                             TS_ASSERT((s) == BYTE(f,3))
+#define CHK_MLTPX(f,i,s)     TS_ASSERT((uint16_t)(i) == WORD(f,1)); \
+                             TS_ASSERT((uint8_t)(s) == BYTE(f,3))
 
 #define CHK_DATA(f,d)        TS_ASSERT((uint32_t)(d) == LONG(f,4))
 

@@ -64,6 +64,7 @@ TS_DEF_MAIN(TS_CSdoRd_1Byte)
                               &val, sizeof(val),
                               TS_AppCSdoCallback,
                               timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
@@ -112,6 +113,7 @@ TS_DEF_MAIN(TS_CSdoRd_1Word)
                               (uint8_t *)&val, sizeof(val),
                               TS_AppCSdoCallback,
                               timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
@@ -160,6 +162,7 @@ TS_DEF_MAIN(TS_CSdoRd_1Long)
                               (uint8_t *)&val, sizeof(val),
                               TS_AppCSdoCallback,
                               timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
@@ -209,6 +212,7 @@ TS_DEF_MAIN(TS_CSdoRd_Timeout)
                               &val, sizeof(val),
                               TS_AppCSdoCallback,
                               timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
@@ -262,6 +266,7 @@ TS_DEF_MAIN(TS_CSdoRd_Abort)
                               &val, sizeof(val),
                               TS_AppCSdoCallback,
                               timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK REQUEST -- */
     CHK_CAN  (&frm);
