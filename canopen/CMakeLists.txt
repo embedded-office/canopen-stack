@@ -20,6 +20,7 @@ target_include_directories(Canopen
 target_sources(Canopen
   PRIVATE
     source/co_core.c
+    source/co_csdo.c
     source/co_dict.c
     source/co_emcy.c
     source/co_if_can.c
