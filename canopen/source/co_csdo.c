@@ -42,13 +42,12 @@ CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num) {
 }
 
 CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
-                           uint32_t index,
-                           uint8_t sub,
+                           uint32_t key,
                            uint8_t *buf,
                            uint32_t size,
                            CO_CSDO_CALLBACK_T callback,
                            uint32_t timeout) {
-    CO_IF_FRM frm = {0};
+    CO_IF_FRM frm;
     uint32_t ticks;
 
     if ((csdo == 0) || (callback == 0) ||
@@ -80,8 +79,8 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
     /* Update transfer info */
     csdo->Tfer.Type             = CO_CSDO_TRANSFER_UPLOAD;
     csdo->Tfer.Abort            = 0;
-    csdo->Tfer.Idx              = index;
-    csdo->Tfer.Sub              = sub;
+    csdo->Tfer.Idx              = CO_GET_IDX(key);
+    csdo->Tfer.Sub              = CO_GET_SUB(key);
     csdo->Tfer.Buf              = buf;
     csdo->Tfer.Size             = size;
     csdo->Tfer.Tmt              = timeout;
@@ -93,6 +92,7 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
     CO_SET_BYTE (&frm, 0x40          , 0);
     CO_SET_WORD (&frm, csdo->Tfer.Idx, 1);
     CO_SET_BYTE (&frm, csdo->Tfer.Sub, 3);
+    CO_SET_LONG (&frm, 0,              4);
 
     ticks = COTmrGetTicks(&(csdo->Node->Tmr), timeout, CO_TMR_UNIT_1MS);
     csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
@@ -103,8 +103,7 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
 }
 
 CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
-                             uint32_t index,
-                             uint8_t sub,
+                             uint32_t key,
                              uint8_t *buf,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
@@ -112,6 +111,7 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
     CO_IF_FRM   frm;
     uint8_t     cmd;
     uint8_t     n;
+    uint32_t    ticks;
 
     if ((csdo == 0) || (buf      == 0) ||
         (size == 0) || (callback == 0)) {
@@ -150,16 +150,12 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
     /* Update transfer info */
     csdo->Tfer.Type             = CO_CSDO_TRANSFER_DOWNLOAD;
     csdo->Tfer.Abort            = 0;
-    csdo->Tfer.Idx              = index;
-    csdo->Tfer.Sub              = sub;
+    csdo->Tfer.Idx              = CO_GET_IDX(key);
+    csdo->Tfer.Sub              = CO_GET_SUB(key);
     csdo->Tfer.Buf              = buf;
     csdo->Tfer.Size             = size;
     csdo->Tfer.Tmt              = timeout;
     csdo->Tfer.Call             = callback;
-
-    for (n = 4; n < 8; n++) {
-        CO_SET_BYTE(&frm, *buf++, n);
-    }
 
     cmd = ((0x23) | ((4 - size) << 2));
     CO_SET_BYTE(&frm, cmd, 0);
@@ -169,6 +165,19 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
     CO_SET_DLC  (&frm, 8                );
     CO_SET_WORD (&frm, csdo->Tfer.Idx, 1);
     CO_SET_BYTE (&frm, csdo->Tfer.Sub, 3);
+
+    for (n = 4; n < 8; n++) {
+        if (size > 0) {
+            CO_SET_BYTE(&frm, *buf++, n);
+            size--;
+        } else {
+            CO_SET_BYTE(&frm, 0u, n);
+        }
+    }
+
+    ticks = COTmrGetTicks(&(csdo->Node->Tmr), timeout, CO_TMR_UNIT_1MS);
+    csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
+
     (void)COIfCanSend(&csdo->Node->If, &frm);
 
     return CO_ERR_NONE;
@@ -232,7 +241,9 @@ void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
 }
 
 void COCSdoEnable(CO_CSDO *csdo, uint8_t num) {
-    uint32_t    rxId, txId;
+    uint32_t    rxId;
+    uint32_t    txId;
+    uint8_t     nodeId;
     CO_NODE    *node;
     CO_CSDO    *csdonum;
     CO_ERR      err;
@@ -254,11 +265,15 @@ void COCSdoEnable(CO_CSDO *csdo, uint8_t num) {
     if (err != CO_ERR_NONE) {
         return;
     }
+    err = CODictRdByte(&node->Dict, CO_DEV(0x1280 + num, 3), &nodeId);
+    if (err != CO_ERR_NONE) {
+        return;
+    }
 
     if (((rxId & CO_SDO_ID_OFF) == 0) &&
         ((txId & CO_SDO_ID_OFF) == 0)){
-        csdonum->TxId   = txId;
-        csdonum->RxId   = rxId;
+        csdonum->TxId   = txId + nodeId;
+        csdonum->RxId   = rxId + nodeId;
         csdonum->State  = CO_CSDO_STATE_IDLE;
     }
 }
