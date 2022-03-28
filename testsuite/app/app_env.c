@@ -62,10 +62,14 @@ static uint8_t TS_Obj1003_0;
 static uint32_t TS_Obj1003[TS_EMCY_HIST_MAX];
 /* object entry variables for 0x1005:0 (the SYNC COB-ID) */
 static uint32_t TS_Obj1005_0;
-/* object entry variables for 0x12xx:1 (the SDOS request COB-ID) */
-static uint32_t TS_Obj12xx_1[TS_SDOS_N];
-/* object entry variables for 0x12xx:2 (the SDOS response COB-ID) */
-static uint32_t TS_Obj12xx_2[TS_SDOS_N];
+/* object entry variables for 0x120x:1 (the SSDO request COB-ID) */
+static uint32_t TS_Obj120x_1[TS_SDOS_N];
+/* object entry variables for 0x120x:2 (the SSDO response COB-ID) */
+static uint32_t TS_Obj120x_2[TS_SDOS_N];
+/* object entry variables for 0x128x:1 (the CSDO request COB-ID) */
+static uint32_t TS_Obj128x_1[TS_SDOS_N];
+/* object entry variables for 0x128x:2 (the CSDO response COB-ID) */
+static uint32_t TS_Obj128x_2[TS_SDOS_N];
 /* object entry variable for 0x1014:0 (COB-ID of EMCY message) */
 static uint32_t TS_Obj1014_0;
 /* object entry variable for 0x1017:0 (producer heartbeat time) */
@@ -235,16 +239,16 @@ void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data)
 *          - 1017:0 - Producer heartbeat time (loval variable)
 *          - 1018:0 - Identity object (constant 4)
 *          - 1018:X - 1..4: Identity object values (constant 0)
-*          - 12xx:0 - SDO server communication settings (constant 2)
-*          - 12xx:1 - SDO request COB-ID (local variable)
-*          - 12xx:2 - SDO response COB-ID (local variable)
+*          - 120X:0 - SDO server communication settings (constant 2)
+*          - 120X:1 - SDO request COB-ID (local variable)
+*          - 120X:2 - SDO response COB-ID (local variable)
 *
 *          Reset all local variables referenced in object entries.
 */
 /*---------------------------------------------------------------------------*/
 void TS_CreateMandatoryDir(void)
 {
-    uint32_t n;
+    uint32_t num;
 
     ODInit(&TS_ODDyn, &TS_ODList[0], TS_OD_MAX);
     TS_ODAdd(OBJ1000_0(0));
@@ -259,12 +263,12 @@ void TS_CreateMandatoryDir(void)
     TS_ODAdd(OBJ1018_2(0));
     TS_ODAdd(OBJ1018_3(0));
     TS_ODAdd(OBJ1018_4(0));
-    for (n = 0; n < CO_SDOS_N; n++) {
-        TS_ODAdd(OBJ12XX_0(n, 2));
-        TS_ODAdd(OBJ12XX_1(n, &TS_Obj12xx_1[n]));
-        TS_Obj12xx_1[n] = 0x600 + (n * 0x10);
-        TS_ODAdd(OBJ12XX_2(n, &TS_Obj12xx_2[n]));
-        TS_Obj12xx_2[n] = 0x580 + (n * 0x10);
+    for (num = 0; num < CO_SDOS_N; num++) {
+        TS_ODAdd(OBJ120X_0(num, 2));
+        TS_ODAdd(OBJ120X_1(num, &TS_Obj120x_1[num])); /* rx */
+        TS_Obj120x_1[num] = 0x600 + (num * 0x10);
+        TS_ODAdd(OBJ120X_2(num, &TS_Obj120x_2[num])); /* tx */
+        TS_Obj120x_2[num] = 0x580 + (num * 0x10);
     }
 
     EmcyResetTable();
@@ -274,7 +278,7 @@ void TS_CreateMandatoryDir(void)
 /*---------------------------------------------------------------------------*/
 /*! \brief REQ-ENV-0151
 *
-* \details Clear object dictionary and append the following object entries:
+* \details Append the following object entries:
 *          - 1005:0 - COB-ID SYNC message (parameter id)
 *          - 1006:0 - Communication cycle period (parameter period)
 *
@@ -289,9 +293,33 @@ void TS_CreateSyncPeriod(uint32_t *id, uint32_t *period)
 }
 
 /*---------------------------------------------------------------------------*/
+/*! \brief REQ-ENV-0151
+*
+* \details Append the following object entries:
+*          - 128x:1 - SDO Client request COB-ID (local variable)
+*          - 128x:2 - SDO Client response COB-ID (local variable)
+*          - 128x:3 - NODE-ID of the SDO Server (parameter nodeId)
+*
+* \note    Parameter, used as object entries must be initialized by
+*          calling function.
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateCSdoCom(uint8_t num, uint8_t *nodeId)
+{
+    if (num < CO_CSDO_N) {
+        TS_ODAdd(OBJ128X_0(num, 3));
+        TS_ODAdd(OBJ128X_1(num, &TS_Obj128x_1[num])); /* tx */
+        TS_Obj128x_1[num] = 0x580 + (num * 0x10);
+        TS_ODAdd(OBJ128X_2(num, &TS_Obj128x_2[num])); /* rx */
+        TS_Obj128x_2[num] = 0x600 + (num * 0x10);
+        TS_ODAdd(OBJ128X_3(num, nodeId));
+    }
+}
+
+/*---------------------------------------------------------------------------*/
 /*! \brief REQ-ENV-0160
 *
-* \details Clear object dictionary and append the following object entries:
+* \details Append the following object entries:
 *          - 14xx:0 - RPDO communication settings (constant 2)
 *          - 14xx:1 - RPDO message COB-ID (parameter id)
 *          - 14xx:2 - RPDO type (parameter type)
@@ -310,7 +338,7 @@ void TS_CreateRPdoCom(uint8_t num, uint32_t *id, uint8_t *type)
 /*---------------------------------------------------------------------------*/
 /*! \brief REQ-ENV-0170
 *
-* \details Clear object dictionary and append the following object entries:
+* \details Append the following object entries:
 *          - 16xx:0 - RPDO mapping number (parameter len)
 *          and for each entry N < len:
 *          - 16xx:N - RPDO application object mapping (parameter map[N])
@@ -334,7 +362,7 @@ void TS_CreateRPdoMap(uint8_t num, uint32_t *map, uint8_t *len)
 /*---------------------------------------------------------------------------*/
 /*! \brief REQ-ENV-0180
 *
-* \details Clear object dictionary and append the following object entries:
+* \details Append the following object entries:
 *          - 18xx:0 - TPDO communication settings (constant 2)
 *          - 18xx:1 - TPDO message COB-ID (parameter id)
 *          - 18xx:2 - TPDO type (parameter type)
@@ -361,7 +389,7 @@ void TS_CreateTPdoCom(uint8_t   num,
 /*---------------------------------------------------------------------------*/
 /*! \brief REQ-ENV-0190
 *
-* \details Clear object dictionary and append the following object entries:
+* \details Append the following object entries:
 *          - 1Axx:0 - TPDO mapping number (parameter len)
 *          and for each entry N < len:
 *          - 1Axx:N - TPDO application object mapping (parameter map[N])

@@ -202,7 +202,7 @@ extern "C" {
 *          Constant value for highest sub-index (2h to 3h)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ12XX_0(srv,val)                                \
+#define OBJ120X_0(srv,val)                                \
     CO_KEY(0x1200 + (srv), 0, CO_UNSIGNED8|CO_OBJ_D__R_), \
     0, (uintptr_t)(val)
 
@@ -218,7 +218,7 @@ extern "C" {
 * \note    The node-id is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ12XX_1(srv,ref)                                 \
+#define OBJ120X_1(srv,ref)                                 \
     CO_KEY(0x1200 + (srv), 1, CO_UNSIGNED32|CO_OBJ__N_RW), \
     CO_TSDOID, (uintptr_t)(ref)
 
@@ -234,9 +234,69 @@ extern "C" {
 * \note    The node-id is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ12XX_2(srv,ref)                                 \
+#define OBJ120X_2(srv,ref)                                 \
     CO_KEY(0x1200 + (srv), 2, CO_UNSIGNED32|CO_OBJ__N_RW), \
     CO_TSDOID, (uintptr_t)(ref)
+
+/*---------------------------------------------------------------------------*/
+/*! \brief OBJECT 1280h:0 - SDO CLIENT PARAMETER
+*
+* \param   srv
+*          Constant value for SDO client (0 to 127)
+*
+* \param   val
+*          Constant value for highest sub-index (2h to 3h)
+*/
+/*---------------------------------------------------------------------------*/
+#define OBJ128X_0(cli,val)                                \
+    CO_KEY(0x1200 + (cli), 0, CO_UNSIGNED8|CO_OBJ_D__R_), \
+    0, (uintptr_t)(val)
+
+/*---------------------------------------------------------------------------*/
+/*! \brief OBJECT 1280h:1 - SDO CLIENT PARAMETER COB-ID CLIENT TO SERVER (TX)
+*
+* \param   cli
+*          Constant value for SDO client (0 to 127)
+*
+* \param   ref
+*          Reference to value of 32bit COB-ID with CAN-ID (bit0 to 10)
+*
+* \note    The subindex 3 (node-id) is considered when using this object entry
+*/
+/*---------------------------------------------------------------------------*/
+#define OBJ128X_1(cli,ref)                                 \
+    CO_KEY(0x1280 + (cli), 1, CO_UNSIGNED32|CO_OBJ____RW), \
+    CO_TSDOID, (uintptr_t)(ref)
+
+/*---------------------------------------------------------------------------*/
+/*! \brief OBJECT 1280h:2 - SDO CLIENT PARAMETER COB-ID SERVER TO CLIENT (RX)
+*
+* \param   cli
+*          Constant value for SDO client (0 to 127)
+*
+* \param   ref
+*          Reference to value of 32bit COB-ID with CAN-ID (bit0 to 10)
+*
+* \note    The subindex 3 (node-id) is considered when using this object entry
+*/
+/*---------------------------------------------------------------------------*/
+#define OBJ128X_2(cli,ref)                                 \
+    CO_KEY(0x1280 + (cli), 2, CO_UNSIGNED32|CO_OBJ____RW), \
+    CO_TSDOID, (uintptr_t)(ref)
+
+/*---------------------------------------------------------------------------*/
+/*! \brief OBJECT 1280h:3 - SDO CLIENT PARAMETER NODE-ID OF THE SDO SERVER
+*
+* \param   cli
+*          Constant value for SDO client (0 to 127)
+*
+* \param   ref
+*          Reference to value of 8bit SDO server Node-ID (1 to 127)
+*/
+/*---------------------------------------------------------------------------*/
+#define OBJ128X_3(cli,ref)                                 \
+    CO_KEY(0x1280 + (cli), 3, CO_UNSIGNED8|CO_OBJ____RW), \
+    0, (uintptr_t)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 14XXh:0 - RPDO COMMUNICATION PARAMETER

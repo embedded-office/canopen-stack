@@ -99,6 +99,24 @@ extern "C" {
     SimCanRun();                            \
   } while(0)
 
+#define TS_SDO5_SEND(_c,_i,_s,_d)           \
+  do {                                      \
+    uint8_t  c=(uint8_t)(_c);               \
+    uint16_t i=(uint16_t)(_i);              \
+    uint8_t  s=(uint8_t)(_s);               \
+    uint32_t d=(uint32_t)(_d);              \
+    SimCanSetFrm(0x605, 8,                  \
+             (uint8_t)(c),                  \
+             (uint8_t)(i),                  \
+             (uint8_t)(((uint32_t)i)>>8),   \
+             (uint8_t)(s),                  \
+             (uint8_t)(d),                  \
+             (uint8_t)(((uint32_t)d)>>8),   \
+             (uint8_t)(((uint32_t)d)>>16),  \
+             (uint8_t)(((uint32_t)d)>>24)); \
+    SimCanRun();                            \
+  } while(0)
+
 #define TS_EBLK_SEND(_c,_d)                 \
   do {                                      \
     uint8_t  c=(uint8_t)(_c);               \
@@ -248,6 +266,10 @@ extern "C" {
 #define CHK_MODE(n,m)        TS_ASSERT((m) == CONmtGetMode(n))
 
 #define CHK_SDO0(f,c)        TS_ASSERT(0x581 == (f).Identifier); \
+                             TS_ASSERT(8     == (f).DLC);        \
+                             TS_ASSERT((c)   == BYTE((f),0))
+
+#define CHK_SDO5(f,c)        TS_ASSERT(0x585 == (f).Identifier); \
                              TS_ASSERT(8     == (f).DLC);        \
                              TS_ASSERT((c)   == BYTE((f),0))
 
@@ -492,6 +514,20 @@ void TS_CreateMandatoryDir(void);
 */
 /*---------------------------------------------------------------------------*/
 void TS_CreateSyncPeriod(uint32_t *id, uint32_t *period);
+
+/*---------------------------------------------------------------------------*/
+/*! \brief ADD SDO CLIENT COMMUNICATION SETTINGS TO OBJECT DICTIONARY
+*
+* \details Append the object entries for SDO client communication settings.
+*
+* \param   num
+*          Number of SDO Client
+*
+* \param   nodeId
+*          Target node-ID of the SDO Server
+*/
+/*---------------------------------------------------------------------------*/
+void TS_CreateCSdoCom(uint8_t num, uint8_t *nodeId);
 
 /*---------------------------------------------------------------------------*/
 /*! \brief ADD RPDO #N COMMUNICATION SETTINGS TO OBJECT DICTIONARY

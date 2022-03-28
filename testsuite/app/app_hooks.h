@@ -49,6 +49,9 @@ extern "C" {
 #define CHK_CB_LSS_ARG_NODE_ID(s,n)   TS_ASSERT((n) == (s)->LssStore_ArgNodeId)
 #define SET_CB_LSS_STORE_RETURN(s,v)  (s)->LssStore_Return=(int16_t)(v)
 
+#define CHK_CB_CSDO_FINISHED(s,n)     TS_ASSERT((n) == (s)->AppCSdoCallback_Called)
+#define CHK_CB_CSDO_CODE(s,c)         TS_ASSERT((c) == (s)->AppCSdoCallback_ArgCode)
+
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
@@ -103,6 +106,12 @@ typedef struct TS_CALLBACK_T {
     CO_RPDO    *PdoSyncUpdate_ArgPdo;
     uint32_t    PdoSyncUpdate_Called;
 
+    CO_CSDO    *AppCSdoCallback_ArgCSdo;
+    uint16_t    AppCSdoCallback_ArgIndex;
+    uint8_t     AppCSdoCallback_ArgSub;
+    uint32_t    AppCSdoCallback_ArgCode;
+    uint32_t    AppCSdoCallback_Called;
+
 } TS_CALLBACK;
 
 /******************************************************************************
@@ -114,6 +123,9 @@ void TS_CallbackDeInit(void);
 
 void COTmrLock  (void);
 void COTmrUnlock(void);
+
+/* Application callbacks provided via function argument: */
+void TS_AppCSdoCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

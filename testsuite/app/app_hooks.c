@@ -83,6 +83,12 @@ void TS_CallbackInit(TS_CALLBACK *cb)
 
     cb->PdoSyncUpdate_ArgPdo = 0;
     cb->PdoSyncUpdate_Called = 0;
+
+    cb->AppCSdoCallback_ArgCSdo = 0;
+    cb->AppCSdoCallback_ArgIndex = 0;
+    cb->AppCSdoCallback_ArgSub = 0;
+    cb->AppCSdoCallback_ArgCode = 0;
+    cb->AppCSdoCallback_Called = 0;
 }
 
 void TS_CallbackDeInit(void)
@@ -239,5 +245,16 @@ void COPdoSyncUpdate(CO_RPDO *pdo)
     if (TsCallbacks != 0) {
         TsCallbacks->PdoSyncUpdate_ArgPdo = pdo;
         TsCallbacks->PdoSyncUpdate_Called++;
+    }
+}
+
+void TS_AppCSdoCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
+{
+    if (TsCallbacks != 0) {
+        TsCallbacks->AppCSdoCallback_ArgCSdo = csdo;
+        TsCallbacks->AppCSdoCallback_ArgIndex = index;
+        TsCallbacks->AppCSdoCallback_ArgSub = sub;
+        TsCallbacks->AppCSdoCallback_ArgCode = code;
+        TsCallbacks->AppCSdoCallback_Called++;
     }
 }

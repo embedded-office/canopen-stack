@@ -36,6 +36,7 @@ typedef enum DEF_TEST_GROUPS_E {                      /*---- Test Groups -------
     DEF_G_NMT,                                        /*!< Group: NMT Management                  */
     DEF_G_EMCY,                                       /*!< Group: EMCY Management                 */
     DEF_G_SYNC,                                       /*!< Group: SYNC Communication              */
+    DEF_G_CSDO,                                       /*!< Group: SDO Client                      */
 
     DEF_G_NUM                                         /*!< Number of Groups                       */
 } DEF_TEST_GROUPS;
@@ -91,6 +92,13 @@ typedef enum DEF_SYNC_SUITES_E {                      /*---- SYNC Communication 
     DEF_S_SYNC_NUM                                    /*!< Number of Suites in Group              */
 } DEF_SYNC_SUITES;
 
+typedef enum DEF_CSDO_SUITES_E {                      /*---- SDO Client Test Suites --------------*/
+    DEF_S_CSDO_EXP_UP,                                /*!< Suite: SDO Upload Expedited            */
+    DEF_S_CSDO_EXP_DOWN,                              /*!< Suite: SDO Download Expedited          */
+
+    DEF_S_CSDO_NUM                                    /*!< Number of Suites in Group              */
+} DEF_CSDO_SUITES;
+
 /******************************************************************************
 * PUBLIC DEFINES
 ******************************************************************************/
@@ -121,5 +129,8 @@ typedef enum DEF_SYNC_SUITES_E {                      /*---- SYNC Communication 
 #define SUITE_EMCY_API()   TS_DEF_SUITE(DEF_G_EMCY, DEF_S_EMCY_API)   /*!< \addtogroup emcy_api   EMCY Application Interface Test */
 
 #define SUITE_SYNC_PROD()  TS_DEF_SUITE(DEF_G_SYNC, DEF_S_SYNC_PROD)  /*!< \addtogroup sync_prod  SYNC Producer Test */
+
+#define SUITE_CSDO_EXP_UP()   TS_DEF_SUITE(DEF_G_CSDO, DEF_S_CSDO_EXP_UP)    /*!< \addtogroup csdo_exp_up    SDO Client Expedited Upload Test   */
+#define SUITE_CSDO_EXP_DOWN() TS_DEF_SUITE(DEF_G_CSDO, DEF_S_CSDO_EXP_DOWN)  /*!< \addtogroup csdo_exp_down  SDO Client Expedited Download Test */
 
 #endif /* DEF_SUITE_H_ */
