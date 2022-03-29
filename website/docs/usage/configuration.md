@@ -422,7 +422,7 @@ CO_TMR_MEM AppTmrMem[CO_TMR_N];
 This chapter describes the allocation of the data memory, required by the CANopen SDO server module. The presented source code lines represent the default and must not be changed. The typical need on changing this memory allocation is to place this memory to a specific place in internal or external RAM.
 
 ```c
-uint8_t AppSdoBuf[CO_SDO_N][CO_SDO_BUF_BYTE];
+uint8_t AppSdoBuf[CO_SSDO_N][CO_SDO_BUF_BYTE];
 ```
 
 Note: This memory is used only when support for SDO segmented or block transfers are performed.
