@@ -263,7 +263,7 @@ void TS_CreateMandatoryDir(void)
     TS_ODAdd(OBJ1018_2(0));
     TS_ODAdd(OBJ1018_3(0));
     TS_ODAdd(OBJ1018_4(0));
-    for (num = 0; num < CO_SDOS_N; num++) {
+    for (num = 0; num < CO_SSDO_N; num++) {
         TS_ODAdd(OBJ120X_0(num, 2));
         TS_ODAdd(OBJ120X_1(num, &TS_Obj120x_1[num])); /* rx */
         TS_Obj120x_1[num] = 0x600 + (num * 0x10);
