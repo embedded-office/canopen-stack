@@ -18,7 +18,7 @@
 #define CO_CSDO_H_
 
 #if defined __cplusplus
-extern "C"{
+extern "C" {
 #endif
 
 /******************************************************************************
@@ -40,9 +40,9 @@ extern "C"{
  *
  */
 typedef enum {
-    CO_CSDO_STATE_INVALID       = 0, /*!< SDO client is not enabled          */
-    CO_CSDO_STATE_IDLE          = 1, /*!< SDO client is idle                 */
-    CO_CSDO_STATE_BUSY          = 2, /*!< SDO client handling transfer       */
+    CO_CSDO_STATE_INVALID = 0,       /*!< SDO client is not enabled          */
+    CO_CSDO_STATE_IDLE    = 1,       /*!< SDO client is idle                 */
+    CO_CSDO_STATE_BUSY    = 2,       /*!< SDO client handling transfer       */
 
 } CO_CSDO_STATE;
 
@@ -54,9 +54,9 @@ typedef enum {
  *   and block transfer support will be added.
  */
 typedef enum {
-    CO_CSDO_TRANSFER_NONE       = 0, /*!< No transfer is currently ongoing   */
-    CO_CSDO_TRANSFER_UPLOAD     = 1, /*!< SDO upload is being executed       */
-    CO_CSDO_TRANSFER_DOWNLOAD   = 2, /*!< SDO download is being executed     */
+    CO_CSDO_TRANSFER_NONE     = 0,   /*!< No transfer is currently ongoing   */
+    CO_CSDO_TRANSFER_UPLOAD   = 1,   /*!< SDO upload is being executed       */
+    CO_CSDO_TRANSFER_DOWNLOAD = 2,   /*!< SDO download is being executed     */
 
 } CO_CSDO_TRANSFER_TYPE;
 
@@ -91,17 +91,16 @@ typedef void (*CO_CSDO_CALLBACK_T)(struct CO_CSDO_T *csdo,
  *
  */
 typedef struct CO_CSDO_TRANSFER_T {
-    struct CO_CSDO_T       *Csdo;       /*!< Reference to responsible CSDO   */
-    CO_CSDO_TRANSFER_TYPE   Type;       /*!< Type of current transfer        */
-    uint32_t                Abort;      /*!< Abort code of transfer          */
-    uint16_t                Idx;        /*!< Accessed dictionary index       */
-    uint8_t                 Sub;        /*!< Accessed dictionary subindex    */
-    uint32_t                Tmt;        /*!< Timeout value in milliseconds   */
-    uint8_t                *Buf;        /*!< Reference to transfered data    */
-    uint32_t                Size;       /*!< Transfered data size            */
-    int16_t                 Tmr;        /*!< Identifier of timeout timer     */
-    CO_CSDO_CALLBACK_T      Call;       /*!< Notification callback           */
-
+    struct CO_CSDO_T      *Csdo;        /*!< Reference to responsible CSDO   */
+    CO_CSDO_TRANSFER_TYPE  Type;        /*!< Type of current transfer        */
+    uint32_t               Abort;       /*!< Abort code of transfer          */
+    uint16_t               Idx;         /*!< Accessed dictionary index       */
+    uint8_t                Sub;         /*!< Accessed dictionary subindex    */
+    uint32_t               Tmt;         /*!< Timeout value in milliseconds   */
+    uint8_t               *Buf;         /*!< Reference to transfered data    */
+    uint32_t               Size;        /*!< Transfered data size            */
+    int16_t                Tmr;         /*!< Identifier of timeout timer     */
+    CO_CSDO_CALLBACK_T     Call;        /*!< Notification callback           */
 
 } CO_CSDO_TRANSFER;
 
@@ -109,15 +108,15 @@ typedef struct CO_CSDO_TRANSFER_T {
  *
  *   This structure contains information required for SDO client
  *   functionality implementation.
- *
  */
 typedef struct CO_CSDO_T {
-    struct CO_NODE_T       *Node;       /*!< Link to node info structure     */
-    CO_IF_FRM              *Frm;        /*!< SDO req/res CAN frame           */
-    uint32_t                RxId;       /*!< Identifier for CSDO response    */
-    uint32_t                TxId;       /*!< Identifier for CSDO requests    */
-    CO_CSDO_STATE           State;      /*!< Current CSDO state              */
-    CO_CSDO_TRANSFER        Tfer;       /*!< Current CSDO transfer info      */
+    struct CO_NODE_T *Node;             /*!< Link to node info structure     */
+    CO_IF_FRM        *Frm;              /*!< SDO req/res CAN frame           */
+    uint32_t          RxId;             /*!< Identifier for CSDO response    */
+    uint32_t          TxId;             /*!< Identifier for CSDO requests    */
+    uint8_t           NodeId;           /*!< Node-Id of addressed SDO server */
+    CO_CSDO_STATE     State;            /*!< Current CSDO state              */
+    CO_CSDO_TRANSFER  Tfer;             /*!< Current CSDO transfer info      */
 
 } CO_CSDO;
 
@@ -140,7 +139,7 @@ typedef struct CO_CSDO_T {
  * \retval  =0  SDO client 'num' is not valid or does not exist
  *
  */
-CO_CSDO * COCSdoFind(struct CO_NODE_T *node, uint8_t num);
+CO_CSDO *COCSdoFind(struct CO_NODE_T *node, uint8_t num);
 
 /*! \brief
  *

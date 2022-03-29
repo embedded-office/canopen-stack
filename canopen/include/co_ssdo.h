@@ -128,7 +128,7 @@ typedef struct CO_SDO_T {
 *    This function reads the content of the object dictionary with
 *    index 1200+[n] subindex 1 (for RX) and subindex 2 (for TX), where n
 *    is a counter from 0 to the maximal number of supported SDO servers
-*    (CO_SDO_N).
+*    (CO_SSDO_N).
 *
 * \param srv
 *    Ptr to root element of SDO server array
