@@ -98,7 +98,7 @@ nav:
     - CANopen Stack Overview: "usage/overview.md"
     - Controlling the Node: "usage/control.md"
     - Using Object Dictionary: "usage/dictionary.md"
-    - Triggering TPDO: "usage/tpdo.md"
+    - Transmit PDO: "usage/tpdo.md"
     - Emergency Errors: "usage/emergency.md"
     - Timed Actions: "usage/actions.md"
     - Callback Interface: "usage/callbacks.md"
@@ -113,6 +113,7 @@ nav:
     - CAN Interface: "api/interface.md"
     - Timer Handling: "api/timer.md"
     - Parameter Storage: "api/parameter.md"
+    - SDO Client: "api/csdo.md"
   - Examples:
     - Firmware Upload: "examples/flash-user-domain.md"
     - Calibration Mode: "examples/setup-calibration-mode.md"
