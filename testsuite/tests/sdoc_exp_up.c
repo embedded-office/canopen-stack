@@ -28,6 +28,8 @@
 
 #include "def_suite.h"
 
+#if USE_CSDO
+
 /******************************************************************************
 * PRIVATE VARIABLES
 ******************************************************************************/
@@ -46,6 +48,7 @@ TS_DEF_MAIN(TS_CSdoRd_1Byte)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -59,7 +62,8 @@ TS_DEF_MAIN(TS_CSdoRd_1Byte)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestUpload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestUpload(csdo,
                               CO_DEV(idx, sub),
                               &val, sizeof(val),
                               TS_AppCSdoCallback,
@@ -95,6 +99,7 @@ TS_DEF_MAIN(TS_CSdoRd_1Word)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -108,7 +113,8 @@ TS_DEF_MAIN(TS_CSdoRd_1Word)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestUpload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestUpload(csdo,
                               CO_DEV(idx, sub),
                               (uint8_t *)&val, sizeof(val),
                               TS_AppCSdoCallback,
@@ -144,6 +150,7 @@ TS_DEF_MAIN(TS_CSdoRd_1Long)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_SDO   *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -157,7 +164,8 @@ TS_DEF_MAIN(TS_CSdoRd_1Long)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestUpload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestUpload(csdo,
                               CO_DEV(idx, sub),
                               (uint8_t *)&val, sizeof(val),
                               TS_AppCSdoCallback,
@@ -194,6 +202,7 @@ TS_DEF_MAIN(TS_CSdoRd_Timeout)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_SDO   *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -207,7 +216,8 @@ TS_DEF_MAIN(TS_CSdoRd_Timeout)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestUpload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestUpload(csdo,
                               CO_DEV(idx, sub),
                               &val, sizeof(val),
                               TS_AppCSdoCallback,
@@ -248,6 +258,7 @@ TS_DEF_MAIN(TS_CSdoRd_Abort)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_SDO   *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -261,7 +272,8 @@ TS_DEF_MAIN(TS_CSdoRd_Abort)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestUpload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestUpload(csdo,
                               CO_DEV(idx, sub),
                               &val, sizeof(val),
                               TS_AppCSdoCallback,
@@ -313,5 +325,7 @@ SUITE_CSDO_EXP_UP()
 
     TS_End();
 }
+
+#endif
 
 /*! @} */

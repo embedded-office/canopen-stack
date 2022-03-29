@@ -14,7 +14,7 @@
    limitations under the License.
 ******************************************************************************/
 
-/*------------------------------------------------------------------------------------------------*/
+/*---------------------------------------------------------------------------*/
 /*!
 * \addtogroup csdo_exp_down
 * \details    This test suite checks the protocol for expedited SDO download
@@ -27,6 +27,8 @@
 ******************************************************************************/
 
 #include "def_suite.h"
+
+#if USE_CSDO
 
 /******************************************************************************
 * PRIVATE VARIABLES
@@ -46,6 +48,7 @@ TS_DEF_MAIN(TS_CSdoWr_1Byte)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -59,7 +62,8 @@ TS_DEF_MAIN(TS_CSdoWr_1Byte)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestDownload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestDownload(csdo,
                                 CO_DEV(idx, sub),
                                 &val, sizeof(val),
                                 TS_AppCSdoCallback,
@@ -94,6 +98,7 @@ TS_DEF_MAIN(TS_CSdoWr_1Word)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -107,7 +112,8 @@ TS_DEF_MAIN(TS_CSdoWr_1Word)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestDownload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestDownload(csdo,
                                 CO_DEV(idx, sub),
                                 (uint8_t *)&val, sizeof(val),
                                 TS_AppCSdoCallback,
@@ -142,6 +148,7 @@ TS_DEF_MAIN(TS_CSdoWr_1Long)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -155,7 +162,8 @@ TS_DEF_MAIN(TS_CSdoWr_1Long)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestDownload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestDownload(csdo,
                                 CO_DEV(idx, sub),
                                 (uint8_t *)&val, sizeof(val),
                                 TS_AppCSdoCallback,
@@ -191,6 +199,7 @@ TS_DEF_MAIN(TS_CSdoWr_Timeout)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -204,7 +213,8 @@ TS_DEF_MAIN(TS_CSdoWr_Timeout)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestDownload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestDownload(csdo,
                                 CO_DEV(idx, sub),
                                 &val, sizeof(val),
                                 TS_AppCSdoCallback,
@@ -244,6 +254,7 @@ TS_DEF_MAIN(TS_CSdoWr_About)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -257,7 +268,8 @@ TS_DEF_MAIN(TS_CSdoWr_About)
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
-    err = COCSdoRequestDownload(&node.CSdo[0],
+    csdo = COCSdoFind(&node, 0);
+    err = COCSdoRequestDownload(csdo,
                                 CO_DEV(idx, sub),
                                 &val, sizeof(val),
                                 TS_AppCSdoCallback,
@@ -307,5 +319,7 @@ SUITE_CSDO_EXP_DOWN()
 
     TS_End();
 }
+
+#endif
 
 /*! @} */

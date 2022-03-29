@@ -56,7 +56,9 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 #endif //USE_PARAMS
     CONmtInit(&node->Nmt, node);
     COSdoInit(node->Sdo, node);
+#if USE_CSDO
     COCSdoInit(node->CSdo, node);
+#endif
     COTPdoClear(node->TPdo, node);
     CORPdoClear(node->RPdo, node);
     COEmcyInit(&node->Emcy, node, spec->EmcyCode);
@@ -178,6 +180,7 @@ void CONodeProcess(CO_NODE *node)
                 (void)COIfCanSend(&node->If, &frm);
             }
             allowed = 0;
+#if USE_CSDO
         } else {
             csdo = COCSdoCheck(node->CSdo, &frm);
             if (csdo != 0) {
@@ -188,6 +191,7 @@ void CONodeProcess(CO_NODE *node)
                 }
                 allowed = 0;
             }
+#endif
         }
     }
 

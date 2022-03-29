@@ -22,8 +22,8 @@
 *    This configuration define specifies how many SDO servers the library
 *    will support.
 */
-#ifndef CO_SDOS_N
-#define CO_SDOS_N               1
+#ifndef CO_SSDO_N
+#define CO_SSDO_N               1
 #endif
 
 /*! \brief DEFAULT SDO CLIENT
@@ -64,7 +64,7 @@
 
 /*! \brief DEFAULT ENABLE LSS
 *
-*    This configuration define specifies whether the LSS functionality will 
+*    This configuration define specifies whether the LSS functionality will
 *    be supported by the library.
 */
 #ifndef USE_LSS
@@ -78,6 +78,15 @@
 */
 #ifndef USE_PARAMS
 #define USE_PARAMS              1
+#endif
+
+/*! \brief DEFAULT ENABLE SDO CLIENT
+*
+*    This configuration define specifies whether SDO client will be supported
+*    by the library.
+*/
+#ifndef USE_CSDO
+#define USE_CSDO                1
 #endif
 
 #endif  /* #ifndef CO_CFG_H_ */

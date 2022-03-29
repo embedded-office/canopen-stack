@@ -240,7 +240,7 @@ CO_TMR_MEM TmrMem[APP_TMR_N];
 /* Each SDO server needs memory for the segmented or
  * block transfer requests.
  */
-uint8_t SdoSrvMem[CO_SDOS_N * CO_SDO_BUF_BYTE];
+uint8_t SdoSrvMem[CO_SSDO_N * CO_SDO_BUF_BYTE];
   :
 /* Collect all node specification settings in a single
  * structure for initializing the node easily.

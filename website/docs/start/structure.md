@@ -29,10 +29,18 @@ This directory tree contains the embedded source code of the CANopen Stack. The 
 
 ```
 mandatory settings
-- CO_SDOS_N     : maximum number of possible SDO servers (default: 1)
+- CO_SSDO_N     : maximum number of possible SDO servers (default: 1)
+- CO_CSDO_N     : maximum number of possible SDO clients (default: 1)
 - CO_TPDO_N     : maximum number of possible TPDOs (default: 4)
 - CO_RPDO_N     : maximum number of possible RPDOs (default: 4)
 - CO_EMCY_N     : maximum number of possible emergency codes (default: 32)
+```
+
+```
+settings for optimizing resource usage
+- USE_LSS       : enable/disable support for LSS functionality (default: 1)
+- USE_PARAMS    : enable/disable support for NVM parameters (default: 1)
+- USE_CSDO      : enable/disable support for SDO clients (default: 1)
 ```
 
 ### Directory: driver

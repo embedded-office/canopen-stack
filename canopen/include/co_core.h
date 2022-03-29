@@ -62,9 +62,11 @@ typedef struct CO_NODE_T {
     struct CO_EMCY_T       Emcy;                 /*!< Node error status      */
     struct CO_NMT_T        Nmt;                  /*!< Network management     */
     struct CO_TMR_T        Tmr;                  /*!< Timer manager          */
-    struct CO_SDO_T        Sdo[CO_SDOS_N];       /*!< SDO Server Array       */
+    struct CO_SDO_T        Sdo[CO_SSDO_N];       /*!< SDO Server Array       */
     uint8_t               *SdoBuf;               /*!< SDO Transfer Buffer    */
+#if USE_CSDO
     struct CO_CSDO_T       CSdo[CO_CSDO_N];      /*!< SDO client array       */
+#endif
     struct CO_RPDO_T       RPdo[CO_RPDO_N];      /*!< RPDO Array             */
     struct CO_TPDO_T       TPdo[CO_TPDO_N];      /*!< TPDO Array             */
     struct CO_TPDO_LINK_T  TMap[CO_TPDO_N * 8];  /*!< TPDO mapping links     */
