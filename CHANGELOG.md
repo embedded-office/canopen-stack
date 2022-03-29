@@ -10,8 +10,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 ### Added
 
 - Add callback `CONmtResetRequest()` for handling specific application and/or communication reset features
-- Add feature: SYNC producer
-- Add feature: SDO client (limited to expedited transfers)
+- Add feature: SYNC producer [dozack/develop](https://github.com/dozack)
+- Add feature: SDO client (limited to expedited transfers) [dozack/feature-sdo-client](https://github.com/dozack)
 
 ### Changed
 
