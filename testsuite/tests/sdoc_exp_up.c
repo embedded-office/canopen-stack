@@ -150,7 +150,7 @@ TS_DEF_MAIN(TS_CSdoRd_1Long)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    CO_SDO   *csdo;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -202,7 +202,7 @@ TS_DEF_MAIN(TS_CSdoRd_Timeout)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    CO_SDO   *csdo;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
@@ -258,7 +258,7 @@ TS_DEF_MAIN(TS_CSdoRd_Abort)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    CO_SDO   *csdo;
+    CO_CSDO  *csdo;
     uint8_t   serverId = 5;
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
