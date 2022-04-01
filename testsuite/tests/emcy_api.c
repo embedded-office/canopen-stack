@@ -71,20 +71,50 @@ TS_DEF_MAIN(TS_Emcy_TxUserData)
 TS_DEF_MAIN(TS_Emcy_TxChangedId)
 {
     CO_IF_FRM frm;                               /* Local: virtual CAN frame                 */
-    CO_NODE        node;
-    uint32_t     emcy_id = 0x00000101;
+    CO_NODE   node;
+    uint32_t  emcy_id = 0x00000101;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_CreateEmcy();
     TS_CreateNode(&node,0);
 
-    (void)CODictWrLong(&node.Dict,CO_DEV(0x1014,0),emcy_id);
+    (void)CODictWrLong(&node.Dict,CO_DEV(0x1014,0),0x81L | (1L << 31));    /* disable EMCY COB-ID */
+    (void)CODictWrLong(&node.Dict,CO_DEV(0x1014,0),emcy_id);               /* set new value       */
 
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     SimCanRun();
 
     CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
     TS_ASSERT(0x101 == frm.Identifier);
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*
+*          This test will check that a change of EMCY COB-ID with value < 0x81h is aborted.
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_Emcy_IdTooLow)
+{
+    CO_IF_FRM frm;                                    /* Local: virtual CAN frame                 */
+    CO_NODE   node;
+    uint32_t  emcy_id = 0x00000070;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    TS_CreateEmcy();
+    TS_CreateNode(&node,0);
+
+    TS_SDO_SEND(0x23, 0x1014, 0, emcy_id);            /* try to change with a low value           */
+    CHK_CAN(&frm);                                    /* check for a CAN frame                    */
+    CHK_SDO0 (frm, 0x80);
+    CHK_MLTPX(frm, 0x1014, 0);
+    CHK_DATA (frm, 0x6090030);
+
+    COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
+    SimCanRun();
+    CHK_CAN(&frm);                                    /* check for a CAN frame                    */
+    TS_ASSERT(0x81 == frm.Identifier);                /* unchanged Id                             */
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
@@ -189,6 +219,7 @@ SUITE_EMCY_API()
 
     TS_RUNNER(TS_Emcy_TxUserData);
     TS_RUNNER(TS_Emcy_TxChangedId);
+    TS_RUNNER(TS_Emcy_IdTooLow);
     TS_RUNNER(TS_Emcy_GetStatusNoError);
     TS_RUNNER(TS_Emcy_GetStatusError);
     TS_RUNNER(TS_Emcy_TotalNumNoError);

@@ -123,8 +123,8 @@ extern "C" {
 */
 /*---------------------------------------------------------------------------*/
 #define OBJ1014_0(ref)                             \
-    CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_R_), \
-    0, (uintptr_t)(ref)
+    CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_RW), \
+    CO_TEMCYID, (uintptr_t)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1017h:0 - PRODUCER HEARTBEAT TIME
