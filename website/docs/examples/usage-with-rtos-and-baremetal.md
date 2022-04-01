@@ -3,7 +3,7 @@
 This example describes the usage and differences when using the CANopen Stack with an RTOS or within a foreground / background system. The overall architecture of a CANopen device is standardized and shown in the following figure:
 
 <figure markdown>
-  ![CANopen architecture](/assets/images/illustrations/standard-architecture.svg "Standardized CANopen Architecture"){ width=640px }
+  ![CANopen architecture](../assets/images/illustrations/standard-architecture.svg "Standardized CANopen Architecture"){ width=640px }
 </figure>
 
 In this example, only the high-level usage within the component **Your Application** is addressed. We focus the description in the examples to the startup, event service, and CANopen stack processing API functions:
@@ -23,7 +23,7 @@ When using the CANopen stack in a foreground / background system, we establish a
 The following figure shows an overview of the application:
 
 <figure markdown>
-  ![CANopen Application without RTOS](/assets/images/illustrations/canopen-without-rtos.svg "CANopen Application without RTOS"){ width=480px }
+  ![CANopen Application without RTOS](../assets/images/illustrations/canopen-without-rtos.svg "CANopen Application without RTOS"){ width=480px }
 </figure>
 
 The figure shows the hardware components which drives the CANopen stack operation. The **CAN Controller** is the interface to the CAN network. The **Hardware Timer** is the time base for all timed actions of the CANopen stack.
@@ -116,7 +116,7 @@ When using the CANopen stack with an RTOS, we establish a timer interrupt for tr
 The following figure shows an overview of the application:
 
 <figure markdown>
-  ![CANopen Application with RTOS](/assets/images/illustrations/canopen-with-rtos.svg "CANopen Application with RTOS"){ width=480px }
+  ![CANopen Application with RTOS](../assets/images/illustrations/canopen-with-rtos.svg "CANopen Application with RTOS"){ width=480px }
 </figure>
 
 The figure shows the hardware components which drives the CANopen stack operation. The **CAN controller** is the interface to the CAN network. The **Hardware Timer** is the time base for all timed actions. Within your RTOS, there is most likely a callback function which you can use as time service trigger.

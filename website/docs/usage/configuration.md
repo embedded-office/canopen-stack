@@ -352,7 +352,7 @@ The object data reference [`uintptr_t`] shall be set in dependence to the object
 For the PDO mapping object entries, we must encode the object data value in the following way:
 
 <figure markdown>
-  ![PDO Mapping](/assets/images/illustrations/pdo-mapping.svg "PDO Mapping Concept"){ width=700px }
+  ![PDO Mapping](../assets/images/illustrations/pdo-mapping.svg "PDO Mapping Concept"){ width=700px }
 </figure>
 
 You can use the macro `CO_LINK` to get the value in a readable way:
