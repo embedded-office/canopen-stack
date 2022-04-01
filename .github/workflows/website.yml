@@ -14,7 +14,7 @@ on:
 
 env:
   REQUIREMENTS: website/requirements.txt
-  MKDOC: website/mkdocs.yml
+  MKDOCS: website/mkdocs.yml
   WEBSITE: website/site
 
 jobs:
