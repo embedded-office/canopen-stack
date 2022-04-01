@@ -107,7 +107,7 @@ int16_t COObjRdBufCont(CO_OBJ  *obj,
 
 **Example**
 
-see [Example in COObjRdBufStart()](/api/object/#coobjrdbufstart)
+see [Example in COObjRdBufStart()][2]
 
 !!! attention
 
@@ -348,7 +348,7 @@ int16_t COObjWrBufStart(CO_OBJ  *obj,
 
 **Example**
 
-see [Example in COObjWrBufStart()](/api/object/#coobjwrbufstart)
+see [Example in COObjWrBufStart()][1]
 
 
 !!! attention
@@ -413,3 +413,7 @@ The following example writes a byte-stream to the hypothetical application-speci
 !!! attention
 
     This function is used when writing data in smaller junks (e.g. internaly the SDO transfers is using this function). Within the application you most likely use the related memory area due to performance issues.
+
+
+[1]: ../dictionary#user-objects
+[2]: ../object/#coobjrdbufstart

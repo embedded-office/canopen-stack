@@ -6,7 +6,7 @@ Projects using CANopen may need to realize an adaptive CANopen Object Dictionary
 
 This example is the first of two writings to achieve a flexible and comfortable way of managing CANopen device software with dynamically generated object dictionaries during runtime.
 
-The first part describes tool functions for managing the object directory, while the [second part](/examples/use-dynamic-object-dictionary) illustrates the usage of the introduced tool functions.
+The first part describes tool functions for managing the object directory, while the [second part][1] illustrates the usage of the introduced tool functions.
 
 
 ### Resource Estimation
@@ -195,4 +195,7 @@ That's it. Now we have a set of functions for managing the object dictionary. Th
 * Object Handling (Set, Copy, Swap Compare)
 * Object Dictionary Handling (Init, Add & Update)
 
-We are now ready to go for using these functions in the next example: [Dynamic Object Dictionary - Part II](/examples/use-dynamic-object-dictionary).
+We are now ready to go for using these functions in the next example: [Dynamic Object Dictionary - Part II][1].
+
+
+[1]: ../use-dynamic-object-dictionary

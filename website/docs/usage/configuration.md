@@ -394,7 +394,6 @@ This chapter describes the PDO communication record for a transmit PDO. The obje
 | `1800h:03` | `UNSIGNED16` | `const` or `rw`                    | Inhibit time with LSB 100us (0=disable) |
 | `1800h:04` | n/a          | n/a                                | reserved, shall not be implemented      |
 | `1800h:05` | `UNSIGNED16` | `const` or `rw` with `CO_TEVENT`   | Event timer LSB 1ms (0=disable)         |
-{:.fullwidth}
 
 The index identifies which PDO is configured (1800h: TPDO #0, 1801h: TPDO #1, ..., 19ffh: TPDO #511). The object type is `const` in case of static communication settings. When the communication settings are parameters or dynamic variables, the listed object types ensures the correct change behavior for these records.
 

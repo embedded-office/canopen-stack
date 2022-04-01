@@ -121,4 +121,4 @@ In this example, the TPDO #7 is triggered after the receiption of every 4-th SYN
     The standard entries for subindex 3 and 5 are not used. Therefore, we adjust the highest subindex in object entry with subindex 00h.
 
 
-[1]: /usage/configuration#transmit-pdo-communication
+[1]: ../configuration#transmit-pdo-communication

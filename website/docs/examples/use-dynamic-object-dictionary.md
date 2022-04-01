@@ -1,6 +1,6 @@
 # Dynamic Object Dictionary - Part II
 
-In the [first part](/examples/setup-dynamic-object-dictionary) of this example, we discover the needed activities to create and manage a dynamic CANopen Object Dictionary. With this example, we will have a look at using the dynamic CANopen Dictionary functions. We will see, how powerful these little functions are and how we can use them to get a dynamic Quickstart application. For details of the object entries, please have a look to the example [Quickstart](/start/quickstart).
+In the [first part][1] of this example, we discover the needed activities to create and manage a dynamic CANopen Object Dictionary. With this example, we will have a look at using the dynamic CANopen Dictionary functions. We will see, how powerful these little functions are and how we can use them to get a dynamic Quickstart application. For details of the object entries, please have a look to the example [Quickstart][2].
 
 ## Overview
 
@@ -235,3 +235,7 @@ void main(int argc, char *argv[])
 Well, that's it.
 
 Enjoy the new flexibility with our dynamic generated object directories.
+
+
+[1]: ../setup-dynamic-object-dictionary
+[2]: ../../start/quickstart

@@ -415,7 +415,7 @@ void App_TmrIsrHandler(void)
 
 [1]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/
 [2]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L50
-[3]: /usage/configuration#pdo-mapping-value
+[3]: ../usage/configuration#pdo-mapping-value
 [4]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_spec.c#L21
 [5]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c
 [6]: https://github.com/embedded-office/canopen-stack/blob/master/example/quickstart/app/clock_app.c#L90

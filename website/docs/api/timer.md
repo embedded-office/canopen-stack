@@ -120,7 +120,7 @@ int16_t COTmrDelete(CO_TMR  *tmr,
 | Parameter | Description                                                               |
 | --------- | ------------------------------------------------------------------------- |
 | tmr       | pointer to timer object                                                   |
-| action    | action identifier, returned by [`COTmrCreate()`](/api/timer/#cotmrcreate) |
+| action    | action identifier, returned by [`COTmrCreate()`][1] |
 
 **Returned Value**
 
@@ -344,3 +344,6 @@ void HardwareTimerISR(void)
     }
 }
 ```
+
+
+[1]: ../timer/#cotmrcreate
