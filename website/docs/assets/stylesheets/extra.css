@@ -1,0 +1,25 @@
+
+/* select colors */
+:root {
+  --md-primary-fg-color: #1a0043;
+  --md-primary-fg-color--light: #7f964a;
+  --md-primary-fg-color--dark:  #4d337c;
+}
+:root>* {
+  --md-typeset-color:   var(--md-default-fg-color);
+  --md-typeset-a-color: var(--md-primary-fg-color--light);
+}
+
+/* tables set to 100% width */
+.md-typeset__table {
+  min-width: 100%;
+}
+.md-typeset table:not([class]) {
+  display: table;
+}
+@media only screen and (min-width: 768px)
+{
+  td:nth-child(1){
+    white-space: nowrap;
+  }
+}

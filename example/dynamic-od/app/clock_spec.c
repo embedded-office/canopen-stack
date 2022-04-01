@@ -60,7 +60,7 @@ static CO_TMR_MEM TmrMem[APP_TMR_N];
 /* Each SDO server needs memory for the segmented or
  * block transfer requests.
  */
-static uint8_t SdoSrvMem[CO_SDOS_N * CO_SDO_BUF_BYTE];
+static uint8_t SdoSrvMem[CO_SSDO_N * CO_SDO_BUF_BYTE];
 
 /* Select the drivers for your application. For possible
  * selections, see the directory /drivers. In this example

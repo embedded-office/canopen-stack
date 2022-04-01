@@ -28,8 +28,8 @@
 ******************************************************************************/
 
 #define CO_VER_MAJOR          4
-#define CO_VER_MINOR          1
-#define CO_VER_BUILD          8
+#define CO_VER_MINOR          2
+#define CO_VER_BUILD          0
 
 /******************************************************************************
 * PUBLIC FUNCTIONS

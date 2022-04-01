@@ -1,0 +1,52 @@
+{% extends "overrides/main.html" %}
+{% block tabs %}
+  {{ super() }}
+  <style>.md-header{position:initial}.md-main__inner{margin:0}.md-content{display:none}@media screen and (min-width:60em){.md-sidebar--secondary{display:none}}@media screen and (min-width:76.25em){.md-sidebar--primary{display:none}}</style>
+  <section class="mdx-container" style="color:white;height:fit-content;padding-top:0rem;background-image:linear-gradient(135deg,rgba(34,139,87,.4),rgba(139,34,139,.4)),url(assets/images/stock/cover.jpg);min-height:100vh;background-size:cover;background-position:center">
+    <div class="md-grid md-typeset" style="padding-left:2em;padding-right:2em">
+      <h1 style="color:white;text-align:center;padding-top:3em;font-weight:bold;font-size:4em">
+        CANopen Stack Project
+      </h1>
+      <p style="text-align:center;max-width:23em;display:block;margin:auto;font-size:1.5em">
+        The free and customizable CANopen Stack for resource constrained embedded systems.
+      </p>
+      <div style="padding-top:3em;text-align:center;">
+        <div>
+          <a href="{{ page.next_page.url | url }}" title="Getting started" class="md-button md-button--primary" style="margin:.5em;border-color:#f42900;background-color:#f42900">
+            Getting started
+          </a>
+          <a href="https://github.com/embedded-office/canopen-stack" title="Contribute on GitHub" class="md-button" style="margin:.5em;color:#e3e3e3;background-color:#526cfe;border-color:#526cfe">
+            Contribute on GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="mdx-container" style="background-color:#e0e0e0;color:#303030;padding-bottom:10em">
+    <div class="md-grid md-typeset" style="padding-left:2em;padding-right:2em">
+      <h2 style="text-align:center;font-weight:bold;font-size:4em">Rock Solid</h2>
+      <p style="text-align:center;display:block;margin:auto;font-size:1.5em">
+        This CANopen stack performs great on any device at any size!
+      </p>
+    </div>
+  </section>
+  <section class="mdx-container" style="background-color:#ffffff;color:#303030;padding-bottom:10em">
+    <div class="md-grid md-typeset" style="padding-left:2em;padding-right:2em">
+      <h2 style="text-align:center;font-weight:bold;font-size:4em">Super Flexible</h2>
+      <p style="text-align:center;max-width:29em;display:block;margin:auto;font-size:1.5em">
+        Every object entry access can take any aktion. Standard actions are prepared and are open for manufacturer specific changes.
+      </p>
+    </div>
+  </section>
+  <section class="mdx-container" style="background-color:#f0f0f0;color:#303030;padding-bottom:10em;">
+    <div class="md-grid md-typeset" style="padding-left:2em;padding-right:2em;">
+      <h2 style="text-align:center;font-weight:bold;font-size:4em;">
+        Our Sponsors
+      </h2>
+      <a href="https://www.embedded-office.com" title="Sponsor: Embedded Office">
+        <img style="display:block;margin:auto" src="assets/images/logos/embedded-office.png"/>
+      </a>
+    </div>
+  </section>
+{% endblock %}
+{% block content %}{% endblock %}

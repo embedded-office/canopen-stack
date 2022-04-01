@@ -1262,6 +1262,77 @@ TS_DEF_MAIN(TS_BlkRd_BlkWr_BlkRd)
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
+*         This testcase will check the block upload restart within a block upload transfer
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_BlkRd_Restart_BlkRd)
+{
+    CO_IF_FRM   frm;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom ;
+    uint32_t    size = 994;
+    uint16_t    idx  = 0x2520;
+    uint8_t     sub  = 6;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomFill(dom, 0);
+    TS_CreateNode(&node,0);
+
+                                                      /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
+    TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);
+
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xC2);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
+    CHK_DATA    (frm, size);                          /* check block size                         */
+
+                                                      /*===== INIT BLOCK UPLOAD (PHASE II) =======*/
+    TS_SDO_SEND (0xA3, 0x0000, 0, 0);
+
+                                                      /*===== BLOCK UPLOAD =======================*/
+    TS_ChkBlk  (0x00, 127, 0, 7);                     /* check received block                     */
+
+                                                      /*===== BAD INIT BLOCK UPLOAD (PHASE I) ====*/
+    TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0x80);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
+    CHK_DATA    (frm, 0x05040001);                    /* check abort code                         */
+
+                                                      /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
+    TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xC2);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
+    CHK_DATA    (frm, size);                          /* check block size                         */
+
+                                                      /*===== INIT BLOCK UPLOAD (PHASE II) =======*/
+    TS_SDO_SEND (0xA3, 0x0000, 0, 0);
+                                                      /*===== BLOCK UPLOAD =======================*/
+    TS_ChkBlk  (0x00, 127, 0, 7);                     /* check received block                     */
+    TS_ACKBLK_SEND(0xA2, 127, CO_SDO_BUF_SEG);
+
+    TS_ChkBlk  (0x79, 15, 1, 7);                      /* check received block                     */
+    TS_ACKBLK_SEND(0xA2, 15, CO_SDO_BUF_SEG);
+
+                                                      /*===== END BLOCK UPLOAD ===================*/
+    CHK_CAN     (&frm);                               /* check for a CAN frame                    */
+    CHK_SDO0    (frm, 0xC1);                          /* check SDO #0 response (Id and DLC)       */
+    CHK_ZERO    (frm);                                /* check cleared data area                  */
+
+    TS_EBLK_SEND(0xA1, 0x00000000);
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -1297,6 +1368,7 @@ SUITE_BLK_UP()
     TS_RUNNER(TS_BlkRd_BadSeqNbrAfterRestart);
     TS_RUNNER(TS_BlkRd_TwoDomains);
     TS_RUNNER(TS_BlkRd_BlkWr_BlkRd);
+    TS_RUNNER(TS_BlkRd_Restart_BlkRd);
 
 //    CanDiagnosticOff(0);
 

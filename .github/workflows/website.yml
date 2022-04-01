@@ -1,0 +1,60 @@
+name: Create Website
+
+on:
+  push:
+    # any push with creation of a version tag is creating a new version
+    # of the website.
+    tags:
+      - 'v*.*.*'
+
+env:
+  REQUIREMENTS: website/requirements.txt
+  MKDOCS: website/mkdocs.yml
+  WEBSITE: website/site
+
+jobs:
+  deploy:
+    name: Deploy Website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Extract Version Tag
+        id: version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "::set-output name=tag::${GITHUB_REF#refs/tags/v}"
+
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Upgrade pip
+        run: |
+          python3 -m pip install --upgrade pip
+      - name: Get pip cache dir
+        id: pip-cache
+        run: echo "::set-output name=dir::$(pip cache dir)"
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.pip-cache.outputs.dir }}
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/${REQUIREMENTS}') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: python3 -m pip install -r ./${REQUIREMENTS}
+
+      - name: Setup deploy
+        run: |
+          git config --global user.name github-actions[bot]
+          git config --global user.email github-actions[bot]@users.noreply.github.com
+
+      - name: Deploy Website
+        run: |
+          mike deploy --config-file ./${MKDOCS} --push --update-aliases v4.2 latest
+          mike set-default --config-file ./${MKDOCS} --push latest

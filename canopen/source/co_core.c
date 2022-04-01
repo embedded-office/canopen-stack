@@ -56,6 +56,9 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 #endif //USE_PARAMS
     CONmtInit(&node->Nmt, node);
     COSdoInit(node->Sdo, node);
+#if USE_CSDO
+    COCSdoInit(node->CSdo, node);
+#endif
     COTPdoClear(node->TPdo, node);
     CORPdoClear(node->RPdo, node);
     COEmcyInit(&node->Emcy, node, spec->EmcyCode);
@@ -145,7 +148,9 @@ CO_ERR CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
 void CONodeProcess(CO_NODE *node)
 {
     CO_IF_FRM frm;
+    CO_ERR    err;
     CO_SDO   *srv;
+    CO_CSDO  *csdo;
     CO_RPDO  *rpdo;
     int16_t   result;
     uint8_t   allowed;
@@ -169,12 +174,24 @@ void CONodeProcess(CO_NODE *node)
     if ((allowed & CO_SDO_ALLOWED) != 0) {
         srv = COSdoCheck(node->Sdo, &frm);
         if (srv != 0) {
-            CO_ERR err = COSdoResponse(srv);
+            err = COSdoResponse(srv);
             if ((err == CO_ERR_NONE     ) ||
                 (err == CO_ERR_SDO_ABORT)) {
                 (void)COIfCanSend(&node->If, &frm);
             }
             allowed = 0;
+#if USE_CSDO
+        } else {
+            csdo = COCSdoCheck(node->CSdo, &frm);
+            if (csdo != 0) {
+                err = COCSdoResponse(csdo);
+                if ((err == CO_ERR_NONE) ||
+                    (err == CO_ERR_SDO_ABORT)) {
+                    (void)COIfCanSend(&node->If, &frm);
+                }
+                allowed = 0;
+            }
+#endif
         }
     }
 

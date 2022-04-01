@@ -76,7 +76,8 @@ struct CO_HBCONS_T;           /* Declaration of heartbeat consumer structure */
 *    This enumeration holds all possible reset types.
 */
 typedef enum CO_NMT_RESET_T {
-    CO_RESET_NODE = 0,           /*!< reset application (and communication)  */
+    CO_RESET_INVALID = 0,        /*!< invalid reset type (for testing)       */
+    CO_RESET_NODE,               /*!< reset application (and communication)  */
     CO_RESET_COM,                /*!< reset communication                    */
     CO_RESET_NUM                 /*!< number of reset types                  */
 
@@ -174,9 +175,9 @@ CO_MODE CONmtGetMode(CO_NMT *nmt);
 *    The following error are detected within this function:
 *    - CO_ERR_NMT_MODE: the CANopen device is not in INIT mode
 *    - CO_ERR_BAD_ARG: the given nodeId is invalid (e.g. zero)
-*    
+*
 * \note
-*    If one of these errors is detected, this function call will change 
+*    If one of these errors is detected, this function call will change
 *    nothing.
 *
 * \param nmt
@@ -205,7 +206,7 @@ uint8_t CONmtGetNodeId(CO_NMT *nmt);
 *    encoding.
 *
 * \param code
-*    heartbeat state 
+*    heartbeat state
 *
 * \retval  =CO_INVALID    An error is detected
 * \retval  >0             The corresponding NMT heartbeat state
@@ -341,7 +342,7 @@ void CONmtHbConsInit(CO_NMT *nmt);
 * \retval  !=CO_ERR_NONE    error detected (double activation, timer delete
 *                           problem)
 */
-CO_ERR CONmtHbConsActivate(CO_NMT    *nmt, 
+CO_ERR CONmtHbConsActivate(CO_NMT    *nmt,
                            CO_HBCONS *hbc,
                            uint16_t   time,
                            uint8_t    nodeid);
@@ -370,7 +371,7 @@ int16_t CONmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm);
 
 /*! \brief  HEARTBEAT CONSUMER TIMEOUT
 *
-*    This timer callback function checks that at least one received heartbeat 
+*    This timer callback function checks that at least one received heartbeat
 *    is detected for this heartbeat consumer.
 *
 * \param parg
@@ -465,6 +466,22 @@ CO_ERR COTypeNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
 *    the new mode
 */
 extern void CONmtModeChange(CO_NMT *nmt, CO_MODE mode);
+
+/*! \brief NMT RESET REQUEST CALLBACK
+*
+*    This function is called when a NMT reset is requested.
+*
+* \note
+*    The nmt object pointer is checked to be valid before calling this
+*    function.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param reset
+*    the reset request
+*/
+extern void CONmtResetRequest(CO_NMT *nmt, CO_NMT_RESET reset);
 
 /*! \brief HEARTBEAT CONSUMER EVENT CALLBACK
 *

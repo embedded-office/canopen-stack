@@ -444,7 +444,7 @@ void COObjTypeUserSDOAbort(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t abort)
 {
     uint8_t n;
 
-    for (n = 0; n < CO_SDOS_N; n++) {
+    for (n = 0; n < CO_SSDO_N; n++) {
         if (node->Sdo[n].Obj == obj) {
             node->Sdo[n].Abort = abort;
             break;
