@@ -16,7 +16,7 @@ The CANopen stack is optimized for minimal resource requirements. The default ex
 For an estimation of how big the difference is, we have a quick look into the manual. The manual explains that each object dictionary entry needs 3 x 32bit values. Therefore, at an object dictionary with 256 object entries, we talk about: 256 * 12 Byte = 3 kByte
 
 <figure markdown>
-  ![CANopen Dictionary Memory Estimation](/assets/images/illustrations/canopen-dictionary-memory.svg "CANopen Dictionary Memory Estimation"){ width=480px }
+  ![CANopen Dictionary Memory Estimation](../assets/images/illustrations/canopen-dictionary-memory.svg "CANopen Dictionary Memory Estimation"){ width=480px }
 </figure>
 
 In case of a static object dictionary, the CANopen stack stores the entire dictionary (including pointers to the changing data) in non-volatile memory. On the dynamic side, the CANopen stack stores the object dictionary in RAM, along with the changing data. The use of pointers to the changing data is optional.
