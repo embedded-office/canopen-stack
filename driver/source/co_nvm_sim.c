@@ -71,7 +71,7 @@ static uint32_t DrvNvmRead(uint32_t start, uint8_t *buffer, uint32_t size)
 
     idx = 0;
     pos = start;
-    while ((pos < NVM_SIM_SIZE) && (size > 0)) {
+    while ((pos < NVM_SIM_SIZE) && (idx < size)) {
         buffer[idx] = NvmMemory[pos];
         idx++;
         pos++;
@@ -87,7 +87,7 @@ static uint32_t DrvNvmWrite(uint32_t start, uint8_t *buffer, uint32_t size)
 
     idx = 0;
     pos = start;
-    while ((pos < NVM_SIM_SIZE) && (size > 0)) {
+    while ((pos < NVM_SIM_SIZE) && (idx < size)) {
         NvmMemory[pos] = buffer[idx];
         idx++;
         pos++;

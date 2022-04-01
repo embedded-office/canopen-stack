@@ -58,6 +58,10 @@ void TS_CallbackInit(TS_CALLBACK *cb)
     cb->NmtModeChange_ArgMode = CO_INVALID;
     cb->NmtModeChange_Called = 0;
 
+    cb->NmtResetRequest_ArgNmt = 0;
+    cb->NmtResetRequest_ArgReset = CO_RESET_INVALID;
+    cb->NmtResetRequest_Called = 0;
+
     cb->NmtHbConsEvent_ArgNmt = 0;
     cb->NmtHbConsEvent_ArgNodeId = 0;
     cb->NmtHbConsEvent_Called = 0;
@@ -79,6 +83,12 @@ void TS_CallbackInit(TS_CALLBACK *cb)
 
     cb->PdoSyncUpdate_ArgPdo = 0;
     cb->PdoSyncUpdate_Called = 0;
+
+    cb->AppCSdoCallback_ArgCSdo = 0;
+    cb->AppCSdoCallback_ArgIndex = 0;
+    cb->AppCSdoCallback_ArgSub = 0;
+    cb->AppCSdoCallback_ArgCode = 0;
+    cb->AppCSdoCallback_Called = 0;
 }
 
 void TS_CallbackDeInit(void)
@@ -149,6 +159,15 @@ void CONmtModeChange(CO_NMT *nmt, CO_MODE mode)
         TsCallbacks->NmtModeChange_ArgNmt  = nmt;
         TsCallbacks->NmtModeChange_ArgMode = mode;
         TsCallbacks->NmtModeChange_Called++;
+    }
+}
+
+void CONmtResetRequest(CO_NMT *nmt, CO_NMT_RESET reset)
+{
+    if (TsCallbacks != 0) {
+        TsCallbacks->NmtResetRequest_ArgNmt   = nmt;
+        TsCallbacks->NmtResetRequest_ArgReset = reset;
+        TsCallbacks->NmtResetRequest_Called++;
     }
 }
 
@@ -226,5 +245,16 @@ void COPdoSyncUpdate(CO_RPDO *pdo)
     if (TsCallbacks != 0) {
         TsCallbacks->PdoSyncUpdate_ArgPdo = pdo;
         TsCallbacks->PdoSyncUpdate_Called++;
+    }
+}
+
+void TS_AppCSdoCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
+{
+    if (TsCallbacks != 0) {
+        TsCallbacks->AppCSdoCallback_ArgCSdo = csdo;
+        TsCallbacks->AppCSdoCallback_ArgIndex = index;
+        TsCallbacks->AppCSdoCallback_ArgSub = sub;
+        TsCallbacks->AppCSdoCallback_ArgCode = code;
+        TsCallbacks->AppCSdoCallback_Called++;
     }
 }

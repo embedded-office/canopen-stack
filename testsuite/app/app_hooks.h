@@ -31,22 +31,26 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CHK_CB_IF_RECEIVE(s,n)       TS_ASSERT((n) == (s)->IfCanReceive_Called)
+#define CHK_CB_IF_RECEIVE(s,n)        TS_ASSERT((n) == (s)->IfCanReceive_Called)
 
-#define CHK_CB_TPDO_TRANSMIT(s,n)    TS_ASSERT((n) == (s)->PdoTransmit_Called)
+#define CHK_CB_TPDO_TRANSMIT(s,n)     TS_ASSERT((n) == (s)->PdoTransmit_Called)
 
-#define CHK_CB_RPDO_RECEIVE(s,n)     TS_ASSERT((n) == (s)->PdoReceive_Called)
+#define CHK_CB_RPDO_RECEIVE(s,n)      TS_ASSERT((n) == (s)->PdoReceive_Called)
 
-#define CHK_CB_NMT_MODE_CHANGE(s,n)  TS_ASSERT((n) == (s)->NmtModeChange_Called)
+#define CHK_CB_NMT_MODE_CHANGE(s,n)   TS_ASSERT((n) == (s)->NmtModeChange_Called)
+#define CHK_CB_NMT_RESET_REQUEST(s,n) TS_ASSERT((n) == (s)->NmtResetRequest_Called)
 
-#define CHK_CB_HBC_EVENT(s,n)        TS_ASSERT((n) == (s)->NmtHbConsEvent_Called)
+#define CHK_CB_HBC_EVENT(s,n)         TS_ASSERT((n) == (s)->NmtHbConsEvent_Called)
 
-#define CHK_CB_HBC_CHANGE(s,n)       TS_ASSERT((n) == (s)->NmtHbConsChange_Called)
+#define CHK_CB_HBC_CHANGE(s,n)        TS_ASSERT((n) == (s)->NmtHbConsChange_Called)
 
-#define CHK_CB_LSS_STORE(s,n)        TS_ASSERT((n) == (s)->LssStore_Called)
-#define CHK_CB_LSS_ARG_BAUDRATE(s,n) TS_ASSERT((n) == (s)->LssStore_ArgBaudrate)
-#define CHK_CB_LSS_ARG_NODE_ID(s,n)  TS_ASSERT((n) == (s)->LssStore_ArgNodeId)
-#define SET_CB_LSS_STORE_RETURN(s,v) (s)->LssStore_Return=(int16_t)(v)
+#define CHK_CB_LSS_STORE(s,n)         TS_ASSERT((n) == (s)->LssStore_Called)
+#define CHK_CB_LSS_ARG_BAUDRATE(s,n)  TS_ASSERT((n) == (s)->LssStore_ArgBaudrate)
+#define CHK_CB_LSS_ARG_NODE_ID(s,n)   TS_ASSERT((n) == (s)->LssStore_ArgNodeId)
+#define SET_CB_LSS_STORE_RETURN(s,v)  (s)->LssStore_Return=(int16_t)(v)
+
+#define CHK_CB_CSDO_FINISHED(s,n)     TS_ASSERT((n) == (s)->AppCSdoCallback_Called)
+#define CHK_CB_CSDO_CODE(s,c)         TS_ASSERT((c) == (s)->AppCSdoCallback_ArgCode)
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -54,7 +58,7 @@ extern "C" {
 
 typedef struct TS_CALLBACK_T {
     uint32_t    NodeFatalError_Called;
-    
+
     uint32_t    TmrLock_Called;
     uint32_t    TmrUnlock_Called;
 
@@ -71,6 +75,10 @@ typedef struct TS_CALLBACK_T {
     CO_NMT     *NmtModeChange_ArgNmt;
     CO_MODE     NmtModeChange_ArgMode;
     uint32_t    NmtModeChange_Called;
+
+    CO_NMT       *NmtResetRequest_ArgNmt;
+    CO_NMT_RESET  NmtResetRequest_ArgReset;
+    uint32_t      NmtResetRequest_Called;
 
     CO_NMT     *NmtHbConsEvent_ArgNmt;
     uint8_t     NmtHbConsEvent_ArgNodeId;
@@ -98,6 +106,12 @@ typedef struct TS_CALLBACK_T {
     CO_RPDO    *PdoSyncUpdate_ArgPdo;
     uint32_t    PdoSyncUpdate_Called;
 
+    CO_CSDO    *AppCSdoCallback_ArgCSdo;
+    uint16_t    AppCSdoCallback_ArgIndex;
+    uint8_t     AppCSdoCallback_ArgSub;
+    uint32_t    AppCSdoCallback_ArgCode;
+    uint32_t    AppCSdoCallback_Called;
+
 } TS_CALLBACK;
 
 /******************************************************************************
@@ -109,6 +123,9 @@ void TS_CallbackDeInit(void);
 
 void COTmrLock  (void);
 void COTmrUnlock(void);
+
+/* Application callbacks provided via function argument: */
+void TS_AppCSdoCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

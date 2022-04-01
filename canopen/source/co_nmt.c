@@ -657,9 +657,11 @@ int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
                     break;
                 case 129:
                     CONmtReset(nmt, CO_RESET_NODE);
+                    CONmtResetRequest(nmt, CO_RESET_NODE);
                     break;
                 case 130:
                     CONmtReset(nmt, CO_RESET_COM);
+                    CONmtResetRequest(nmt, CO_RESET_COM);
                     break;
                 default:
                     break;

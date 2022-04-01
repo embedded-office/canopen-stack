@@ -321,9 +321,10 @@ TS_DEF_MAIN(TS_Emcy_HistClearOk)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Emcy_HistClearBad)
 {
-    CO_NODE        node;
-    uint8_t     hist_num;
-    uint32_t     hist;
+    CO_IF_FRM frm;                                    /* Local: virtual CAN frame                 */
+    CO_NODE   node;
+    uint8_t   hist_num;
+    uint32_t  hist;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_CreateEmcy();
@@ -332,8 +333,14 @@ TS_DEF_MAIN(TS_Emcy_HistClearBad)
     COEmcySet(&node.Emcy, 1, 0);                      /* register error #1 without user info      */
     COEmcySet(&node.Emcy, 2, 0);                      /* register error #2 without user info      */
     SimCanRun();
+    CHK_CAN(&frm);                                    /* check for a CAN frame                    */
+    CHK_CAN(&frm);                                    /* check for a CAN frame                    */
 
     TS_SDO_SEND (0x2F, 0x1003, 0, 0x01);
+    CHK_CAN(&frm);                                    /* check for a CAN frame                    */
+    CHK_SDO0 (frm, 0x80);
+    CHK_MLTPX(frm, 0x1003, 0);
+    CHK_DATA (frm, 0x6090030);
 
     (void)CODictRdByte(&node.Dict,CO_DEV(0x1003,0),&hist_num);
     TS_ASSERT(2 == hist_num);

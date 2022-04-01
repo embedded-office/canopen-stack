@@ -108,6 +108,14 @@ extern "C" {
 */
 extern const CO_OBJ_TYPE COTEmcy;      /* Link to EMCY Object Type Structure */
 
+/*! \brief OBJECT TYPE EMCY IDENTIFIER
+*
+*    This object type specializes the general handling of objects for the
+*    object dictionary entries holding a EMCY identifier. This entry is
+*    designed to provide the feature of changing a EMCY identifier.
+*/
+extern const CO_OBJ_TYPE COTEmcyId;
+
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/

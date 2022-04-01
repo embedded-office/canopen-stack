@@ -521,6 +521,8 @@ CO_ERR COTypeEmcyWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, 
         if (val == 0) {
             COEmcyHistReset(emcy);
             result = CO_ERR_NONE;
+        } else {
+            result = CO_ERR_OBJ_RANGE;
         }
     }
 
@@ -549,7 +551,17 @@ CO_ERR COTypeEmcyIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf
             result = COObjWrDirect(obj, &nid, CO_LONG);
         }
     } else {
-        result = COObjWrDirect(obj, &nid, CO_LONG);
+        /* Conformance Test case : 2.11 - Test name : SDO 11
+         * (note: I can't find the requirement in DS301?)
+         *
+         * SDO 11: Use object 1014h:00h with min value 81h
+         * SDO 11: Valid abort codes are 06090030h, 06090032h or 08000000h
+         */
+        if (nid >= 0x80) {
+            result = COObjWrDirect(obj, &nid, CO_LONG);
+        } else {
+            result = CO_ERR_OBJ_RANGE;
+        }
     }
 
     return (result);
