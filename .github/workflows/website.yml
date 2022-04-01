@@ -5,7 +5,7 @@ on:
     # any push with creation of a version tag is creating a new version
     # of the website.
     tags:
-      - 'v*'
+      - 'v*.*.*'
 
 env:
   REQUIREMENTS: website/requirements.txt
@@ -22,7 +22,9 @@ jobs:
 
       - name: Extract Version Tag
         id: version
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/v}
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "::set-output name=tag::${GITHUB_REF#refs/tags/v}"
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -31,7 +33,6 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          # install pip=>20.1 to use "pip cache dir"
           python3 -m pip install --upgrade pip
       - name: Get pip cache dir
         id: pip-cache
@@ -48,22 +49,12 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install -r ./${REQUIREMENTS}
 
-      - name: Setup doc deploy
+      - name: Setup deploy
         run: |
           git config --global user.name github-actions[bot]
           git config --global user.email github-actions[bot]@users.noreply.github.com
 
-      - name: Build Website
+      - name: Deploy Website
         run: |
-          mike deploy --config-file ./${MKDOCS} --push --update-aliases ${{ steps.version.outputs.tag }} latest
+          mike deploy --config-file ./${MKDOCS} --push --update-aliases v4.2 latest
           mike set-default --config-file ./${MKDOCS} --push latest
-
-      - name: Copy Website to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./${WEBSITE}
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          tag_name: ${{ steps.prepare_tag.outputs.deploy_tag_name }}
-          full_commit_message: 'Deploy Website ${{ steps.version.outputs.tag }}'
