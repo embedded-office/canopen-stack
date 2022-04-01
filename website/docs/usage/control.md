@@ -106,7 +106,7 @@ sequenceDiagram
 
 ### Node Stop
 
-Stopping a node is typically performed by the CAN network with [autonomous requests](/docs/usecase/overview#autonomous-external-request). Nevertheless, the CANopen stack provides a service function to switch the NMT modes by the application. The following line switches the node into the NMT mode `CO_STOP`.
+Stopping a node is typically performed by the CAN network with [autonomous requests][1]. Nevertheless, the CANopen stack provides a service function to switch the NMT modes by the application. The following line switches the node into the NMT mode `CO_STOP`.
 
 ```c
 CONmtSetMode(&demo.Nmt, CO_STOP);
@@ -189,3 +189,6 @@ sequenceDiagram
 ```
 
 *Note: After this activity, the interface and all resources are free to use by other components.*
+
+
+[1]: ../overview#autonomous-external-request

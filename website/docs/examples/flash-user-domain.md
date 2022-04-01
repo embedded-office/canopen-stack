@@ -28,7 +28,7 @@ The **subindex 2h** is used to program the firmware image into the FLASH memory 
 
 ### Type: Control Commands
 
-Lets implement the firmware control user type as shown in [CANopen Usage: User Object](/usage/dictionary#user-objects):
+Lets implement the firmware control user type as shown in [CANopen Usage: User Object][1]:
 
 ```c
 CO_ERR FwCtrlWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len);
@@ -139,3 +139,7 @@ CO_ERR FwImageWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len);
 !!! info
 
     If you need to consider additional constraints due to your FLASH backend hardware, this constraints should be handled within your FLASH driver function, e.g.: programm granularity of 8 byte portions due to continuously running ECC checks, and similar.
+
+
+
+[1]: ../../usage/dictionary#user-objects

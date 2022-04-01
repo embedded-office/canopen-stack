@@ -36,7 +36,7 @@ The key to get the wanted functionality is the entry at subindex 1. This object 
 
 ## Implement Object Type
 
-Lets implement the calibration user type as shown in the [CANopen Usage: User Object](/usage/dictionary#user-objects):
+Lets implement the calibration user type as shown in the [CANopen Usage: User Object][1]:
 
 ```c
 uint8_t calWriteAllowed = 0u;
@@ -147,3 +147,5 @@ const CO_OBJ ExampleObjDir[] = {
 ```
 
 Well, that's it. Now we have an (unsecured) protected calibration area for manufacturer-specific data. This concept is a starting point for more secure solutions with advanced algorithms.
+
+[1]: ../../usage/dictionary#user-objects

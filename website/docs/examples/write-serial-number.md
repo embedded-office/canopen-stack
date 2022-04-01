@@ -23,7 +23,7 @@ The key to get the wanted functionality is the object type for the entry at subi
 
 ## Implement Object Type
 
-Lets implement the one time programmable (OTP) user type as shown in the [CANopen Usage: User Object](/usage/dictionary#user-objects):
+Lets implement the one time programmable (OTP) user type as shown in the [CANopen Usage: User Object][1]:
 
 ```c
 const uint32_t serialNo = 0xFFFFFFFFu;  /* locate this variable to FLASH and initialize with empty cell value */
@@ -70,3 +70,6 @@ const CO_OBJ ExampleObjDir[] = {
 ```
 
 Now we have a one time programmable object entry for the serial number. This concept shows how to integrate application specific logic to specific object entry access.
+
+
+[1]: ../../usage/dictionary#user-objects

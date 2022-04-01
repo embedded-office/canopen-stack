@@ -8,13 +8,13 @@ This example describes the usage and differences when using the CANopen Stack wi
 
 In this example, only the high-level usage within the component **Your Application** is addressed. We focus the description in the examples to the startup, event service, and CANopen stack processing API functions:
 
-| Function Name                                 | Description                            |
-| --------------------------------------------- | -------------------------------------- |
-| [`CONodeInit()`](/api/node/#conodeinit)       | Initialization of CANopen stack        |
-| [`CONodeStart()`](/api/node/#conodestart)     | Start of CANopen stack                 |
-| [`CONodeProcess()`](/api/node/#conodeprocess) | Processing of CAN communication        |
-| [`COTmrService()`](/api/timer/#cotmrservice)  | Trigger elapsed configured time quanta |
-| [`COTmrProcess()`](/api/timer/#cotmrprocess)  | Processing of timed actions            |
+| Function Name          | Description                            |
+| ---------------------- | -------------------------------------- |
+| [`CONodeInit()`][1]    | Initialization of CANopen stack        |
+| [`CONodeStart()`][2]   | Start of CANopen stack                 |
+| [`CONodeProcess()`][3] | Processing of CAN communication        |
+| [`COTmrService()`][4]  | Trigger elapsed configured time quanta |
+| [`COTmrProcess()`][5]  | Processing of timed actions            |
 
 ## CANopen Baremetal
 
@@ -127,7 +127,7 @@ For the processing of the events we use two separate tasks for **Node Processing
 
 ### RTOS Startup
 
-Let's have a look in the implementation for the [Flexible Safety RTOS](https://www.embedded-office.com/products/flexible-safety-rtos). There is no limitation to this RTOS; you can use any RTOS you already have or want.
+Let's have a look in the implementation for the [Flexible Safety RTOS][6]. There is no limitation to this RTOS; you can use any RTOS you already have or want.
 
 The following source shows the global variables and the initialization and startup of the CANopen device node.
 
@@ -244,3 +244,11 @@ void AppTmrTask(void *arg)
   }
 }
 ```
+
+
+[1]: ../../api/node/#conodeinit
+[2]: ../../api/node/#conodestart
+[3]: ../../api/node/#conodeprocess
+[4]: ../../api/timer/#cotmrservice
+[5]: ../../api/timer/#cotmrprocess
+[6]: https://www.embedded-office.com/products/flexible-safety-rtos
