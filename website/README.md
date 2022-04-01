@@ -47,4 +47,4 @@ $ TODO: mike ...
 
 ### Automatic deployment
 
-The GitHub Action `website.yml` is defined to deploy (or overwrite) a website version. This action is triggered when a new version tag is created (naming pattern `v*.*.*`).
+The GitHub Action `website.yml` is defined to deploy (or overwrite) a website version. This action is triggered when a new version tag is created (naming pattern `v*.*.*`) or a file is changed within the directory `/website/...`.
