@@ -6,6 +6,9 @@ on:
   push:
     tags:
       - 'v*'
+    branches:
+      - master
+      - main
     paths:
       - 'website/**'
 
