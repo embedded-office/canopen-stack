@@ -51,6 +51,11 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install -r ./${REQUIREMENTS}
 
+      - name: Setup doc deploy
+        run: |
+          git config --global user.name github-actions[bot]
+          git config --global user.email github-actions[bot]@users.noreply.github.com
+
       - name: Build Website
         run: |
           mike deploy --config-file ./${MKDOCS} --push --update-aliases ${{ steps.version.outputs.tag }} latest
