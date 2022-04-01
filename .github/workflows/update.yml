@@ -19,21 +19,17 @@ env:
 
 jobs:
   deploy:
-    name: Deploy Website
+    name: Update Website
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
       - name: 'Get Previous tag'
+        # get previous tag in current branch (or v1.0.0 if no tag is found)
         id: version
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-        with:
-          fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
-
-      - name: Extract Version Tag
-        id: extract
-        run: echo ::set-output name=version::${GITHUB_REF#refs/*/v}
+        run: |
+          echo "tag=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo v1.0.0)" >> $GITHUB_ENV
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -66,7 +62,7 @@ jobs:
 
       - name: Update Website
         run: |
-          mike deploy --config-file ./${MKDOCS} --push --update-aliases ${{ steps.version.outputs.tag }} latest
+          mike deploy --config-file ./${MKDOCS} --push --update-aliases ${{ env.tag }} latest
           mike set-default --config-file ./${MKDOCS} --push latest
 
       - name: Copy Website to GitHub Pages
@@ -77,4 +73,4 @@ jobs:
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
           tag_name: ${{ steps.prepare_tag.outputs.deploy_tag_name }}
-          full_commit_message: 'Deploy Website ${{ steps.version.outputs.tag }}'
+          full_commit_message: 'Deploy Website ${{ env.tag }}'

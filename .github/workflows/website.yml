@@ -6,9 +6,6 @@ on:
     # of the website.
     tags:
       - 'v*'
-    branches:
-      - master
-      - main
 
 env:
   REQUIREMENTS: website/requirements.txt
