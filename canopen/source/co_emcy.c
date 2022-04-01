@@ -521,6 +521,8 @@ CO_ERR COTypeEmcyWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, 
         if (val == 0) {
             COEmcyHistReset(emcy);
             result = CO_ERR_NONE;
+        } else {
+            result = CO_ERR_OBJ_RANGE;
         }
     }
 
