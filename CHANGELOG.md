@@ -7,11 +7,15 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
+none
+
+## [4.2.0] - 2022-04-01
+
 ### Added
 
 - Add callback `CONmtResetRequest()` for handling specific application and/or communication reset features
-- Add feature: SYNC producer [dozack/develop](https://github.com/dozack)
-- Add feature: SDO client (limited to expedited transfers) [dozack/feature-sdo-client](https://github.com/dozack)
+- Add feature: SYNC producer [@dozack](https://github.com/dozack)
+- Add feature: SDO client (limited to expedited transfers) [@dozack](https://github.com/dozack)
 
 ### Changed
 
@@ -21,12 +25,15 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 - Fix navigation link in sidebar to quickstart example
 - Correct restarting of block transfer after aborting a running transfer by a client restart
+- Correct abort message when writing to 1014h:00h while active or with value out of range
+- Correct abort message when writing to 1003h:00h with value out of range
+- Fix data copy loops in NVM simulation read and write functions
 
 ## [4.1.8] - 2021-10-04
 
 ### Added
 
-- Add the option to exclude LSS and/or parameters [Domen2242/configurable_features](https://github.com/Domen2242)
+- Add the option to exclude LSS and/or parameters [@Domen2242](https://github.com/Domen2242)
 - Detailed description of API function `COObjTypeUserSDOAbort()`
 - Example article explaining the usage with RTOS and baremetal
 - Example article explaining the firmware upload with user domains
@@ -73,7 +80,7 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 - Explain how to setup EMCY in quickstart example (even if not used in this application).
 - Fix NMT reset when EMCY is not used (no EMCY code table).
-- Fix broken RPDO communication setup [cjardin112/master](https://github.com/cjardin112).
+- Fix broken RPDO communication setup [@cjardin112](https://github.com/cjardin112).
 
 ## [4.1.4] - 2020-12-15
 
@@ -167,7 +174,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.1.8...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.2.0...HEAD
+[4.2.0]: https://github.com/embedded-office/canopen-stack/compare/v4.1.8...v4.2.0
 [4.1.8]: https://github.com/embedded-office/canopen-stack/compare/v4.1.7...v4.1.8
 [4.1.7]: https://github.com/embedded-office/canopen-stack/compare/v4.1.6...v4.1.7
 [4.1.6]: https://github.com/embedded-office/canopen-stack/compare/v4.1.5...v4.1.6

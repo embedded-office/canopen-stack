@@ -20,6 +20,8 @@ The source code is compliant to the C99 standard and you must cross-compile the 
   - Expedited transfers
   - Segmented transfers
   - Block transfers
+- Unlimited number of SDO clients which supports:
+  - Expedited transfers
 - Unlimited number of TPDO and RPDOs which supports:
   - Synchronized operation
   - Asynchronous operation
@@ -31,6 +33,7 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 - Emergency producer which supports:
   - Manufacturer specific extensions
   - Unlimited error history
+- SYNC producer
 - Heartbeat producer
 - Unlimited Emergency consumers
 - Unlimited number of Heartbeat consumers
@@ -49,13 +52,13 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 
 Get the project repository and add to your include search path:
 - `canopen/config`
-- `canopen/include` 
+- `canopen/include`
 
 and to your source path:
 - `canopen/source`
 
 Select the driver templates for CAN, NVM and Timer you want as starting point for your hardware interface and add them to your project:
-- `driver/include` 
+- `driver/include`
 - `driver/source`
 
 *Note: in future versions, we want to remove the pre-compiler configuration file in `canopen/config`. The corresponding configuration will be possible in a more flexible way. The main goal is to get a CANopen library for a specific microcontroller, with no application specific configuration included and therefore usable in all applications.*
@@ -161,16 +164,6 @@ The first release of this CANopen stack is back in 2005. It is still used in man
 Some years later, now in 2020, we think it is time for a new way of software development of components where no product specific know-how is neccessary. This project is the try with the hope, that this way of software development is good for existing customers, for Embedded Offic and for all potential new users.
 
 To avoid confusion, it is the best to continue with the release version numbering. The first stable release of the open-source variant of the CANopen Stack is: **V4.0.0**
-
-## Roadmap
-
-*Ideas for further development:*
-
-- remove all pre-compiler configuration defines to allow a single library for multiple projects with different needs
-- hardware independent collection of examples for demonstration purpose (exchange driver and re-compile should be enought for usage on real target hardware)
-- improve documentation of single test cases within the testsuite
-- add the SDO client (rarely used, but nice to have)
-Feel free to add issues with further ideas or needs!
 
 # License
 
