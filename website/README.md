@@ -29,20 +29,18 @@ $ mkdocs serve --config-file ./website/mkdocs.yml
 
 When deployment of the website via commandline is required, you can do it by typing
 
-TODO: check and describe the commands for website version management
-
 ```bash
 # deploy a new website version
-$ TODO: mike ...
+$ mike deploy --config-file ./website/mkdocs.yml --push --update-aliases vx.y.z latest
 
 # manage the alias 'latest'
-$ TODO: mike ...
+$ mike set-default --config-file ./website/mkdocs.yml --push latest
 
 # list all website versions
-$ TODO: mike ...
+$ mike delete --config-file ./website/mkdocs.yml [version-or-alias]
 
 # delete a website version
-$ TODO: mike ...
+$ mike delete --config-file ./website/mkdocs.yml [version-or-alias]
 ```
 
 ### Automatic deployment
