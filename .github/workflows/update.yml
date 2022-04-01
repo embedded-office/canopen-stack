@@ -1,14 +1,16 @@
-name: Create Website
+name: Update Website
 
 on:
   push:
-    # any push with creation of a version tag is creating a new version
-    # of the website.
-    tags:
+    # any push without setting a version tag will update the website
+    # when a file within the website directory is updated:
+    tags-ignore:
       - 'v*'
     branches:
       - master
       - main
+    paths:
+      - 'website/**'
 
 env:
   REQUIREMENTS: website/requirements.txt
@@ -23,9 +25,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Extract Version Tag
+      - name: 'Get Previous tag'
         id: version
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/v}
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          fallback: 1.0.0 # Optional fallback tag to use when no tag can be found
+
+      - name: Extract Version Tag
+        id: extract
+        run: echo ::set-output name=version::${GITHUB_REF#refs/*/v}
 
       - name: Setup Python
         uses: actions/setup-python@v2
@@ -51,7 +59,7 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install -r ./${REQUIREMENTS}
 
-      - name: Build Website
+      - name: Update Website
         run: |
           mike deploy --config-file ./${MKDOCS} --push --update-aliases ${{ steps.version.outputs.tag }} latest
           mike set-default --config-file ./${MKDOCS} --push latest

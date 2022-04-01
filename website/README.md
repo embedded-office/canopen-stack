@@ -45,4 +45,4 @@ $ mike delete --config-file ./website/mkdocs.yml [version-or-alias]
 
 ### Automatic deployment
 
-The GitHub Action `website.yml` is defined to deploy (or overwrite) a website version. This action is triggered when a new version tag is created (naming pattern `v*.*.*`) or a file is changed within the directory `/website/...`.
+The GitHub Action `website.yml` is defined to deploy (or overwrite) a website version. This action is triggered when a new version tag is created (naming pattern `v*.*.*`). A website update is triggered, when a file is changed within the directory `/website/...`.
