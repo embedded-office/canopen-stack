@@ -6,6 +6,8 @@ on:
   push:
     tags:
       - 'v*'
+    paths:
+      - 'website/**'
 
 env:
   REQUIREMENTS: website/requirements.txt
