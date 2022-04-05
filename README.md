@@ -33,9 +33,10 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 - Emergency producer which supports:
   - Manufacturer specific extensions
   - Unlimited error history
-- SYNC producer
-- Heartbeat producer
 - Unlimited Emergency consumers
+- SYNC producer
+- Unlimited number of SYNC consumers
+- Heartbeat producer
 - Unlimited number of Heartbeat consumers
 - Network Management consumer
 
@@ -112,7 +113,7 @@ The CANopen node is configured with global data structures:
 The CANopen dictionary is an array of object entries, which we can allocate statically:
 
 ```c
-const CO_OBJ MyDir[MY_DIR_LEN] = {
+const CO_OBJ MyDict[MY_DICT_LEN] = {
     /* setup application specific dictionary, example entry: */
     { CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)(0u) },
     /* : */
@@ -144,8 +145,8 @@ void foo(void)
 
     spec.NodeId   = 1u;
     spec.Baudrate = 250000u;
-    spec.Dir      = &MyDir;
-    spec.DirLen   = MY_DIR_LEN;
+    spec.Dict     = &MyDict;
+    spec.DictLen  = MY_DICT_LEN;
     spec.EmcyCode = &MyEmcyTbl;
     spec.TmrMem   = &MyTmrMem[0];
     spec.TmrNum   = 16u;
