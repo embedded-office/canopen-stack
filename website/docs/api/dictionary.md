@@ -96,6 +96,10 @@ if (obj == 0) {
 
     When using a static object dictionary, you can store and reuse the pointer to the identified object entry with the [Object Entry][1] access functions. The pointer to the object entry will NOT change during runtime in a static object dictionary.
 
+!!! warning "Important"
+
+    The CANopen Stack relies on a binary search algorithm to ensure that object dictionary entries are found quickly. Because of this, you must keep the index / subindex of all entries in the object dictionary sorted in ascending order.
+
 #### CODictRdBuffer()
 
 The object entry is addressed with the given key and the bytes will be read from the dictionary and copied to the given destination buffer with the given length.
