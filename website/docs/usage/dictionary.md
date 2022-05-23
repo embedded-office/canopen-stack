@@ -17,7 +17,13 @@ const CO_OBJ DemoObjDir[] = {
 };
 ```
 
-*Note: The object dictionary can manage different object entry types with different properties. This information is encoded within the object entry and is described in detail in the configuration section.*
+!!! warning "Important"
+
+    The CANopen Stack relies on a binary search algorithm to ensure that object dictionary entries are found quickly. Because of this, you must keep the index / subindex of all entries in the object dictionary sorted in ascending order.
+
+!!! note
+
+    The object dictionary can manage different object entry types with different properties. This information is encoded within the object entry and is described in detail in the configuration section.
 
 The update of the provided basic and system object types within the object dictionary is managed by the CANopen stack. The application may read or write these objects at any time. Use the service function groups CODir…() and COObj…() for accessing the object dictionary.
 
@@ -234,8 +240,7 @@ sequenceDiagram
 
 
 **Implementation Note:**
-*The parameter `len` in the functions `DemoRead()` and `DemoWrite()` is the length of the data, given via the
-pointer `buf`. If you want to use the width of the object entry, you can use the following snippet:*
+*The parameter `len` in the functions `DemoRead()` and `DemoWrite()` is the length of the data, given via the pointer `buf`. If you want to use the width of the object entry, you can use the following snippet:*
 
 ```c
 CO_ERR DemoRead(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len)
