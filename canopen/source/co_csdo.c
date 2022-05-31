@@ -88,6 +88,7 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
     csdo->Tfer.Size  = size;
     csdo->Tfer.Tmt   = timeout;
     csdo->Tfer.Call  = callback;
+    csdo->Tfer.Buf_Idx = 0;
 
     /* Transmit transfer initiation directly */
     CO_SET_ID  (&frm, csdo->TxId       );
@@ -159,6 +160,7 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
     csdo->Tfer.Size  = size;
     csdo->Tfer.Tmt   = timeout;
     csdo->Tfer.Call  = callback;
+    csdo->Tfer.Buf_Idx = 0;
 
     cmd = ((0x23) | ((4 - size) << 2));
     CO_SET_BYTE(&frm, cmd, 0);
@@ -233,9 +235,10 @@ void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
 
     csdonum->Tfer.Tmt  = 0;
     csdonum->Tfer.Call = 0;
+    csdonum->Tfer.Buf_Idx = 0;
 
     if (csdonum->Tfer.Tmr >= 0) {
-        tid = COTmrDelete(&node->Tmr, csdonum->Tfer.Tmr);
+        tid = COTmrDelete(&(node->Tmr), csdonum->Tfer.Tmr);
         if (tid < 0) {
             node->Error = CO_ERR_TMR_DELETE;
             return;
@@ -339,10 +342,51 @@ CO_ERR COCSdoResponse(CO_CSDO *csdo) {
         }
     }
 
-    /*
-     * Only expedited transfers are supported right now
-     */
-    if (cmd == 0x60) {
+    if (csdo->Tfer.Type == CO_CSDO_TRANSFER_UPLOAD_SEGMENT)
+    {
+        if (cmd == 0x41)
+        {
+            COCSdoInitUploadSegmented(csdo);
+        }
+        else if ((cmd & 0xE0 ) == 0x00)
+        {
+            COCSdoUploadSegmented(csdo);
+        }
+        else
+        {
+            COCSdoAbort(csdo, CO_SDO_ERR_MEM);
+
+            COCSdoTransferFinalize(csdo);
+        }
+    }
+    else if (csdo->Tfer.Type == CO_CSDO_TRANSFER_DOWNLOAD_SEGMENT)
+    {
+        if (cmd == 0x60)
+        {
+            COCSdoInitDownloadSegmented(csdo);
+        }
+        else if (((cmd & 0xE0) ==  0x20) )
+        {
+            if (csdo->Tfer.Size > csdo->Tfer.Buf_Idx)
+            {
+                COCSdoDownloadSegmented(csdo);
+            }
+            else
+            {
+                /* wait last response */
+                COCSdoFinishDownloadSegmented(csdo);
+            }
+        }
+        else
+        {
+            COCSdoAbort(csdo, CO_SDO_ERR_MEM);
+
+            COCSdoTransferFinalize(csdo);
+        }
+    }
+
+    /* Only expedited transfers are supported right now */
+    else if (cmd == 0x60) {
         result = COCSdoDownloadExpedited(csdo);
         return (result);
     }
@@ -352,6 +396,7 @@ CO_ERR COCSdoResponse(CO_CSDO *csdo) {
     } else {
         COCSdoAbort(csdo, CO_SDO_ERR_PARA_INCOMP);
     }
+    
     return (result);
 }
 
@@ -450,11 +495,392 @@ void COCSdoTransferFinalize(CO_CSDO *csdo) {
         csdo->Tfer.Tmt   = 0;
         csdo->Tfer.Call  = 0;
         csdo->Tfer.Tmr   = -1;
+        csdo->Tfer.Buf_Idx = 0;
+        csdo->Tfer.TBit = 0;
 
         /* Release SDO client for next request */
         csdo->Frm   = 0;
         csdo->State = CO_CSDO_STATE_IDLE;
     }
+}
+
+CO_ERR COCSdoInitUploadSegmented(CO_CSDO *csdo)
+{
+    CO_ERR result = CO_ERR_SDO_SILENT;
+    uint32_t obj_size;
+    uint32_t ticks;
+    uint16_t Idx;
+    uint8_t Sub;
+    CO_IF_FRM frm;
+    
+
+    obj_size = CO_GET_LONG(csdo->Frm, 4);
+    Idx = CO_GET_WORD(csdo->Frm, 1);
+    Sub = CO_GET_BYTE(csdo->Frm, 3);
+
+    /* verify size,Idx, Sub */
+    if ((obj_size == csdo->Tfer.Size) &&
+        (Idx == csdo->Tfer.Idx) &&
+        (Sub == csdo->Tfer.Sub))
+    {
+        result = CO_ERR_NONE;
+
+        /* setup CAN request */
+        CO_SET_ID  (&frm, csdo->TxId       );
+        CO_SET_DLC (&frm, 8                );
+        CO_SET_BYTE(&frm, 0x60         , 0);
+        CO_SET_WORD(&frm, 0, 1);
+        CO_SET_BYTE(&frm, 0, 3);
+        CO_SET_LONG(&frm, 0, 4);
+
+        csdo->Tfer.TBit = 0;
+
+        /* refresh timer */
+        COTmrDelete(&(csdo->Node->Tmr), csdo->Tfer.Tmr);
+        ticks = COTmrGetTicks(&(csdo->Node->Tmr), csdo->Tfer.Tmt, CO_TMR_UNIT_1MS);
+        csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
+
+        (void)COIfCanSend(&csdo->Node->If, &frm);
+    }
+    else
+    {
+        COCSdoAbort(csdo, CO_SDO_ERR_MEM);
+        COCSdoTransferFinalize(csdo);
+    }
+
+    return result;
+}
+
+CO_ERR COCSdoUploadSegmented(CO_CSDO *csdo)
+{
+    CO_ERR result = CO_ERR_SDO_SILENT;
+    uint32_t ticks;
+    uint8_t cmd, n;
+    CO_IF_FRM frm;
+    
+    cmd = CO_GET_BYTE(csdo->Frm, 0);
+    
+    if (((cmd >> 4) & 0x01) == csdo->Tfer.TBit)
+    {
+        
+
+        for (n = 1; (n < 8) && (csdo->Tfer.Buf_Idx < csdo->Tfer.Size); n++)
+        {
+            csdo->Tfer.Buf[csdo->Tfer.Buf_Idx] = CO_GET_BYTE(csdo->Frm, n);
+            csdo->Tfer.Buf_Idx++;
+        }
+
+        if ((cmd & 0x01) == 0x00)
+        {
+            csdo->Tfer.TBit ^= 0x01;
+
+            CO_SET_ID  (&frm, csdo->TxId       );
+            CO_SET_DLC (&frm, 8                );
+
+            if (csdo->Tfer.TBit == 0x01)
+            {
+                CO_SET_BYTE(&frm, 0x70          , 0);
+            }
+            else
+            {
+                CO_SET_BYTE(&frm, 0x60          , 0);
+            }
+            
+            CO_SET_WORD(&frm, 0,		  1);
+            CO_SET_BYTE(&frm, 0, 		  3);
+            CO_SET_LONG(&frm, 0,          4);
+
+            /* refresh timer */
+            COTmrDelete(&(csdo->Node->Tmr), csdo->Tfer.Tmr);
+            ticks = COTmrGetTicks(&(csdo->Node->Tmr), csdo->Tfer.Tmt, CO_TMR_UNIT_1MS);
+            csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
+
+            (void)COIfCanSend(&csdo->Node->If, &frm);
+        }
+        else
+        {
+            COCSdoTransferFinalize(csdo);
+        }
+
+    }
+    else
+    {
+        COCSdoAbort(csdo, CO_SDO_ERR_MEM);
+
+        COCSdoTransferFinalize(csdo);
+    }
+
+    return result;
+}
+
+CO_ERR COCSdoRequestSegmentUpload(CO_CSDO *csdo,
+                                uint32_t key,
+                                uint8_t *buf,
+                                uint32_t size,
+                                CO_CSDO_CALLBACK_T callback,
+                                uint32_t timeout){
+    CO_IF_FRM frm;
+    uint32_t ticks;
+    
+     if ((csdo == 0) || (callback == 0) ||
+        (buf  == 0) || (size     == 0)) {
+        /*
+         * Invalid argument
+         *
+         * TODO: Maybe we can tolerate NULL callback,
+         * but i do not see any reason why request
+         * without callback should be triggered.
+         */
+        return CO_ERR_BAD_ARG;
+    }
+    if (csdo->State == CO_CSDO_STATE_INVALID) {
+        /* Requested SDO client is disabled */
+        return CO_ERR_SDO_OFF;
+    }
+    if (csdo->State == CO_CSDO_STATE_BUSY) {
+        /* Requested SDO client is busy */
+        return CO_ERR_SDO_BUSY;
+    }
+
+    /*
+     * Set client as busy to prevent its usage
+     * until requested transfer is complete
+     */
+    csdo->State = CO_CSDO_STATE_BUSY;
+
+     /* Update transfer info */
+    csdo->Tfer.Type  = CO_CSDO_TRANSFER_UPLOAD_SEGMENT;
+    csdo->Tfer.Abort = 0;
+    csdo->Tfer.Idx   = CO_GET_IDX(key);
+    csdo->Tfer.Sub   = CO_GET_SUB(key);
+    csdo->Tfer.Buf   = buf;
+    csdo->Tfer.Size  = size;
+    csdo->Tfer.Tmt   = timeout;
+    csdo->Tfer.Call  = callback;
+    csdo->Tfer.Buf_Idx = 0;
+
+    /* Transmit transfer initiation directly */
+    CO_SET_ID  (&frm, csdo->TxId       );
+    CO_SET_DLC (&frm, 8                );
+    CO_SET_BYTE(&frm, 0x40          , 0);
+    CO_SET_WORD(&frm, csdo->Tfer.Idx, 1);
+    CO_SET_BYTE(&frm, csdo->Tfer.Sub, 3);
+    CO_SET_LONG(&frm, 0,              4);
+
+    ticks = COTmrGetTicks(&(csdo->Node->Tmr), timeout, CO_TMR_UNIT_1MS);
+    csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
+
+    (void)COIfCanSend(&csdo->Node->If, &frm);
+
+    return CO_ERR_NONE;
+
+}
+
+
+
+CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo)
+{
+    CO_ERR result = CO_ERR_SDO_SILENT;
+    uint32_t ticks;
+    uint16_t Idx;
+    uint8_t Sub;
+    uint8_t n, width;
+    uint8_t c_bit = 0;
+    uint8_t cmd;
+    CO_IF_FRM frm;
+
+    Idx = CO_GET_WORD(csdo->Frm, 1);
+    Sub = CO_GET_BYTE(csdo->Frm, 3);
+
+    if (Idx == csdo->Tfer.Idx &&
+        Sub == csdo->Tfer.Sub)
+    {
+        CO_SET_ID  (&frm, csdo->TxId       );
+        CO_SET_DLC (&frm, 8                );
+
+        /* clean frm data */
+        CO_SET_LONG(&frm, 0, 0);
+        CO_SET_LONG(&frm, 0, 4);
+
+        width = csdo->Tfer.Size - csdo->Tfer.Buf_Idx;
+
+        if (width > 7)
+        {
+            width = 7;
+        }
+        else
+        {
+            c_bit = 1;
+        }
+        
+        for (n = 1; n <= width; n++)
+        {
+            CO_SET_BYTE(&frm, csdo->Tfer.Buf[csdo->Tfer.Buf_Idx], n);
+            csdo->Tfer.Buf_Idx++;
+        }
+
+        cmd = (uint8_t)(csdo->Tfer.TBit << 4) |
+              (uint8_t)(((7 - width) << 1)) | 
+              (uint8_t)(c_bit);
+
+        CO_SET_BYTE(&frm, cmd, 0);
+
+         
+        csdo->Tfer.TBit = 0;
+
+        /* refresh timer */
+        COTmrDelete(&(csdo->Node->Tmr), csdo->Tfer.Tmr);
+        ticks = COTmrGetTicks(&(csdo->Node->Tmr), csdo->Tfer.Tmt, CO_TMR_UNIT_1MS);
+        csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
+
+        (void)COIfCanSend(&csdo->Node->If, &frm);
+
+    }
+    else
+    {
+        COCSdoAbort(csdo, CO_SDO_ERR_MEM);
+        COCSdoTransferFinalize(csdo);
+    }
+
+    return result;
+}
+
+CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo)
+{
+    CO_ERR result = CO_ERR_SDO_SILENT;
+    uint32_t ticks;
+    uint8_t cmd;
+    uint8_t n, width;
+    uint8_t c_bit = 0;
+    CO_IF_FRM frm;
+
+    cmd = CO_GET_BYTE(csdo->Frm, 0);
+
+    if (((cmd >> 4) & 0x01) == csdo->Tfer.TBit)
+    {
+        csdo->Tfer.TBit ^= 0x01;
+
+        CO_SET_ID  (&frm, csdo->TxId       );
+        CO_SET_DLC (&frm, 8                );
+
+         /* clean frm data */
+        CO_SET_LONG(&frm, 0, 0);
+        CO_SET_LONG(&frm, 0, 4);
+
+        width = csdo->Tfer.Size - csdo->Tfer.Buf_Idx;
+
+        if (width > 7)
+        {
+            width = 7;
+        }
+        else
+        {
+            c_bit = 1;
+        }
+        
+        for (n = 1; n <= width; n++)
+        {
+            CO_SET_BYTE(&frm, csdo->Tfer.Buf[csdo->Tfer.Buf_Idx], n);
+            csdo->Tfer.Buf_Idx++;
+        }
+
+        cmd = (uint8_t)(csdo->Tfer.TBit << 4) |
+              (uint8_t)(((7 - width) << 1)) | 
+              (uint8_t)(c_bit);
+
+        CO_SET_BYTE(&frm, cmd, 0);
+
+         /* refresh timer */
+        COTmrDelete(&(csdo->Node->Tmr), csdo->Tfer.Tmr);
+        ticks = COTmrGetTicks(&(csdo->Node->Tmr), csdo->Tfer.Tmt, CO_TMR_UNIT_1MS);
+        csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
+
+        (void)COIfCanSend(&csdo->Node->If, &frm);
+    }
+    else
+    {
+        COCSdoAbort(csdo, CO_SDO_ERR_MEM);
+
+        COCSdoTransferFinalize(csdo);
+    }
+
+    return result;
+}
+
+CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo)
+{
+    /*
+     * No need for further processing,
+     * release finished transfer.
+     */
+    COCSdoTransferFinalize(csdo);
+    return CO_ERR_SDO_SILENT;
+}
+
+CO_ERR COCSdoRequestSegmentDownload(CO_CSDO *csdo,
+                                uint32_t key,
+                                uint8_t *buf,
+                                uint32_t size,
+                                CO_CSDO_CALLBACK_T callback,
+                                uint32_t timeout)
+{
+    CO_IF_FRM frm;
+    uint8_t cmd;
+    uint8_t n;
+    uint32_t ticks;
+
+    if ((csdo == 0) || (buf      == 0) ||
+        (size == 0) || (callback == 0)) {
+        /*
+        * Invalid argument
+        *
+        * TODO: Maybe we can tolerate NULL callback,
+        * but i do not see any reason why request
+        * without callback should be triggered.
+        */
+        return CO_ERR_BAD_ARG;
+    }
+    if (csdo->State == CO_CSDO_STATE_INVALID) {
+        /* Requested SDO client is disabled */
+        return CO_ERR_SDO_OFF;
+    }
+    if (csdo->State == CO_CSDO_STATE_BUSY) {
+        /* Requested SDO client is busy */
+        return CO_ERR_SDO_BUSY;
+    }
+
+    /*
+    * Set client as busy to prevent its usage
+    * until requested transfer is complete
+    */
+    csdo->State = CO_CSDO_STATE_BUSY;
+    /* Update transfer info */
+    csdo->Tfer.Type  = CO_CSDO_TRANSFER_DOWNLOAD_SEGMENT;
+    csdo->Tfer.Abort = 0;
+    csdo->Tfer.Idx   = CO_GET_IDX(key);
+    csdo->Tfer.Sub   = CO_GET_SUB(key);
+    csdo->Tfer.Buf   = buf;
+    csdo->Tfer.Size  = size;
+    csdo->Tfer.Tmt   = timeout;
+    csdo->Tfer.Call  = callback;
+    csdo->Tfer.Buf_Idx = 0;
+
+    cmd = 0x21;
+    CO_SET_BYTE(&frm, cmd, 0);
+
+    /* Transmit transfer initiation directly */
+    CO_SET_ID  (&frm, csdo->TxId       );
+    CO_SET_DLC (&frm, 8                );
+    CO_SET_WORD(&frm, csdo->Tfer.Idx, 1);
+    CO_SET_BYTE(&frm, csdo->Tfer.Sub, 3);
+    CO_SET_LONG(&frm, size, 4);
+
+    ticks = COTmrGetTicks(&(csdo->Node->Tmr), timeout, CO_TMR_UNIT_1MS);
+    csdo->Tfer.Tmr = COTmrCreate(&(csdo->Node->Tmr), ticks, 0, &COCSdoTimeout, csdo);
+
+    (void)COIfCanSend(&csdo->Node->If, &frm);
+
+    return CO_ERR_NONE;
 }
 
 #endif
