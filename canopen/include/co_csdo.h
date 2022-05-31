@@ -57,6 +57,8 @@ typedef enum {
     CO_CSDO_TRANSFER_NONE     = 0,   /*!< No transfer is currently ongoing   */
     CO_CSDO_TRANSFER_UPLOAD   = 1,   /*!< SDO upload is being executed       */
     CO_CSDO_TRANSFER_DOWNLOAD = 2,   /*!< SDO download is being executed     */
+    CO_CSDO_TRANSFER_UPLOAD_SEGMENT = 3,  /*!< SDO segment upload is being executed     */
+    CO_CSDO_TRANSFER_DOWNLOAD_SEGMENT = 4, /*!< SDO segment download is being executed     */
 
 } CO_CSDO_TRANSFER_TYPE;
 
@@ -84,6 +86,21 @@ typedef void (*CO_CSDO_CALLBACK_T)(struct CO_CSDO_T *csdo,
                                    uint8_t           sub,
                                    uint32_t          code);
 
+
+/*! \brief SDO SEGMENTED TRANSFER
+*
+*    This structure holds the data, which are needed for the segmented
+*    SDO transfer.
+*/
+typedef struct CO_CSDO_SEG_T {
+    uint32_t  Size;              /*!< Size of object entry                 */
+    uint32_t  Num;               /*!< Number of transfered bytes            */
+    uint8_t   TBit;              /*!< Segment toggle bit                    */
+
+} CO_CSDO_SEG;
+
+
+
 /*! \brief SDO CLIENT TRANSFER
  *
  *   This structure contains information required for handling ongoing SDO
@@ -101,7 +118,8 @@ typedef struct CO_CSDO_TRANSFER_T {
     uint32_t               Size;        /*!< Transfered data size            */
     int16_t                Tmr;         /*!< Identifier of timeout timer     */
     CO_CSDO_CALLBACK_T     Call;        /*!< Notification callback           */
-
+    uint32_t               Buf_Idx;     /*!< Buffer Index                    */
+    uint8_t                TBit;        /*!< Segment toggle bit              */
 } CO_CSDO_TRANSFER;
 
 /*! \brief SDO CLIENT
@@ -117,7 +135,6 @@ typedef struct CO_CSDO_T {
     uint8_t           NodeId;           /*!< Node-Id of addressed SDO server */
     CO_CSDO_STATE     State;            /*!< Current CSDO state              */
     CO_CSDO_TRANSFER  Tfer;             /*!< Current CSDO transfer info      */
-
 } CO_CSDO;
 
 /******************************************************************************
@@ -355,6 +372,183 @@ void COCSdoAbort(CO_CSDO *csdo, uint32_t err);
 *    Pointer to SDO client object
 */
 void COCSdoTransferFinalize(CO_CSDO *csdo);
+
+/*! \brief  INIT CSDO SEGMENTED UPLOAD
+*
+*    This function generates the request for 'First Upload SDO Segment Protocol'.
+*
+*    Entry condition for this function is the SDO response command byte
+*    with the following condition:
+* \code
+*    +---+---+---+---+---+---+---+---+
+*    |     2     | 0 |   0   | 0 | 1 |
+*    +---+---+---+---+---+---+---+---+
+*      7   6   5   4   3   2   1   0
+*
+*    => condition := "command must be 0x41"*
+* \endcode
+*
+* \param csdo
+*    Pointer to SDO client object
+*
+* \param width
+*    Object size in byte
+*
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on CSDO abort
+*/
+CO_ERR COCSdoInitUploadSegmented(CO_CSDO *csdo);
+
+/*! \brief  SEGMENTED UPLOAD
+*
+*    This function generates the request for 'Upload SDO Segment Protocol'.
+*
+*    Entry condition for this function is the SDO response command byte
+*    with the following condition:
+* \code
+*    +---+---+---+---+---+---+---+---+
+*    |     0     | t |     n     | c |
+*    +---+---+---+---+---+---+---+---+
+*      7   6   5   4   3   2   1   0
+*
+*    => condition = "command & 0xE0 must be 0x00"
+* \endcode
+*
+* \param csdo
+*    Pointer to SDO client object
+*
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on CSDO abort
+*/
+CO_ERR COCSdoUploadSegmented(CO_CSDO *csdo);
+
+/*! \brief 
+ *
+ *   This function initiates SDO segmented upload sequence. User should provide its
+ *   own notification callback which is executed upon transfer completion.
+ *
+ * \param csdo
+ *   Reference to SDO client
+ *
+ * \param key
+ *    object entry key; should be generated with the macro CO_DEV()
+ *
+ * \param buf
+ *   Reference to buffer to be uploaded from server
+ *
+ * \param size
+ *   Size of uploaded buffer
+ *
+ * \param callback
+ *   Notification callback on tranfer end (complete or abort)
+ *
+ * \param
+ *   SDO server response timeout in milliseconds
+ *
+ * \retval  ==CO_ERR_NONE   transfer initiated successfuly
+ * \retval  !=CO_ERR_NONE   SDO client is busy or invalid
+ *
+ */
+CO_ERR COCSdoRequestSegmentUpload(CO_CSDO *csdo,
+                                uint32_t key,
+                                uint8_t *buf,
+                                uint32_t size,
+                                CO_CSDO_CALLBACK_T callback,
+                                uint32_t timeout);
+
+/*! \brief  INIT CSDO SEGMENTED DOWNLOAD
+*
+*    This function generates the request for 'First Download SDO Segment
+*    Protocol'.
+*
+*    Entry condition for this function is the SDO response command byte
+*    with the following condition:
+* \code
+*    +---+---+---+---+---+---+---+---+
+*    |     3     | 0   0   0   0   0 |
+*    +---+---+---+---+---+---+---+---+
+*      7   6   5   4   3   2   1   0
+*
+*    => condition = "command must be 0x60"
+* \endcode
+*
+* \param csdo
+*    Pointer to SDO client object
+*
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on CSDO abort
+*/
+CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo);
+
+/*! \brief  SEGMENTED DOWNLOAD
+*
+*    This function generates the request for 'Download SDO Segment
+*    Protocol'.
+*
+*    Entry condition for this function is the SDO request command byte
+*    with the following condition:
+* \code
+*    +---+---+---+---+---+---+---+---+
+*    |     0     | t |     n     | c |
+*    +---+---+---+---+---+---+---+---+
+*      7   6   5   4   3   2   1   0
+*
+*    => condition = "command & 0xE0 must be 0x00"
+* \endcode
+*
+* \param csdo
+*    Pointer to SDO client object
+*
+* \retval  ==CO_ERR_NONE    on success
+* \retval  !=CO_ERR_NONE    on CSDO abort
+*/
+CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo);
+
+/*! \brief
+ *
+ *   This function finish SDO segmented download sequence.
+ *  
+ * \param csdo
+ *   Reference to SDO client
+ *
+ */
+CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo);
+
+/*! \brief
+ *
+ *   This function initiates SDO segmented download sequence. User should provide its
+ *   own notification callback which is executed upon transfer completion.
+ *
+ * \param csdo
+ *   Reference to SDO client
+ *
+ * \param key
+ *    object entry key; should be generated with the macro CO_DEV()
+ *
+ * \param buf
+ *   Reference to data to be downloaded to server
+ *
+ * \param size
+ *   Size of downloaded data
+ *
+ * \param callback
+ *   Notification callback on tranfer end (complete or abort)
+ *
+ * \param timeout
+ *   SDO server response timeout in milliseconds
+ *
+ * \retval  ==CO_ERR_NONE   transfer initiated successfuly
+ * \retval  !=CO_ERR_NONE   SDO client is busy or invalid
+ *
+ */
+CO_ERR COCSdoRequestSegmentDownload(CO_CSDO *csdo,
+                                uint32_t key,
+                                uint8_t *buf,
+                                uint32_t size,
+                                CO_CSDO_CALLBACK_T callback,
+                                uint32_t timeout);
+
+
 
 #if defined __cplusplus
 }
