@@ -59,8 +59,10 @@ target_sources(CanopenTest
     tests/pdo_dyn.c
     tests/pdo_rx.c
     tests/pdo_tx.c
-    tests/sdoc_exp_up.c
     tests/sdoc_exp_down.c
+    tests/sdoc_exp_up.c
+    tests/sdoc_seg_down.c
+    tests/sdoc_seg_up.c
     tests/sdos_blk_down.c
     tests/sdos_blk_up.c
     tests/sdos_exp_down.c

@@ -95,6 +95,8 @@ typedef enum DEF_SYNC_SUITES_E {                      /*---- SYNC Communication 
 typedef enum DEF_CSDO_SUITES_E {                      /*---- SDO Client Test Suites --------------*/
     DEF_S_CSDO_EXP_UP,                                /*!< Suite: SDO Upload Expedited            */
     DEF_S_CSDO_EXP_DOWN,                              /*!< Suite: SDO Download Expedited          */
+    DEF_S_CSDO_SEG_UP,                                /*!< Suite: SDO Upload Segmented            */
+    DEF_S_CSDO_SEG_DOWN,                              /*!< Suite: SDO Download Segmented          */
 
     DEF_S_CSDO_NUM                                    /*!< Number of Suites in Group              */
 } DEF_CSDO_SUITES;
@@ -132,5 +134,7 @@ typedef enum DEF_CSDO_SUITES_E {                      /*---- SDO Client Test Sui
 
 #define SUITE_CSDO_EXP_UP()   TS_DEF_SUITE(DEF_G_CSDO, DEF_S_CSDO_EXP_UP)    /*!< \addtogroup csdo_exp_up    SDO Client Expedited Upload Test   */
 #define SUITE_CSDO_EXP_DOWN() TS_DEF_SUITE(DEF_G_CSDO, DEF_S_CSDO_EXP_DOWN)  /*!< \addtogroup csdo_exp_down  SDO Client Expedited Download Test */
+#define SUITE_CSDO_SEG_UP()   TS_DEF_SUITE(DEF_G_CSDO, DEF_S_CSDO_SEG_UP)    /*!< \addtogroup csdo_seg_down  SDO Client Segmented Upload Test   */
+#define SUITE_CSDO_SEG_DOWN() TS_DEF_SUITE(DEF_G_CSDO, DEF_S_CSDO_SEG_DOWN)  /*!< \addtogroup csdo_seg_down  SDO Client Segmented Download Test */
 
 #endif /* DEF_SUITE_H_ */
