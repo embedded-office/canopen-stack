@@ -55,7 +55,7 @@ Some small local functions will help us to get the following implementations of 
 The service `ObjSet()` allows us to set the values of a single object entry to the given values.
 
 ```c
-static void ObjSet(CO_OBJ *obj, uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data)
+static void ObjSet(CO_OBJ *obj, uint32_t key, const CO_OBJ_TYPE *type, CO_DATA data)
 {
   obj->Key  = key;
   obj->Type = type;
@@ -147,7 +147,7 @@ The function for adding a new object entry needs three arguments besides the obj
 - The last argument `data` holds the data of this object entry. The interpretation of this data depends on the flags in the argument `key`. We have a look at this relationship later in the examples.
 
 ```c
-void ODAddUpdate(OD_DYN *self, uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data)
+void ODAddUpdate(OD_DYN *self, uint32_t key, const CO_OBJ_TYPE *type, CO_DATA data)
 {
   CO_OBJ  temp;
   CO_OBJ *od;

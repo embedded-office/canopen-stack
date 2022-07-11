@@ -28,7 +28,7 @@
 #define OD_SET(obj,key,type,data)   do {     \
         (obj)->Key  = (uint32_t)(key);       \
         (obj)->Type = (CO_OBJ_TYPE *)(type); \
-        (obj)->Data = (uintptr_t)(data);     \
+        (obj)->Data = (CO_DATA)(data);       \
     } while (0)
 
 /* copy content of source object (src) into the destination object (dst) */
@@ -86,7 +86,7 @@ void ODInit(OD_DYN *self, CO_OBJ *root, uint32_t len)
 *          is found in the list, we modify the content of this entry.
 */
 /*---------------------------------------------------------------------------*/
-void ODAdd(OD_DYN *self, uint32_t key, CO_OBJ_TYPE *type, uintptr_t data)
+void ODAdd(OD_DYN *self, uint32_t key, CO_OBJ_TYPE *type, CO_DATA data)
 {
     CO_OBJ  temp;
     CO_OBJ *od;

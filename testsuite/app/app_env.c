@@ -224,7 +224,7 @@ void TS_CreateNodeAutoStart(CO_NODE *node)
 *          which is referenced in the specification, too.
 */
 /*---------------------------------------------------------------------------*/
-void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data)
+void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, CO_DATA data)
 {
     ODAdd(&TS_ODDyn, key, (CO_OBJ_TYPE *)type, data);
 }
