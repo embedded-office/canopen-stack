@@ -84,7 +84,7 @@ if (csdo == 0) {
 
 #### COCSdoRequestDownload()
 
-The function starts an SDO download transfer in the calling node to write data to the configured SDO server node-id.
+The function starts an SDO download transfer in the calling node to write data to the configured SDO server node-id. When the size of data transfer is lower or equal 4 an expedited transfer is used, otherwise a segmented transfer is initiated.
 
 **Prototype**
 
@@ -161,7 +161,7 @@ void foo()
 
 #### COCSdoRequestUpload()
 
-The function starts an SDO upload transfer in the calling node to read data from the configured SDO server node-id.
+The function starts an SDO upload transfer in the calling node to read data from the configured SDO server node-id. When the size of data transfer is lower or equal 4 an expedited transfer is used, otherwise a segmented transfer is initiated.
 
 **Prototype**
 

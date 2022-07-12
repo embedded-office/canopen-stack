@@ -22,6 +22,7 @@ The source code is compliant to the C99 standard and you must cross-compile the 
   - Block transfers
 - Unlimited number of SDO clients which supports:
   - Expedited transfers
+  - Segmented transfers
 - Unlimited number of TPDO and RPDOs which supports:
   - Synchronized operation
   - Asynchronous operation

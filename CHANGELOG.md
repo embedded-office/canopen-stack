@@ -5,15 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and starting with version 4.1.0 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [4.3.0] - (unreleased)
 
 ### Added
 
 - Add a note in documentation to usage and api about the need of sorted object dictionary
+- Add support for SDO client segmented transfers [@tonbo777](https://github.com/tonbo777)
+
+### Changed
+
+- Adjust SDO client API documentation to reflect conditions for expedited and segmented transfers
 
 ### Fixed
 
 - Avoid variable declaration if SDO client is disabled [@jernejsk](https://github.com/jernejsk)
+- Allow direct data in object dictionaries running on 16bit microcontrollers
+
+> **Note**: The datatype in the object dictionary was `uintptr_t` in previous versions. For 16bit microcontrollers `uintptr_t` may contain only 24bit instead of the required 32bits for direct data storage. For this reason, in version 4.3.0 and later the object dictionary should use `CO_DATA` as data type.
 
 ## [4.2.0] - 2022-04-01
 
