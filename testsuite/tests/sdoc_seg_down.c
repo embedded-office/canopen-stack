@@ -38,70 +38,6 @@ static TS_CALLBACK CSdoSegDownCb;
 
 /*---------------------------------------------------------------------------*/
 /*!
-* \brief    Use SDO client to write a basic data type to SDO server
-*
-*           The SDO client #0 is used on testing node with Node-Id 1 to send
-*           a byte to the SDO server #0 on device with Node-Id 5.
-*/
-/*---------------------------------------------------------------------------*/
-TS_DEF_MAIN(TS_CSdoWr_SegBasic)
-{
-    CO_IF_FRM frm;
-    CO_NODE   node;
-    CO_CSDO  *csdo;
-    uint8_t   serverId = 5;
-    uint32_t  idx = 0x2000;
-    uint8_t   sub = 0x01;
-    uint32_t  timeout = 1000;
-    uint8_t   val = 0x33;
-    CO_ERR    err;
-
-    /* -- PREPARATION -- */
-    TS_CreateMandatoryDir();
-    TS_CreateCSdoCom(0, &serverId);
-    TS_CreateNode(&node, 0);
-    csdo = COCSdoFind(&node, 0);
-
-    /* -- TEST -- */
-    err = COCSdoRequestSegmentDownload(csdo,
-                                       CO_DEV(idx, sub),
-                                       &val, sizeof(val),
-                                       TS_AppCSdoCallback,
-                                       timeout);
-    TS_ASSERT(err == CO_ERR_NONE);
-
-    /* -- CHECK SDO INIT REQUEST -- */
-    CHK_CAN  (&frm);
-    CHK_SDO5 (frm, 0x21);
-    CHK_MLTPX(frm, idx, sub);
-    CHK_DATA (frm, sizeof(val));
-
-    /* -- SERVER INIT RESPONSE: OK -- */
-    TS_SDO5_SEND (0x60, idx, sub, 0x00000000);
-
-    /* -- CHECK SDO DOWNLOAD REQUEST -- */
-    CHK_CAN  (&frm);
-    CHK_SDO5 (frm, 0x0D);
-    CHK_BYTE (frm, 1, 0x33);
-    CHK_BYTE (frm, 2, 0);
-    CHK_BYTE (frm, 3, 0);
-    CHK_BYTE (frm, 4, 0);
-    CHK_BYTE (frm, 5, 0);
-    CHK_BYTE (frm, 6, 0);
-    CHK_BYTE (frm, 7, 0);
-
-    /* -- SERVER DOWNLOAD RESPONSE: OK -- */
-    TS_SEG5_SEND (0x20, 0x00000000, 0x000000);
-
-    /* -- CHECK TRANSFER FINISHED -- */
-    CHK_CB_CSDO_FINISHED(&CSdoSegDownCb, 1);
-    CHK_CB_CSDO_CODE(&CSdoSegDownCb, 0);
-
-    CHK_NO_ERR(&node);
-}
-
-/*---------------------------------------------------------------------------*/
-/*!
 * \brief    Use SDO client to write a 16 byte domain to SDO server
 *
 *           The SDO client #0 is used on testing node with Node-Id 1 to send
@@ -127,11 +63,11 @@ TS_DEF_MAIN(TS_CSdoWr_Seg16ByteDomain)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentDownload(csdo,
-                                       CO_DEV(idx, sub),
-                                       &val[0], 16,
-                                       TS_AppCSdoCallback,
-                                       timeout);
+    err = COCSdoRequestDownload(csdo,
+                                CO_DEV(idx, sub),
+                                &val[0], 16,
+                                TS_AppCSdoCallback,
+                                timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -210,7 +146,7 @@ TS_DEF_MAIN(TS_CSdoWr_SegTimeout)
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
     uint32_t  timeout = 100;
-    uint8_t   val = 0x33;
+    uint8_t   val[16] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16 };
     CO_ERR    err;
 
     /* -- PREPARATION -- */
@@ -220,11 +156,11 @@ TS_DEF_MAIN(TS_CSdoWr_SegTimeout)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentDownload(csdo,
-                                       CO_DEV(idx, sub),
-                                       &val, sizeof(val),
-                                       TS_AppCSdoCallback,
-                                       timeout);
+    err = COCSdoRequestDownload(csdo,
+                                CO_DEV(idx, sub),
+                                &val[0], 16,
+                                TS_AppCSdoCallback,
+                                timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -265,7 +201,7 @@ TS_DEF_MAIN(TS_CSdoWr_SegAbout)
     uint32_t  idx = 0x2000;
     uint8_t   sub = 0x01;
     uint32_t  timeout = 1000;
-    uint8_t   val = 0x33;
+    uint8_t   val[16] = { 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16 };
     CO_ERR    err;
 
     /* -- PREPARATION -- */
@@ -275,11 +211,11 @@ TS_DEF_MAIN(TS_CSdoWr_SegAbout)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentDownload(csdo,
-                                       CO_DEV(idx, sub),
-                                       &val, sizeof(val),
-                                       TS_AppCSdoCallback,
-                                       timeout);
+    err = COCSdoRequestDownload(csdo,
+                                CO_DEV(idx, sub),
+                                &val[0], 16,
+                                TS_AppCSdoCallback,
+                                timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -325,11 +261,11 @@ TS_DEF_MAIN(TS_CSdoWr_SegBadToggle)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentDownload(csdo,
-                                       CO_DEV(idx, sub),
-                                       &val[0], 16,
-                                       TS_AppCSdoCallback,
-                                       timeout);
+    err = COCSdoRequestDownload(csdo,
+                                CO_DEV(idx, sub),
+                                &val[0], 16,
+                                TS_AppCSdoCallback,
+                                timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -395,7 +331,6 @@ SUITE_CSDO_SEG_DOWN()
     TS_Begin(__FILE__);
     TS_SetupCase(CSdoSegDownSetup, CSdoSegDownCleanup);
 
-    TS_RUNNER(TS_CSdoWr_SegBasic);
     TS_RUNNER(TS_CSdoWr_Seg16ByteDomain);
 
     TS_RUNNER(TS_CSdoWr_SegTimeout);

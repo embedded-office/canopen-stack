@@ -38,124 +38,6 @@ static TS_CALLBACK CSdoSegUpCb;
 
 /*---------------------------------------------------------------------------*/
 /*!
-* \brief    Use SDO client to read a basic data type from the SDO server
-*
-*           The SDO client #0 is used on testing node with Node-Id 1 to send
-*           a byte to the SDO server #0 on device with Node-Id 5.
-*/
-/*---------------------------------------------------------------------------*/
-TS_DEF_MAIN(TS_CSdoRd_SegBasic)
-{
-    CO_IF_FRM   frm;
-    CO_NODE     node;
-    CO_CSDO    *csdo;
-    uint8_t     serverId = 5;
-    uint32_t    idx      = 0x2000;
-    uint8_t     sub      = 1;
-    uint32_t    timeout  = 1000;
-    uint8_t     val      = 0x11;
-    CO_ERR      err;
-
-    /* -- PREPARATION -- */
-    TS_CreateMandatoryDir();
-    TS_CreateCSdoCom(0, &serverId);
-    TS_CreateNode(&node, 0);
-    csdo = COCSdoFind(&node, 0);
-
-    /* -- TEST -- */
-    err = COCSdoRequestSegmentUpload(csdo,
-                                     CO_DEV(idx, sub),
-                                     &val, sizeof(val),
-                                     TS_AppCSdoCallback,
-                                     timeout);
-    TS_ASSERT(err == CO_ERR_NONE);
-
-    /* -- CHECK SDO INIT REQUEST -- */
-    CHK_CAN  (&frm);
-    CHK_SDO5 (frm, 0x40);
-    CHK_MLTPX(frm, idx, sub);
-    CHK_DATA (frm, 0);
-
-    /* -- SERVER INIT RESPONSE: OK (not switching to expedited) -- */
-    TS_SDO5_SEND (0x41, idx, sub, sizeof(val));
-
-    /* -- CHECK SDO UPLOAD REQUEST -- */
-    CHK_CAN  (&frm);
-    CHK_SDO5 (frm, 0x60);
-    CHK_BYTE (frm, 1, 0);
-    CHK_BYTE (frm, 2, 0);
-    CHK_BYTE (frm, 3, 0);
-    CHK_BYTE (frm, 4, 0);
-    CHK_BYTE (frm, 5, 0);
-    CHK_BYTE (frm, 6, 0);
-    CHK_BYTE (frm, 7, 0);
-
-    /* -- SERVER UPLOAD RESPONSE: LAST DATA SEGMENT (1 BYTE) -- */
-    TS_SEG5_SEND (0x0f, 0x00000033, 0x000000);
-
-    /* -- CHECK TRANSFER FINISHED -- */
-    CHK_CB_CSDO_FINISHED(&CSdoSegUpCb, 1);
-    CHK_CB_CSDO_CODE(&CSdoSegUpCb, 0);
-    TS_ASSERT(val == 0x33);
-
-    CHK_NO_ERR(&node);
-}
-
-/*---------------------------------------------------------------------------*/
-/*!
-* \brief    Use SDO client to read a basic data type from the SDO server
-*           while server is switching to expedited transfer
-*
-*           The SDO client #0 is used on testing node with Node-Id 1 to send
-*           a byte to the SDO server #0 on device with Node-Id 5.
-*/
-/*---------------------------------------------------------------------------*/
-TS_DEF_MAIN(TS_CSdoRd_SegBasicExp)
-{
-    CO_IF_FRM   frm;
-    CO_NODE     node;
-    CO_CSDO    *csdo;
-    uint8_t     serverId = 5;
-    uint32_t    idx      = 0x2000;
-    uint8_t     sub      = 1;
-    uint32_t    timeout  = 1000;
-    uint8_t     val      = 0x11;
-    CO_ERR      err;
-
-    /* -- PREPARATION -- */
-    TS_CreateMandatoryDir();
-    TS_CreateCSdoCom(0, &serverId);
-    TS_CreateNode(&node, 0);
-    csdo = COCSdoFind(&node, 0);
-
-    /* -- TEST -- */
-    err = COCSdoRequestSegmentUpload(csdo,
-                                     CO_DEV(idx, sub),
-                                     &val, sizeof(val),
-                                     TS_AppCSdoCallback,
-                                     timeout);
-    TS_ASSERT(err == CO_ERR_NONE);
-
-    /* -- CHECK SDO INIT REQUEST -- */
-    CHK_CAN  (&frm);
-    CHK_SDO5 (frm, 0x40);
-    CHK_MLTPX(frm, idx, sub);
-    CHK_DATA (frm, 0);
-
-    /* -- SERVER INIT RESPONSE: OK (switching to expedited) -- */
-    TS_SDO5_SEND (0x4f, idx, sub, 0x33);
-
-    /* -- CHECK TRANSFER FINISHED -- */
-    CHK_NOCAN  (&frm);
-    CHK_CB_CSDO_FINISHED(&CSdoSegUpCb, 1);
-    CHK_CB_CSDO_CODE(&CSdoSegUpCb, 0);
-    TS_ASSERT(val == 0x33);
-
-    CHK_NO_ERR(&node);
-}
-
-/*---------------------------------------------------------------------------*/
-/*!
 * \brief    Use SDO client to read a 16 byte domain from the SDO server
 *
 *           The SDO client #0 is used on testing node with Node-Id 1 to send
@@ -181,11 +63,11 @@ TS_DEF_MAIN(TS_CSdoRd_Seg16ByteDomain)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentUpload(csdo,
-                                     CO_DEV(idx, sub),
-                                     &val[0], 16,
-                                     TS_AppCSdoCallback,
-                                     timeout);
+    err = COCSdoRequestUpload(csdo,
+                              CO_DEV(idx, sub),
+                              &val[0], 16,
+                              TS_AppCSdoCallback,
+                              timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -290,11 +172,11 @@ TS_DEF_MAIN(TS_CSdoRd_SegTimeout)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentUpload(csdo,
-                                     CO_DEV(idx, sub),
-                                     &val, sizeof(val),
-                                     TS_AppCSdoCallback,
-                                     timeout);
+    err = COCSdoRequestUpload(csdo,
+                              CO_DEV(idx, sub),
+                              &val, sizeof(val),
+                              TS_AppCSdoCallback,
+                              timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -345,11 +227,11 @@ TS_DEF_MAIN(TS_CSdoRd_SegAbout)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentUpload(csdo,
-                                     CO_DEV(idx, sub),
-                                     &val, sizeof(val),
-                                     TS_AppCSdoCallback,
-                                     timeout);
+    err = COCSdoRequestUpload(csdo,
+                              CO_DEV(idx, sub),
+                              &val, sizeof(val),
+                              TS_AppCSdoCallback,
+                              timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -395,11 +277,11 @@ TS_DEF_MAIN(TS_CSdoRd_SegBadToggle)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentUpload(csdo,
-                                     CO_DEV(idx, sub),
-                                     &val[0], 16,
-                                     TS_AppCSdoCallback,
-                                     timeout);
+    err = COCSdoRequestUpload(csdo,
+                              CO_DEV(idx, sub),
+                              &val[0], 16,
+                              TS_AppCSdoCallback,
+                              timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -474,11 +356,11 @@ TS_DEF_MAIN(TS_CSdoRd_SegBadSize)
     csdo = COCSdoFind(&node, 0);
 
     /* -- TEST -- */
-    err = COCSdoRequestSegmentUpload(csdo,
-                                     CO_DEV(idx, sub),
-                                     &val[0], 16,
-                                     TS_AppCSdoCallback,
-                                     timeout);
+    err = COCSdoRequestUpload(csdo,
+                              CO_DEV(idx, sub),
+                              &val[0], 16,
+                              TS_AppCSdoCallback,
+                              timeout);
     TS_ASSERT(err == CO_ERR_NONE);
 
     /* -- CHECK SDO INIT REQUEST -- */
@@ -516,8 +398,6 @@ SUITE_CSDO_SEG_UP()
     TS_Begin(__FILE__);
     TS_SetupCase(CSdoSegUpSetup, CSdoSegUpCleanup);
 
-    TS_RUNNER(TS_CSdoRd_SegBasic);
-    // TS_RUNNER(TS_CSdoRd_SegBasicExp);  /* not supported */
     TS_RUNNER(TS_CSdoRd_Seg16ByteDomain);
 
     TS_RUNNER(TS_CSdoRd_SegTimeout);

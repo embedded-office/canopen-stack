@@ -422,40 +422,6 @@ CO_ERR COCSdoInitUploadSegmented(CO_CSDO *csdo);
 */
 CO_ERR COCSdoUploadSegmented(CO_CSDO *csdo);
 
-/*! \brief 
- *
- *   This function initiates SDO segmented upload sequence. User should provide its
- *   own notification callback which is executed upon transfer completion.
- *
- * \param csdo
- *   Reference to SDO client
- *
- * \param key
- *    object entry key; should be generated with the macro CO_DEV()
- *
- * \param buf
- *   Reference to buffer to be uploaded from server
- *
- * \param size
- *   Size of uploaded buffer
- *
- * \param callback
- *   Notification callback on tranfer end (complete or abort)
- *
- * \param
- *   SDO server response timeout in milliseconds
- *
- * \retval  ==CO_ERR_NONE   transfer initiated successfuly
- * \retval  !=CO_ERR_NONE   SDO client is busy or invalid
- *
- */
-CO_ERR COCSdoRequestSegmentUpload(CO_CSDO *csdo,
-                                uint32_t key,
-                                uint8_t *buf,
-                                uint32_t size,
-                                CO_CSDO_CALLBACK_T callback,
-                                uint32_t timeout);
-
 /*! \brief  INIT CSDO SEGMENTED DOWNLOAD
 *
 *    This function generates the request for 'First Download SDO Segment
@@ -513,42 +479,6 @@ CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo);
  *
  */
 CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo);
-
-/*! \brief
- *
- *   This function initiates SDO segmented download sequence. User should provide its
- *   own notification callback which is executed upon transfer completion.
- *
- * \param csdo
- *   Reference to SDO client
- *
- * \param key
- *    object entry key; should be generated with the macro CO_DEV()
- *
- * \param buf
- *   Reference to data to be downloaded to server
- *
- * \param size
- *   Size of downloaded data
- *
- * \param callback
- *   Notification callback on tranfer end (complete or abort)
- *
- * \param timeout
- *   SDO server response timeout in milliseconds
- *
- * \retval  ==CO_ERR_NONE   transfer initiated successfuly
- * \retval  !=CO_ERR_NONE   SDO client is busy or invalid
- *
- */
-CO_ERR COCSdoRequestSegmentDownload(CO_CSDO *csdo,
-                                uint32_t key,
-                                uint8_t *buf,
-                                uint32_t size,
-                                CO_CSDO_CALLBACK_T callback,
-                                uint32_t timeout);
-
-
 
 #if defined __cplusplus
 }
