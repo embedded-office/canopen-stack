@@ -86,7 +86,7 @@ extern "C" {
 *    This define may be used in object dictionary definitions. It marks the
 *    first unused object entry.
 */
-#define CO_OBJ_DIR_ENDMARK   { (uint32_t)0, (CO_OBJ_TYPE *)0, (uintptr_t)0 }
+#define CO_OBJ_DIR_ENDMARK   { (uint32_t)0, (CO_OBJ_TYPE *)0, (CO_DATA)0 }
 
 #define CO_TSTRING    ((CO_OBJ_TYPE *)&COTString)   /*!< Object Type String  */
 #define CO_TDOMAIN    ((CO_OBJ_TYPE *)&COTDomain)   /*!< Object Type Domain  */
@@ -262,13 +262,13 @@ extern "C" {
 *    the CAN-ID (standard or extended format)
 * \{
 */
-#define CO_COBID_SYNC_STD(generate, id)      \
-    (((uint32_t)(id) & 0x7ffuL)            | \
+#define CO_COBID_SYNC_STD(generate, id)         \
+    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)      | \
      ((uint32_t)(generate) & 0x1uL) << 30u)
 
-#define CO_COBID_SYNC_EXT(generate, id)      \
-    (((uint32_t)(id) & 0x1fffffffuL)       | \
-     ((uint32_t)0x1uL << 29u)              | \
+#define CO_COBID_SYNC_EXT(generate, id)         \
+    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL) | \
+     ((uint32_t)0x1uL << 29u)                 | \
      ((uint32_t)(generate) & 0x1uL) << 30u)
 /*! \} */
 
@@ -293,15 +293,15 @@ extern "C" {
 * \{
 */
 #define CO_COBID_TIME_STD(consume, produce, id)    \
-    (((uint32_t)(id) & 0x7ffuL)                  | \
-     ((uint32_t)(consume) & 0x1uL) << 31u)       | \
-     ((uint32_t)(produce) & 0x1uL) << 30u))
+    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)          | \
+     (((uint32_t)(consume) & 0x1uL) << 31u)       | \
+     (((uint32_t)(produce) & 0x1uL) << 30u))
 
 #define CO_COBID_TIME_EXT(consume, produce, id)    \
-    (((uint32_t)(id) & 0x1fffffffuL)             | \
+    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)    | \
      ((uint32_t)0x1uL << 29u)                    | \
-     ((uint32_t)(consume) & 0x1uL) << 31u)       | \
-     ((uint32_t)(produce) & 0x1uL) << 30u))
+     (((uint32_t)(consume) & 0x1uL) << 31u)      | \
+     (((uint32_t)(produce) & 0x1uL) << 30u))
 /*! \} */
 
 /*! \brief COB-ID EMCY
@@ -324,13 +324,13 @@ extern "C" {
 * \{
 */
 #define CO_COBID_EMCY_STD(valid, id)               \
-    (((uint32_t)(id) & 0x7ffuL)                  | \
-     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u)
+    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)         | \
+     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u))
 
 #define CO_COBID_EMCY_EXT(valid, id)               \
-    (((uint32_t)(id) & 0x1fffffffuL)             | \
+    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)    | \
      ((uint32_t)0x1uL << 29u)                    | \
-     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u)
+     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u))
 /*! \} */
 
 /*! \brief SDO server/client COB-ID parameter
@@ -357,12 +357,12 @@ extern "C" {
 * \{
 */
 #define CO_COBID_SDO_STD(valid, dynamic, id)       \
-    (((uint32_t)(id) & 0x7ffuL)                  | \
+    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)         | \
      (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
 #define CO_COBID_SDO_EXT(valid, dynamic, id)       \
-    (((uint32_t)(id) & 0x1fffffffuL)             | \
+    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)    | \
      ((uint32_t)0x1u << 29u)                     | \
      (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
@@ -396,11 +396,11 @@ extern "C" {
 * \{
 */
 #define CO_COBID_RPDO_STD(valid, id)               \
-    (((uint32_t)(id) & 0x7ffuL)                  | \
+    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)         | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
 #define CO_COBID_RPDO_EXT(valid, id)               \
-    (((uint32_t)(id) & 0x1fffffffuL)             | \
+    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)    | \
      ((uint32_t)0x1u << 29u)                     | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 /*! \} */
@@ -440,12 +440,12 @@ extern "C" {
 * \{
 */
 #define CO_COBID_TPDO_STD(valid, id)             \
-    (((uint32_t)(id) & 0x7ffuL)                | \
+    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)       | \
      ((uint32_t)0x1u << 30u)                   | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
 #define CO_COBID_TPDO_EXT(valid, id)             \
-    (((uint32_t)(id) & 0x1fffffffuL)           | \
+    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)  | \
      ((uint32_t)0x1u << 29u)                   | \
      ((uint32_t)0x1u << 30u)                   | \
      ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
@@ -473,6 +473,21 @@ struct CO_NODE_T;              /* Declaration of canopen node structure      */
 struct CO_OBJ_TYPE_T;          /* Declaration of object type structure       */
 struct CO_DICT_T;              /* Declaration of object dictionary structure */
 
+/*! \brief OBJECT DATA TYPE
+*
+*    This type holds a pointer to the object entrys data. To allow storage of
+*    constant values directly within the object dictionary, this type must be
+*    able to hold a complete 32bit value.
+*
+* \note  This is required for 8bit and 16bit controllers, where pointers may
+*        represent 24bit only.
+*/
+#if UINTPTR_MAX < UINT32_MAX
+typedef uint32_t CO_DATA;
+#else
+typedef uintptr_t CO_DATA;
+#endif
+
 /*! \brief OBJECT ENTRY
 *
 *    This structure holds all data, needed for managing a single object
@@ -490,7 +505,7 @@ typedef struct CO_OBJ_T {
                                        /*   - 7: 1=direct (ptr is value if Type=0) */
     const struct CO_OBJ_TYPE_T *Type;  /*!< ==0: value access via Data-Ptr,        */
                                        /*   !=0: access via type structure         */
-    uintptr_t                   Data;  /*!< Address of value or data structure     */
+    CO_DATA                     Data;  /*!< Address of value or data structure     */
                                        /*   or data value for direct access        */
 } CO_OBJ;
 

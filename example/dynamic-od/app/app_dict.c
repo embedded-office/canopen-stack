@@ -24,7 +24,7 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void ObjSet(CO_OBJ *obj, uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data)
+static void ObjSet(CO_OBJ *obj, uint32_t key, const CO_OBJ_TYPE *type, CO_DATA data)
 {
     obj->Key  = key;
     obj->Type = type;
@@ -84,7 +84,7 @@ void ODInit (OD_DYN *self, CO_OBJ *root, uint32_t length)
     self->Used   = 0;
 }
 
-void ODAddUpdate(OD_DYN *self, uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data)
+void ODAddUpdate(OD_DYN *self, uint32_t key, const CO_OBJ_TYPE *type, CO_DATA data)
 {
     CO_OBJ  temp;
     CO_OBJ *od;

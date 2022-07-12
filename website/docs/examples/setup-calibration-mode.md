@@ -125,7 +125,7 @@ Finally, in the standard parameter store/restore entries, we use a separate subi
 ```c
 const CO_OBJ ExampleObjDir[] = {
     :
-  { CO_KEY(0x1010, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&CalParaObj },
+  { CO_KEY(0x1010, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)&CalParaObj },
     :
 };
 ```
@@ -139,9 +139,9 @@ const CO_OBJ ExampleObjDir[] = {
     :
   { CO_KEY(0x2F00, 0, CO_UNSIGNED8 |CO_OBJ_D__RW), 0u, 4u },
   { CO_KEY(0x2F00, 1, CO_UNSIGNED32|CO_OBJ_D___W), CO_TCAL, 0u },
-  { CO_KEY(0x2F00, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TCAL, (uintptr_t)&CalValue.Factor },
-  { CO_KEY(0x2F00, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TCAL, (uintptr_t)&CalValue.Divisor },
-  { CO_KEY(0x2F00, 4, CO_SIGNED32  |CO_OBJ____RW), CO_TCAL, (uintptr_t)&CalValue.Offset },
+  { CO_KEY(0x2F00, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TCAL, (CO_DATA)&CalValue.Factor },
+  { CO_KEY(0x2F00, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TCAL, (CO_DATA)&CalValue.Divisor },
+  { CO_KEY(0x2F00, 4, CO_SIGNED32  |CO_OBJ____RW), CO_TCAL, (CO_DATA)&CalValue.Offset },
     :
 };
 ```
