@@ -45,6 +45,7 @@ extern "C"{
 #define CO_SDO_ERR_WR           0x06010002    /*!< Attempt to write a read only object    */
 #define CO_SDO_ERR_OBJ          0x06020000    /*!< Object doesn't exist in dictionary     */
 #define CO_SDO_ERR_HW_ACCESS    0x06060000    /*!< Access failed due to an hardware error */
+#define CO_SDO_ERR_LEN          0x06070010    /*!< Length of parameter does not match     */
 #define CO_SDO_ERR_LEN_HIGH     0x06070012    /*!< Length of parameter too high           */
 #define CO_SDO_ERR_LEN_SMALL    0x06070013    /*!< Length of parameter too small          */
 #define CO_SDO_ERR_SUB          0x06090011    /*!< Subindex doesn't exist in dictionary   */
