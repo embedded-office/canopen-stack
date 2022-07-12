@@ -7,7 +7,13 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
-none
+### Added
+
+- Add a note in documentation to usage and api about the need of sorted object dictionary
+
+### Fixed
+
+- Avoid variable declaration if SDO client is disabled [@jernejsk](https://github.com/jernejsk)
 
 ## [4.2.0] - 2022-04-01
 
