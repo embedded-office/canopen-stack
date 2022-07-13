@@ -79,7 +79,24 @@ The transmit on change of an object entry is described in the quickstart. This t
   :
 ```
 
-This example triggers the transmission of TPDO #0 when the mapped object 2100h:01h is changing. When using this mode, the setting of the inhibit time is recommended in case the object changes often (e.g. an unfiltered ADC value). This prohibits the CAN bus from overloaded PDO transmissions. In the example we limit the shortest time between two transmissions to 100 * 100us = 10ms.
+This example triggers the transmission of TPDO #0 when the value of the mapped object 2100h:01h is changed by the API function `COObjWrValue()`.
+
+```c
+  :
+uint32_t  value;
+CO_OBJ   *entry;
+  :
+entry = CODictFind  (&(AppNode.Dict), CO_DEV(0x2100,0x01));
+err   = COObjRdValue(entry, &AppNode, &value, sizeof(value), 0);
+  :
+value++;    /* only a changed value will trigger the PDO transmission! */
+  :
+err   = COObjWrValue(entry, &AppNode, &value, sizeof(value); 0);
+  :
+```
+
+!!! note
+    When using this mode, the setting of the inhibit time is recommended in case the object changes often (e.g. an unfiltered ADC value). This prohibits the CAN bus from overloaded PDO transmissions. In the example we limit the shortest time between two transmissions to 100 * 100us = 10ms.
 
 
 ## Synchronized communication
