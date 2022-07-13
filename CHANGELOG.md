@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and starting with version 4.1.0 this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.3.0] - (unreleased)
+## [unreleased]
+
+- nothing
+
+## [4.3.0] - 2022-07-13
 
 ### Added
 
@@ -190,7 +194,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.2.0...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.3.0...HEAD
+[4.3.0]: https://github.com/embedded-office/canopen-stack/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/embedded-office/canopen-stack/compare/v4.1.8...v4.2.0
 [4.1.8]: https://github.com/embedded-office/canopen-stack/compare/v4.1.7...v4.1.8
 [4.1.7]: https://github.com/embedded-office/canopen-stack/compare/v4.1.6...v4.1.7

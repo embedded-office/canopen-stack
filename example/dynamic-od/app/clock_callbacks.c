@@ -186,3 +186,29 @@ int16_t COParaDefault(CO_PARA *pg)
      */
     return (0u);
 }
+
+void CORpdoWriteData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
+{
+    (void)frm;
+    (void)pos;
+    (void)size;
+    (void)obj;
+
+    /* Optional: place here some code, which is called
+     * when a PDO is received with mapped values with
+     * a size larger than 4 byte.
+     */
+}
+
+void COTpdoReadData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
+{
+    (void)frm;
+    (void)pos;
+    (void)size;
+    (void)obj;
+
+    /* Optional: place here some code, which is called
+     * when a PDO is constructed for transmission which
+     * needs a mapped values with a size larger than 4 byte.
+     */
+}

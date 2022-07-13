@@ -342,7 +342,7 @@ void CORpdoWriteData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
 This **optional** function is called during PDO transmission when a mapped data value consumes more than 4 bytes.
 
 ```c
-void COTpdoReadData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj);
+void COTpdoReadData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
 {
   /* Optional: place here some code, which is called
    * when a PDO is constructed for transmission which
