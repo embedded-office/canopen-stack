@@ -9,10 +9,10 @@ The definition of the object dictionary table is done with an array of object en
 ```c
 const CO_OBJ DemoObjDir[] = {
     :
-  { CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CPU_INT32U)&DemoErrReg  },
-  { CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CPU_INT32U) 0x00000080  },
-  { CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_R_), 0, (CPU_INT32U)&DemoEmcyId  },
-  { CO_KEY(0x2500, 0, CO_UNSIGNED32|CO_OBJ____RW), 0, (CPU_INT32U)&DemoVarLong },
+  { CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)&DemoErrReg  },
+  { CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA) 0x00000080  },
+  { CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_R_), 0, (CO_DATA)&DemoEmcyId  },
+  { CO_KEY(0x2500, 0, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&DemoVarLong },
     :
 };
 ```
