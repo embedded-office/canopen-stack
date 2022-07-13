@@ -107,7 +107,7 @@ int16_t COObjRdBufCont(CO_OBJ  *obj,
 
 **Example**
 
-see [Example in COObjRdBufStart()][2]
+see [Example in COObjRdBufStart()][1]
 
 !!! attention
 
@@ -297,27 +297,7 @@ int16_t COObjWrBufCont(CO_OBJ  *obj,
 
 **Example**
 
-The following example writes a byte-stream to the hypothetical application-specific object entry "[1234:56]" within the object directory of the CANopen node AppNode.
-
-```c
-CPU_INT08U  buffer[10] = { 'H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd' };
-CPU_INT16S  err;
-CO_OBJ     *entry;
-  :
-entry = CODictFind     (&(AppNode.Dict), CO_DEV(0x1234,0x56));
-err   = COObjWrBufStart(entry, &AppNode, buffer, 10);
-if (err == CO_ERR_NONE) {
-  do {
-    /* stream bytes to object */
-    err = COObjWrBufCont(entry, &AppNode, buffer, 10);
-  } while (err == CO_ERR_NONE);
-} else {
-
-  /* error during writing */
-
-}
-  :
-```
+see [Example in COObjWrBufStart()][2]
 
 #### COObjWrBufStart()
 
@@ -348,8 +328,27 @@ int16_t COObjWrBufStart(CO_OBJ  *obj,
 
 **Example**
 
-see [Example in COObjWrBufStart()][1]
+The following example writes a byte-stream to the hypothetical application-specific object entry "[1234:56]" within the object directory of the CANopen node AppNode.
 
+```c
+CPU_INT08U  buffer[10] = { 'H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd' };
+CPU_INT16S  err;
+CO_OBJ     *entry;
+  :
+entry = CODictFind     (&(AppNode.Dict), CO_DEV(0x1234,0x56));
+err   = COObjWrBufStart(entry, &AppNode, buffer, 10);
+if (err == CO_ERR_NONE) {
+  do {
+    /* stream bytes to object */
+    err = COObjWrBufCont(entry, &AppNode, buffer, 10);
+  } while (err == CO_ERR_NONE);
+} else {
+
+  /* error during writing */
+
+}
+  :
+```
 
 !!! attention
 
@@ -388,32 +387,20 @@ int16_t COObjWrValue(CO_OBJ  *obj ,
 
 The following example writes a byte-stream to the hypothetical application-specific object entry "[1234:56]" within the object directory of the CANopen node AppNode.
 
+
 ```c
-    CPU_INT08U  buffer[10] = { 'H', 'e', 'l', 'l', 'o', 'W', 'o', 'r', 'l', 'd' };
-    CPU_INT16S  err;
-    CO_OBJ     *entry;
-    :
-    entry = CODictFind     (&(AppNode.Dict), CO_DEV(0x1234,0x56));
-    err   = COObjWrBufStart(entry, &AppNode, buffer, 10);
-    if (err == CO_ERR_NONE) {
-        do {
-            /* stream bytes to object */
-            err = COObjWrBufCont(entry, &AppNode, buffer, 10);
-        } while (err == CO_ERR_NONE);
-    } else {
-        /* error during writing */
-    }
-    :
+uint32_t  value = 1234;
+CO_OBJ   *entry;
+  :
+entry = CODictFind  (&(AppNode.Dict), CO_DEV(0x1234,0x56));
+err   = COObjWrValue(entry, &AppNode, &value, sizeof(value), 0);
+  :
 ```
 
 !!! note
 
     The example shows the write access with the knowledge, that the addressed object entry is independent of the node ID. To be independent of this knowledge, the API function `CONmtGetNodeId()` may be used to get the current node ID.
 
-!!! attention
 
-    This function is used when writing data in smaller junks (e.g. internaly the SDO transfers is using this function). Within the application you most likely use the related memory area due to performance issues.
-
-
-[1]: ../dictionary#user-objects
-[2]: ../object/#coobjrdbufstart
+[1]: ../object/#coobjrdbufstart
+[2]: ../object/#coobjwrbufstart
