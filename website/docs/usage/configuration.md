@@ -380,7 +380,7 @@ const CO_OBJ AppObjDir[] = {
 };
 ```
 
-*Note: this CANopen stack supports the mapping of 8, 16 or 32bits.*
+*Note: this CANopen stack supports the mapping of 8, 16, 24 or 32bits.*
 
 ### Transmit PDO Communication
 

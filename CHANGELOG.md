@@ -11,6 +11,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 - Add a note in documentation to usage and api about the need of sorted object dictionary
 - Add support for SDO client segmented transfers [@tonbo777](https://github.com/tonbo777)
+- Add support of mapping values with 3 bytes in PDOs
+- Introducte callbacks for read/write PDO mapped values larger than 4 bytes
 
 ### Changed
 

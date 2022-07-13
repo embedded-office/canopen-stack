@@ -34,6 +34,7 @@ The class `CO_TPDO` is defined within `co_tpdo.h` and is responsible for the CAN
 | Inhibit     | `uint16_t` | inhibit timer in timer ticks          |
 | InTmr       | `int16_t`  | inhibit timer identifier              |
 | Map[]       | `CO_OBJ*`  | pointer list to mapped object entries |
+| Size[]      | `uint8_t*` | size of mapped values in PDO payload  |
 | Node        | `CO_NODE*` | pointer to parent node                |
 | ObjNum      | `uint8_t`  | number of mapped object entries       |
 
