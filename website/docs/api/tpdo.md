@@ -12,10 +12,11 @@ classDiagram
     -uint32_t Identifier
     -int16_t EvTmr
     -uint16_t Event
-    -in16_t InTmr
+    -int16_t InTmr
     -uint16_t Inhibit
     -uint8_t Flags
-    -uint8_T ObjNum
+    -uint8_t ObjNum
+    -uint8_t Size[]
     +COTPdoTrigObj(obj)
     +COTPdoTrigPdo(num)
   }
