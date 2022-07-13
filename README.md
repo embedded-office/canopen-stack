@@ -22,6 +22,7 @@ The source code is compliant to the C99 standard and you must cross-compile the 
   - Block transfers
 - Unlimited number of SDO clients which supports:
   - Expedited transfers
+  - Segmented transfers
 - Unlimited number of TPDO and RPDOs which supports:
   - Synchronized operation
   - Asynchronous operation
@@ -115,7 +116,7 @@ The CANopen dictionary is an array of object entries, which we can allocate stat
 ```c
 const CO_OBJ MyDict[MY_DICT_LEN] = {
     /* setup application specific dictionary, example entry: */
-    { CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)(0u) },
+    { CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0u) },
     /* : */
 };
 ```

@@ -88,6 +88,7 @@ typedef struct CO_TPDO_T {
     struct CO_NODE_T *Node;        /*!< link to parent CANopen node          */
     uint32_t          Identifier;  /*!< message identifier                   */
     struct CO_OBJ_T  *Map[8];      /*!< pointer list with mapped objects     */
+    uint8_t           Size[8];     /*!< size of mapped object value in bytes */
     int16_t           EvTmr;       /*!< event timer id                       */
     uint32_t          Event;       /*!< event time in timer ticks            */
     int16_t           InTmr;       /*!< inhibit timer id                     */
@@ -106,6 +107,7 @@ typedef struct CO_RPDO_T {
     struct CO_NODE_T *Node;        /*!< link to parent CANopen node          */
     uint32_t          Identifier;  /*!< message identifier                   */
     struct CO_OBJ_T  *Map[8];      /*!< pointer list with mapped objects     */
+    uint8_t           Size[8];     /*!< size of mapped object value in bytes */
     uint8_t           ObjNum;      /*!< Number of linked objects             */
     uint8_t           Flag;        /*!< Flags attributed of PDO              */
 
@@ -632,6 +634,45 @@ extern void COPdoTransmit(CO_IF_FRM *frm);
 * \retval   >0    CAN message frame is consumed
 */
 extern int16_t COPdoReceive(CO_IF_FRM *frm);
+
+/*! \brief  PDO WRITE DATA CALLBACK
+*
+*    This function is called during PDO distribution of the PDO message
+*    frame into the object dictionary when mapped data value consumes
+*    more than 4 bytes.
+*
+* \param frm
+*    Pointer to PDO message frame
+*
+* \param pos
+*    The start index in the CAN message frame payload
+*
+* \param size
+*    The mapped value size in bytes
+*
+* \param obj
+*    Pointer to the target object entry
+*/
+extern void CORpdoWriteData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj);
+
+/*! \brief  PDO READ DATA CALLBACK
+*
+*    This function is called during PDO transmission when a mapped
+*    data value consumes more than 4 bytes.
+*
+* \param frm
+*    Pointer to PDO message frame
+*
+* \param pos
+*    The start index in the CAN message frame payload
+*
+* \param size
+*    The mapped value size in bytes
+*
+* \param obj
+*    Pointer to the source object entry
+*/
+extern void COTpdoReadData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

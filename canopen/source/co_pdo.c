@@ -91,7 +91,8 @@ void COTPdoClear(CO_TPDO *pdo, CO_NODE *node)
         pdo[num].Identifier = CO_TPDO_COBID_OFF;
         pdo[num].ObjNum     = 0;
         for (on = 0; on < 8; on++) {
-            pdo[num].Map[on] = 0;
+            pdo[num].Map[on]  = 0;
+            pdo[num].Size[on] = 0;
         }
     }
 }
@@ -120,7 +121,8 @@ void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
         pdo[num].Identifier = CO_TPDO_COBID_OFF;
         pdo[num].ObjNum     = 0;
         for (on = 0; on < 8; on++) {
-            pdo[num].Map[on] = 0;
+            pdo[num].Map[on]  = 0;
+            pdo[num].Size[on] = 0;
         }
         err = CODictRdByte(&node->Dict, CO_DEV(0x1800 + num,0),&tnum);
         if (err == CO_ERR_NONE) {
@@ -238,6 +240,7 @@ CO_ERR COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
     uint16_t  on;
     CO_ERR    err;
     uint8_t   mapnum;
+    uint8_t   size;
     uint8_t   dlc;
 
     cod = &pdo[num].Node->Dict;
@@ -255,7 +258,8 @@ CO_ERR COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
             return (CO_ERR_TPDO_MAP_OBJ);
         }
 
-        dlc += (uint8_t)(mapping & 0xFF) >> 3;
+        size = (uint8_t)(mapping & 0xFF) >> 3;
+        dlc += size;
         if (dlc > 8) {
             return (CO_ERR_TPDO_MAP_OBJ);
         }
@@ -263,7 +267,8 @@ CO_ERR COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
         if (obj == 0) {
             return (CO_ERR_TPDO_MAP_OBJ);
         } else {
-            pdo[num].Map[on] = obj;
+            pdo[num].Map[on]  = obj;
+            pdo[num].Size[on] = size;
             COTPdoMapAdd(pdo->Node->TMap, obj, num);
         }
     }
@@ -308,6 +313,7 @@ void COTPdoTx (CO_TPDO *pdo)
     CO_TMR    *tmr;
     CO_IF_FRM  frm;
     uint32_t   sz;
+    uint8_t    pdosz;
     uint32_t   data;
     uint8_t    num;
 
@@ -348,18 +354,28 @@ void COTPdoTx (CO_TPDO *pdo)
     frm.Identifier = pdo->Identifier;
     frm.DLC        = 0;
     for (num = 0; num < pdo->ObjNum; num++) {
-        sz = COObjGetSize(pdo->Map[num], pdo->Node, 0L);
-        if (sz <= (uint32_t)(8 - frm.DLC)) {
-            COObjRdValue(pdo->Map[num], pdo->Node, &data, CO_LONG, pdo->Node->NodeId);
-
-            if (sz == CO_BYTE) {
-                CO_SET_BYTE(&frm, data, frm.DLC);
-            } else if (sz == CO_WORD) {
-                CO_SET_WORD(&frm, data, frm.DLC);
-            } else if (sz == CO_LONG) {
-                CO_SET_LONG(&frm, data, frm.DLC);
+        pdosz = pdo->Size[num];
+        if (pdosz <= 4) {
+            /* supported mapping: 1 to 4 bytes */
+            sz = COObjGetSize(pdo->Map[num], pdo->Node, 0L);
+            if (sz <= (uint32_t)(8 - frm.DLC)) {
+                COObjRdValue(pdo->Map[num], pdo->Node, &data, CO_LONG, pdo->Node->NodeId);
+                if (sz == CO_BYTE) {
+                    CO_SET_BYTE(&frm, data, frm.DLC);
+                } else if (sz == CO_WORD) {
+                    CO_SET_WORD(&frm, data, frm.DLC);
+                } else if (sz == CO_LONG) {
+                    if (pdosz == 3) {
+                        CO_SET_BYTE(&frm, data, frm.DLC);
+                        CO_SET_WORD(&frm, (data >> 8), (frm.DLC + 1));
+                    } else {
+                        CO_SET_LONG(&frm, data, frm.DLC);
+                    }
+                }
+                frm.DLC += pdosz;
             }
-            frm.DLC += (uint8_t)sz;
+        } else {
+            COTpdoReadData(&frm, frm.DLC, pdosz, pdo->Map[num]);
         }
     }
 
@@ -560,7 +576,8 @@ CO_ERR CORPdoReset(CO_RPDO *pdo, uint16_t num)
     wp->Identifier = 0;
     wp->ObjNum     = 0;
     for (on = 0; on < 8; on++) {
-        wp->Map[on] = 0;
+        wp->Map[on]  = 0;
+        wp->Size[on] = 0;
     }
 
     if ((wp->Flag & CO_RPDO_FLG_S_) != 0) {
@@ -622,6 +639,7 @@ CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
     uint8_t   on;
     uint8_t   mapnum;
     uint8_t   dlc;
+    uint8_t   size;
     uint8_t   dummy = 0;
 
     cod = &pdo[num].Node->Dict;
@@ -638,7 +656,8 @@ CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
             return (CO_ERR_RPDO_MAP_OBJ);
         }
 
-        dlc += (uint8_t)(mapping & 0xFF) >> 3;
+        size = (uint8_t)(mapping & 0xFF) >> 3;
+        dlc += size;
         if (dlc > 8) {
             return (CO_ERR_RPDO_MAP_OBJ);
         }
@@ -666,6 +685,7 @@ CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
                 return (CO_ERR_RPDO_MAP_OBJ);
             } else {
                 pdo[num].Map[on + dummy] = obj;
+                pdo[num].Size[on + dummy] = size;
             }
         }
     }
@@ -724,24 +744,34 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
     uint8_t  val08;
     uint8_t  on;
     uint8_t  sz;
+    uint8_t  pdosz;
     uint8_t  dlc = 0;
 
     for (on = 0; on < pdo->ObjNum; on++) {
-        obj = pdo->Map[on];
+        obj   = pdo->Map[on];
+        pdosz = pdo->Size[on];
         if (obj != 0) {
-            sz = (uint8_t)COObjGetSize(obj, pdo->Node, 0L);
-            if (sz == CO_BYTE) {
-                val08 = CO_GET_BYTE(frm, dlc);
-                dlc++;
-                COObjWrValue(obj, pdo->Node, (void *)&val08, sz, pdo->Node->NodeId);
-            } else if (sz == CO_WORD) {
-                val16 = CO_GET_WORD(frm, dlc);
-                dlc += 2;
-                COObjWrValue(obj, pdo->Node, (void *)&val16, sz, pdo->Node->NodeId);
-            } else if (sz == CO_LONG) {
-                val32 = CO_GET_LONG(frm, dlc);
-                dlc += 4;
-                COObjWrValue(obj, pdo->Node, (void *)&val32, sz, pdo->Node->NodeId);
+            if (pdosz <= 4) {
+                /* supported mapping: 1 to 4 bytes */
+                sz = (uint8_t)COObjGetSize(obj, pdo->Node, 0L);
+                if (sz == CO_BYTE) {
+                    val08 = CO_GET_BYTE(frm, dlc);
+                    dlc++;
+                    COObjWrValue(obj, pdo->Node, (void *)&val08, sz, pdo->Node->NodeId);
+                } else if (sz == CO_WORD) {
+                    val16 = CO_GET_WORD(frm, dlc);
+                    dlc += 2;
+                    COObjWrValue(obj, pdo->Node, (void *)&val16, sz, pdo->Node->NodeId);
+                } else if (sz == CO_LONG) {
+                    val32 = CO_GET_LONG(frm, dlc);
+                    if (pdosz == 3) {
+                        val32 &= 0x00FFFFFF;
+                    }
+                    dlc += pdosz;
+                    COObjWrValue(obj, pdo->Node, (void *)&val32, sz, pdo->Node->NodeId);
+                }
+            } else {
+                CORpdoWriteData(frm, dlc, pdosz, obj);
             }
         }
     }

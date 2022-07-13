@@ -64,7 +64,7 @@ We use our user type to define the calibration object entry:
 ```c
 const CO_OBJ ExampleObjDir[] = {
     :
-  { CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), CO_TOTP, (uintptr_t)&serialNo },
+  { CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), CO_TOTP, (CO_DATA)&serialNo },
     :
 };
 ```

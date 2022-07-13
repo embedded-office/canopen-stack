@@ -166,6 +166,23 @@ extern "C" {
     SimCanRun();                            \
   } while(0)
 
+#define TS_SEG5_SEND(_s,_d1,_d2)            \
+  do {                                      \
+    uint8_t  s=(uint8_t)(_s);               \
+    uint32_t d1=(uint32_t)(_d1);            \
+    uint32_t d2=(uint32_t)(_d2);            \
+    SimCanSetFrm(0x605, 8,                  \
+             (uint8_t)(s),                  \
+             (uint8_t)(d1),                 \
+             (uint8_t)(((uint32_t)d1)>>8),  \
+             (uint8_t)(((uint32_t)d1)>>16), \
+             (uint8_t)(((uint32_t)d1)>>24), \
+             (uint8_t)(d2),                 \
+             (uint8_t)(((uint32_t)d2)>>8),  \
+             (uint8_t)(((uint32_t)d2)>>16));\
+    SimCanRun();                            \
+  } while(0)
+
 #define TS_HB_SEND(_n,_s)                   \
   do {                                      \
     uint32_t n=(uint32_t)(_n);              \
@@ -490,7 +507,7 @@ void TS_CreateNodeAutoStart(CO_NODE *node);
 *          object entry data according to user manual
 */
 /*---------------------------------------------------------------------------*/
-void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, uintptr_t data);
+void TS_ODAdd(uint32_t key, const CO_OBJ_TYPE *type, CO_DATA data);
 
 /*---------------------------------------------------------------------------*/
 /*! \brief SETUP THE MANDATORY OBJECT ENTRIES OF AN OBJECT DICTIONARY

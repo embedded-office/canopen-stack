@@ -34,7 +34,7 @@ First, we will take a look at all CiA DS301 object entries one by one. After get
 The device type is a 32bit value, which identifies the CANopen device. Due to the fact, that our demo is not a real CANopen device, we store a constant 32bit dummy value (0x00000000) in this entry.
 
 ```c
-ODAddUpdate(self, CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x00000000);
+ODAddUpdate(self, CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)0x00000000);
 ```
 
 We choose the additional flags `CO_OBJ_D__R_` to store the data directly (`D`) in the object entry and allow read access (`R`) from the communication interface.
@@ -45,7 +45,7 @@ We choose the additional flags `CO_OBJ_D__R_` to store the data directly (`D`) i
 The error register is an 8bit value, which holds the error register flags. The CANopen EMGY module manages the single error register flags.
 
 ```c
-ODAddUpdate(self, CO_KEY(0x1001, 0, CO_UNSIGNED32|CO_OBJ___PR_), 0, (uintptr_t)&ErrReg);
+ODAddUpdate(self, CO_KEY(0x1001, 0, CO_UNSIGNED32|CO_OBJ___PR_), 0, (CO_DATA)&ErrReg);
 ```
 
 For this entry, we choose the additional flags `CO_OBJ___PR_` to store a pointer to the data in the object entry (`_` instead of `D`), allow the PDO mapping (`P`) and allow read access (`R`) from the communication interface.
@@ -56,7 +56,7 @@ For this entry, we choose the additional flags `CO_OBJ___PR_` to store a pointer
 The heartbeat producer is a 16bit value, which holds the time in ms between two heartbeats. The entry is a system type, which injects the heartbeat callback functions into this entry. The callback functions are responsible for the system behavior when reading or writing this entry.
 
 ```c
-ODAddUpdate(self, CO_KEY(0x1017, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_THEARTBEAT, (uintptr_t)&HbTime);
+ODAddUpdate(self, CO_KEY(0x1017, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_THEARTBEAT, (CO_DATA)&HbTime);
 ```
 
 For the system type `CO_THEARTBEAT` we must choose the storage of a data pointer in the object directory (`_` instead of `D`). To get a system, which conforms to CiA DS301, we disallow the PDO mapping (`_` instead of `P`) and allow read (`R`) and write (`W`) access from the communication interface. Therefore we set the additional flags: `CO_OBJ____RW`.
@@ -67,8 +67,8 @@ For the system type `CO_THEARTBEAT` we must choose the storage of a data pointer
 The identity object is a structure of detailed node information. Due to the fact, that our demo is not a real CANopen device, we store a constant 32bit dummy value (0x00000000) in the mandatory entry at Sub-index 01h.
 
 ```c
-ODAddUpdate(self, CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0x01);
-ODAddUpdate(self, CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x00000000);
+ODAddUpdate(self, CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)0x01);
+ODAddUpdate(self, CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)0x00000000);
 ```
 
 The subindex 00h holds the highest supported subindex in this index as a constant 8bit value.
@@ -91,9 +91,9 @@ static void ODCreateSDOServer(OD_DYN *self, uint8_t srv, uint32_t request, uint3
     request  = (uint32_t)0x600;
     response = (uint32_t)0x580;
   }
-  ODAddUpdate(self, CO_KEY(0x1200+srv, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0x02);
-  ODAddUpdate(self, CO_KEY(0x1200+srv, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (uintptr_t)request);
-  ODAddUpdate(self, CO_KEY(0x1200+srv, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (uintptr_t)response);
+  ODAddUpdate(self, CO_KEY(0x1200+srv, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)0x02);
+  ODAddUpdate(self, CO_KEY(0x1200+srv, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)request);
+  ODAddUpdate(self, CO_KEY(0x1200+srv, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)response);
 }
 ```
 
@@ -106,11 +106,11 @@ Now we want to setup the transmit PDO (TPDO) communication object entry with a s
 ```c
 static void ODCreateTPDOCom(OD_DYN *self, uint8_t num, uint32_t id, uint8_t type, uint16_t inhibit, uint16_t evtimer)
 {
-  ODAddUpdate(self, CO_KEY(0x1800+num, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0x05);
-  ODAddUpdate(self, CO_KEY(0x1800+num, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (uintptr_t)id);
-  ODAddUpdate(self, CO_KEY(0x1800+num, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)type);
-  ODAddUpdate(self, CO_KEY(0x1800+num, 3, CO_UNSIGNED16|CO_OBJ_D__RW), 0, (uintptr_t)inhibit);
-  ODAddUpdate(self, CO_KEY(0x1800+num, 5, CO_UNSIGNED16|CO_OBJ_D__RW), CO_TEVENT, (uintptr_t)evtimer);
+  ODAddUpdate(self, CO_KEY(0x1800+num, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)0x05);
+  ODAddUpdate(self, CO_KEY(0x1800+num, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)id);
+  ODAddUpdate(self, CO_KEY(0x1800+num, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)type);
+  ODAddUpdate(self, CO_KEY(0x1800+num, 3, CO_UNSIGNED16|CO_OBJ_D__RW), 0, (CO_DATA)inhibit);
+  ODAddUpdate(self, CO_KEY(0x1800+num, 5, CO_UNSIGNED16|CO_OBJ_D__RW), CO_TEVENT, (CO_DATA)evtimer);
 }
 ```
 
@@ -131,9 +131,9 @@ static void ODCreateTPdoMap(OD_DYN *self, uint8_t num, uint32_t *map, uint8_t le
 {
   uint8_t n;
 
-  ODAddUpdate(self, CO_KEY(0x1A00+num, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)len);
+  ODAddUpdate(self, CO_KEY(0x1A00+num, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)len);
   for (n = 0; n < len; n++) {
-    ODAddUpdate(self, CO_KEY(0x1A00+num, 1+n, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)map[n]);
+    ODAddUpdate(self, CO_KEY(0x1A00+num, 1+n, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)map[n]);
   }
 }
 ```
@@ -156,15 +156,15 @@ static void ODCreateDict(OD_DYN *self)
 
   Obj1001_00_08 = 0;
 
-  ODAddUpdate(self, CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x00000000);
-  ODAddUpdate(self, CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&Obj1001_00_08);
-  ODAddUpdate(self, CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0x80);
-  ODAddUpdate(self, CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)0);
-  ODAddUpdate(self, CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)4);
-  ODAddUpdate(self, CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0);
-  ODAddUpdate(self, CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0);
-  ODAddUpdate(self, CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0);
-  ODAddUpdate(self, CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (uintptr_t)0);
+  ODAddUpdate(self, CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)0x00000000);
+  ODAddUpdate(self, CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)&Obj1001_00_08);
+  ODAddUpdate(self, CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)0x80);
+  ODAddUpdate(self, CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (CO_DATA)0);
+  ODAddUpdate(self, CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)4);
+  ODAddUpdate(self, CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)0);
+  ODAddUpdate(self, CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)0);
+  ODAddUpdate(self, CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)0);
+  ODAddUpdate(self, CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)0);
 
   ODCreateSDOServer(self, 0, CO_COBID_SDO_REQUEST(), CO_COBID_SDO_RESPONSE());
 
@@ -175,10 +175,10 @@ static void ODCreateDict(OD_DYN *self)
   map[2] = CO_LINK(0x2100, 3,  8);
   ODCreateTPdoMap(self, 0, map, 3);
 
-  ODAddUpdate(self, CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)3);
-  ODAddUpdate(self, CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, (uintptr_t)&Obj2100_01_20);
-  ODAddUpdate(self, CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&Obj2100_02_08);
-  ODAddUpdate(self, CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), CO_TASYNC, (uintptr_t)&Obj2100_03_08);
+  ODAddUpdate(self, CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)3);
+  ODAddUpdate(self, CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, (CO_DATA)&Obj2100_01_20);
+  ODAddUpdate(self, CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)&Obj2100_02_08);
+  ODAddUpdate(self, CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), CO_TASYNC, (CO_DATA)&Obj2100_03_08);
 }
 ```
 

@@ -89,6 +89,18 @@ void TS_CallbackInit(TS_CALLBACK *cb)
     cb->AppCSdoCallback_ArgSub = 0;
     cb->AppCSdoCallback_ArgCode = 0;
     cb->AppCSdoCallback_Called = 0;
+
+    cb->CORpdoWriteData_ArgFrm = 0;
+    cb->CORpdoWriteData_ArgPos = 0;
+    cb->CORpdoWriteData_ArgSize = 0;
+    cb->CORpdoWriteData_ArgObj = 0;
+    cb->CORpdoWriteData_Called = 0;
+
+    cb->COTpdoReadData_ArgFrm = 0;
+    cb->COTpdoReadData_ArgPos = 0;
+    cb->COTpdoReadData_ArgSize = 0;
+    cb->COTpdoReadData_ArgObj = 0;
+    cb->COTpdoReadData_Called = 0;
 }
 
 void TS_CallbackDeInit(void)
@@ -256,5 +268,27 @@ void TS_AppCSdoCallback(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t cod
         TsCallbacks->AppCSdoCallback_ArgSub = sub;
         TsCallbacks->AppCSdoCallback_ArgCode = code;
         TsCallbacks->AppCSdoCallback_Called++;
+    }
+}
+
+void CORpdoWriteData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
+{
+    if (TsCallbacks != 0) {
+        TsCallbacks->CORpdoWriteData_ArgFrm = frm;
+        TsCallbacks->CORpdoWriteData_ArgPos = pos;
+        TsCallbacks->CORpdoWriteData_ArgSize = size;
+        TsCallbacks->CORpdoWriteData_ArgObj = obj;
+        TsCallbacks->CORpdoWriteData_Called++;
+    }
+}
+
+void COTpdoReadData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
+{
+    if (TsCallbacks != 0) {
+        TsCallbacks->COTpdoReadData_ArgFrm = frm;
+        TsCallbacks->COTpdoReadData_ArgPos = pos;
+        TsCallbacks->COTpdoReadData_ArgSize = size;
+        TsCallbacks->COTpdoReadData_ArgObj = obj;
+        TsCallbacks->COTpdoReadData_Called++;
     }
 }

@@ -112,6 +112,17 @@ typedef struct TS_CALLBACK_T {
     uint32_t    AppCSdoCallback_ArgCode;
     uint32_t    AppCSdoCallback_Called;
 
+    CO_IF_FRM  *CORpdoWriteData_ArgFrm;
+    uint8_t     CORpdoWriteData_ArgPos;
+    uint8_t     CORpdoWriteData_ArgSize;
+    CO_OBJ     *CORpdoWriteData_ArgObj;
+    uint32_t    CORpdoWriteData_Called;
+
+    CO_IF_FRM  *COTpdoReadData_ArgFrm;
+    uint8_t     COTpdoReadData_ArgPos;
+    uint8_t     COTpdoReadData_ArgSize;
+    CO_OBJ     *COTpdoReadData_ArgObj;
+    uint32_t    COTpdoReadData_Called;
 } TS_CALLBACK;
 
 /******************************************************************************

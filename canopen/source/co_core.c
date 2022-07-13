@@ -150,7 +150,9 @@ void CONodeProcess(CO_NODE *node)
     CO_IF_FRM frm;
     CO_ERR    err;
     CO_SDO   *srv;
+#if USE_CSDO
     CO_CSDO  *csdo;
+#endif
     CO_RPDO  *rpdo;
     int16_t   result;
     uint8_t   allowed;

@@ -21,6 +21,12 @@
 #include "def_suite.h"
 
 /******************************************************************************
+* PRIVATE VARIABLES
+******************************************************************************/
+
+static TS_CALLBACK CORpdoWriteDataCb;
+
+/******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
@@ -33,30 +39,31 @@
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_8x1Byte)
 {
-    CO_NODE        node;
-    uint32_t     rpdo_id     = 0x40000200;
-    uint32_t     rpdo_map[8] = { 0x25000B08, 0x25000C08, 0x25000D08, 0x25000E08,
-                                   0x25000F08, 0x25001008, 0x25001108, 0x25001208 };
-    uint8_t     rpdo_type   = 1;
-    uint8_t     rpdo_len    = 8;
-    uint8_t     data[8]     = { 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98};
+    CO_NODE  node;
+    uint32_t rpdo_id     = 0x40000200;
+    uint32_t rpdo_map[8] = { 0x25000B08, 0x25000C08, 0x25000D08, 0x25000E08,
+                             0x25000F08, 0x25001008, 0x25001108, 0x25001208 };
+    uint8_t  rpdo_type   = 1;
+    uint8_t  rpdo_len    = 8;
+    uint8_t  data[8]     = { 0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98};
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &rpdo_id,     &rpdo_type);
     TS_CreateRPdoMap(0, &rpdo_map[0], &rpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 0x0C, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data[1]);
-    TS_ODAdd(CO_KEY(0x2500, 0x0D, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data[2]);
-    TS_ODAdd(CO_KEY(0x2500, 0x0E, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data[3]);
-    TS_ODAdd(CO_KEY(0x2500, 0x0F, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data[4]);
-    TS_ODAdd(CO_KEY(0x2500, 0x10, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data[5]);
-    TS_ODAdd(CO_KEY(0x2500, 0x11, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data[6]);
-    TS_ODAdd(CO_KEY(0x2500, 0x12, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data[7]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0C, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0D, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data[2]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0E, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data[3]);
+    TS_ODAdd(CO_KEY(0x2500, 0x0F, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data[4]);
+    TS_ODAdd(CO_KEY(0x2500, 0x10, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data[5]);
+    TS_ODAdd(CO_KEY(0x2500, 0x11, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data[6]);
+    TS_ODAdd(CO_KEY(0x2500, 0x12, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data[7]);
     TS_CreateNodeAutoStart(&node);
 
     TS_PDO_SEND(0x201, 0x51);
 
-    TS_ASSERT(0x91 == data[0]);            /* check signals to be unchanged            */
+    /* check signals to be unchanged */
+    TS_ASSERT(0x91 == data[0]);            
     TS_ASSERT(0x92 == data[1]);
     TS_ASSERT(0x93 == data[2]);
     TS_ASSERT(0x94 == data[3]);
@@ -67,7 +74,8 @@ TS_DEF_MAIN(TS_RPdo_8x1Byte)
 
     TS_SYNC_SEND();
 
-    TS_ASSERT(0x51 == data[0]);            /* check signals to be changed              */
+    /* check signals to be changed */
+    TS_ASSERT(0x51 == data[0]);            
     TS_ASSERT(0x52 == data[1]);
     TS_ASSERT(0x53 == data[2]);
     TS_ASSERT(0x54 == data[3]);
@@ -76,7 +84,8 @@ TS_DEF_MAIN(TS_RPdo_8x1Byte)
     TS_ASSERT(0x57 == data[6]);
     TS_ASSERT(0x58 == data[7]);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    /* check error free stack execution         */
+    CHK_NO_ERR(&node);                                
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -88,37 +97,40 @@ TS_DEF_MAIN(TS_RPdo_8x1Byte)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_4x2Byte)
 {
-    CO_NODE        node;
-    uint32_t     rpdo_id     = 0x40000200;
-    uint32_t     rpdo_map[4] = { 0x25001510, 0x25001610, 0x25001710, 0x25001810 };
-    uint8_t     rpdo_type   = 1;
-    uint8_t     rpdo_len    = 4;
-    uint16_t     data[4]     = { 0x8182, 0x8384, 0x8586, 0x8788};
+    CO_NODE  node;
+    uint32_t rpdo_id     = 0x40000200;
+    uint32_t rpdo_map[4] = { 0x25001510, 0x25001610, 0x25001710, 0x25001810 };
+    uint8_t  rpdo_type   = 1;
+    uint8_t  rpdo_len    = 4;
+    uint16_t data[4]     = { 0x8182, 0x8384, 0x8586, 0x8788};
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &rpdo_id,     &rpdo_type);
     TS_CreateRPdoMap(0, &rpdo_map[0], &rpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 0x16, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&data[1]);
-    TS_ODAdd(CO_KEY(0x2500, 0x17, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&data[2]);
-    TS_ODAdd(CO_KEY(0x2500, 0x18, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&data[3]);
+    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 0x16, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 0x17, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)&data[2]);
+    TS_ODAdd(CO_KEY(0x2500, 0x18, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)&data[3]);
     TS_CreateNodeAutoStart(&node);
 
     TS_PDO_SEND(0x201, 0x41);
 
-    TS_ASSERT(0x8182 == data[0]);         /* check signals to be unchanged            */
+    /* check signals to be unchanged */
+    TS_ASSERT(0x8182 == data[0]);
     TS_ASSERT(0x8384 == data[1]);
     TS_ASSERT(0x8586 == data[2]);
     TS_ASSERT(0x8788 == data[3]);
 
     TS_SYNC_SEND();
 
-    TS_ASSERT(0x4241 == data[0]);         /* check signals to be changed              */
+    /* check signals to be changed */
+    TS_ASSERT(0x4241 == data[0]);
     TS_ASSERT(0x4443 == data[1]);
     TS_ASSERT(0x4645 == data[2]);
     TS_ASSERT(0x4847 == data[3]);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    /* check error free stack execution */
+    CHK_NO_ERR(&node);
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -130,31 +142,34 @@ TS_DEF_MAIN(TS_RPdo_4x2Byte)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_2x4Byte)
 {
-    CO_NODE        node;
-    uint32_t     rpdo_id     = 0x40000200;
-    uint32_t     rpdo_map[2] = { 0x25001F20, 0x25002020 };
-    uint8_t     rpdo_type   = 1;
-    uint8_t     rpdo_len    = 2;
-    uint32_t     data[2]     = { 0x71727374, 0x75767778};
+    CO_NODE  node;
+    uint32_t rpdo_id     = 0x40000200;
+    uint32_t rpdo_map[2] = { 0x25001F20, 0x25002020 };
+    uint8_t  rpdo_type   = 1;
+    uint8_t  rpdo_len    = 2;
+    uint32_t data[2]     = { 0x71727374, 0x75767778};
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &rpdo_id,     &rpdo_type);
     TS_CreateRPdoMap(0, &rpdo_map[0], &rpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x1F, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&data[0]);
-    TS_ODAdd(CO_KEY(0x2500, 0x20, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&data[1]);
+    TS_ODAdd(CO_KEY(0x2500, 0x1F, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&data[0]);
+    TS_ODAdd(CO_KEY(0x2500, 0x20, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&data[1]);
     TS_CreateNodeAutoStart(&node);
 
     TS_PDO_SEND(0x201, 0x31);
 
-    TS_ASSERT(0x71727374 == data[0]);     /* check signals to be unchanged            */
+    /* check signals to be unchanged */
+    TS_ASSERT(0x71727374 == data[0]);
     TS_ASSERT(0x75767778 == data[1]);
 
     TS_SYNC_SEND();
 
-    TS_ASSERT(0x34333231 == data[0]);     /* check signals to be changed              */
+    /* check signals to be changed */
+    TS_ASSERT(0x34333231 == data[0]);
     TS_ASSERT(0x38373635 == data[1]);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    /* check error free stack execution */
+    CHK_NO_ERR(&node);
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -166,36 +181,72 @@ TS_DEF_MAIN(TS_RPdo_2x4Byte)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_1_2_4Byte)
 {
-    CO_NODE        node;
-    uint32_t     rpdo_id     = 0x40000200;
-    uint32_t     rpdo_map[3] = { 0x25000B08, 0x25001510, 0x25001F20 };
-    uint8_t     rpdo_type   = 1;
-    uint8_t     rpdo_len    = 3;
-    uint8_t     data8       = 0x91;
-    uint16_t     data16      = 0x8182;
-    uint32_t     data32      = 0x71727374;
+    CO_NODE  node;
+    uint32_t rpdo_id     = 0x40000200;
+    uint32_t rpdo_map[3] = { 0x25000B08, 0x25001510, 0x25001F20 };
+    uint8_t  rpdo_type   = 1;
+    uint8_t  rpdo_len    = 3;
+    uint8_t  data8       = 0x91;
+    uint16_t data16      = 0x8182;
+    uint32_t data32      = 0x71727374;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &rpdo_id,     &rpdo_type);
     TS_CreateRPdoMap(0, &rpdo_map[0], &rpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data8);
-    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&data16);
-    TS_ODAdd(CO_KEY(0x2500, 0x1F, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&data32);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data8);
+    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)&data16);
+    TS_ODAdd(CO_KEY(0x2500, 0x1F, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&data32);
     TS_CreateNodeAutoStart(&node);
 
     TS_PDO_SEND(0x201, 0x21);
 
-    TS_ASSERT(0x91 == data8);             /* check signals to be unchanged            */
+    /* check signals to be unchanged */
+    TS_ASSERT(0x91 == data8);
     TS_ASSERT(0x8182 == data16);
     TS_ASSERT(0x71727374 == data32);
 
     TS_SYNC_SEND();
 
-    TS_ASSERT(0x21 == data8);             /* check signals to be unchanged            */
+    /* check signals to be unchanged */
+    TS_ASSERT(0x21 == data8);
     TS_ASSERT(0x2322 == data16);
     TS_ASSERT(0x27262524 == data32);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    /* check error free stack execution */
+    CHK_NO_ERR(&node);
+}
+
+TS_DEF_MAIN(TS_RPdo_24Bit)
+{
+    CO_NODE  node;
+    uint32_t rpdo_id     = 0x40000200;
+    uint32_t rpdo_map[2] = { 0x25000B18, 0x25001520 };
+    uint8_t  rpdo_type   = 1;
+    uint8_t  rpdo_len    = 2;
+    uint32_t data24      = 0x91929394;
+    uint32_t data32      = 0x71727374;
+
+    TS_CreateMandatoryDir();
+    TS_CreateRPdoCom(0, &rpdo_id,     &rpdo_type);
+    TS_CreateRPdoMap(0, &rpdo_map[0], &rpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&data24);
+    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&data32);
+    TS_CreateNodeAutoStart(&node);
+
+    TS_PDO_SEND(0x201, 0x21);
+
+    /* check signals to be unchanged */
+    TS_ASSERT(0x91929394 == data24);
+    TS_ASSERT(0x71727374 == data32);
+
+    TS_SYNC_SEND();
+
+    /* check signals to be unchanged */
+    TS_ASSERT(0x00232221 == data24);
+    TS_ASSERT(0x27262524 == data32);
+
+    /* check error free stack execution */
+    CHK_NO_ERR(&node);
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -207,10 +258,10 @@ TS_DEF_MAIN(TS_RPdo_1_2_4Byte)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_NoData)
 {
-    CO_NODE        node;
-    uint32_t     rpdo_id     = 0x40000200;
-    uint8_t     rpdo_type   = 1;
-    uint8_t     rpdo_len    = 0;
+    CO_NODE  node;
+    uint32_t rpdo_id   = 0x40000200;
+    uint8_t  rpdo_type = 1;
+    uint8_t  rpdo_len  = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &rpdo_id, &rpdo_type);
@@ -221,7 +272,8 @@ TS_DEF_MAIN(TS_RPdo_NoData)
 
     TS_SYNC_SEND();
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    /* check error free stack execution */
+    CHK_NO_ERR(&node);
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -233,28 +285,31 @@ TS_DEF_MAIN(TS_RPdo_NoData)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_UpdateAfterSync)
 {
-    CO_NODE        node;
-    uint32_t     rpdo_id     = 0x40000200;
-    uint32_t     rpdo_map    = 0x25000B08;
-    uint8_t     rpdo_type   = 3;
-    uint8_t     rpdo_len    = 1;
-    uint8_t     data        = 0x91;
+    CO_NODE  node;
+    uint32_t rpdo_id   = 0x40000200;
+    uint32_t rpdo_map  = 0x25000B08;
+    uint8_t  rpdo_type = 3;
+    uint8_t  rpdo_len  = 1;
+    uint8_t  data      = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &rpdo_id,  &rpdo_type);
     TS_CreateRPdoMap(0, &rpdo_map, &rpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data);
     TS_CreateNodeAutoStart(&node);
 
     TS_PDO_SEND(0x201, 0x11);
 
-    TS_ASSERT(0x91 == data);               /* check signals to be unchanged            */
+    /* check signals to be unchanged */
+    TS_ASSERT(0x91 == data);
 
     TS_SYNC_SEND();
 
-    TS_ASSERT(0x11 == data);               /* check signals to be changed              */
+    /* check signals to be changed */
+    TS_ASSERT(0x11 == data);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    /* check error free stack execution */
+    CHK_NO_ERR(&node);
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -266,24 +321,26 @@ TS_DEF_MAIN(TS_RPdo_UpdateAfterSync)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_UpdateType254)
 {
-    CO_NODE        node;
-    uint32_t     rpdo_id     = 0x40000200;
-    uint32_t     rpdo_map    = 0x25000B08;
-    uint8_t     rpdo_type   = 254;
-    uint8_t     rpdo_len    = 1;
-    uint8_t     data        = 0x91;
+    CO_NODE  node;
+    uint32_t rpdo_id   = 0x40000200;
+    uint32_t rpdo_map  = 0x25000B08;
+    uint8_t  rpdo_type = 254;
+    uint8_t  rpdo_len  = 1;
+    uint8_t  data      = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &rpdo_id,  &rpdo_type);
     TS_CreateRPdoMap(0, &rpdo_map, &rpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data);
     TS_CreateNodeAutoStart(&node);
 
     TS_PDO_SEND(0x201, 0x31);
 
-    TS_ASSERT(0x31 == data);               /* check signals to be changed              */
+    /* check signals to be changed */
+    TS_ASSERT(0x31 == data);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    /* check error free stack execution */
+    CHK_NO_ERR(&node);
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -295,46 +352,57 @@ TS_DEF_MAIN(TS_RPdo_UpdateType254)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_UpdateType255)
 {
-    CO_NODE        node;
-    uint32_t     rpdo_id     = 0x40000200;
-    uint32_t     rpdo_map    = 0x25000B08;
-    uint8_t     rpdo_type   = 255;
-    uint8_t     rpdo_len    = 1;
-    uint8_t     data        = 0x91;
+    CO_NODE  node;
+    uint32_t rpdo_id   = 0x40000200;
+    uint32_t rpdo_map  = 0x25000B08;
+    uint8_t  rpdo_type = 255;
+    uint8_t  rpdo_len  = 1;
+    uint8_t  data      = 0x91;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &rpdo_id,  &rpdo_type);
     TS_CreateRPdoMap(0, &rpdo_map, &rpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (uintptr_t)&data);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ____RW), 0, (CO_DATA)&data);
     TS_CreateNodeAutoStart(&node);
 
     TS_PDO_SEND(0x201, 0xE1);
 
-    TS_ASSERT(0xE1 == data);               /* check signals to be changed              */
+    /* check signals to be changed */
+    TS_ASSERT(0xE1 == data);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    /* check error free stack execution */
+    CHK_NO_ERR(&node);
 }
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
+static void PdoRxSetup(void)
+{
+    TS_CallbackInit(&CORpdoWriteDataCb);
+}
+
+static void PdoRxCleanup(void)
+{
+    TS_CallbackDeInit();
+}
+
 SUITE_PDO_RX()
 {
     TS_Begin(__FILE__);
-    
-//    CanDiagnosticOn(0);
+    TS_SetupCase(PdoRxSetup, PdoRxCleanup);
 
     TS_RUNNER(TS_RPdo_8x1Byte);
     TS_RUNNER(TS_RPdo_4x2Byte);
     TS_RUNNER(TS_RPdo_2x4Byte);
     TS_RUNNER(TS_RPdo_1_2_4Byte);
+    TS_RUNNER(TS_RPdo_24Bit);
+
     TS_RUNNER(TS_RPdo_NoData);
     TS_RUNNER(TS_RPdo_UpdateAfterSync);
     TS_RUNNER(TS_RPdo_UpdateType254);
     TS_RUNNER(TS_RPdo_UpdateType255);
-
-//    CanDiagnosticOff(0);
 
     TS_End();
 }

@@ -101,20 +101,20 @@ The object entries, handling the saving and restoring of parameters, shall be se
 
 ```c
 { CO_KEY(0x1010, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 0x03 },
-{ CO_KEY(0x1010, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&AllParaObj },
-{ CO_KEY(0x1010, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&ComParaObj },
-{ CO_KEY(0x1010, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&AppParaObj },
+{ CO_KEY(0x1010, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)&AllParaObj },
+{ CO_KEY(0x1010, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)&ComParaObj },
+{ CO_KEY(0x1010, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)&AppParaObj },
 
 { CO_KEY(0x1011, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, 0x03 },
-{ CO_KEY(0x1011, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&AllParaObj },
-{ CO_KEY(0x1011, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&ComParaObj },
-{ CO_KEY(0x1011, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (uintptr_t)&AppParaObj },
+{ CO_KEY(0x1011, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)&AllParaObj },
+{ CO_KEY(0x1011, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)&ComParaObj },
+{ CO_KEY(0x1011, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)&AppParaObj },
 ```
 
 The single parameters are most likely used within the object directory. The example definition of an object entry is shown for one parameter:
 
 ```c
-{ CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (uintptr_t)&Para.App.DemoWord },
+{ CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)&Para.App.DemoWord },
 ```
 
 ### Domain Definition
@@ -144,7 +144,7 @@ The following descriptions explains the details of the structure members:
 The object entry, presenting the example domain above to the CANopen network, should be defined within the manufacturer-specific area (e.g. index 0x2500, subindex 0x00) with the following object directory entry definition line:
 
 ```c
-{ CO_KEY(0x2500, 0, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (uintptr_t)&AppDomain },
+{ CO_KEY(0x2500, 0, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (CO_DATA)&AppDomain },
 ```
 
 Note: The standard type implementation `CO_TDOMAIN` assumes, that the domain memory is located in RAM and is direct accessible. For other types of domain, a project-specific domain type shall be implemented.
@@ -175,8 +175,8 @@ The following descriptions explains the details of the structure members, which 
 The object entry, presenting the example domain above to the CANopen network, should be defined within the heartbeat consumer area (index 0x1016, subindex 0x01 ff.) with the following object directory entry definition line:
 
 ```c
-{ CO_KEY(0x1016, 0, CO_DOMAIN|CO_OBJ_D__R_),           0, (uintptr_t)1                },
-{ CO_KEY(0x1016, 1, CO_DOMAIN|CO_OBJ____RW), CO_THB_CONS, (uintptr_t)&AppHbConsumer_1 },
+{ CO_KEY(0x1016, 0, CO_DOMAIN|CO_OBJ_D__R_),           0, (CO_DATA)1                },
+{ CO_KEY(0x1016, 1, CO_DOMAIN|CO_OBJ____RW), CO_THB_CONS, (CO_DATA)&AppHbConsumer_1 },
 ```
 
 Note: Even, if the members "Time" and "NodeId" are static, the heartbeat consumer must be placed in RAM. There are multiple internal members for managing the heartbeat consumer included as well.
@@ -325,7 +325,7 @@ The object entry type structure reference [`CO_OBJ_TYPE *`] shall be set to one 
 
 #### Object Data Reference
 
-The object data reference [`uintptr_t`] shall be set in dependence to the object flags and the object type structure reference to different values.
+The object data reference [`CO_DATA`] shall be set in dependence to the object flags and the object type structure reference to different values.
 
 | Object Type   | Object Flags   | Required Content in Data Pointer          |
 | ------------- | -------------- | ----------------------------------------- |
@@ -374,13 +374,13 @@ const CO_OBJ AppObjDir[] = {
   {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x02, 8)},
     :
   /* mapped object entry */
-  {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (uintptr_t)&MyData},
+  {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)&MyData},
     :
   CO_OBJ_DIR_ENDMARK
 };
 ```
 
-*Note: this CANopen stack supports the mapping of 8, 16 or 32bits.*
+*Note: this CANopen stack supports the mapping of 8, 16, 24 or 32bits.*
 
 ### Transmit PDO Communication
 

@@ -43,7 +43,7 @@ TS_DEF_MAIN(TS_SegWr_Basic)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&val);
     TS_CreateNode(&node,0);
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0x21, idx, sub, 4);
@@ -81,7 +81,7 @@ TS_DEF_MAIN(TS_SegWr_Basic_Bad)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (uintptr_t)&val);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&val);
     TS_CreateNode(&node,0);
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0x21, idx, sub, 4);
@@ -581,7 +581,7 @@ TS_DEF_MAIN(TS_SegWr_DomainNullPtr)
     uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (uintptr_t)0);
+    TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (CO_DATA)0);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/

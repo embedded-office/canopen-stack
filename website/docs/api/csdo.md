@@ -60,7 +60,7 @@ CO_CSDO *COCSdoFind(CO_NODE *node, uint8_t num);
 
 **Returned Value**
 
-- The function returns a valid CO_CSDO object when addressed SDO client is ready for initiating a new transfer. Otherwise, an invalid CO_CSDO object is returned.
+- The function returns a valid `CO_CSDO` object when addressed SDO client is ready for initiating a new transfer. Otherwise, an invalid `CO_CSDO` object is returned.
 
 **Example**
 
@@ -84,7 +84,7 @@ if (csdo == 0) {
 
 #### COCSdoRequestDownload()
 
-The function starts an SDO download transfer in the calling node to write data to the configured SDO server node-id.
+The function starts an SDO download transfer in the calling node to write data to the configured SDO server node-id. When the size of data transfer is lower or equal 4 an expedited transfer is used, otherwise a segmented transfer is initiated.
 
 **Prototype**
 
@@ -110,7 +110,7 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
 
 **Returned Value**
 
-- The function returns CO_ERR_NONE when transfer is initiated successfully. Any other error code indicates, that the transfer is not started.
+- The function returns `CO_ERR_NONE` when transfer is initiated successfully. Any other error code indicates, that the transfer is not started.
 
 **Example**
 
@@ -161,7 +161,7 @@ void foo()
 
 #### COCSdoRequestUpload()
 
-The function starts an SDO upload transfer in the calling node to read data from the configured SDO server node-id.
+The function starts an SDO upload transfer in the calling node to read data from the configured SDO server node-id. When the size of data transfer is lower or equal 4 an expedited transfer is used, otherwise a segmented transfer is initiated.
 
 **Prototype**
 
@@ -187,14 +187,14 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
 
 **Returned Value**
 
-- The function returns CO_ERR_NONE when transfer is initiated successfully. Any other error code indicates, that the transfer is not started.
+- The function returns `CO_ERR_NONE` when transfer is initiated successfully. Any other error code indicates, that the transfer is not started.
 
 **Example**
 
-The following example reads a 32bit value from the remote node object dictionary entry [`1234h:02`] with SDO client #1 and a transfer timeout of 1s.
+The following example reads a 32 bytes from the remote node object dictionary entry [`1234h:02`] with SDO client #1 and a transfer timeout of 1s.
 
 ```c
-uint32_t readValue = 0;
+uint8_t readValue[32] = { 0 };
 
 /* The application specific SDO transfer finalization callback */
 void AppCSdoFinishCb(CO_CSDO *csdo, uint16_t index, uint8_t sub, uint32_t code)
@@ -218,7 +218,7 @@ void foo()
     :
   csdo = COCSdoFind(&(AppNode), 1);
   err = COCSdoRequestUpload(csdo, CO_DEV(1234,02),
-                            &readValue, sizeof(readValue),
+                            &readValue, 32,
                             AppCSdoFinishCb, 1000);
   if (err == CO_ERR_NONE) {
 

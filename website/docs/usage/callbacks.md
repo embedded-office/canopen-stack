@@ -311,3 +311,51 @@ int16_t COParaDefault(CO_PARA *pg)
 
 - `=0` : parameter default values successful set
 - `<0` : error is detected and function aborted
+
+
+## CORpdoWriteData()
+
+This **optional** function is called during PDO distribution of the PDO message frame into the object dictionary when mapped data value consumes more than 4 bytes.
+
+```c
+void CORpdoWriteData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
+{
+  /* Optional: place here some code, which is called
+   * when a PDO is received with mapped values with
+   * a size larger than 4 byte.
+   */
+}
+```
+
+**Arguments**
+
+| Parameter | Description                                      |
+| --------- | ------------------------------------------------ |
+| frm       | Ptr to PDO message frame                         |
+| pos       | The start index in the CAN message frame payload |
+| size      | The mapped value size in bytes                   |
+| obj       | Ptr to the target object entry                   |
+
+
+## COTpdoReadData()
+
+This **optional** function is called during PDO transmission when a mapped data value consumes more than 4 bytes.
+
+```c
+void COTpdoReadData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
+{
+  /* Optional: place here some code, which is called
+   * when a PDO is constructed for transmission which
+   * needs a mapped values with a size larger than 4 byte.
+   */
+}
+```
+
+**Arguments**
+
+| Parameter | Description                                      |
+| --------- | ------------------------------------------------ |
+| frm       | Ptr to PDO message frame                         |
+| pos       | The start index in the CAN message frame payload |
+| size      | The mapped value size in bytes                   |
+| obj       | Ptr to the source object entry                   |

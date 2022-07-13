@@ -22,11 +22,11 @@ For a constant timer based sending as defined in the CiA standards we need to pr
 
 ```c
   :
-{CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)5},
+{CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)5},
 {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
-{CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0xfe},
-{CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)0},
-{CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_), CO_TEVENT, (uintptr_t)60},
+{CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)0xfe},
+{CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (CO_DATA)0},
+{CO_KEY(0x1800, 5, CO_UNSIGNED16|CO_OBJ_D__R_), CO_TEVENT, (CO_DATA)60},
   :
 ```
 
@@ -67,15 +67,15 @@ The transmit on change of an object entry is described in the quickstart. This t
 
 ```c
   :
-{CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
+{CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)2},
 {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
-{CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)254}
-{CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (uintptr_t)100}
+{CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)254}
+{CO_KEY(0x1800, 3, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (CO_DATA)100}
   :
-{CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)1},
+{CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)1},
 {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_LINK(0x2100, 0x01, 32)},
   :
-{CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TASYNC, (uintptr_t)&MyValue},
+{CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TASYNC, (CO_DATA)&MyValue},
   :
 ```
 
@@ -94,8 +94,8 @@ For triggering the PDO transmissions on all remote nodes in the network, we need
 uint32_t obj1005 = CO_SYNC_COBID_ON | 0x80;    /* enable sync producer       */
 uint32_t obj1006 = 20 * 1000;                  /* sync cycle-time 20ms in us */
   :
-{CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TSYNCID, (uintptr_t)(&obj1005)},
-{CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TSYNCCYCLE, (uintptr_t)(&obj1006)},
+{CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TSYNCID, (CO_DATA)(&obj1005)},
+{CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TSYNCCYCLE, (CO_DATA)(&obj1006)},
   :
 ```
 
@@ -109,9 +109,9 @@ The CiA standard defines synchronous PDO transfers, too. This allows the transmi
 
 ```c
   :
-{CO_KEY(0x1807, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)2},
+{CO_KEY(0x1807, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)2},
 {CO_KEY(0x1807, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_COBID_TPDO_DEFAULT(0)},
-{CO_KEY(0x1807, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (uintptr_t)0x4},
+{CO_KEY(0x1807, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)0x4},
   :
 ```
 

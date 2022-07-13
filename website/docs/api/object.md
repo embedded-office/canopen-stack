@@ -10,7 +10,7 @@ classDiagram
   CO_OBJ_TYPE o-- CO_OBJ : Type
   class CO_OBJ {
     -uint32_t Key
-    -uintptr_t Data
+    -CO_DATA Data
     +COObjGetSize(width) uint32_t
     +COObjRdBufCont(destination, length) int16_t
     +COObjRdBufStart(destination, length) int16_t
@@ -28,7 +28,7 @@ The class `CO_OBJ` is defined within `co_obj.h` and is responsible for the CANop
 
 | Data Member | Type           | Description                        |
 | ----------- | -------------- | ---------------------------------- |
-| Data        | `uintptr_t`    | data information of object entry   |
+| Data        | `CO_DATA`      | data information of object entry   |
 | Key         | `uint32_t`     | Encoded object entry properties    |
 | Type        | `CO_OBJ_TYPE*` | pointer to object type             |
 

@@ -7,7 +7,27 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
-none
+- nothing
+
+## [4.3.0] - 2022-07-13
+
+### Added
+
+- Add a note in documentation to usage and api about the need of sorted object dictionary
+- Add support for SDO client segmented transfers [@tonbo777](https://github.com/tonbo777)
+- Add support of mapping values with 3 bytes in PDOs
+- Introducte callbacks for read/write PDO mapped values larger than 4 bytes
+
+### Changed
+
+- Adjust SDO client API documentation to reflect conditions for expedited and segmented transfers
+
+### Fixed
+
+- Avoid variable declaration if SDO client is disabled [@jernejsk](https://github.com/jernejsk)
+- Allow direct data in object dictionaries running on 16bit microcontrollers
+
+> **Note**: The datatype in the object dictionary was `uintptr_t` in previous versions. For 16bit microcontrollers `uintptr_t` may contain only 24bit instead of the required 32bits for direct data storage. For this reason, in version 4.3.0 and later the object dictionary should use `CO_DATA` as data type.
 
 ## [4.2.0] - 2022-04-01
 
@@ -174,7 +194,8 @@ none
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.2.0...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.3.0...HEAD
+[4.3.0]: https://github.com/embedded-office/canopen-stack/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/embedded-office/canopen-stack/compare/v4.1.8...v4.2.0
 [4.1.8]: https://github.com/embedded-office/canopen-stack/compare/v4.1.7...v4.1.8
 [4.1.7]: https://github.com/embedded-office/canopen-stack/compare/v4.1.6...v4.1.7
