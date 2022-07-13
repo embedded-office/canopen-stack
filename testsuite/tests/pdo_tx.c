@@ -189,6 +189,38 @@ TS_DEF_MAIN(TS_TPdo_1_2_4Byte)
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
+TS_DEF_MAIN(TS_TPdo_24Bit)
+{
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map[2]  = { 0x25000B18, 0x25001520 };
+    uint8_t   tpdo_type    = 0xfe;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 2;
+    uint32_t  data24       = 0x00123456;
+    uint32_t  data32       = 0x789abcde;
+
+    TS_CreateMandatoryDir();
+    TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
+    TS_CreateTPdoMap(0, &tpdo_map[0], &tpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED32|CO_OBJ___PRW), 0, (CO_DATA)&data24);
+    TS_ODAdd(CO_KEY(0x2500, 0x15, CO_UNSIGNED32|CO_OBJ___PRW), 0, (CO_DATA)&data32);
+    TS_CreateNodeAutoStart(&node);
+
+    COTPdoTrigPdo(node.TPdo, 0);                      /* send PDO #0                              */
+
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_PDO0 (frm, 0x181, 7);                         /* check PDO #0 (Id and DLC)                */
+    CHK_BYTE (frm, 0, 0x56);
+    CHK_BYTE (frm, 1, 0x34);
+    CHK_BYTE (frm, 2, 0x12);
+    CHK_LONG (frm, 3, 0x789abcde);
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC5
 *
@@ -260,50 +292,6 @@ TS_DEF_MAIN(TS_TPdo_After3Sync)
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-
-/*------------------------------------------------------------------------------------------------*/
-/*! \brief TC7
-*
-*          This testcase will check the principle transmission of:
-*          - PDO #0 (transmission on change after a SYNC messages (type = 0))
-*/
-/*------------------------------------------------------------------------------------------------*/
-#if DISABLED
-TS_DEF_MAIN(TS_TPdo_OnChangeAfterSync)
-{
-    CO_IF_FRM frm;
-    CO_NODE   node;
-    uint32_t  tpdo_id      = 0x40000180;
-    uint32_t  tpdo_map     = 0x25000B08;
-    uint8_t   tpdo_type    = 0;
-    uint16_t  tpdo_inhibit = 0;
-    uint16_t  tpdo_evtime  = 0;
-    uint8_t   tpdo_len     = 1;
-    uint8_t   data8        = 0x91;
-
-    TS_CreateMandatoryDir();
-    TS_CreateTPdoCom(0, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
-    TS_CreateTPdoMap(0, &tpdo_map, &tpdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (CO_DATA)&data8);
-    TS_CreateNodeAutoStart(&node);
-
-    TS_SYNC_SEND();
-
-    CHK_NOCAN(&frm);                                  /* check for no CAN frame                   */
-
-    TS_SYNC_SEND();
-
-    SET_OBJ08(0x2500, 0x0B, 0x19);                    /* perform signal change                    */
-
-    TS_SYNC_SEND();
-
-    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
-    CHK_PDO0 (frm, 0x181, 1);                         /* check PDO #0 (Id and DLC)                */
-    CHK_BYTE (frm, 0, 0x19);
-
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
-}
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC8
@@ -963,15 +951,13 @@ SUITE_PDO_TX()
 {
     TS_Begin(__FILE__);
 
-//    CanDiagnosticOn(0);
-
     TS_RUNNER(TS_TPdo_8x1Byte);
     TS_RUNNER(TS_TPdo_4x2Byte);
     TS_RUNNER(TS_TPdo_2x4Byte);
     TS_RUNNER(TS_TPdo_1_2_4Byte);
+    TS_RUNNER(TS_TPdo_24Bit);
     TS_RUNNER(TS_TPdo_NoData);
     TS_RUNNER(TS_TPdo_After3Sync);
-//    TS_RUNNER(TS_TPdo_OnChangeAfterSync);
     TS_RUNNER(TS_TPdo_After240Sync);
     TS_RUNNER(TS_TPdo_Type254ViaObj);
     TS_RUNNER(TS_TPdo_Type255ViaObj);
@@ -985,8 +971,6 @@ SUITE_PDO_TX()
     TS_RUNNER(TS_TPdo_TmrFastest);
     TS_RUNNER(TS_TPdo_Async);
     TS_RUNNER(TS_TPdo_SwitchToOpWhileInOp);
-
-//    CanDiagnosticOff(0);
 
     TS_End();
 }
