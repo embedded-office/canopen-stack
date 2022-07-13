@@ -37,7 +37,7 @@ $ mike deploy --config-file ./website/mkdocs.yml --push --update-aliases vx.y.z 
 $ mike set-default --config-file ./website/mkdocs.yml --push latest
 
 # list all website versions
-$ mike delete --config-file ./website/mkdocs.yml [version-or-alias]
+$ mike list --config-file ./website/mkdocs.yml [version-or-alias]
 
 # delete a website version
 $ mike delete --config-file ./website/mkdocs.yml [version-or-alias]
@@ -47,5 +47,5 @@ $ mike delete --config-file ./website/mkdocs.yml [version-or-alias]
 
 The GitHub Action `website.yml` is defined to deploy (or overwrite) a website version. This action is triggered when a new version tag is created (naming pattern `v*.*.*`). A website update is triggered, when a file is changed within the directory `/website/...`.
 
-TODO: version identification is fixed to v4.2 (needs update before moving forward to v4.3)
-=> sufficient for v4.2.x updates
+TODO: version identification is fixed to v4.3 (needs update before moving forward to v4.4)
+=> sufficient for v4.3.x updates

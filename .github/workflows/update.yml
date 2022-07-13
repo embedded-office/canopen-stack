@@ -63,5 +63,5 @@ jobs:
 
       - name: Deploy Website
         run: |
-          mike deploy --config-file ./${MKDOCS} --push --update-aliases v4.2 latest
+          mike deploy --config-file ./${MKDOCS} --push --update-aliases v4.3 latest
           mike set-default --config-file ./${MKDOCS} --push latest
