@@ -313,7 +313,7 @@ int16_t COParaDefault(CO_PARA *pg)
 - `<0` : error is detected and function aborted
 
 
-## CORpdoWriteData()
+### CORpdoWriteData()
 
 This **optional** function is called during PDO distribution of the PDO message frame into the object dictionary when mapped data value consumes more than 4 bytes.
 
@@ -337,7 +337,7 @@ void CORpdoWriteData(CO_IF_FRM *frm, uint8_t pos, uint8_t size, CO_OBJ *obj)
 | obj       | Ptr to the target object entry                   |
 
 
-## COTpdoReadData()
+### COTpdoReadData()
 
 This **optional** function is called during PDO transmission when a mapped data value consumes more than 4 bytes.
 
