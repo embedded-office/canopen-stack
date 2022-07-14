@@ -315,7 +315,7 @@ void CONmtHbConsInit(CO_NMT *nmt)
             node->Error = CO_ERR_CFG_1016;
             break;
         }
-        hbc = (CO_HBCONS *)obj->Data;
+        hbc = (CO_HBCONS *)CO_DATA_GET_REF(obj->Data);
         if (hbc == 0) {
             node->Error = CO_ERR_CFG_1016;
             break;
@@ -488,7 +488,7 @@ CO_ERR COTypeNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     uint16_t    time;
     uint8_t     nodeid;
 
-    hbc  = (CO_HBCONS *)obj->Data;
+    hbc  = (CO_HBCONS *)CO_DATA_GET_REF(obj->Data);
     if (hbc == 0) {
         node->Error = CO_ERR_CFG_1016;
         return (result);
@@ -518,7 +518,7 @@ CO_ERR COTypeNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *b
     uint32_t   num;
 
     (void)node;
-    hbc    = (CO_HBCONS *)(obj->Data);
+    hbc    = (CO_HBCONS *)CO_DATA_GET_REF(obj->Data);
     value  = (uint32_t)(hbc->Time);
     value |= ((uint32_t)(hbc->NodeId)) << 16;
     num    = CO_LONG;

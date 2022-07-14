@@ -63,13 +63,13 @@ extern "C" {
 # define TS_ENV_VER_BASE   10
 # if defined(__GNUC_PATCHLEVEL__)
 #  define TS_ENV_VER_FORMAT "RRBBPP"
-#  define TS_ENV_VER (__GNUC__ * 10000 \
-                      + __GNUC_MINOR__ * 100 \
+#  define TS_ENV_VER (__GNUC__ * 10000L \
+                      + __GNUC_MINOR__ * 100L \
                       + __GNUC_PATCHLEVEL__)
 # else
 #  define TS_ENV_VER_FORMAT "RRBBXX"
-#  define TS_ENV_VER (__GNUC__ * 10000 \
-                      + __GNUC_MINOR__ * 100)
+#  define TS_ENV_VER (__GNUC__ * 10000L \
+                      + __GNUC_MINOR__ * 100L)
 # endif
 #endif /* defined(__GNUC__) */
 

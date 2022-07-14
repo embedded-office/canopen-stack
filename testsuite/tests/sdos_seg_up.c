@@ -257,7 +257,7 @@ TS_DEF_MAIN(TS_SegRd_23ByteString)
     Str23.Start  = (uint8_t *)strPtr;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_STRING|CO_OBJ____R_), CO_TSTRING, (CO_DATA)&Str23);
+    TS_ODAdd(CO_KEY(idx, sub, CO_STRING|CO_OBJ____R_), CO_TSTRING, CO_DATA_SET_REF(&Str23));
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -455,7 +455,7 @@ TS_DEF_MAIN(TS_SegRd_DomainNullPtr)
     uint8_t   sub  = 9;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (CO_DATA)0);
+    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, CO_DATA_SET_VAL(0));
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -541,7 +541,7 @@ TS_DEF_MAIN(TS_SegRd_Bad2ndToggleBit)
     Str23.Start  = (uint8_t *)strPtr;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_STRING|CO_OBJ____R_), CO_TSTRING, (CO_DATA)&Str23);
+    TS_ODAdd(CO_KEY(idx, sub, CO_STRING|CO_OBJ____R_), CO_TSTRING, CO_DATA_SET_REF(&Str23));
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
