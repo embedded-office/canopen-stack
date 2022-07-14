@@ -315,7 +315,7 @@ void CONmtHbConsInit(CO_NMT *nmt)
             node->Error = CO_ERR_CFG_1016;
             break;
         }
-        hbc = (CO_HBCONS *)obj->Data;
+        hbc = (CO_HBCONS *)(obj->Data);
         if (hbc == 0) {
             node->Error = CO_ERR_CFG_1016;
             break;
@@ -488,7 +488,7 @@ CO_ERR COTypeNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     uint16_t    time;
     uint8_t     nodeid;
 
-    hbc  = (CO_HBCONS *)obj->Data;
+    hbc  = (CO_HBCONS *)(obj->Data);
     if (hbc == 0) {
         node->Error = CO_ERR_CFG_1016;
         return (result);

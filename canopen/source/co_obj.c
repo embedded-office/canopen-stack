@@ -231,9 +231,9 @@ void COObjInit (struct CO_OBJ_T *obj)
     if (obj == 0) {
         return;
     }
-    obj->Key   = 0;
-    obj->Type  = 0;
-    obj->Data  = 0;
+    obj->Key  = (uint32_t)0;
+    obj->Type = (CO_OBJ_TYPE *)0;
+    obj->Data = (CO_DATA)(0);
 }
 
 /*
@@ -250,9 +250,9 @@ CO_ERR COObjRdDirect(struct CO_OBJ_T *obj, void *val, uint32_t len)
 
     if (CO_IS_DIRECT(obj->Key) != 0) {
         if (len == CO_BYTE) {
-            *((uint8_t *)val) = (uint8_t)((obj->Data)&0xff);
+            *((uint8_t *)val) = (uint8_t)((obj->Data) & 0xff);
         } else if (len == CO_WORD) {
-            *((uint16_t *)val) = (uint16_t)((obj->Data)&0xffff);
+            *((uint16_t *)val) = (uint16_t)((obj->Data) & 0xffff);
         } else if (len == CO_LONG) {
             *((uint32_t *)val) = (uint32_t)(obj->Data);
         } else {
@@ -260,25 +260,25 @@ CO_ERR COObjRdDirect(struct CO_OBJ_T *obj, void *val, uint32_t len)
         }
     } else {
         sz = CO_GET_SIZE(obj->Key);
-        if (obj->Data == 0) {
+        if ((obj->Data) == 0) {
             result = CO_ERR_OBJ_ACC;
         } else if (len == CO_BYTE) {
             if (sz == CO_BYTE) {
-                *((uint8_t *)val) = (uint8_t)(*((uint8_t*)(obj->Data))&0xff);
+                *((uint8_t *)val) = (uint8_t)(*((uint8_t*)(obj->Data)) & 0xff);
             } else if (sz == CO_WORD) {
-                *((uint8_t *)val) = (uint8_t)(*((uint16_t*)(obj->Data))&0xff);
+                *((uint8_t *)val) = (uint8_t)(*((uint16_t*)(obj->Data)) & 0xff);
             } else if (sz == CO_LONG) {
-                *((uint8_t *)val) = (uint8_t)(*((uint32_t*)(obj->Data))&0xff);
+                *((uint8_t *)val) = (uint8_t)(*((uint32_t*)(obj->Data)) & 0xff);
             } else {
                 result = CO_ERR_BAD_ARG;
             }
         } else if (len == CO_WORD) {
             if (sz == CO_BYTE) {
-                *((uint16_t *)val) = (uint16_t)(*((uint8_t*)(obj->Data))&0xffff);
+                *((uint16_t *)val) = (uint16_t)(*((uint8_t*)(obj->Data)) & 0xffff);
             } else if (sz == CO_WORD) {
-                *((uint16_t *)val) = (uint16_t)(*((uint16_t*)(obj->Data))&0xffff);
+                *((uint16_t *)val) = (uint16_t)(*((uint16_t*)(obj->Data)) & 0xffff);
             } else if (sz == CO_LONG) {
-                *((uint16_t *)val) = (uint16_t)(*((uint32_t*)(obj->Data))&0xffff);
+                *((uint16_t *)val) = (uint16_t)(*((uint32_t*)(obj->Data)) & 0xffff);
             } else {
                 result = CO_ERR_BAD_ARG;
             }
@@ -363,17 +363,17 @@ CO_ERR COObjWrDirect(CO_OBJ *obj, void *val, uint32_t len)
 
     if (CO_IS_DIRECT(obj->Key) != 0) {
         if (len == CO_BYTE) {
-            obj->Data = (uint32_t)(*((uint8_t*)val)&0xff);
+            obj->Data = (CO_DATA)((uint8_t)(*((uint8_t*)val)&0xff));
         } else if (len == CO_WORD) {
-            obj->Data = (uint32_t)(*((uint16_t*)val)&0xffff);
+            obj->Data = (CO_DATA)((uint16_t)(*((uint16_t*)val)&0xffff));
         } else if (len == CO_LONG) {
-            obj->Data = (uint32_t)(*((uint32_t *)val));
+            obj->Data = (CO_DATA)((uint32_t)(*((uint32_t *)val)));
         } else {
             result = CO_ERR_BAD_ARG;
         }
     } else {
         sz = CO_GET_SIZE(obj->Key);
-        if (obj->Data == 0) {
+        if ((obj->Data) == 0) {
             result = CO_ERR_OBJ_ACC;
         } else if (sz == CO_BYTE) {
             if (len == CO_BYTE) {
@@ -528,7 +528,7 @@ uint32_t COTypeDomainSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t
     uint32_t    result = 0;
 
     (void)node;
-    if (obj->Data == 0) {
+    if ((obj->Data) == (CO_DATA)0) {
         return (result);
     }
     dom = (CO_OBJ_DOM *)(obj->Data);

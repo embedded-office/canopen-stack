@@ -128,7 +128,7 @@ CO_ERR CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
     for (sub = 1; sub <= num; sub++) {
         obj = CODictFind(cod, CO_DEV(0x1010, sub));
         if (obj != 0) {
-            pg = (CO_PARA *)obj->Data;
+            pg = (CO_PARA *)(obj->Data);
             if (pg->Type == type) {
                 bytes = COIfNvmRead(&node->If, pg->Offset, pg->Start, pg->Size);
                 if (bytes != pg->Size) {

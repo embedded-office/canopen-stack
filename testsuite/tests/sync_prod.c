@@ -35,8 +35,8 @@ TS_DEF_MAIN(TS_Sync_1s)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    uint32_t  id     = CO_SYNC_COBID_ON | 0x80;
-    uint32_t  period = 1000 * 1000;
+    uint32_t  id     = CO_SYNC_COBID_ON | 0x80L;
+    uint32_t  period = 1000L * 1000L;
 
     TS_CreateMandatoryDir();
     TS_CreateSyncPeriod(&id, &period);
@@ -65,8 +65,8 @@ TS_DEF_MAIN(TS_Sync_100ms)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    uint32_t  id     = CO_SYNC_COBID_ON | 0x80;
-    uint32_t  period = 100 * 1000;
+    uint32_t  id     = CO_SYNC_COBID_ON | 0x80L;
+    uint32_t  period = 100L * 1000L;
 
     TS_CreateMandatoryDir();
     TS_CreateSyncPeriod(&id, &period);
@@ -94,8 +94,8 @@ TS_DEF_MAIN(TS_Sync_disabled)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    uint32_t  id     = 0x80;
-    uint32_t  period = 100 * 1000;
+    uint32_t  id     = 0x80L;
+    uint32_t  period = 100L * 1000L;
 
     TS_CreateMandatoryDir();
     TS_CreateSyncPeriod(&id, &period);
@@ -122,8 +122,8 @@ TS_DEF_MAIN(TS_Sync_stop_mode)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    uint32_t  id     = CO_SYNC_COBID_ON | 0x80;
-    uint32_t  period = 100 * 1000;
+    uint32_t  id     = CO_SYNC_COBID_ON | 0x80L;
+    uint32_t  period = 100L * 1000L;
 
     TS_CreateMandatoryDir();
     TS_CreateSyncPeriod(&id, &period);
@@ -151,8 +151,8 @@ TS_DEF_MAIN(TS_Sync_change_id)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    uint32_t  id     = CO_SYNC_COBID_ON | 0x80;
-    uint32_t  period = 100 * 1000;
+    uint32_t  id     = CO_SYNC_COBID_ON | 0x80L;
+    uint32_t  period = 100L * 1000L;
 
     TS_CreateMandatoryDir();
     TS_CreateSyncPeriod(&id, &period);
@@ -190,8 +190,8 @@ TS_DEF_MAIN(TS_Sync_freeze_id)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    uint32_t  id     = CO_SYNC_COBID_ON | 0x80;
-    uint32_t  period = 100 * 1000;
+    uint32_t  id     = CO_SYNC_COBID_ON | 0x80L;
+    uint32_t  period = 100L * 1000L;
 
     TS_CreateMandatoryDir();
     TS_CreateSyncPeriod(&id, &period);
@@ -227,8 +227,8 @@ TS_DEF_MAIN(TS_Sync_change_period)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
-    uint32_t  id     = CO_SYNC_COBID_ON | 0x80;
-    uint32_t  period = 200 * 1000;
+    uint32_t  id     = CO_SYNC_COBID_ON | 0x80L;
+    uint32_t  period = 200L * 1000L;
 
     TS_CreateMandatoryDir();
     TS_CreateSyncPeriod(&id, &period);
@@ -243,7 +243,7 @@ TS_DEF_MAIN(TS_Sync_change_period)
     CHK_CAN(&frm);                                    /* check for a CAN frame                    */
     CHK_SYNC(frm, 0x80);
 
-    TS_SDO_SEND(0x23, 0x1006, 0, 100 * 1000);
+    TS_SDO_SEND(0x23, 0x1006, 0, 100L * 1000L);
     CHK_CAN(&frm);
 
     TS_Wait(&node, 50);

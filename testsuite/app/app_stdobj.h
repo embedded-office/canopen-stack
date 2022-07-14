@@ -94,24 +94,24 @@ extern "C" {
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1005h:0 - COB-ID SYNC MESSAGE
 *
-* \param   val
-*          Constant value of 32bit COB-ID with CAN-ID (bit0 to 10).
+* \param   ref
+*          Reference to value of 32bit COB-ID with CAN-ID (bit0 to 10).
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1005_0(val)                             \
+#define OBJ1005_0(ref)                             \
     CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ____RW), \
-    CO_TSYNCID, (CO_DATA)(val)
+    CO_TSYNCID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1006h:0 - COMMUNICATION CYCLE PERIOD
 *
-* \param   val
-*          This period value defines the SYNC interval in us.
+* \param   ref
+*          Reference to period value defines the SYNC interval in us.
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1006_0(val)                             \
+#define OBJ1006_0(ref)                             \
     CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ____RW), \
-    CO_TSYNCCYCLE, (CO_DATA)(val)
+    CO_TSYNCCYCLE, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1014h:0 - COB-ID EMCY MESSAGE

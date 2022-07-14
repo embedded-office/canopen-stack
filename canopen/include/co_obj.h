@@ -111,10 +111,10 @@ extern "C" {
 * \param flags
 *    The additional object property flags
 */
-#define CO_KEY(idx,sub,flags)            \
-    ( (uint32_t)((  idx) & 0xFFFF)<<16 | \
-      (uint32_t)((  sub) &   0xFF)<< 8 | \
-      (uint32_t)((flags) &   0xFF)     )
+#define CO_KEY(idx,sub,flags)                       \
+    (uint32_t)( ((uint32_t)(  idx) & 0xFFFF)<<16  | \
+                ((uint32_t)(  sub) &   0xFF)<< 8  | \
+                ((uint32_t)(flags) &   0xFF)     )
 
 /*! \brief OBJECT DEVICE
 *
@@ -128,9 +128,9 @@ extern "C" {
 * \param sub
 *    CANopen object subindex [0x00..0xFF]
 */
-#define CO_DEV(idx,sub)                \
-    ( (uint32_t)((idx) & 0xFFFF)<<16 | \
-      (uint32_t)((sub) &   0xFF)<<8  )
+#define CO_DEV(idx,sub)                           \
+    (uint32_t)( ((uint32_t)(idx) & 0xFFFF)<<16  | \
+                ((uint32_t)(sub) &   0xFF)<<8  )
 
 /*! \brief OBJECT MAPPING LINK
 *
@@ -144,12 +144,12 @@ extern "C" {
 *    CANopen object subindex [0x00..0xFF]
 *
 * \param bit
-*    Length of mapped signal in bits [8,16 or 32]
+*    Length of mapped signal in bits [8,16,24 or 32]
 */
-#define CO_LINK(idx,sub,bit)           \
-    ( (uint32_t)((idx) & 0xFFFF)<<16 | \
-      (uint32_t)((sub) &   0xFF)<<8  | \
-      (uint32_t)((bit) &   0xFF)     )
+#define CO_LINK(idx,sub,bit)                        \
+    (uint32_t)( ((uint32_t)(idx) & 0xFFFFL) << 16 | \
+                ((uint32_t)(sub) &   0xFFL) << 8  | \
+                ((uint32_t)(bit) &   0xFFL)      )
 
 /*! \brief EXTRACT DEVICE
 *
@@ -159,7 +159,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_GET_DEV(key)    (uint32_t)(((key) & 0xFFFFFF00))
+#define CO_GET_DEV(key)    \
+    (uint32_t)((uint32_t)(key) & 0xFFFFFF00L)
 
 /*! \brief EXTRACT SUBINDEX
 *
@@ -169,7 +170,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_GET_SUB(key)    (uint8_t)(((key) & 0x0000FF00) >> 8)
+#define CO_GET_SUB(key)    \
+    (uint8_t)(((uint32_t)(key) & 0x0000FF00L) >> 8)
 
 /*! \brief EXTRACT INDEX
 *
@@ -179,7 +181,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_GET_IDX(key)    (uint16_t)((key) >> 16)
+#define CO_GET_IDX(key)    \
+    (uint16_t)((uint32_t)(key) >> 16)
 
 /*! \brief EXTRACT SIZE
 *
@@ -191,7 +194,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_GET_SIZE(key)    (uint8_t)(1L << (((key) & CO_OBJ_SZ_MSK) >> 4))
+#define CO_GET_SIZE(key)    \
+    (uint8_t)(1L << (((uint32_t)(key) & CO_OBJ_SZ_MSK) >> 4))
 
 /*! \brief CHECK IF OBJECT IS PDO MAPPABLE
 *
@@ -201,7 +205,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_IS_PDOMAP(key)    (uint32_t)((key) & CO_OBJ___P__)
+#define CO_IS_PDOMAP(key)    \
+    (uint32_t)((uint32_t)(key) & CO_OBJ___P__)
 
 /*! \brief CHECK IF OBJECT DEPENDS ON NODE-ID
 *
@@ -212,7 +217,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_IS_NODEID(key)    (uint32_t)((key) & CO_OBJ__N___)
+#define CO_IS_NODEID(key)    \
+    (uint32_t)((uint32_t)(key) & CO_OBJ__N___)
 
 /*! \brief CHECK IF OBJECT IS A DIRECT
 *
@@ -222,7 +228,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_IS_DIRECT(key)    (uint32_t)((key) & CO_OBJ_D____)
+#define CO_IS_DIRECT(key)    \
+    (uint32_t)((uint32_t)(key) & CO_OBJ_D____)
 
 /*! \brief CHECK IF OBJECT IS READABLE
 *
@@ -232,7 +239,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_IS_READ(key)    (uint32_t)((key) & CO_OBJ____R_)
+#define CO_IS_READ(key)    \
+    (uint32_t)((uint32_t)(key) & CO_OBJ____R_)
 
 /*! \brief CHECK IF OBJECT IS WRITEABLE
 *
@@ -242,7 +250,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_IS_WRITE(key)    (uint32_t)((key) & CO_OBJ_____W)
+#define CO_IS_WRITE(key)    \
+    (uint32_t)((uint32_t)(key) & CO_OBJ_____W)
 
 /*! \brief COB-ID sync message
 *
@@ -262,14 +271,14 @@ extern "C" {
 *    the CAN-ID (standard or extended format)
 * \{
 */
-#define CO_COBID_SYNC_STD(generate, id)         \
-    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)      | \
-     ((uint32_t)(generate) & 0x1uL) << 30u)
+#define CO_COBID_SYNC_STD(generate, id)                \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)            | \
+               ((uint32_t)(generate) & 0x1uL) << 30u)
 
-#define CO_COBID_SYNC_EXT(generate, id)         \
-    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL) | \
-     ((uint32_t)0x1uL << 29u)                 | \
-     ((uint32_t)(generate) & 0x1uL) << 30u)
+#define CO_COBID_SYNC_EXT(generate, id)                \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)       | \
+               ((uint32_t)0x1uL << 29u)              | \
+               ((uint32_t)(generate) & 0x1uL) << 30u)
 /*! \} */
 
 /*! \brief COB-ID time stamp object
@@ -292,16 +301,16 @@ extern "C" {
 *    the CAN-ID (standard or extended format)
 * \{
 */
-#define CO_COBID_TIME_STD(consume, produce, id)    \
-    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)          | \
-     (((uint32_t)(consume) & 0x1uL) << 31u)       | \
-     (((uint32_t)(produce) & 0x1uL) << 30u))
+#define CO_COBID_TIME_STD(consume, produce, id)         \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)             | \
+               (((uint32_t)(consume) & 0x1uL) << 31u) | \
+               (((uint32_t)(produce) & 0x1uL) << 30u))
 
-#define CO_COBID_TIME_EXT(consume, produce, id)    \
-    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)    | \
-     ((uint32_t)0x1uL << 29u)                    | \
-     (((uint32_t)(consume) & 0x1uL) << 31u)      | \
-     (((uint32_t)(produce) & 0x1uL) << 30u))
+#define CO_COBID_TIME_EXT(consume, produce, id)         \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)        | \
+               ((uint32_t)0x1uL << 29u)               | \
+               (((uint32_t)(consume) & 0x1uL) << 31u) | \
+               (((uint32_t)(produce) & 0x1uL) << 30u))
 /*! \} */
 
 /*! \brief COB-ID EMCY
@@ -323,14 +332,14 @@ extern "C" {
 *        standard definition to avoid negated logic
 * \{
 */
-#define CO_COBID_EMCY_STD(valid, id)               \
-    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)         | \
-     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u))
+#define CO_COBID_EMCY_STD(valid, id)                        \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)                 | \
+               ((uint32_t)(1u - ((valid) & 0x1u)) << 31u))
 
-#define CO_COBID_EMCY_EXT(valid, id)               \
-    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)    | \
-     ((uint32_t)0x1uL << 29u)                    | \
-     ((uint32_t)(1u - ((valid) & 0x1u)) << 31u))
+#define CO_COBID_EMCY_EXT(valid, id)                        \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)            | \
+               ((uint32_t)0x1uL << 29u)                   | \
+               ((uint32_t)(1u - ((valid) & 0x1u)) << 31u))
 /*! \} */
 
 /*! \brief SDO server/client COB-ID parameter
@@ -356,16 +365,16 @@ extern "C" {
 *        standard definition to avoid negated logic
 * \{
 */
-#define CO_COBID_SDO_STD(valid, dynamic, id)       \
-    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)         | \
-     (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
-     ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+#define CO_COBID_SDO_STD(valid, dynamic, id)                 \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)                  | \
+               (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
-#define CO_COBID_SDO_EXT(valid, dynamic, id)       \
-    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)    | \
-     ((uint32_t)0x1u << 29u)                     | \
-     (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
-     ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+#define CO_COBID_SDO_EXT(valid, dynamic, id)                 \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)             | \
+               ((uint32_t)0x1u << 29u)                     | \
+               (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 /*! \} */
 
 /*! \brief SDO Default Connection
@@ -395,14 +404,14 @@ extern "C" {
 *        standard definition to avoid negated logic
 * \{
 */
-#define CO_COBID_RPDO_STD(valid, id)               \
-    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)         | \
-     ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+#define CO_COBID_RPDO_STD(valid, id)                         \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)                  | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
-#define CO_COBID_RPDO_EXT(valid, id)               \
-    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)    | \
-     ((uint32_t)0x1u << 29u)                     | \
-     ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+#define CO_COBID_RPDO_EXT(valid, id)                         \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)             | \
+               ((uint32_t)0x1u << 29u)                     | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 /*! \} */
 
 #define CO_COBID_RPDO_BASE   (uint32_t)0x200
@@ -439,16 +448,16 @@ extern "C" {
 *        standard definition to avoid negated logic
 * \{
 */
-#define CO_COBID_TPDO_STD(valid, id)             \
-    (CO_DATA)(((uint32_t)(id) & 0x7ffuL)       | \
-     ((uint32_t)0x1u << 30u)                   | \
-     ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+#define CO_COBID_TPDO_STD(valid, id)                         \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)                  | \
+               ((uint32_t)0x1u << 30u)                     | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 
-#define CO_COBID_TPDO_EXT(valid, id)             \
-    (CO_DATA)(((uint32_t)(id) & 0x1fffffffuL)  | \
-     ((uint32_t)0x1u << 29u)                   | \
-     ((uint32_t)0x1u << 30u)                   | \
-     ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+#define CO_COBID_TPDO_EXT(valid, id)                         \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)             | \
+               ((uint32_t)0x1u << 29u)                     | \
+               ((uint32_t)0x1u << 30u)                     | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
 /*! \} */
 
 #define CO_COBID_TPDO_BASE   (uint32_t)0x180
@@ -482,11 +491,7 @@ struct CO_DICT_T;              /* Declaration of object dictionary structure */
 * \note  This is required for 8bit and 16bit controllers, where pointers may
 *        represent 24bit only.
 */
-#if UINTPTR_MAX < UINT32_MAX
-typedef uint32_t CO_DATA;
-#else
 typedef uintptr_t CO_DATA;
-#endif
 
 /*! \brief OBJECT ENTRY
 *
