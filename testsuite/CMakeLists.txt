@@ -56,6 +56,7 @@ target_sources(CanopenTest
     tests/nmt_hbp.c
     tests/nmt_lss.c
     tests/nmt_mgr.c
+    tests/od_api.c
     tests/pdo_dyn.c
     tests/pdo_rx.c
     tests/pdo_tx.c

@@ -35,11 +35,18 @@ typedef enum DEF_TEST_GROUPS_E {                      /*---- Test Groups -------
     DEF_G_PDO,                                        /*!< Group: PDO Communication               */
     DEF_G_NMT,                                        /*!< Group: NMT Management                  */
     DEF_G_EMCY,                                       /*!< Group: EMCY Management                 */
+    DEF_G_OD,                                         /*!< Group: Object Dictionary               */
     DEF_G_SYNC,                                       /*!< Group: SYNC Communication              */
     DEF_G_CSDO,                                       /*!< Group: SDO Client                      */
 
     DEF_G_NUM                                         /*!< Number of Groups                       */
 } DEF_TEST_GROUPS;
+
+typedef enum DEF_OD_SUITES_E {                        /*---- Object Dictionary Test Suites -------*/
+    DEF_S_OD_API,                                     /*!< Group: Object read/write API           */
+
+    DEF_S_OD_NUM                                      /*!< Number of Suites in Group              */
+} DEF_OD_SUITES;
 
 typedef enum DEF_CORE_SUITES_E {                      /*---- Core Component Test Suites ----------*/
     DEF_S_CORE_TMR,                                   /*!< Suite: Highspeed Timer                 */
@@ -108,6 +115,8 @@ typedef enum DEF_CSDO_SUITES_E {                      /*---- SDO Client Test Sui
 #define SUITE_CORE_TMR()   TS_DEF_SUITE(DEF_G_CORE, DEF_S_CORE_TMR)  /*!< \addtogroup core_tmr    Core Timer Test     */
 #define SUITE_GET_TICKS()  TS_DEF_SUITE(DEF_G_CORE, DEF_S_GET_TICKS) /*!< \addtogroup co_get_tick Timer Service Test  */
 #define SUITE_MIN_TIME()   TS_DEF_SUITE(DEF_G_CORE, DEF_S_MIN_TIME)  /*!< \addtogroup co_min_tmr  Get Timer Min Time  */
+
+#define SUITE_OD_API()     TS_DEF_SUITE(DEF_G_OD, DEF_S_OD_API)      /*!< \addtogroup od_api  Object Dictionary API Test */
 
 #define SUITE_EXP_UP()     TS_DEF_SUITE(DEF_G_SDOS, DEF_S_EXP_UP)    /*!< \addtogroup sdos_exp_up   SDO Server Test: Expedited Upload   */
 #define SUITE_EXP_DOWN()   TS_DEF_SUITE(DEF_G_SDOS, DEF_S_EXP_DOWN)  /*!< \addtogroup sdos_exp_down SDO Server Test: Expedited Download */
