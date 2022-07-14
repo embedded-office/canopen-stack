@@ -86,7 +86,7 @@ extern "C" {
 *    This define may be used in object dictionary definitions. It marks the
 *    first unused object entry.
 */
-#define CO_OBJ_DIR_ENDMARK   { (uint32_t)0, (CO_OBJ_TYPE *)0, CO_DATA_SET_VAL(0) }
+#define CO_OBJ_DIR_ENDMARK   { (uint32_t)0, (CO_OBJ_TYPE *)0, (CO_DATA)0 }
 
 #define CO_TSTRING    ((CO_OBJ_TYPE *)&COTString)   /*!< Object Type String  */
 #define CO_TDOMAIN    ((CO_OBJ_TYPE *)&COTDomain)   /*!< Object Type Domain  */
@@ -491,32 +491,7 @@ struct CO_DICT_T;              /* Declaration of object dictionary structure */
 * \note  This is required for 8bit and 16bit controllers, where pointers may
 *        represent 24bit only.
 */
-#if UINTPTR_MAX < UINT32_MAX
-/* suitable for 8bit and 16bit microcontrollers */
-
-/* TODO: further investigation, because GCC version for ARM will rise an error
-*        when using this method ("initializer element is not a constant"). The
-*        method is working for AVR GCC v12.10.1
-*/
-typedef union CO_DATA_T { 
-    uint32_t  Val;
-    uintptr_t Ref;
-} CO_DATA;
-#define CO_DATA_SET_VAL(val)  ((CO_DATA){.Val = (val)})
-#define CO_DATA_SET_REF(ref)  ((CO_DATA){.Ref = (uintptr_t)(ref)})
-#define CO_DATA_GET_VAL(data) (data.Val)
-#define CO_DATA_GET_REF(data) (data.Ref)
-
-#else
-/* suitable for all 32bit and 64bit microcontrollers */
-
 typedef uintptr_t CO_DATA;
-#define CO_DATA_SET_VAL(val)  (CO_DATA)(val)
-#define CO_DATA_SET_REF(ptr)  (CO_DATA)(ptr)
-#define CO_DATA_GET_VAL(data) (uint32_t)(data)
-#define CO_DATA_GET_REF(data) (uintptr_t)(data)
-
-#endif
 
 /*! \brief OBJECT ENTRY
 *

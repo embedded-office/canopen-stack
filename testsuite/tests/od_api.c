@@ -45,9 +45,9 @@ uint8_t uint8_t_rw_indirect = 0x43;
 uint16_t uint16_t_rw_indirect = 0x8765;
 uint32_t uint32_t_rw_indirect = 0xfedcba09;
 
-#define MK_RO_KEY(type, typeCode) CO_KEY(type ## _I_RO_KEY, 0, typeCode | CO_OBJ____R_), 0, CO_DATA_SET_REF(&type ## _ro_indirect)
-#define MK_RW_KEY(type, typeCode) CO_KEY(type ## _I_RW_KEY, 0, typeCode | CO_OBJ____RW), 0, CO_DATA_SET_REF(&type ## _rw_indirect)
-#define MK_RW_D_KEY(type, typeCode) CO_KEY(type ## _D_RW_KEY, 0, typeCode | CO_OBJ_D__RW), 0, CO_DATA_SET_VAL(type ## _D_VALUE)
+#define MK_RO_KEY(type, typeCode) CO_KEY(type ## _I_RO_KEY, 0, typeCode | CO_OBJ____R_), 0, (CO_DATA)(&type ## _ro_indirect)
+#define MK_RW_KEY(type, typeCode) CO_KEY(type ## _I_RW_KEY, 0, typeCode | CO_OBJ____RW), 0, (CO_DATA)(&type ## _rw_indirect)
+#define MK_RW_D_KEY(type, typeCode) CO_KEY(type ## _D_RW_KEY, 0, typeCode | CO_OBJ_D__RW), 0, (CO_DATA)(type ## _D_VALUE)
 
 #define TS_READ_RO_GET(type, getter) CO_NODE node; \
     int16_t result; type toRead; setup(&node); \
@@ -131,17 +131,17 @@ TS_DEF_MAIN(TS_uint32_t_ReadWriteWrite) {
     TS_WRITE_RW(uint32_t, CODictWrLong, 0x1A2B3C4D)
 }
 
-TS_DEF_MAIN(TS_uint8_t_ReadOnlyWrite) {
-    TS_WRITE_RO(uint8_t, CODictWrByte, 0x1A)
-}
+// TS_DEF_MAIN(TS_uint8_t_ReadOnlyWrite) {
+//     TS_WRITE_RO(uint8_t, CODictWrByte, 0x1A)
+// }
 
-TS_DEF_MAIN(TS_uint16_t_ReadOnlyWrite) {
-    TS_WRITE_RO(uint16_t, CODictWrWord, 0x1A2B)
-}
+// TS_DEF_MAIN(TS_uint16_t_ReadOnlyWrite) {
+//     TS_WRITE_RO(uint16_t, CODictWrWord, 0x1A2B)
+// }
 
-TS_DEF_MAIN(TS_uint32_t_ReadOnlyWrite) {
-    TS_WRITE_RO(uint32_t, CODictWrLong, 0x1A2B3C4D)
-}
+// TS_DEF_MAIN(TS_uint32_t_ReadOnlyWrite) {
+//     TS_WRITE_RO(uint32_t, CODictWrLong, 0x1A2B3C4D)
+// }
 
 TS_DEF_MAIN(TS_uint8_t_DirectRWRead) {
     TS_D_READ(uint8_t, CODictRdByte)
@@ -176,7 +176,7 @@ TS_DEF_MAIN(TS_OD_GetDirect)
     uint32_t    val;
     uint8_t    valByte;
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x2000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, CO_DATA_SET_VAL(123));
+    TS_ODAdd(CO_KEY(0x2000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(123));
     TS_CreateNode(&node, 0);
 
     // result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
@@ -197,26 +197,26 @@ CO_OBJ_STR DemoStringObj = {
     (uint8_t *)&DemoString[0]  /* start address of string memory */
  };
 
-TS_DEF_MAIN(TS_OD_GetStringReadOnly)
-{
-    int16_t     result;
-    CO_NODE     node;
-    uint8_t     buf[32];
-    uint32_t    size;
-    CO_OBJ      *obj;
+// TS_DEF_MAIN(TS_OD_GetStringReadOnly)
+// {
+//     int16_t     result;
+//     CO_NODE     node;
+//     uint8_t     buf[32];
+//     uint32_t    size;
+//     CO_OBJ      *obj;
 
-    TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x2001, 0, CO_STRING | CO_OBJ____R_), CO_TSTRING, CO_DATA_SET_REF(&DemoStringObj));
-    TS_CreateNode(&node, 0);
-    obj = CODictFind(&node.Dict, CO_DEV(0x2001, 0));
-    if (obj != NULL) {
-        size = COObjGetSize(obj, &node, (uint32_t)0);
-    }
-    result = CODictRdBuffer(&node.Dict, CO_DEV(0x2001,0), &buf[0], 32);
-    buf[size]=0;
-    TS_ASSERT(strcmp(buf, DemoString) == 0);
-    CHK_NO_ERR(&node); /* check error free stack execution         */
-}
+//     TS_CreateMandatoryDir();
+//     TS_ODAdd(CO_KEY(0x2001, 0, CO_STRING | CO_OBJ____R_), CO_TSTRING, (CO_DATA)(&DemoStringObj));
+//     TS_CreateNode(&node, 0);
+//     obj = CODictFind(&node.Dict, CO_DEV(0x2001, 0));
+//     if (obj != NULL) {
+//         size = COObjGetSize(obj, &node, (uint32_t)0);
+//     }
+//     result = CODictRdBuffer(&node.Dict, CO_DEV(0x2001,0), &buf[0], 32);
+//     buf[size]=0;
+//     TS_ASSERT(strcmp(buf, DemoString) == 0);
+//     CHK_NO_ERR(&node); /* check error free stack execution         */
+// }
 
 TS_DEF_MAIN(TS_OD_GetIndirect)
 {
@@ -225,7 +225,7 @@ TS_DEF_MAIN(TS_OD_GetIndirect)
     CO_NODE     node;
 
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x2002, 0, CO_UNSIGNED16 | CO_OBJ____RW), NULL, CO_DATA_SET_REF(&val));
+    TS_ODAdd(CO_KEY(0x2002, 0, CO_UNSIGNED16 | CO_OBJ____RW), NULL, (CO_DATA)(&val));
     TS_CreateNode(&node, 0);
 
     result = CODictRdWord(&node.Dict, CO_DEV(0x2002,0), &toRead);
@@ -266,6 +266,6 @@ SUITE_OD_API()
 
     TS_RUNNER(TS_OD_GetDirect);
     TS_RUNNER(TS_OD_GetIndirect);
-    TS_RUNNER(TS_OD_GetStringReadOnly);
+    // TS_RUNNER(TS_OD_GetStringReadOnly);
     TS_End();
 }

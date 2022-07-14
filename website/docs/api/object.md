@@ -8,9 +8,9 @@ The object component provides an interface to the individual object entries.
 classDiagram
   CO_NODE o-- CO_OBJ : Node
   CO_OBJ_TYPE o-- CO_OBJ : Type
+  CO_DATA *-- CO_OBJ : Data
   class CO_OBJ {
     -uint32_t Key
-    -CO_DATA Data
     +COObjGetSize(width) uint32_t
     +COObjRdBufCont(destination, length) int16_t
     +COObjRdBufStart(destination, length) int16_t

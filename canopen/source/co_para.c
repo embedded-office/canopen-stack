@@ -165,7 +165,7 @@ CO_ERR COTypeParaRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, u
     if (size != CO_LONG) {
         return (CO_ERR_BAD_ARG);
     }
-    pg = (CO_PARA *)CO_DATA_GET_REF(obj->Data);
+    pg = (CO_PARA *)(obj->Data);
     if (pg == 0) {
         return (CO_ERR_OBJ_READ);
     }
@@ -204,7 +204,7 @@ CO_ERR COTypeParaWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, 
         for (sub = 2; sub < num; sub++) {
             pwo = CODictFind(cod, CO_DEV(idx, sub));
             if (pwo != 0) {
-                pg = (CO_PARA *)CO_DATA_GET_REF(pwo->Data);
+                pg = (CO_PARA *)(pwo->Data);
                 if (idx == 0x1011) {
                     COParaRestore(pg, node);
                 } else {
@@ -214,7 +214,7 @@ CO_ERR COTypeParaWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, 
         }
     } else {
         /* save addressed para group */
-        pg = (CO_PARA *)CO_DATA_GET_REF(obj->Data);
+        pg = (CO_PARA *)(obj->Data);
         if (idx == 0x1011) {
             COParaRestore(pg, node);
         } else {

@@ -38,7 +38,7 @@ set(CMAKE_OBJDUMP      "avr-objdump.exe" CACHE FILEPATH "" FORCE)
 #* Defince command line options
 
 set(CMAKE_C_FLAGS
-  "-mmcu=atmega6490"
+  "-mmcu=atmega6490 -Wpedantic"
   CACHE STRING "" FORCE
 )
 set(CMAKE_ASM_FLAGS

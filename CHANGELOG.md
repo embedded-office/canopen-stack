@@ -7,7 +7,15 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
-- nothing
+## [4.3.1] - 2022-07-14
+
+### Fixed
+
+- Rollback of 32bit direct storage in 16bit machines (is not compiling reliable)
+
+### Changed
+
+- Add a warning for 16bit microcontroler using direct storage in the object dictionary in docs
 
 ## [4.3.0] - 2022-07-13
 
@@ -26,8 +34,6 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 - Avoid variable declaration if SDO client is disabled [@jernejsk](https://github.com/jernejsk)
 - Allow direct data in object dictionaries running on 16bit microcontrollers
-
-> **Note**: The datatype in the object dictionary was `uintptr_t` in previous versions. For 16bit microcontrollers `uintptr_t` may contain only 24bit instead of the required 32bits for direct data storage. For this reason, in version 4.3.0 and later the object dictionary should use `CO_DATA` as data type.
 
 ## [4.2.0] - 2022-04-01
 
@@ -194,7 +200,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.3.0...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.3.1...HEAD
+[4.3.1]: https://github.com/embedded-office/canopen-stack/compare/v4.3.0...v4.3.1
 [4.3.0]: https://github.com/embedded-office/canopen-stack/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/embedded-office/canopen-stack/compare/v4.1.8...v4.2.0
 [4.1.8]: https://github.com/embedded-office/canopen-stack/compare/v4.1.7...v4.1.8

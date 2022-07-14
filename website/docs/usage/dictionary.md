@@ -9,10 +9,10 @@ The definition of the object dictionary table is done with an array of object en
 ```c
 const CO_OBJ DemoObjDir[] = {
     :
-  { CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)&DemoErrReg  },
-  { CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA) 0x00000080  },
-  { CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_R_), 0, (CO_DATA)&DemoEmcyId  },
-  { CO_KEY(0x2500, 0, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&DemoVarLong },
+  { CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)(&DemoErrReg) },
+  { CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0x00000080)  },
+  { CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_R_), 0, (CO_DATA)(&DemoEmcyId) },
+  { CO_KEY(0x2500, 0, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)(&DemoVarLong)},
     :
 };
 ```
@@ -90,7 +90,7 @@ If this parameter group is controllable from the CAN network side, the standard 
 ```c
 const CO_OBJ DemoObjDir[] = {
     :
-  { CO_KEY(0x1010, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)&DemoParaObj },
+  { CO_KEY(0x1010, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)(&DemoParaObj) },
     :
 };
 ```
@@ -100,7 +100,7 @@ The parameter values itself can be used within any object directory entry. The f
 ```c
 const CO_OBJ DemoObjDir[] = {
     :
-  { CO_KEY(0x1234,0x56, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)&(DemoParaMem.ParaLong) },
+  { CO_KEY(0x1234,0x56, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)(&(DemoParaMem.ParaLong)) },
     :
 };
 ```
@@ -146,7 +146,7 @@ To enable the usage of this domain to the CAN network side, the domain object mu
 ```c
 const CO_OBJ DemoObjDir[] = {
     :
-  { CO_KEY(0x2345, 0, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (CO_DATA)&DemoDomainObj },
+  { CO_KEY(0x2345, 0, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (CO_DATA)(&DemoDomainObj) },
     :
 };
 ```
@@ -173,7 +173,7 @@ To enable the usage of this string to the CAN network side, the string must be a
 ```c
 const CO_OBJ DemoObjDir[] = {
     :
-  { CO_KEY(0x3456, 0, CO_STRING|CO_OBJ____R_), CO_TSTRING, (CO_DATA)&DemoStringObj },
+  { CO_KEY(0x3456, 0, CO_STRING|CO_OBJ____R_), CO_TSTRING, (CO_DATA)(&DemoStringObj) },
     :
 };
 ```
@@ -213,7 +213,7 @@ To enable the usage of this demo type to the CAN network side, the demo object m
 
 const CO_OBJ DemoObjDir[] = {
     :
-  { CO_KEY(0x6789, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TDEMO, (CO_DATA)&DemoValue },
+  { CO_KEY(0x6789, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TDEMO, (CO_DATA)(&DemoValue) },
     :
 };
 ```
