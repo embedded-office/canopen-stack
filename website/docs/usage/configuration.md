@@ -298,6 +298,10 @@ CO_KEY(<index>, <subindex>, <specification>)
 
 When placing the object entry table in read-only memory (with keyword "const"), the direct access modes (tread pointer as object entry value), are limited to read-only access, even by the application.
 
+!!! warning "Important"
+    
+    When using architectures with pointer types lower than 32bit (e.g. 16bit microcontrollers), you can store only values up to the pointer width directly in the object dictionary. For larger values declare a constant variable and place a pointer to this constant into the object dictionary.
+
 #### Object Type Reference
 
 The object entry type structure reference [`CO_OBJ_TYPE *`] shall be set to one of the following values:
