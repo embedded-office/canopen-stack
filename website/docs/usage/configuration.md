@@ -172,11 +172,11 @@ The following descriptions explains the details of the structure members, which 
 
 - The NodeId [`uint8_t`] shall be set to the CANopen Node-ID of the heartbeat producer, which shall be consumed.
 
-The object entry, presenting the example domain above to the CANopen network, should be defined within the heartbeat consumer area (index 0x1016, subindex 0x01 ff.) with the following object directory entry definition line:
+The object entry, presenting the example domain above to the CANopen network, should be defined within the heartbeat consumer area (index 0x1016, subindex 0 to 254) with the following object directory entry definition line:
 
 ```c
-{ CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(1)                },
-{ CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS,   (CO_DATA)(&AppHbConsumer_1) },
+{ CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_THB_CONS, (CO_DATA)(1)                },
+{ CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&AppHbConsumer_1) },
 ```
 
 Note: Even, if the members "Time" and "NodeId" are static, the heartbeat consumer must be placed in RAM. There are multiple internal members for managing the heartbeat consumer included as well.

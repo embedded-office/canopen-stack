@@ -42,7 +42,7 @@ The class `CO_NMT` is defined within `co_nmt.h` and is responsible for the CANop
 
 ### Member Functions
 
-The following table describes the API functions of the CANopen network management module. Furthermore, this module includes the heartbeat producer and consumer. These functions are implemented within the source file: `co_nmt.c/h`, `co_hbprod.c/h` and `co_hbcons.c/h`
+The following table describes the API functions of the CANopen network management module. Furthermore, this module includes the heartbeat producer and consumer. These functions are implemented within the source file: `co_nmt.c/h`, `co_hb_prod.c/h` and `co_hb_cons.c/h`
 
 #### CONmtGetHbEvents()
 
