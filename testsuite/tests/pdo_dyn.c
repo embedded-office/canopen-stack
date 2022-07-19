@@ -35,11 +35,11 @@
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_IdOnOff_PreOp)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -59,11 +59,11 @@ TS_DEF_MAIN(TS_RPdo_IdOnOff_PreOp)
 
 TS_DEF_MAIN(TS_RPdo_IdOnOff_Op)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -94,13 +94,13 @@ TS_DEF_MAIN(TS_RPdo_IdOnOff_Op)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_TPdo_IdOnOff_PreOp)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -120,13 +120,13 @@ TS_DEF_MAIN(TS_TPdo_IdOnOff_PreOp)
 
 TS_DEF_MAIN(TS_TPdo_IdOnOff_Op)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -155,11 +155,11 @@ TS_DEF_MAIN(TS_TPdo_IdOnOff_Op)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_ExtId)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -181,18 +181,18 @@ TS_DEF_MAIN(TS_RPdo_ExtId)
     result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xE0000201);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 TS_DEF_MAIN(TS_TPdo_ExtId)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -214,7 +214,7 @@ TS_DEF_MAIN(TS_TPdo_ExtId)
     result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0xE0000181);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -226,11 +226,11 @@ TS_DEF_MAIN(TS_TPdo_ExtId)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_ChangeActiveId)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -242,18 +242,18 @@ TS_DEF_MAIN(TS_RPdo_ChangeActiveId)
     result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000211);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_ERR(&node, CO_ERR_NONE);
 }
 
 TS_DEF_MAIN(TS_TPdo_ChangeActiveId)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -265,7 +265,7 @@ TS_DEF_MAIN(TS_TPdo_ChangeActiveId)
     result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x40000281);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -277,13 +277,13 @@ TS_DEF_MAIN(TS_TPdo_ChangeActiveId)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_TPdo_RemoteFrame)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -305,7 +305,7 @@ TS_DEF_MAIN(TS_TPdo_RemoteFrame)
     result = CODictWrLong(&node.Dict, CO_DEV(0x1800,1), 0x00000181);
     TS_ASSERT(CO_ERR_OBJ_RANGE == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -320,11 +320,11 @@ TS_DEF_MAIN(TS_TPdo_RemoteFrame)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_IdChange_PreOp)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -353,13 +353,13 @@ TS_DEF_MAIN(TS_RPdo_IdChange_PreOp)
 
 TS_DEF_MAIN(TS_TPdo_IdChange_PreOp)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -388,11 +388,11 @@ TS_DEF_MAIN(TS_TPdo_IdChange_PreOp)
 
 TS_DEF_MAIN(TS_RPdo_IdChange_Op)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -423,13 +423,13 @@ TS_DEF_MAIN(TS_RPdo_IdChange_Op)
 
 TS_DEF_MAIN(TS_TPdo_IdChange_Op)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -467,45 +467,45 @@ TS_DEF_MAIN(TS_TPdo_IdChange_Op)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_BadIdSubIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, 0, &pdo_len);
-    TS_ODAdd(CO_KEY(0x1400, 3, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (CO_DATA)(&pdo_id));
+    TS_ODAdd(CO_KEY(0x1400, 3, CO_OBJ__N__RW), CO_TPDO_ID, (CO_DATA)(&pdo_id));
     TS_CreateNode(&node,0);
 
     /* no PDO COB-ID sub-index */
     result = CODictWrLong(&node.Dict, CO_DEV(0x1400,3), 0xC0000201);
     TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 TS_DEF_MAIN(TS_TPdo_BadIdSubIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
-    TS_ODAdd(CO_KEY(0x1800, 6, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (CO_DATA)(&pdo_id));
+    TS_ODAdd(CO_KEY(0x1800, 6, CO_OBJ__N__RW), CO_TPDO_ID, (CO_DATA)(&pdo_id));
     TS_CreateTPdoMap(0, 0, &pdo_len);
     TS_CreateNode(&node,0);
 
     result = CODictWrLong(&node.Dict, CO_DEV(0x1800,6), 0xC0000181);
     TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -517,38 +517,38 @@ TS_DEF_MAIN(TS_TPdo_BadIdSubIdxCfg)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_BadIdIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, 0, &pdo_len);
-    TS_ODAdd(CO_KEY(0x2502, 1, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (CO_DATA)(&pdo_id));
+    TS_ODAdd(CO_KEY(0x2502, 1, CO_OBJ__N__RW), CO_TPDO_ID, (CO_DATA)(&pdo_id));
     TS_CreateNode(&node,0);
 
     /* no PDO communication parameter index */
     result = CODictWrLong(&node.Dict, CO_DEV(0x2502,1), 0xC0000201);
     TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 TS_DEF_MAIN(TS_TPdo_BadIdIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
-    TS_ODAdd(CO_KEY(0x2501, 1, CO_UNSIGNED32|CO_OBJ__N_RW), CO_TPDOID, (CO_DATA)(&pdo_id));
+    TS_ODAdd(CO_KEY(0x2501, 1, CO_OBJ__N__RW), CO_TPDO_ID, (CO_DATA)(&pdo_id));
     TS_CreateTPdoMap(0, 0, &pdo_len);
     TS_CreateNode(&node,0);
 
@@ -556,7 +556,7 @@ TS_DEF_MAIN(TS_TPdo_BadIdIdxCfg)
     result = CODictWrLong(&node.Dict, CO_DEV(0x2501,1), 0xC0000181);
     TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -569,19 +569,19 @@ TS_DEF_MAIN(TS_TPdo_BadIdIdxCfg)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_MapNumChange)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 3;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
-    uint32_t     data[2]     = { 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 3;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
+    uint32_t data[2]     = { 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, &pdo_map[0], &pdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 31, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (CO_DATA)(&data[0]));
-    TS_ODAdd(CO_KEY(0x2500, 32, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (CO_DATA)(&data[1]));
+    TS_ODAdd(CO_KEY(0x2500, 31, CO_OBJ____PRW), CO_TUNSIGNED8, (CO_DATA)(&data[0]));
+    TS_ODAdd(CO_KEY(0x2500, 32, CO_OBJ____PRW), CO_TUNSIGNED8, (CO_DATA)(&data[1]));
     TS_CreateNode(&node,0);
 
     /* PDO valid to invalid */
@@ -593,10 +593,10 @@ TS_DEF_MAIN(TS_RPdo_MapNumChange)
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping */
-    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_LINK(0x2500,31,32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_LINK(0x2500,32,32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 2 */
@@ -620,19 +620,19 @@ TS_DEF_MAIN(TS_RPdo_MapNumChange)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_ChangeActiveMap)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 3;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
-    uint32_t     data[2]     = { 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 3;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
+    uint32_t data[2]     = { 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, &pdo_map[0], &pdo_len);
-    TS_ODAdd(CO_KEY(0x2500, 31, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (CO_DATA)(&data[0]));
-    TS_ODAdd(CO_KEY(0x2500, 32, CO_UNSIGNED8 |CO_OBJ___PRW), 0, (CO_DATA)(&data[1]));
+    TS_ODAdd(CO_KEY(0x2500, 31, CO_OBJ____PRW), CO_TUNSIGNED8, (CO_DATA)(&data[0]));
+    TS_ODAdd(CO_KEY(0x2500, 32, CO_OBJ____PRW), CO_TUNSIGNED8, (CO_DATA)(&data[1]));
     TS_CreateNode(&node,0);
 
     /* set mapping to 0 */
@@ -640,16 +640,16 @@ TS_DEF_MAIN(TS_RPdo_ChangeActiveMap)
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     /* write mapping */
-    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_LINK(0x2500,31,32));
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
-    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_LINK(0x2500,32,32));
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
     /* set mapping to 2 */
     result = CODictWrByte(&node.Dict, CO_DEV(0x1600,0), 0x2);
     TS_ASSERT(CO_ERR_OBJ_ACC == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -659,19 +659,21 @@ TS_DEF_MAIN(TS_RPdo_ChangeActiveMap)
 *          - change PDO mapping number to > supported mappings
 */
 /*------------------------------------------------------------------------------------------------*/
-#if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapNumTooHigh)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id     = 0x40000180;
+    uint8_t  pdo_type   = 1;
+    uint8_t  pdo_len    = 3;
+    uint32_t pdo_map[3] = { 0, 0, 0 };
+    uint32_t data[2]    = { 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, &pdo_map[0], &pdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 31, CO_OBJ____PRW), CO_TUNSIGNED32, (CO_DATA)(&data[0]));
+    TS_ODAdd(CO_KEY(0x2500, 32, CO_OBJ____PRW), CO_TUNSIGNED32, (CO_DATA)(&data[1]));
     TS_CreateNode(&node,0);
 
     /* PDO valid to invalid */
@@ -682,10 +684,10 @@ TS_DEF_MAIN(TS_RPdo_MapNumTooHigh)
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* write mapping */
-    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_KEY(0x2500,31, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,1), CO_LINK(0x2500,31,32));
     TS_ASSERT(CO_ERR_NONE == result);
 
-    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_KEY(0x2500,32, CO_UNSIGNED32));
+    result = CODictWrLong(&node.Dict, CO_DEV(0x1600,2), CO_LINK(0x2500,32,32));
     TS_ASSERT(CO_ERR_NONE == result);
 
     /* set mapping to 9 */
@@ -700,9 +702,8 @@ TS_DEF_MAIN(TS_RPdo_MapNumTooHigh)
     result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0x40000201);
     TS_ASSERT(CO_ERR_NONE == result);
 
-    CHK_ERR(&node, CO_ERR_OBJ_WRITE);                 /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
-#endif
 
 /*------------------------------------------------------------------------------------------------*/
 /*! \brief TC12
@@ -715,12 +716,12 @@ TS_DEF_MAIN(TS_RPdo_MapNumTooHigh)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapLenTooHigh)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -771,12 +772,12 @@ TS_DEF_MAIN(TS_RPdo_MapLenTooHigh)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_BadMapNumSubIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -794,18 +795,18 @@ TS_DEF_MAIN(TS_RPdo_BadMapNumSubIdxCfg)
 #if DISABLED
 TS_DEF_MAIN(TS_TPdo_BadMapNumSubIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
     TS_CreateTPdoMap(0, 0, &pdo_len);
-    TS_ODAdd(CO_KEY(0x1A00, 9, CO_UNSIGNED8 |CO_OBJ____RW), CO_TPDONUM, (CO_DATA)(&pdo_len));
+    TS_ODAdd(CO_KEY(0x1A00, 9, CO_OBJ_____RW), CO_TPDO_NUM, (CO_DATA)(&pdo_len));
     TS_CreateNode(&node,0);
 
     /* no PDO mapping number sub-index */
@@ -826,17 +827,17 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumSubIdxCfg)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_BadMapNumIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
     TS_CreateRPdoMap(0, &pdo_map[0], &pdo_len);
-    TS_ODAdd(CO_KEY(0x2503, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TPDONUM, (CO_DATA)(&pdo_len));
+    TS_ODAdd(CO_KEY(0x2503, 0, CO_OBJ_____RW), CO_TPDO_NUM, (CO_DATA)(&pdo_len));
     TS_CreateNode(&node,0);
 
     /* no PDO mapping index */
@@ -850,18 +851,18 @@ TS_DEF_MAIN(TS_RPdo_BadMapNumIdxCfg)
 #if DISABLED
 TS_DEF_MAIN(TS_TPdo_BadMapNumIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
     TS_CreateTPdoMap(0, 0, &pdo_len);
-    TS_ODAdd(CO_KEY(0x2504, 0, CO_UNSIGNED32|CO_OBJ____RW), CO_TPDONUM, (CO_DATA)(&pdo_len));
+    TS_ODAdd(CO_KEY(0x2504, 0, CO_OBJ_____RW), CO_TPDO_NUM, (CO_DATA)(&pdo_len));
     TS_CreateNode(&node,0);
 
     /* no PDO mapping index */
@@ -883,13 +884,13 @@ TS_DEF_MAIN(TS_TPdo_BadMapNumIdxCfg)
 #if DISABLED
 TS_DEF_MAIN(TS_TPdo_MapNumChange)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -933,13 +934,13 @@ TS_DEF_MAIN(TS_TPdo_MapNumChange)
 #if DISABLED
 TS_DEF_MAIN(TS_TPdo_ChangeActiveMap)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -975,12 +976,12 @@ TS_DEF_MAIN(TS_TPdo_ChangeActiveMap)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapReadOnlyObj)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -1031,13 +1032,13 @@ TS_DEF_MAIN(TS_RPdo_MapReadOnlyObj)
 #if DISABLED
 TS_DEF_MAIN(TS_TPdo_MapWriteOnlyObj)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint16_t     pdo_inhibit = 0;
-    uint16_t     pdo_evtimer = 0;
-    uint8_t     pdo_len     = 0;
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint16_t pdo_inhibit = 0;
+    uint16_t pdo_evtimer = 0;
+    uint8_t  pdo_len     = 0;
 
     TS_CreateMandatoryDir();
     TS_CreateTPdoCom(0, &pdo_id, &pdo_type, &pdo_inhibit, &pdo_evtimer);
@@ -1088,12 +1089,12 @@ TS_DEF_MAIN(TS_TPdo_MapWriteOnlyObj)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapNotPdoMappableObj)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -1141,12 +1142,12 @@ TS_DEF_MAIN(TS_RPdo_MapNotPdoMappableObj)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_MapObjNotExist)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -1194,12 +1195,12 @@ TS_DEF_MAIN(TS_RPdo_MapObjNotExist)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_ComTypeChange)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -1232,12 +1233,12 @@ TS_DEF_MAIN(TS_RPdo_ComTypeChange)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_ActiveComTypeChange)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -1262,12 +1263,12 @@ TS_DEF_MAIN(TS_RPdo_ActiveComTypeChange)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_BadComTypeIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -1300,12 +1301,12 @@ TS_DEF_MAIN(TS_RPdo_BadComTypeIdxCfg)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_BadComTypeSubIdxCfg)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -1338,12 +1339,12 @@ TS_DEF_MAIN(TS_RPdo_BadComTypeSubIdxCfg)
 #if DISABLED
 TS_DEF_MAIN(TS_RPdo_ComTypeNullPtr)
 {
-    int16_t     result;
-    CO_NODE        node;
-    uint32_t     pdo_id      = 0x40000180;
-    uint8_t     pdo_type    = 1;
-    uint8_t     pdo_len     = 0;
-    uint32_t     pdo_map[3]  = { 0, 0, 0 };
+    int16_t  result;
+    CO_NODE  node;
+    uint32_t pdo_id      = 0x40000180;
+    uint8_t  pdo_type    = 1;
+    uint8_t  pdo_len     = 0;
+    uint32_t pdo_map[3]  = { 0, 0, 0 };
 
     TS_CreateMandatoryDir();
     TS_CreateRPdoCom(0, &pdo_id, &pdo_type);
@@ -1403,7 +1404,7 @@ SUITE_PDO_DYN()
     TS_RUNNER(TS_RPdo_MapNumChange);
     TS_RUNNER(TS_RPdo_ChangeActiveMap);
 
-    // TS_RUNNER(TS_RPdo_MapNumTooHigh);
+    TS_RUNNER(TS_RPdo_MapNumTooHigh);
     // TS_RUNNER(TS_RPdo_MapLenTooHigh);
     // TS_RUNNER(TS_RPdo_BadMapNumSubIdxCfg);
     // TS_RUNNER(TS_RPdo_BadMapNumIdxCfg);

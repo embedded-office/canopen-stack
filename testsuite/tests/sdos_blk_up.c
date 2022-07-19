@@ -66,7 +66,7 @@ TS_DEF_MAIN(TS_BlkRd_Basic)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
                                                       /*===== INIT BLOCK UPLOAD (PHASE I) ========*/
     TS_SDO_SEND (0xA0, idx, sub, CO_SDO_BUF_SEG);
@@ -123,7 +123,7 @@ TS_DEF_MAIN(TS_BlkRd_42ByteDomain)
     uint8_t     sub  = 2;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -174,7 +174,7 @@ TS_DEF_MAIN(TS_BlkRd_43ByteDomain)
     uint8_t     sub  = 3;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -225,7 +225,7 @@ TS_DEF_MAIN(TS_BlkRd_41ByteDomain)
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -276,7 +276,7 @@ TS_DEF_MAIN(TS_BlkRd_994ByteDomain)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -328,7 +328,7 @@ TS_DEF_MAIN(TS_BlkRd_995ByteDomain)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -380,7 +380,7 @@ TS_DEF_MAIN(TS_BlkRd_993ByteDomain)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -432,7 +432,7 @@ TS_DEF_MAIN(TS_BlkRd_890ByteDomain)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -484,7 +484,7 @@ TS_DEF_MAIN(TS_BlkRd_889ByteDomain)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -533,7 +533,7 @@ TS_DEF_MAIN(TS_BlkRd_888ByteDomain)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -584,7 +584,7 @@ TS_DEF_MAIN(TS_BlkRd_LostMiddleSeg)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 'a');
     TS_CreateNode(&node,0);
 
@@ -637,7 +637,7 @@ TS_DEF_MAIN(TS_BlkRd_LostLastSeg)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 'a');
     TS_CreateNode(&node,0);
 
@@ -690,7 +690,7 @@ TS_DEF_MAIN(TS_BlkRd_LostFirstSeg)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -744,7 +744,7 @@ TS_DEF_MAIN(TS_BlkRd_BadCmd)
     uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -777,7 +777,7 @@ TS_DEF_MAIN(TS_BlkRd_ObjNotExist)
     uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
     idx++;
@@ -789,7 +789,7 @@ TS_DEF_MAIN(TS_BlkRd_ObjNotExist)
     CHK_MLTPX(frm, idx, sub);                         /* check multiplexer                        */
     CHK_DATA (frm, 0x06020000);                       /* check abort code                         */
 
-    CHK_ERR(&node, CO_ERR_OBJ_NOT_FOUND);             /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -811,7 +811,7 @@ TS_DEF_MAIN(TS_BlkRd_SubIdxNotExist)
     uint8_t   sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
     sub++;
@@ -824,7 +824,7 @@ TS_DEF_MAIN(TS_BlkRd_SubIdxNotExist)
     CHK_MLTPX(frm, idx, sub);                         /* check multiplexer                        */
     CHK_DATA (frm, 0x06090011);                       /* check abort code                         */
 
-    CHK_ERR(&node, CO_ERR_OBJ_NOT_FOUND);             /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -846,7 +846,7 @@ TS_DEF_MAIN(TS_BlkRd_WriteOnly)
     uint8_t   sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ_____W, size);
+    DomCreate(idx, sub, CO_OBJ______W, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -878,7 +878,7 @@ TS_DEF_MAIN(TS_BlkRd_DomainNullPtr)
     uint8_t   sub  = 9;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (CO_DATA)(0));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(0));
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -911,7 +911,7 @@ TS_DEF_MAIN(TS_BlkRd_LenTooHigh)
     uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -944,7 +944,7 @@ TS_DEF_MAIN(TS_BlkRd_LenTooLow)
     uint8_t   sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED UPLOAD ==============*/
@@ -980,7 +980,7 @@ TS_DEF_MAIN(TS_BlkRd_LenTooLowAfterRestart)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -1034,7 +1034,7 @@ TS_DEF_MAIN(TS_BlkRd_LenTooHighAfterRestart)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -1087,7 +1087,7 @@ TS_DEF_MAIN(TS_BlkRd_BadSeqNbrAfterRestart)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 
@@ -1144,8 +1144,8 @@ TS_DEF_MAIN(TS_BlkRd_TwoDomains)
     uint8_t     sub2  = 3;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom1 = DomCreate(idx, sub1, CO_OBJ____RW, size1);
-    dom2 = DomCreate(idx, sub2, CO_OBJ____RW, size2);
+    dom1 = DomCreate(idx, sub1, CO_OBJ_____RW, size1);
+    dom2 = DomCreate(idx, sub2, CO_OBJ_____RW, size2);
     DomFill(dom1, 0);
     DomFill(dom2, 0);
     TS_CreateNode(&node,0);
@@ -1229,7 +1229,7 @@ TS_DEF_MAIN(TS_BlkRd_BlkWr_BlkRd)
     uint8_t     sub  = 2;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 'a');
     TS_CreateNode(&node,0);
 
@@ -1281,7 +1281,7 @@ TS_DEF_MAIN(TS_BlkRd_Restart_BlkRd)
     uint8_t     sub  = 6;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     DomFill(dom, 0);
     TS_CreateNode(&node,0);
 

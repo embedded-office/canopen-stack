@@ -88,8 +88,8 @@ TS_DEF_MAIN(TS_Lss_SelGlobal_ChgNodeId)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Lss_SelIdent_WrongVendor)
 {
-    CO_NODE     node;
-    CO_IF_FRM   frm;
+    CO_NODE   node;
+    CO_IF_FRM frm;
     uint32_t  vendor = 0x11000011;
     uint32_t  product = 0x22000022;
     uint32_t  revision = 0x33000033;
@@ -97,10 +97,10 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongVendor)
 
     /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&vendor));
-    TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&product));
-    TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&revision));
-    TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&serial));
+    TS_ODAdd(CO_KEY(0x1018, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&vendor));
+    TS_ODAdd(CO_KEY(0x1018, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&product));
+    TS_ODAdd(CO_KEY(0x1018, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&revision));
+    TS_ODAdd(CO_KEY(0x1018, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&serial));
     TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
@@ -122,8 +122,8 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongVendor)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Lss_SelIdent_WrongProduct)
 {
-    CO_NODE     node;
-    CO_IF_FRM   frm;
+    CO_NODE   node;
+    CO_IF_FRM frm;
     uint32_t  vendor = 0x11000011;
     uint32_t  product = 0x22000022;
     uint32_t  revision = 0x33000033;
@@ -131,10 +131,10 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongProduct)
 
     /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&vendor));
-    TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&product));
-    TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&revision));
-    TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&serial));
+    TS_ODAdd(CO_KEY(0x1018, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&vendor));
+    TS_ODAdd(CO_KEY(0x1018, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&product));
+    TS_ODAdd(CO_KEY(0x1018, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&revision));
+    TS_ODAdd(CO_KEY(0x1018, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&serial));
     TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
@@ -156,8 +156,8 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongProduct)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Lss_SelIdent_WrongRevision)
 {
-    CO_NODE     node;
-    CO_IF_FRM   frm;
+    CO_NODE   node;
+    CO_IF_FRM frm;
     uint32_t  vendor = 0x11000011;
     uint32_t  product = 0x22000022;
     uint32_t  revision = 0x33000033;
@@ -165,10 +165,10 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongRevision)
 
     /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&vendor));
-    TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&product));
-    TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&revision));
-    TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&serial));
+    TS_ODAdd(CO_KEY(0x1018, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&vendor));
+    TS_ODAdd(CO_KEY(0x1018, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&product));
+    TS_ODAdd(CO_KEY(0x1018, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&revision));
+    TS_ODAdd(CO_KEY(0x1018, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&serial));
     TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
@@ -190,8 +190,8 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongRevision)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Lss_SelIdent_WrongSerial)
 {
-    CO_NODE     node;
-    CO_IF_FRM   frm;
+    CO_NODE   node;
+    CO_IF_FRM frm;
     uint32_t  vendor = 0x11000011;
     uint32_t  product = 0x22000022;
     uint32_t  revision = 0x33000033;
@@ -199,10 +199,10 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongSerial)
 
     /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&vendor));
-    TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&product));
-    TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&revision));
-    TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&serial));
+    TS_ODAdd(CO_KEY(0x1018, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&vendor));
+    TS_ODAdd(CO_KEY(0x1018, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&product));
+    TS_ODAdd(CO_KEY(0x1018, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&revision));
+    TS_ODAdd(CO_KEY(0x1018, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&serial));
     TS_CreateNode(&node,0);
     /*------------------------------------------*/
 
@@ -224,18 +224,18 @@ TS_DEF_MAIN(TS_Lss_SelIdent_WrongSerial)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Lss_SelIdent_Ok)
 {
-    CO_NODE     node;
-    uint32_t  vendor = 0x11000011;
-    uint32_t  product = 0x22000022;
-    uint32_t  revision = 0x33000033;
-    uint32_t  serial = 0x44000044;
+    CO_NODE  node;
+    uint32_t vendor = 0x11000011;
+    uint32_t product = 0x22000022;
+    uint32_t revision = 0x33000033;
+    uint32_t serial = 0x44000044;
 
     /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1018, 1, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&vendor));
-    TS_ODAdd(CO_KEY(0x1018, 2, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&product));
-    TS_ODAdd(CO_KEY(0x1018, 3, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&revision));
-    TS_ODAdd(CO_KEY(0x1018, 4, CO_UNSIGNED32 | CO_OBJ____R_), 0, (CO_DATA)(&serial));
+    TS_ODAdd(CO_KEY(0x1018, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&vendor));
+    TS_ODAdd(CO_KEY(0x1018, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&product));
+    TS_ODAdd(CO_KEY(0x1018, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&revision));
+    TS_ODAdd(CO_KEY(0x1018, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&serial));
     TS_CreateNode(&node,0);
     /*------------------------------------------*/
 

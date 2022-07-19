@@ -45,9 +45,9 @@ uint8_t uint8_t_rw_indirect = 0x43;
 uint16_t uint16_t_rw_indirect = 0x8765;
 uint32_t uint32_t_rw_indirect = 0xfedcba09;
 
-#define MK_RO_KEY(type, typeCode) CO_KEY(type ## _I_RO_KEY, 0, typeCode | CO_OBJ____R_), 0, (CO_DATA)(&type ## _ro_indirect)
-#define MK_RW_KEY(type, typeCode) CO_KEY(type ## _I_RW_KEY, 0, typeCode | CO_OBJ____RW), 0, (CO_DATA)(&type ## _rw_indirect)
-#define MK_RW_D_KEY(type, typeCode) CO_KEY(type ## _D_RW_KEY, 0, typeCode | CO_OBJ_D__RW), 0, (CO_DATA)(type ## _D_VALUE)
+#define MK_RO_KEY(type, typeCode) CO_KEY(type ## _I_RO_KEY, 0, CO_OBJ_____R_), typeCode, (CO_DATA)(&type ## _ro_indirect)
+#define MK_RW_KEY(type, typeCode) CO_KEY(type ## _I_RW_KEY, 0, CO_OBJ_____RW), typeCode, (CO_DATA)(&type ## _rw_indirect)
+#define MK_RW_D_KEY(type, typeCode) CO_KEY(type ## _D_RW_KEY, 0, CO_OBJ_D___RW), typeCode, (CO_DATA)(type ## _D_VALUE)
 
 #define TS_READ_RO_GET(type, getter) CO_NODE node; \
     int16_t result; type toRead; setup(&node); \
@@ -82,15 +82,15 @@ uint32_t uint32_t_rw_indirect = 0xfedcba09;
 
 void setup(CO_NODE *node) {
     TS_CreateMandatoryDir();
-    TS_ODAdd(MK_RO_KEY(uint8_t, CO_UNSIGNED8));
-    TS_ODAdd(MK_RO_KEY(uint16_t, CO_UNSIGNED16));
-    TS_ODAdd(MK_RO_KEY(uint32_t, CO_UNSIGNED32));
-    TS_ODAdd(MK_RW_KEY(uint8_t, CO_UNSIGNED8));
-    TS_ODAdd(MK_RW_KEY(uint16_t, CO_UNSIGNED16));
-    TS_ODAdd(MK_RW_KEY(uint32_t, CO_UNSIGNED32));
-    TS_ODAdd(MK_RW_D_KEY(uint8_t, CO_UNSIGNED8));
-    TS_ODAdd(MK_RW_D_KEY(uint16_t, CO_UNSIGNED16));
-    TS_ODAdd(MK_RW_D_KEY(uint32_t, CO_UNSIGNED32));
+    TS_ODAdd(MK_RO_KEY(uint8_t, CO_TUNSIGNED8));
+    TS_ODAdd(MK_RO_KEY(uint16_t, CO_TUNSIGNED16));
+    TS_ODAdd(MK_RO_KEY(uint32_t, CO_TUNSIGNED32));
+    TS_ODAdd(MK_RW_KEY(uint8_t, CO_TUNSIGNED8));
+    TS_ODAdd(MK_RW_KEY(uint16_t, CO_TUNSIGNED16));
+    TS_ODAdd(MK_RW_KEY(uint32_t, CO_TUNSIGNED32));
+    TS_ODAdd(MK_RW_D_KEY(uint8_t, CO_TUNSIGNED8));
+    TS_ODAdd(MK_RW_D_KEY(uint16_t, CO_TUNSIGNED16));
+    TS_ODAdd(MK_RW_D_KEY(uint32_t, CO_TUNSIGNED32));
     TS_CreateNode(node, 0);
 }
 
@@ -176,7 +176,7 @@ TS_DEF_MAIN(TS_OD_GetDirect)
     uint32_t    val;
     uint8_t    valByte;
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x2000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(123));
+    TS_ODAdd(CO_KEY(0x2000, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(123));
     TS_CreateNode(&node, 0);
 
     // result = CODictWrLong(&node.Dict, CO_DEV(0x1400,1), 0xC0000201);
@@ -206,7 +206,7 @@ CO_OBJ_STR DemoStringObj = {
 //     CO_OBJ      *obj;
 
 //     TS_CreateMandatoryDir();
-//     TS_ODAdd(CO_KEY(0x2001, 0, CO_STRING | CO_OBJ____R_), CO_TSTRING, (CO_DATA)(&DemoStringObj));
+//     TS_ODAdd(CO_KEY(0x2001, 0, CO_OBJ_____R_), CO_TSTRING, (CO_DATA)(&DemoStringObj));
 //     TS_CreateNode(&node, 0);
 //     obj = CODictFind(&node.Dict, CO_DEV(0x2001, 0));
 //     if (obj != NULL) {
@@ -225,7 +225,7 @@ TS_DEF_MAIN(TS_OD_GetIndirect)
     CO_NODE     node;
 
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x2002, 0, CO_UNSIGNED16 | CO_OBJ____RW), NULL, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(0x2002, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)(&val));
     TS_CreateNode(&node, 0);
 
     result = CODictRdWord(&node.Dict, CO_DEV(0x2002,0), &toRead);

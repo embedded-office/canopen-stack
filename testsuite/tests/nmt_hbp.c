@@ -34,11 +34,11 @@
 TS_DEF_MAIN(TS_HBProd_Disable)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     time = 0;
+    CO_NODE   node;
+    uint16_t  time = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), CO_THB_PROD, (CO_DATA)(&time));
+    TS_ODAdd(CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)(&time));
     TS_CreateNode(&node,0);
                                                       /*------------------------------------------*/
     TS_Wait(&node, 1000);                             /* wait 1000ms                              */
@@ -57,11 +57,11 @@ TS_DEF_MAIN(TS_HBProd_Disable)
 TS_DEF_MAIN(TS_HBProd_PreOperational)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     time = 50;
+    CO_NODE   node;
+    uint16_t  time = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), CO_THB_PROD, (CO_DATA)(&time));
+    TS_ODAdd(CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)(&time));
     TS_CreateNode(&node,0);
                                                       /*------------------------------------------*/
     TS_Wait(&node, 50);                               /* wait heartbeat time                      */
@@ -82,11 +82,11 @@ TS_DEF_MAIN(TS_HBProd_PreOperational)
 TS_DEF_MAIN(TS_HBProd_Operational)
 {
     CO_IF_FRM frm;
-    CO_NODE        node;
-    uint16_t     time = 50;
+    CO_NODE   node;
+    uint16_t  time = 50;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), CO_THB_PROD, (CO_DATA)(&time));
+    TS_ODAdd(CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)(&time));
     TS_CreateNode(&node,0);
                                                       /*------------------------------------------*/
     TS_NMT_SEND(0x01, 1);                            /* set node-id 0x01 to operational          */

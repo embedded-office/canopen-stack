@@ -131,8 +131,8 @@ void TS_CreateEmcy(void)
     TS_ODAdd(OBJ1003_0(&TS_Obj1003_0));
     TS_Obj1003_0 = 0;
     for (n = 1; n < TS_EMCY_HIST_MAX; n++) {
-        TS_ODAdd(OBJ1003_X(n, &TS_Obj1003[n]));
-        TS_Obj1003[n] = 0;
+        TS_ODAdd(OBJ1003_X(n, &TS_Obj1003[n-1]));
+        TS_Obj1003[n-1] = 0;
     }
 
     TS_ODAdd(OBJ1014_0(&TS_Obj1014_0));

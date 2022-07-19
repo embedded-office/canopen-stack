@@ -78,8 +78,7 @@ CO_OBJ_DOM *DomCreate(uint16_t idx, uint8_t sub, uint8_t access, uint32_t size)
     MemNext += size;
 
     DomClear(&Domain[DomIdx]);
-    TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|access), CO_TDOMAIN,
-             (CO_DATA)(&Domain[DomIdx]));
+    TS_ODAdd(CO_KEY(idx, sub, access), CO_TDOMAIN, (CO_DATA)(&Domain[DomIdx]));
     result = &Domain[DomIdx];
     DomIdx++;
 

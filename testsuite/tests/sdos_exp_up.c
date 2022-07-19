@@ -75,20 +75,24 @@
 ******************************************************************************/
 
 #define MY_TYPE  ((CO_OBJ_TYPE *)&MyType)
+static uint32_t MyTypeSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
+{
+    UNUSED(obj);
+    UNUSED(node);
+    UNUSED(width);
 
+    return (1u);
+}
 static CO_ERR MyTypeReadErr(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_ERR err = CO_ERR_TYPE_RD;
-
+    UNUSED(buf);
+    UNUSED(size);
     COObjTypeUserSDOAbort(obj, node, 0x11223344);
-
-    (void)size;
-    (void)buf;
 
     return (err);
 }
-
-static const CO_OBJ_TYPE MyType = { 0, 0, MyTypeReadErr, 0 };
+static const CO_OBJ_TYPE MyType = { MyTypeSize, 0, MyTypeReadErr, 0 };
 
 /*------------------------------------------------------------------------------------------------*/
 /*!
@@ -119,7 +123,7 @@ TS_DEF_MAIN(TS_ExpRd_1BytePara)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -164,7 +168,7 @@ TS_DEF_MAIN(TS_ExpRd_2BytePara)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -209,7 +213,7 @@ TS_DEF_MAIN(TS_ExpRd_4BytePara)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -254,7 +258,7 @@ TS_DEF_MAIN(TS_ExpRd_1ByteVar)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ___PRW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ____PRW), CO_TUNSIGNED8, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -299,7 +303,7 @@ TS_DEF_MAIN(TS_ExpRd_2ByteVar)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ___PRW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ____PRW), CO_TUNSIGNED16, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -343,7 +347,7 @@ TS_DEF_MAIN(TS_ExpRd_4ByteVar)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ___PRW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ____PRW), CO_TUNSIGNED32, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -387,7 +391,7 @@ TS_DEF_MAIN(TS_ExpRd_4ByteConst)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0x44434241));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0x44434241));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -432,7 +436,7 @@ TS_DEF_MAIN(TS_ExpRd_4ByteConstNodeId)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32 | CO_OBJ_DN_R_), 0, (CO_DATA)(0x44434241));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_DN__R_),  CO_TUNSIGNED32, (CO_DATA)(0x44434241));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -478,7 +482,7 @@ TS_DEF_MAIN(TS_ExpRd_2ByteParaNodeId)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ__NPRW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ__N_PRW), CO_TUNSIGNED16, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -523,7 +527,7 @@ TS_DEF_MAIN(TS_ExpRd_BadCmd)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -580,7 +584,7 @@ TS_DEF_MAIN(TS_ExpRd_ObjNotExist)
     CHK_MLTPX(frm, idx, sub);
     CHK_DATA (frm, 0x06020000);
 
-    CHK_ERR(&node, CO_ERR_OBJ_NOT_FOUND);
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -612,7 +616,7 @@ TS_DEF_MAIN(TS_ExpRd_SubIdxNotExist)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -626,7 +630,7 @@ TS_DEF_MAIN(TS_ExpRd_SubIdxNotExist)
     CHK_MLTPX(frm, idx, sub);
     CHK_DATA (frm, 0x06090011);
 
-    CHK_ERR(&node, CO_ERR_OBJ_NOT_FOUND);
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -658,7 +662,7 @@ TS_DEF_MAIN(TS_ExpRd_WriteOnly)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ_____W), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ______W), CO_TUNSIGNED16, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -703,7 +707,7 @@ TS_DEF_MAIN(TS_ExpRd_DataNullPtr)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)(0));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)(0));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */
@@ -748,7 +752,7 @@ TS_DEF_MAIN(TS_ExpRd_UserReadErr)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED8|CO_OBJ____RW), MY_TYPE, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), MY_TYPE, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
 
     /* -- TEST -- */

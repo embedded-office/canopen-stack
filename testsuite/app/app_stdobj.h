@@ -39,9 +39,8 @@ extern "C" {
 *          additional information (bit16 to 31).
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1000_0(val)                             \
-    CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ1000_0(val)  \
+    CO_KEY(0x1000, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1001h:0 - ERROR REGISTER
@@ -50,9 +49,8 @@ extern "C" {
 *          Reference to 8bit error register variable.
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1001_0(ref)                             \
-    CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ___PR_), \
-    0, (CO_DATA)(ref)
+#define OBJ1001_0(ref)  \
+    CO_KEY(0x1001, 0, CO_OBJ____PR_), CO_TUNSIGNED8, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1002h:0 - MANUFACTURER STATUS REGISTER
@@ -61,9 +59,8 @@ extern "C" {
 *          Reference to 32bit manufacturer specific status register variable.
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1002_0(ref)                             \
-    CO_KEY(0x1002, 0, CO_UNSIGNED32|CO_OBJ___PR_), \
-    0, (CO_DATA)(ref)
+#define OBJ1002_0(ref)  \
+    CO_KEY(0x1002, 0, CO_OBJ____PR_), CO_TUNSIGNED32, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1003h:0 - NUMBER OF ERRORS
@@ -72,9 +69,8 @@ extern "C" {
 *          Reference to 8bit variable with number of actual errors.
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1003_0(ref)                            \
-    CO_KEY(0x1003, 0, CO_UNSIGNED8|CO_OBJ____RW), \
-    CO_TEMCY, (CO_DATA)(ref)
+#define OBJ1003_0(ref)  \
+    CO_KEY(0x1003, 0, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1003h:n - STANDARD ERROR FIELD
@@ -87,9 +83,8 @@ extern "C" {
 *          and additional information (bit16 to 31).
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1003_X(sub,ref)                             \
-    CO_KEY(0x1003, (sub), CO_UNSIGNED32|CO_OBJ____R_), \
-    CO_TEMCY, (CO_DATA)(ref)
+#define OBJ1003_X(sub,ref)  \
+    CO_KEY(0x1003, (sub), CO_OBJ_____R_), CO_TEMCY_HIST, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1005h:0 - COB-ID SYNC MESSAGE
@@ -98,9 +93,8 @@ extern "C" {
 *          Reference to value of 32bit COB-ID with CAN-ID (bit0 to 10).
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1005_0(ref)                             \
-    CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ____RW), \
-    CO_TSYNCID, (CO_DATA)(ref)
+#define OBJ1005_0(ref)  \
+    CO_KEY(0x1005, 0, CO_OBJ_____RW), CO_TSYNC_ID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1006h:0 - COMMUNICATION CYCLE PERIOD
@@ -109,9 +103,8 @@ extern "C" {
 *          Reference to period value defines the SYNC interval in us.
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1006_0(ref)                             \
-    CO_KEY(0x1006, 0, CO_UNSIGNED32|CO_OBJ____RW), \
-    CO_TSYNCCYCLE, (CO_DATA)(ref)
+#define OBJ1006_0(ref)  \
+    CO_KEY(0x1006, 0, CO_OBJ_____RW), CO_TSYNC_CYCLE, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1014h:0 - COB-ID EMCY MESSAGE
@@ -122,9 +115,8 @@ extern "C" {
 * \note    The node-id is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1014_0(ref)                             \
-    CO_KEY(0x1014, 0, CO_UNSIGNED32|CO_OBJ__N_RW), \
-    CO_TEMCYID, (CO_DATA)(ref)
+#define OBJ1014_0(ref)  \
+    CO_KEY(0x1014, 0, CO_OBJ__N__RW), CO_TEMCY_ID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1017h:0 - PRODUCER HEARTBEAT TIME
@@ -133,9 +125,8 @@ extern "C" {
 *          Reference to value of 16bit heartbeat time in 1 ms.
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1017_0(ref)                             \
-    CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), \
-    CO_THB_PROD, (CO_DATA)(ref)
+#define OBJ1017_0(ref)  \
+    CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1018h:0 - IDENTITY OBJECT
@@ -144,9 +135,8 @@ extern "C" {
 *          Constant value for highest sub-index (1h to 4h).
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1018_0(val)                            \
-    CO_KEY(0x1018, 0, CO_UNSIGNED8|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ1018_0(val)  \
+    CO_KEY(0x1018, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1018h:1 - IDENTITY OBJECT VENDOR-ID
@@ -155,9 +145,8 @@ extern "C" {
 *          Constant vendor-id (assigned uniquely to manufacturers by CiA)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1018_1(val)                             \
-    CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ1018_1(val)  \
+    CO_KEY(0x1018, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1018h:2 - IDENTITY OBJECT PRODUCT CODE
@@ -166,9 +155,8 @@ extern "C" {
 *          Constant product code
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1018_2(val)                             \
-    CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ1018_2(val)  \
+    CO_KEY(0x1018, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1018h:3 - IDENTITY OBJECT REVISION NUMBER
@@ -177,9 +165,8 @@ extern "C" {
 *          Constant revision number
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1018_3(val)                             \
-    CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ1018_3(val)  \
+    CO_KEY(0x1018, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1018h:3 - IDENTITY OBJECT SERIAL NUMBER
@@ -188,9 +175,8 @@ extern "C" {
 *          Constant serial number
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1018_4(val)                             \
-    CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ1018_4(val)  \
+    CO_KEY(0x1018, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1200h:0 - SDO SERVER PARAMETER
@@ -202,9 +188,8 @@ extern "C" {
 *          Constant value for highest sub-index (2h to 3h)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ120X_0(srv,val)                                \
-    CO_KEY(0x1200 + (srv), 0, CO_UNSIGNED8|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ120X_0(srv,val)  \
+    CO_KEY(0x1200 + (srv), 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1200h:1 - SDO SERVER PARAMETER COB-ID CLIENT TO SERVER (RX)
@@ -218,9 +203,8 @@ extern "C" {
 * \note    The node-id is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ120X_1(srv,ref)                                 \
-    CO_KEY(0x1200 + (srv), 1, CO_UNSIGNED32|CO_OBJ__N_RW), \
-    CO_TSDOID, (CO_DATA)(ref)
+#define OBJ120X_1(srv,ref)  \
+    CO_KEY(0x1200 + (srv), 1, CO_OBJ__N__RW), CO_TSDO_ID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1200h:2 - SDO SERVER PARAMETER COB-ID SERVER TO CLIENT (TX)
@@ -234,9 +218,8 @@ extern "C" {
 * \note    The node-id is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ120X_2(srv,ref)                                 \
-    CO_KEY(0x1200 + (srv), 2, CO_UNSIGNED32|CO_OBJ__N_RW), \
-    CO_TSDOID, (CO_DATA)(ref)
+#define OBJ120X_2(srv,ref)  \
+    CO_KEY(0x1200 + (srv), 2, CO_OBJ__N__RW), CO_TSDO_ID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1280h:0 - SDO CLIENT PARAMETER
@@ -248,9 +231,8 @@ extern "C" {
 *          Constant value for highest sub-index (2h to 3h)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ128X_0(cli,val)                                \
-    CO_KEY(0x1200 + (cli), 0, CO_UNSIGNED8|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ128X_0(cli,val)  \
+    CO_KEY(0x1200 + (cli), 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1280h:1 - SDO CLIENT PARAMETER COB-ID CLIENT TO SERVER (TX)
@@ -264,9 +246,8 @@ extern "C" {
 * \note    The subindex 3 (node-id) is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ128X_1(cli,ref)                                 \
-    CO_KEY(0x1280 + (cli), 1, CO_UNSIGNED32|CO_OBJ____RW), \
-    CO_TSDOID, (CO_DATA)(ref)
+#define OBJ128X_1(cli,ref)  \
+    CO_KEY(0x1280 + (cli), 1, CO_OBJ_____RW), CO_TSDO_ID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1280h:2 - SDO CLIENT PARAMETER COB-ID SERVER TO CLIENT (RX)
@@ -280,9 +261,8 @@ extern "C" {
 * \note    The subindex 3 (node-id) is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ128X_2(cli,ref)                                 \
-    CO_KEY(0x1280 + (cli), 2, CO_UNSIGNED32|CO_OBJ____RW), \
-    CO_TSDOID, (CO_DATA)(ref)
+#define OBJ128X_2(cli,ref)  \
+    CO_KEY(0x1280 + (cli), 2, CO_OBJ_____RW), CO_TSDO_ID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1280h:3 - SDO CLIENT PARAMETER NODE-ID OF THE SDO SERVER
@@ -294,9 +274,8 @@ extern "C" {
 *          Reference to value of 8bit SDO server Node-ID (1 to 127)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ128X_3(cli,ref)                                 \
-    CO_KEY(0x1280 + (cli), 3, CO_UNSIGNED8|CO_OBJ____RW), \
-    0, (CO_DATA)(ref)
+#define OBJ128X_3(cli,ref)  \
+    CO_KEY(0x1280 + (cli), 3, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 14XXh:0 - RPDO COMMUNICATION PARAMETER
@@ -308,9 +287,8 @@ extern "C" {
 *          Constant value for highest sub-index (2h to 5h)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ14XX_0(num,val)                                \
-    CO_KEY(0x1400 + (num), 0, CO_UNSIGNED8|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ14XX_0(num,val)  \
+    CO_KEY(0x1400 + (num), 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 14XXh:1 - RPDO COMMUNICATION PARAMETER COB-ID USED BY RPDO
@@ -324,9 +302,8 @@ extern "C" {
 * \note    The node-id is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ14XX_1(num,ref)                                 \
-    CO_KEY(0x1400 + (num), 1, CO_UNSIGNED32|CO_OBJ__N_RW), \
-    CO_TPDOID, (CO_DATA)(ref)
+#define OBJ14XX_1(num,ref)  \
+    CO_KEY(0x1400 + (num), 1, CO_OBJ__N__RW), CO_TPDO_ID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 14XXh:2 - RPDO COMMUNICATION PARAMETER TRANSMISSION TYPE
@@ -338,9 +315,8 @@ extern "C" {
 *          Reference to value of 8bit with encoded transmission type
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ14XX_2(num,ref)                                \
-    CO_KEY(0x1400 + (num), 2, CO_UNSIGNED8|CO_OBJ____RW), \
-    CO_TPDOTYPE, (CO_DATA)(ref)
+#define OBJ14XX_2(num,ref)  \
+    CO_KEY(0x1400 + (num), 2, CO_OBJ_____RW), CO_TPDO_TYPE, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 16XXh:0 - RPDO MAPPING PARAMETER
@@ -353,9 +329,8 @@ extern "C" {
 *          in RPDO
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ16XX_0(num,ref)                                \
-    CO_KEY(0x1600 + (num), 0, CO_UNSIGNED8|CO_OBJ____RW), \
-    CO_TPDONUM, (CO_DATA)(ref)
+#define OBJ16XX_0(num,ref)  \
+    CO_KEY(0x1600 + (num), 0, CO_OBJ_____RW), CO_TPDO_NUM, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 16XXh:N - RPDO MAPPING PARAMETER APPLICATION OBJECT #N
@@ -371,9 +346,8 @@ extern "C" {
 *          subindex (bit15 to 8) and length in number of bits (bit7 to 0)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ16XX_N(num,map,ref)                                 \
-    CO_KEY(0x1600 + (num), (map), CO_UNSIGNED32|CO_OBJ____RW), \
-    CO_TPDOMAP, (CO_DATA)(ref)
+#define OBJ16XX_N(num,map,ref)  \
+    CO_KEY(0x1600 + (num), (map), CO_OBJ_____RW), CO_TPDO_MAP, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 18XXh:0 - TPDO COMMUNICATION PARAMETER
@@ -385,9 +359,8 @@ extern "C" {
 *          Constant value for highest sub-index (2h to 5h)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ18XX_0(num,val)                                \
-    CO_KEY(0x1800 + (num), 0, CO_UNSIGNED8|CO_OBJ_D__R_), \
-    0, (CO_DATA)(val)
+#define OBJ18XX_0(num,val)  \
+    CO_KEY(0x1800 + (num), 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(val)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 18XXh:1 - TPDO COMMUNICATION PARAMETER COB-ID USED BY TPDO
@@ -401,9 +374,8 @@ extern "C" {
 * \note    The node-id is considered when using this object entry
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ18XX_1(num,ref)                                 \
-    CO_KEY(0x1800 + (num), 1, CO_UNSIGNED32|CO_OBJ__N_RW), \
-    CO_TPDOID, (CO_DATA)(ref)
+#define OBJ18XX_1(num,ref)  \
+    CO_KEY(0x1800 + (num), 1, CO_OBJ__N__RW), CO_TPDO_ID, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 18XXh:2 - TPDO COMMUNICATION PARAMETER TRANSMISSION TYPE
@@ -415,9 +387,8 @@ extern "C" {
 *          Reference to 8bit value with encoded transmission type
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ18XX_2(num,ref)                                \
-    CO_KEY(0x1800 + (num), 2, CO_UNSIGNED8|CO_OBJ____RW), \
-    CO_TPDOTYPE, (CO_DATA)(ref)
+#define OBJ18XX_2(num,ref)  \
+    CO_KEY(0x1800 + (num), 2, CO_OBJ_____RW), CO_TPDO_TYPE, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 18XXh:3 - TPDO COMMUNICATION PARAMETER INHIBIT TIME
@@ -429,9 +400,8 @@ extern "C" {
 *          Reference to 16bit value with inhibit time in 100us
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ18XX_3(num,ref)                                 \
-    CO_KEY(0x1800 + (num), 3, CO_UNSIGNED16|CO_OBJ____RW), \
-    0, (CO_DATA)(ref)
+#define OBJ18XX_3(num,ref)  \
+    CO_KEY(0x1800 + (num), 3, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 18XXh:5 - TPDO COMMUNICATION PARAMETER EVENT TIMER
@@ -443,9 +413,8 @@ extern "C" {
 *          Reference to 16bit value with event time in 1ms
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ18XX_5(num,ref)                                 \
-    CO_KEY(0x1800 + (num), 5, CO_UNSIGNED16|CO_OBJ____RW), \
-    CO_TEVENT, (CO_DATA)(ref)
+#define OBJ18XX_5(num,ref)  \
+    CO_KEY(0x1800 + (num), 5, CO_OBJ_____RW), CO_TPDO_EVENT, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1AXXh:0 - TPDO MAPPING PARAMETER
@@ -458,9 +427,8 @@ extern "C" {
 *          in TPDO
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1AXX_0(num,ref)                                \
-    CO_KEY(0x1A00 + (num), 0, CO_UNSIGNED8|CO_OBJ____RW), \
-    CO_TPDONUM, (CO_DATA)(ref)
+#define OBJ1AXX_0(num,ref)  \
+    CO_KEY(0x1A00 + (num), 0, CO_OBJ_____RW), CO_TPDO_NUM, (CO_DATA)(ref)
 
 /*---------------------------------------------------------------------------*/
 /*! \brief OBJECT 1AXXh:N - TPDO MAPPING PARAMETER APPLICATION OBJECT #N
@@ -476,10 +444,8 @@ extern "C" {
 *          subindex (bit15 to 8) and length in number of bits (bit7 to 0)
 */
 /*---------------------------------------------------------------------------*/
-#define OBJ1AXX_N(num,map,ref)                                 \
-    CO_KEY(0x1A00 + (num), (map), CO_UNSIGNED32|CO_OBJ____RW), \
-    CO_TPDOMAP, (CO_DATA)(ref)
-
+#define OBJ1AXX_N(num,map,ref)  \
+    CO_KEY(0x1A00 + (num), (map), CO_OBJ_____RW), CO_TPDO_MAP, (CO_DATA)(ref)
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

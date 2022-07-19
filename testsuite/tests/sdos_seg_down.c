@@ -43,7 +43,7 @@ TS_DEF_MAIN(TS_SegWr_Basic)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0x21, idx, sub, 4);
@@ -81,7 +81,7 @@ TS_DEF_MAIN(TS_SegWr_Basic_Bad)
 
     /* -- PREPARATION -- */
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_UNSIGNED32|CO_OBJ____RW), 0, (CO_DATA)(&val));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&val));
     TS_CreateNode(&node,0);
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
     TS_SDO_SEND (0x21, idx, sub, 4);
@@ -113,7 +113,7 @@ TS_DEF_MAIN(TS_SegWr_42ByteDomain)
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -165,7 +165,7 @@ TS_DEF_MAIN(TS_SegWr_43ByteDomain)
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -220,7 +220,7 @@ TS_DEF_MAIN(TS_SegWr_41ByteDomain)
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -273,7 +273,7 @@ TS_DEF_MAIN(TS_SegWr_46ByteDomain)
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -326,7 +326,7 @@ TS_DEF_MAIN(TS_SegWr_44ByteDomain)
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -376,7 +376,7 @@ TS_DEF_MAIN(TS_SegWr_BadCmd)
     uint8_t  sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -406,7 +406,7 @@ TS_DEF_MAIN(TS_SegWr_ObjNotExist)
     uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
     idx++;
@@ -415,7 +415,7 @@ TS_DEF_MAIN(TS_SegWr_ObjNotExist)
 
     CHK_SDO0_ERR(idx, sub, 0x06020000);
 
-    CHK_ERR(&node, CO_ERR_OBJ_NOT_FOUND);             /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -436,7 +436,7 @@ TS_DEF_MAIN(TS_SegWr_SubIdxNotExist)
     uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
     sub++;
@@ -445,7 +445,7 @@ TS_DEF_MAIN(TS_SegWr_SubIdxNotExist)
 
     CHK_SDO0_ERR(idx, sub, 0x06090011);
 
-    CHK_ERR(&node, CO_ERR_OBJ_NOT_FOUND);             /* check for expected error                 */
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 
@@ -468,7 +468,7 @@ TS_DEF_MAIN(TS_SegWr_ReadOnly)
     uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____R_, size);
+    DomCreate(idx, sub, CO_OBJ_____R_, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -498,7 +498,7 @@ TS_DEF_MAIN(TS_SegWr_LenTooHigh)
     uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    DomCreate(idx, sub, CO_OBJ____RW, size);
+    DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
     size++;
@@ -531,7 +531,7 @@ TS_DEF_MAIN(TS_SegWr_42ByteDomain_41Byte)
     uint8_t     sub  = 1;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
     size--;
@@ -581,7 +581,7 @@ TS_DEF_MAIN(TS_SegWr_DomainNullPtr)
     uint8_t  sub  = 0;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    TS_ODAdd(CO_KEY(idx, sub, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (CO_DATA)(0));
+    TS_ODAdd(CO_KEY(idx, sub, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(0));
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -614,7 +614,7 @@ TS_DEF_MAIN(TS_SegWr_BadToggleBit)
     uint8_t     id;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
@@ -667,7 +667,7 @@ TS_DEF_MAIN(TS_SegWr_RestartTransfer)
     uint8_t     id;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
-    dom = DomCreate(idx, sub, CO_OBJ____RW, size);
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
     TS_CreateNode(&node,0);
 
                                                       /*===== INIT SEGMENTED DOWNLOAD  ===========*/
