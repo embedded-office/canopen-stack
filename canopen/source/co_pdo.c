@@ -23,83 +23,29 @@
 #include "co_core.h"
 
 /******************************************************************************
-* GLOBAL CONSTANTS
+* PRIVATE HELPER FUNCTION PROTOTYPES
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTAsync   = { 0, COTypeAsyncCtrl, 0, 0 };
-const CO_OBJ_TYPE COTEvent   = { 0, 0, 0, COTypeEventWrite };
-const CO_OBJ_TYPE COTPdoMapN = { 0, 0, 0, COTypePdoMapNumWrite };
-const CO_OBJ_TYPE COTPdoMap  = { 0, 0, 0, COTypePdoMapWrite };
-const CO_OBJ_TYPE COTPdoId   = { 0, 0, 0, COTypePdoComIdWrite };
-const CO_OBJ_TYPE COTPdoType = { 0, 0, 0, COTypePdoComTypeWrite };
+static void COTPdoMapClear(CO_TPDO_LINK *map);
 
 /******************************************************************************
-* FUNCTIONS
+* PRIVATE HELPER FUNCTIONS
 ******************************************************************************/
 
-/*
-* see function definition
-*/
-void COTPdoTrigObj(CO_TPDO *pdo, CO_OBJ *obj)
+static void COTPdoMapClear(CO_TPDO_LINK *map)
 {
-    uint32_t n;
-    uint16_t num;
+    uint16_t id;
 
-    if (CO_IS_PDOMAP(obj->Key) != 0) {
-        for (n=0; n < (CO_TPDO_N << 3); n++) {
-            if (pdo->Node->TMap[n].Obj == obj) {
-                num = pdo->Node->TMap[n].Num;
-                COTPdoTrigPdo(pdo, num);
-            }
-        }
-    } else {
-        pdo->Node->Error = CO_ERR_TPDO_OBJ_TRIGGER;
+    for (id = 0; id < (CO_TPDO_N << 3); id++) {
+        map[id].Obj  = 0;
+        map[id].Num  = 0xFFFF;
     }
 }
 
-/*
-* see function definition
-*/
-void COTPdoTrigPdo(CO_TPDO *pdo, uint16_t num)
-{
-    if (num < CO_TPDO_N) {
-        COTPdoTx(&pdo[num]);
-    } else {
-        pdo->Node->Error = CO_ERR_TPDO_NUM_TRIGGER;
-    }
-}
+/******************************************************************************
+* PROTECTED API FUNCTIONS
+******************************************************************************/
 
-/*
-* see function definition
-*/
-void COTPdoClear(CO_TPDO *pdo, CO_NODE *node)
-{
-    uint16_t num;
-    uint8_t  on;
-
-    /* argument checks */
-    if ((pdo == 0) || (node == 0)) {
-        CONodeFatalError();
-        return;
-    }
-    
-    COTPdoMapClear(node->TMap);
-    for (num = 0; num < CO_TPDO_N; num++) {
-        pdo[num].Node       = node;
-        pdo[num].EvTmr      = -1;
-        pdo[num].InTmr      = -1;
-        pdo[num].Identifier = CO_TPDO_COBID_OFF;
-        pdo[num].ObjNum     = 0;
-        for (on = 0; on < 8; on++) {
-            pdo[num].Map[on]  = 0;
-            pdo[num].Size[on] = 0;
-        }
-    }
-}
-
-/*
-* see function definition
-*/
 void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
 {
     CO_ERR   err;
@@ -107,11 +53,8 @@ void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
     uint8_t  on;
     uint8_t  tnum;
 
-    /* argument checks */
-    if ((pdo == 0) || (node == 0)) {
-        CONodeFatalError();
-        return;
-    }
+    ASSERT_PTR_FATAL(pdo);
+    ASSERT_PTR_FATAL(node);
     
     COTPdoMapClear(node->TMap);
     for (num = 0; num < CO_TPDO_N; num++) {
@@ -133,9 +76,6 @@ void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
     }
 }
 
-/*
-* see function definition
-*/
 void COTPdoReset(CO_TPDO *pdo, uint16_t num)
 {
     CO_TPDO  *wp;
@@ -228,9 +168,6 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
     }
 }
 
-/*
-* see function definition
-*/
 CO_ERR COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
 {
     CO_DICT   *cod;
@@ -277,9 +214,41 @@ CO_ERR COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
     return (CO_ERR_NONE);
 }
 
-/*
-* see function definition
-*/
+void COTPdoMapAdd(CO_TPDO_LINK *map, CO_OBJ *obj, uint16_t num)
+{
+    uint16_t id;
+    
+    for (id = 0; id < (CO_TPDO_N << 3); id++) {
+        if (map[id].Obj == 0) {
+            map[id].Obj = obj;
+            map[id].Num = num;
+            break;
+        }
+    }
+}
+
+void COTPdoClear(CO_TPDO *pdo, CO_NODE *node)
+{
+    uint16_t num;
+    uint8_t  on;
+
+    ASSERT_PTR(pdo);
+    ASSERT_PTR(node);
+    
+    COTPdoMapClear(node->TMap);
+    for (num = 0; num < CO_TPDO_N; num++) {
+        pdo[num].Node       = node;
+        pdo[num].EvTmr      = -1;
+        pdo[num].InTmr      = -1;
+        pdo[num].Identifier = CO_TPDO_COBID_OFF;
+        pdo[num].ObjNum     = 0;
+        for (on = 0; on < 8; on++) {
+            pdo[num].Map[on]  = 0;
+            pdo[num].Size[on] = 0;
+        }
+    }
+}
+
 void COTPdoTmrEvent (void *parg)
 {
     CO_TPDO *pdo;
@@ -289,10 +258,7 @@ void COTPdoTmrEvent (void *parg)
     COTPdoTx(pdo);
 }
 
-/*
-* see function definition
-*/
-void COTPdoEndInhibit(void *parg)
+void COTPdoTmrInhibit(void *parg)
 {
     CO_TPDO *pdo;
     
@@ -305,10 +271,7 @@ void COTPdoEndInhibit(void *parg)
     }
 }
 
-/*
-* see function definition
-*/
-void COTPdoTx (CO_TPDO *pdo)
+void COTPdoTx(CO_TPDO *pdo)
 {
     CO_TMR    *tmr;
     CO_IF_FRM  frm;
@@ -333,7 +296,7 @@ void COTPdoTx (CO_TPDO *pdo)
         pdo->InTmr = COTmrCreate(tmr,
                                  pdo->Inhibit,
                                  0,
-                                 COTPdoEndInhibit,
+                                 COTPdoTmrInhibit,
                                  (void*)pdo);
         if (pdo->InTmr < 0) {
             pdo->Node->Error = CO_ERR_TPDO_INHIBIT;
@@ -359,12 +322,17 @@ void COTPdoTx (CO_TPDO *pdo)
             /* supported mapping: 1 to 4 bytes */
             sz = COObjGetSize(pdo->Map[num], pdo->Node, 0L);
             if (sz <= (uint32_t)(8 - frm.DLC)) {
-                COObjRdValue(pdo->Map[num], pdo->Node, &data, CO_LONG, pdo->Node->NodeId);
-                if (sz == CO_BYTE) {
+                if (pdosz == 3) {
+                    /* for 3bytes, read a basic 32bit type */
+                    COObjRdValue(pdo->Map[num], pdo->Node, &data, 4u);
+                } else {
+                    COObjRdValue(pdo->Map[num], pdo->Node, &data, pdosz);
+                }
+                if (sz == 1u) {
                     CO_SET_BYTE(&frm, data, frm.DLC);
-                } else if (sz == CO_WORD) {
+                } else if (sz == 2u) {
                     CO_SET_WORD(&frm, data, frm.DLC);
-                } else if (sz == CO_LONG) {
+                } else if (sz == 4u) {
                     if (pdosz == 3) {
                         CO_SET_BYTE(&frm, data, frm.DLC);
                         CO_SET_WORD(&frm, (data >> 8), (frm.DLC + 1));
@@ -383,147 +351,42 @@ void COTPdoTx (CO_TPDO *pdo)
     (void)COIfCanSend(&pdo->Node->If, &frm);
 }
 
-/*
-* see function definition
-*/
-void COTPdoMapClear(CO_TPDO_LINK *map)
-{
-    uint16_t id;
+/******************************************************************************
+* PUBLIC API FUNCTIONS
+******************************************************************************/
 
-    for (id = 0; id < (CO_TPDO_N << 3); id++) {
-        map[id].Obj  = 0;
-        map[id].Num  = 0xFFFF;
-    }
-}
-
-/*
-* see function definition
-*/
-void COTPdoMapAdd(CO_TPDO_LINK *map, CO_OBJ *obj, uint16_t num)
+void COTPdoTrigObj(CO_TPDO *pdo, CO_OBJ *obj)
 {
-    uint16_t id;
-    
-    for (id = 0; id < (CO_TPDO_N << 3); id++) {
-        if (map[id].Obj == 0) {
-            map[id].Obj = obj;
-            map[id].Num = num;
-            break;
+    uint32_t n;
+    uint16_t num;
+
+    if (CO_IS_PDOMAP(obj->Key) != 0) {
+        for (n=0; n < (CO_TPDO_N << 3); n++) {
+            if (pdo->Node->TMap[n].Obj == obj) {
+                num = pdo->Node->TMap[n].Num;
+                COTPdoTrigPdo(pdo, num);
+            }
         }
+    } else {
+        pdo->Node->Error = CO_ERR_TPDO_OBJ_TRIGGER;
     }
 }
 
-/*
-* see function definition
-*/
-void COTPdoMapDelNum(CO_TPDO_LINK *map, uint16_t num)
+void COTPdoTrigPdo(CO_TPDO *pdo, uint16_t num)
 {
-    uint16_t id;
-    
-    for (id = 0; id < (CO_TPDO_N << 3); id++) {
-        if (map[id].Num == num) {
-            map[id].Obj = 0;
-            map[id].Num = 0xFFFF;
-        }
+    if (num < CO_TPDO_N) {
+        COTPdoTx(&pdo[num]);
+    } else {
+        pdo->Node->Error = CO_ERR_TPDO_NUM_TRIGGER;
     }
 }
 
-/*
-* see function definition
-*/
-void COTPdoMapDelSig(CO_TPDO_LINK *map, CO_OBJ *obj)
-{
-    uint16_t id;
-
-    for (id = 0; id < (CO_TPDO_N << 3); id++) {
-        if (map[id].Obj == obj) {
-            map[id].Obj = 0;
-            map[id].Num = 0xFFFF;
-        }
-    }
-}
-
-/*
-* see function definition
-*/
-CO_ERR COTypeAsyncCtrl (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint16_t func, uint32_t para)
-{
-    CO_ERR result = CO_ERR_NONE;
-
-    (void)para;
-
-    if (func == CO_TPDO_ASYNC) {
-        COTPdoTrigObj(node->TPdo, obj);
-    }
-
-    return (result);
-}
-
-/*
-* see function definition
-*/
-CO_ERR COTypeEventWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
-{
-    CO_DICT  *cod;
-    CO_NMT   *nmt;
-    CO_TPDO  *pdo;
-    CO_TMR   *tmr;
-    uint32_t  cobid = 0;
-    uint16_t  cycTime;
-    uint16_t  num;
-    int16_t   tid;
-    CO_ERR    err;
-
-    err = COObjWrDirect(obj, (void *)buf, size);
-    if (err != CO_ERR_NONE) {
-        return (err);
-    }
-    cod     = &node->Dict;
-    nmt     = &node->Nmt;
-    num     = CO_GET_IDX(obj->Key);
-    num    &= 0x1FF;
-    pdo     = &node->TPdo[num];
-    tmr = &pdo->Node->Tmr;
-
-    cycTime = (uint16_t)(*(uint32_t *)buf);
-    pdo->Event = COTmrGetTicks(tmr, cycTime, CO_TMR_UNIT_1MS);
-    if (pdo->EvTmr >= 0) {
-        tid = COTmrDelete(tmr, pdo->EvTmr);
-        if (tid < 0) {
-            pdo->Node->Error = CO_ERR_TMR_DELETE;
-        }
-    }
-    if (pdo->InTmr >= 0) {
-        tid = COTmrDelete(tmr, pdo->InTmr);
-        if (tid < 0) {
-            pdo->Node->Error = CO_ERR_TMR_DELETE;
-        }
-    }
-
-    (void)CODictRdLong(cod, CO_DEV(0x1800+num, 1), &cobid);
-    if (((cobid & CO_TPDO_COBID_OFF) == 0) &&
-        (pdo->Event > 0)                   &&
-        (nmt->Mode == CO_OPERATIONAL)) {
-        pdo->EvTmr = COTmrCreate(tmr,
-                                 pdo->Event,
-                                 0,
-                                 COTPdoTmrEvent,
-                                 (void*)pdo);
-    }
-
-    return (CO_ERR_NONE);
-}
-
-/*
-* see function definition
-*/
 void CORPdoClear(CO_RPDO *pdo, CO_NODE *node)
 {
     int16_t num;
     
-    if ((pdo == 0) || (node == 0)) {
-        CONodeFatalError();
-        return;
-    }
+    ASSERT_PTR_FATAL(pdo);
+    ASSERT_PTR_FATAL(node);
 
     for (num = 0; num < CO_RPDO_N; num++) {
         pdo[num].Node       = node;
@@ -532,19 +395,14 @@ void CORPdoClear(CO_RPDO *pdo, CO_NODE *node)
     }
 }
 
-/*
-* see function definition
-*/
 void CORPdoInit(CO_RPDO *pdo, CO_NODE *node)
 {
     CO_ERR   err;
     uint8_t  rnum;
     uint16_t num;
-
-    if ((pdo == 0) || (node == 0)) {
-        CONodeFatalError();
-        return;
-    }
+    
+    ASSERT_PTR_FATAL(pdo);
+    ASSERT_PTR_FATAL(node);
 
     for (num = 0; num < CO_RPDO_N; num++) {
         pdo[num].Node       = node;
@@ -559,9 +417,6 @@ void CORPdoInit(CO_RPDO *pdo, CO_NODE *node)
     }
 }
 
-/*
-* see function definition
-*/
 CO_ERR CORPdoReset(CO_RPDO *pdo, uint16_t num)
 {
     CO_RPDO  *wp;
@@ -621,13 +476,9 @@ CO_ERR CORPdoReset(CO_RPDO *pdo, uint16_t num)
             COSyncAdd(&pdo[num].Node->Sync, num, CO_SYNC_FLG_RX, type);
         }
     }
-
     return (CO_ERR_NONE);
 }
-    
-/*
-* see function definition
-*/
+
 CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
 {
     CO_DICT   *cod;
@@ -690,13 +541,9 @@ CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
         }
     }
     pdo[num].ObjNum = mapnum + dummy;
-
     return (CO_ERR_NONE);
 }
 
-/*
-* see function definition
-*/
 void CORPdoRx(CO_RPDO *pdo, CO_IF_FRM *frm)
 {
     int16_t err = 0;
@@ -711,9 +558,6 @@ void CORPdoRx(CO_RPDO *pdo, CO_IF_FRM *frm)
     }
 }
 
-/*
-* see function definition
-*/
 CO_RPDO *CORPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm)
 {
     CO_RPDO *result = NULL;
@@ -729,13 +573,9 @@ CO_RPDO *CORPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm)
         }
         n++;
     }
-
     return (result);
 }
 
-/*
-* see function definition
-*/
 void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
 {
     CO_OBJ  *obj;
@@ -754,266 +594,25 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
             if (pdosz <= 4) {
                 /* supported mapping: 1 to 4 bytes */
                 sz = (uint8_t)COObjGetSize(obj, pdo->Node, 0L);
-                if (sz == CO_BYTE) {
+                if (sz == 1u) {
                     val08 = CO_GET_BYTE(frm, dlc);
                     dlc++;
-                    COObjWrValue(obj, pdo->Node, (void *)&val08, sz, pdo->Node->NodeId);
-                } else if (sz == CO_WORD) {
+                    COObjWrValue(obj, pdo->Node, (void *)&val08, sz);
+                } else if (sz == 2u) {
                     val16 = CO_GET_WORD(frm, dlc);
                     dlc += 2;
-                    COObjWrValue(obj, pdo->Node, (void *)&val16, sz, pdo->Node->NodeId);
-                } else if (sz == CO_LONG) {
+                    COObjWrValue(obj, pdo->Node, (void *)&val16, sz);
+                } else if (sz == 4u) {
                     val32 = CO_GET_LONG(frm, dlc);
                     if (pdosz == 3) {
                         val32 &= 0x00FFFFFF;
                     }
                     dlc += pdosz;
-                    COObjWrValue(obj, pdo->Node, (void *)&val32, sz, pdo->Node->NodeId);
+                    COObjWrValue(obj, pdo->Node, (void *)&val32, sz);
                 }
             } else {
                 CORpdoWriteData(frm, dlc, pdosz, obj);
             }
         }
     }
-}
-
-/*
-* see function definition
-*/
-CO_ERR COTypePdoMapNumWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
-{
-    CO_ERR    result = CO_ERR_NONE;
-    CO_DICT  *cod;
-    uint32_t  id;
-    uint32_t  mapentry;
-    uint16_t  pmapidx;
-    uint16_t  pcomidx;
-    uint8_t   mapbytes;
-    uint8_t   mapnum;
-    uint8_t   i;
-
-    if ((obj == 0) || (buf == 0) || (size != CO_LONG)) {
-        return (CO_ERR_BAD_ARG);
-    }
-    if (CO_GET_SUB(obj->Key) != 0) {
-        return (CO_ERR_TPDO_MAP_OBJ);
-    }
-    mapnum = (uint8_t)(*(uint32_t *)buf);
-    if (mapnum > 8) {
-        return (CO_ERR_OBJ_MAP_LEN);
-    }
-
-    cod     = &node->Dict;
-    pmapidx = CO_GET_IDX(obj->Key);
-    if ((pmapidx >= 0x1600) && (pmapidx <= 0x17FF)) {
-    } else if ((pmapidx >= 0x1A00) && (pmapidx <= 0x1BFF)) {
-    } else {
-        return (CO_ERR_TPDO_MAP_OBJ);
-    }
-
-    pcomidx = pmapidx - 0x200;
-    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
-    if ((id & CO_TPDO_COBID_OFF) == 0) {
-        result = CO_ERR_OBJ_ACC;
-    } else {
-        mapbytes = 0;
-        for (i = 1; i <= mapnum; i++) {
-            result = CODictRdLong(cod, CO_DEV(pmapidx, i), &mapentry);
-            if (result != CO_ERR_NONE) {
-                return (CO_ERR_OBJ_MAP_TYPE);
-            }
-            mapbytes += CO_GET_SIZE(mapentry);
-        }
-
-        if (mapbytes > 8) {
-            return (CO_ERR_OBJ_MAP_LEN);
-        }
-
-        result = COObjWrDirect(obj, &mapnum, CO_LONG);
-    }
-
-    return (result);
-}
-
-/*
-* see function definition
-*/
-CO_ERR COTypePdoMapWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
-{
-    CO_ERR    result = CO_ERR_NONE;
-    CO_DICT  *cod;
-    CO_OBJ   *objm;
-    uint32_t  map;
-    uint32_t  id;
-    uint32_t  maps;
-    uint16_t  pmapidx;
-    uint16_t  pcomidx;
-    uint8_t   mapn;
-
-    (void)size;
-    if ((obj == 0) || (buf == 0)) {
-        return (CO_ERR_BAD_ARG);
-    }
-    if (CO_GET_SUB(obj->Key) < 1) {
-        return (CO_ERR_TPDO_MAP_OBJ);
-    }
-
-    cod     = &node->Dict;
-    pmapidx = CO_GET_IDX(obj->Key);
-    if ((pmapidx >= 0x1600) && (pmapidx <= 0x17FF)) {
-    } else if ((pmapidx >= 0x1A00) && (pmapidx <= 0x1BFF)) {
-    } else {
-        return (CO_ERR_TPDO_MAP_OBJ);
-    }
-
-    pcomidx = pmapidx - 0x200;
-    map     = *(uint32_t*)buf;
-    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
-    if ((id & CO_TPDO_COBID_OFF) == 0) {
-        result = CO_ERR_OBJ_ACC;
-    } else {
-        (void)CODictRdByte(cod, CO_DEV(pmapidx, 0), &mapn);
-        if (mapn != 0) {
-            return (CO_ERR_OBJ_ACC);
-        }
-
-        objm = CODictFind(cod, map);
-        if (objm == (CO_OBJ*)0) {
-            return (CO_ERR_OBJ_MAP_TYPE);
-        }
-
-        maps = CO_IS_PDOMAP(objm->Key);
-        if (maps == 0) {
-            return (CO_ERR_OBJ_MAP_TYPE);
-        }
-
-        if ((pmapidx >= 0x1600) && (pmapidx <= 0x17FF)) {
-            maps = CO_IS_WRITE(objm->Key);
-            if (maps == 0) {
-                return (CO_ERR_OBJ_MAP_TYPE);
-            }
-        } else if ((pmapidx >= 0x1A00) && (pmapidx <= 0x1BFF)) {
-            maps = CO_IS_READ(objm->Key);
-            if (maps == 0) {
-                return (CO_ERR_OBJ_MAP_TYPE);
-            }
-        }
-
-        result = COObjWrDirect(obj, &map, CO_LONG);
-    }
-
-    return (result);
-}
-
-/*
-* see function definition
-*/
-CO_ERR COTypePdoComIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
-{
-    CO_ERR    result = CO_ERR_NONE;
-    CO_NMT   *nmt;
-    CO_TPDO  *tpdo = 0;
-    CO_RPDO  *rpdo = 0;
-    uint32_t  nid;
-    uint32_t  oid;
-    uint16_t  pcomidx;
-    uint16_t  num;
-
-    (void)size;
-    if ((obj == 0) || (buf == 0)) {
-        return (CO_ERR_BAD_ARG);
-    }
-    if (CO_GET_SUB(obj->Key) != 1) {
-        return (CO_ERR_TPDO_COM_OBJ);
-    }
-
-    nid = *(uint32_t*)buf;
-    if ((nid & CO_TPDO_COBID_EXT) != 0) {
-        return (CO_ERR_OBJ_RANGE);
-    }
-
-    nmt     = &node->Nmt;
-    pcomidx = CO_GET_IDX(obj->Key);
-    if ((pcomidx >= 0x1400) && (pcomidx <= 0x15FF)) {
-        rpdo = node->RPdo;
-        num  = pcomidx & 0x1FF;
-    } else if ((pcomidx >= 0x1800) && (pcomidx <= 0x19FF)) {
-        if ((nid & CO_TPDO_COBID_REMOTE) == 0) {
-            return (CO_ERR_OBJ_RANGE);
-        }
-        tpdo = node->TPdo;
-        num  = pcomidx & 0x1FF;
-    } else {
-        return (CO_ERR_TPDO_COM_OBJ);
-    }
-
-    (void)COObjRdDirect(obj, &oid, CO_LONG);
-    if ((oid & CO_TPDO_COBID_OFF) == 0) {
-        if ((nid & CO_TPDO_COBID_OFF) != 0) {
-            result = COObjWrDirect(obj, &nid, CO_LONG);
-            if (nmt->Mode == CO_OPERATIONAL) {
-                if (tpdo != 0) {
-                    COTPdoReset(tpdo, num);
-                }
-                if (rpdo != 0) {
-                    CORPdoReset(rpdo, num);
-                }
-            }
-        } else {
-            result = CO_ERR_OBJ_RANGE;
-        }
-    } else {
-        if ((nid & CO_TPDO_COBID_OFF) != 0) {
-            result = COObjWrDirect(obj, &nid, CO_LONG);
-        } else {
-            result = COObjWrDirect(obj, &nid, CO_LONG);
-            if (nmt->Mode == CO_OPERATIONAL) {
-                if (tpdo != 0) {
-                    COTPdoReset(tpdo, num);
-                }
-                if (rpdo != 0) {
-                    CORPdoReset(rpdo, num);
-                }
-            }
-        }
-    }
-
-    return (result);
-}
-
-/*
-* see function definition
-*/
-CO_ERR COTypePdoComTypeWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
-{
-    CO_ERR    result = CO_ERR_NONE;
-    CO_DICT  *cod;
-    uint8_t   type;
-    uint32_t  id;
-    uint16_t  pcomidx;
-
-    if ((obj == 0) || (buf == 0) || (size != CO_LONG)) {
-        return (CO_ERR_BAD_ARG);
-    }
-    if (CO_GET_SUB(obj->Key) != 2) {
-        return (CO_ERR_PARA_IDX);
-    }
-
-    type    = *(uint8_t*)buf;
-    cod     = &node->Dict;
-    pcomidx = CO_GET_IDX(obj->Key);
-    if ((pcomidx >= 0x1400) && (pcomidx <= 0x15FF)) {
-    } else if ((pcomidx >= 0x1800) && (pcomidx <= 0x19FF)) {
-    } else {
-        return (CO_ERR_PARA_IDX);
-    }
-
-    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
-    if ((id & CO_TPDO_COBID_OFF) == 0) {
-        result = CO_ERR_OBJ_RANGE;
-    } else {
-        result = COObjWrDirect(obj, &type, CO_LONG);
-    }
-
-    return (result);
 }

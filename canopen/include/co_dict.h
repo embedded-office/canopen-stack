@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CO_DICT_H__
-#define CO_DICT_H__
+#ifndef CO_DICT_H_
+#define CO_DICT_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -273,4 +273,4 @@ int16_t CODictInit(CO_DICT *cod,
 }
 #endif
 
-#endif  /* #ifndef co_dict.h_ */
+#endif  /* #ifndef CO_DICT_H_ */

@@ -41,29 +41,6 @@ extern "C" {
 #define CO_SDO_ALLOWED   0x20    /*!< indication of SDO transfers allowed    */
 #define CO_PDO_ALLOWED   0x40    /*!< indication of PDO transfers allowed    */
 
-#define CO_THB_PROD  ((CO_OBJ_TYPE *)&COTNmtHbProd)  /*!< Heartbeat Producer */
-#define CO_THB_CONS  ((CO_OBJ_TYPE *)&COTNmtHbCons)  /*!< Heartbeat Consumer */
-
-/******************************************************************************
-* PUBLIC CONSTANTS
-******************************************************************************/
-
-/*! \brief OBJECT TYPE HEARTBEAT CONSUMER
-*
-*    This object type specializes the general handling of objects for the
-*    object dictionary entry 0x1016. This entries is designed to provide
-*    the heartbeat consumer monitor times.
-*/
-extern const CO_OBJ_TYPE COTNmtHbCons;
-
-/*! \brief OBJECT TYPE HEARTBEAT PRODUCER
-*
-*    This object type specializes the general handling of objects for the
-*    object dictionary entry 0x1017. This entries is designed to provide
-*    the heartbeat producer cycle time.
-*/
-extern const CO_OBJ_TYPE COTNmtHbProd;
-
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
@@ -110,22 +87,6 @@ typedef struct CO_NMT_T {
     uint8_t             Allowed; /*!< encoding of allowed CAN objects        */
 
 } CO_NMT;
-
-/*! \brief HEARTBEAT CONSUMER STRUCTURE
-*
-*    This structure holds all data, which are needed for the heartbeat
-*    consumer handling within the object dictionary.
-*/
-typedef struct CO_HBCONS_T {
-    struct CO_NODE_T   *Node;    /*!< Link to parent node                    */
-    struct CO_HBCONS_T *Next;    /*!< Link to next consumer in active chain  */
-    CO_MODE             State;   /*!< Received Node-State                    */
-    int16_t             Tmr;     /*!< Timer Identifier                       */
-    uint16_t            Time;    /*!< Time   (Bit00-15 when read object)     */
-    uint8_t             NodeId;  /*!< NodeId (Bit16-23 when read object)     */
-    uint8_t             Event;   /*!< Event Counter                          */
-
-} CO_HBCONS;
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
@@ -226,37 +187,6 @@ CO_MODE CONmtModeDecode(uint8_t code);
 */
 uint8_t CONmtModeEncode(CO_MODE mode);
 
-/*! \brief  GET NUMBER OF HEARTBEAT EVENTS
-*
-*    This function retuns the number of heartbeat (miss-)events, which are
-*    detected since the last call of this function or initializing the node.
-*
-* \param nmt
-*    reference to NMT structure
-*
-* \param nodeId
-*    node ID of monitored node (or 0 for master node)
-*
-* \retval  >=0    number of detected heartbeat events for given node ID
-* \retval   <0    error detected (e.g. node ID is not monitored)
-*/
-int16_t CONmtGetHbEvents(CO_NMT *nmt, uint8_t nodeId);
-
-/*! \brief  GET LAST RECEIVED HEARTBEAT STATE
-*
-*    This function returns the last received heartbeat state of a given node.
-*
-* \param nmt
-*    reference to NMT structure
-*
-* \param nodeId
-*    node ID of monitored node
-*
-* \retval  !=CO_INVALID    last detected heartbeat state for given node ID
-* \retval   =CO_INVALID    error detected (e.g. node ID is not monitored)
-*/
-CO_MODE CONmtLastHbState(CO_NMT *nmt, uint8_t nodeId);
-
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
@@ -299,154 +229,6 @@ void CONmtBootup(CO_NMT *nmt);
 */
 int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm);
 
-/*! \brief  HEARTBEAT PRODUCER INITIALIZATION
-*
-*    This function initializes the CANopen heartbeat producer.
-*
-* \param nmt
-*    reference to NMT structure
-*/
-void CONmtHbProdInit(CO_NMT *nmt);
-
-/*! \brief  HEARTBEAT PROTOCOL
-*
-*    This function is a (Timerevent-)callback function. The heartbeat
-*    message will be generated and sent to the configured CAN bus.
-*
-* \param parg
-*    reference to NMT structure
-*/
-void CONmtHbProdSend(void *parg);
-
-/*! \brief  HEARTBEAT CONSUMER INITIALIZATION
-*
-*    This function initializes the CANopen heartbeat consumer.
-*
-* \param nmt
-*    reference to NMT structure
-*/
-void CONmtHbConsInit(CO_NMT *nmt);
-
-/*! \brief  HEARTBEAT CONSUMER ACTIVATION
-*
-*    This function activates a single heartbeat consumer.
-*
-* \param nmt
-*    reference to NMT structure
-*
-* \param hbc
-*    reference to heartbeat consumer structure
-*
-* \retval   =CO_ERR_NONE    successfull activated, or consumer is deactivated
-*                           by command
-* \retval  !=CO_ERR_NONE    error detected (double activation, timer delete
-*                           problem)
-*/
-CO_ERR CONmtHbConsActivate(CO_NMT    *nmt,
-                           CO_HBCONS *hbc,
-                           uint16_t   time,
-                           uint8_t    nodeid);
-
-/*! \brief  HEARTBEAT CONSUMER CHECK
-*
-*    This function checks a received CAN frame against all heartbeat
-*    consumers and increments the receive counter in the specific
-*    consumer monitor.
-*
-* \note
-*    We allow the nodeID 0 for heartbeat consuming, because CANopen master
-*    heartbeat may come with this nodeID.
-*
-* \param frm
-*    reference to CAN frame structure
-*
-* \param nmt
-*    pointer to network management structure
-*
-* \retval   <0    CAN message is not a matching heartbeat message
-* \retval  >=0    CAN message is a matching (and consumed) heartbeat message.
-*                 The return value is equal to the consumer node-ID
-*/
-int16_t CONmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm);
-
-/*! \brief  HEARTBEAT CONSUMER TIMEOUT
-*
-*    This timer callback function checks that at least one received heartbeat
-*    is detected for this heartbeat consumer.
-*
-* \param parg
-*    heartbeat consumer structure
-*/
-void CONmtHbConsMonitor(void *parg);
-
-/*! \brief  WRITE HEARTBEAT CONSUMER CONFIG
-*
-*    This function is a typed object write function, special for object
-*    entry 1016. This entry defines the expected rate of the heartbeat
-*    message of a specific node.
-*
-* \param obj
-*    ptr to accessed object entry
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    ptr to write value
-*
-* \param size
-*    size of write value
-*
-* \retval  CO_ERR_NONE       heartbeat consumer config is written
-* \retval  CO_ERR_TYPE_WR    an error is detected and function aborted
-*/
-CO_ERR COTypeNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
-
-/*! \brief READ HEARTBEAT CONSUMER CONFIG
-*
-*    This function is a typed object read function, special for object
-*    entry 1016. This entry defines the expected rate of the heartbeat
-*    message of a specific node.
-*
-* \param obj
-*    ptr to accessed object entry
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    ptr to write value
-*
-* \param len
-*    size of write value
-*
-* \retval   =CO_ERR_NONE    Successfully operation
-* \retval  !=CO_ERR_NONE    An error is detected
-*/
-CO_ERR COTypeNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
-
-/*! \brief  WRITE HEARTBEAT PRODUCER TIME
-*
-*    This function is a typed object write function, special for object
-*    entry 1017. This entry defines the refresh rate of the heartbeat message.
-*
-* \param obj
-*    ptr to accessed object entry
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    ptr to write value
-*
-* \param size
-*    size of write value
-*
-* \retval   >0    heartbeat cycle time write successful
-* \retval  <=0    an error is detected and function aborted
-*/
-CO_ERR COTypeNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
-
 /******************************************************************************
 * CALLBACK FUNCTIONS
 ******************************************************************************/
@@ -482,41 +264,6 @@ extern void CONmtModeChange(CO_NMT *nmt, CO_MODE mode);
 *    the reset request
 */
 extern void CONmtResetRequest(CO_NMT *nmt, CO_NMT_RESET reset);
-
-/*! \brief HEARTBEAT CONSUMER EVENT CALLBACK
-*
-*    This function is called when a heartbeat consumer monitor timer
-*    elapses, before receiving the corresponding heartbeat message.
-*
-* \note
-*    The node pointer is checked to be valid before calling this function.
-*
-* \param nmt
-*    reference to NMT structure
-*
-* \param nodeId
-*    The nodeId of the missed heartbeat message
-*/
-extern void CONmtHbConsEvent(CO_NMT *nmt, uint8_t nodeId);
-
-/*! \brief HEARTBEAT CONSUMER STATE CHANGE CALLBACK
-*
-*    This function is called when a heartbeat consumer monitor detects a
-*    state change, of a monitored node.
-*
-* \note
-*    The node pointer is checked to be valid before calling this function.
-*
-* \param nmt
-*    reference to NMT structure
-*
-* \param nodeId
-*    The nodeId of the monitored node
-*
-* \param mode
-*    The new received node state of the monitored node
-*/
-extern void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

@@ -24,12 +24,9 @@
 #include "co_core.h"
 
 /******************************************************************************
-* FUNCTIONS
+* PUBLIC API FUNCTIONS
 ******************************************************************************/
 
-/*
-* see function definition
-*/
 CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key)
 {
     CO_OBJ  *result = 0;
@@ -38,14 +35,8 @@ CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key)
     int32_t  end;
     int32_t  center;
 
-    if (cod == 0) {
-        cod->Node->Error = CO_ERR_BAD_ARG;
-        return (result);
-    }
-    if (key == 0) {
-        cod->Node->Error = CO_ERR_BAD_ARG;
-        return (result);
-    }
+    ASSERT_PTR_ERR(cod, 0);
+    ASSERT_NOT_ERR(key, 0, 0);
 
     key = CO_GET_DEV(key);
     end = cod->Num;
@@ -62,224 +53,144 @@ CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key)
             start  = center + 1;
         }
     }
-
-    if (result == 0) {
-        cod->Node->Error = CO_ERR_OBJ_NOT_FOUND;
-    }
-
     return(result);
 }
 
-/*
-* see function definition
-*/
 CO_ERR CODictRdByte(CO_DICT *cod, uint32_t key, uint8_t *val)
 {
     CO_ERR   result = CO_ERR_OBJ_NOT_FOUND;
     uint32_t sz;
-    uint8_t  nodeid;
     CO_OBJ  *obj;
 
-    if ((cod == 0) || (val == 0)) {
-        return (CO_ERR_BAD_ARG);
-    }
+    ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_BYTE);
-        if (sz != (uint32_t)CO_BYTE) {
-            cod->Node->Error = CO_ERR_OBJ_SIZE;
-            result           = CO_ERR_OBJ_SIZE;
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)1u);
+        if (sz != (uint32_t)1u) {
+            result = CO_ERR_OBJ_SIZE;
         } else {
-            nodeid = cod->Node->NodeId;
-            result = COObjRdValue(obj, cod->Node, (void *)val, CO_BYTE, nodeid);
-            if (result != CO_ERR_NONE) {
-                cod->Node->Error = CO_ERR_OBJ_READ;
-            }
+            result = COObjRdValue(obj, cod->Node, (void *)val, 1u);
         }
     }
-
     return(result);
 }
 
-/*
-* see function definition
-*/
 CO_ERR CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val)
 {
     CO_ERR   result = CO_ERR_OBJ_NOT_FOUND;
     uint32_t sz;
-    uint8_t  nodeid;
     CO_OBJ  *obj;
 
-    if ((cod == 0) || (val == 0)) {
-        return (CO_ERR_BAD_ARG);
-    }
+    ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_WORD);
-        if (sz != (uint32_t)CO_WORD) {
-            cod->Node->Error = CO_ERR_OBJ_SIZE;
-            result           = CO_ERR_OBJ_SIZE;
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)2u);
+        if (sz != (uint32_t)2u) {
+            result = CO_ERR_OBJ_SIZE;
         } else {
-            nodeid = cod->Node->NodeId;
-            result = COObjRdValue(obj, cod->Node, (void *)val, CO_WORD, nodeid);
-            if (result != CO_ERR_NONE) {
-                cod->Node->Error = CO_ERR_OBJ_READ;
-            }
+            result = COObjRdValue(obj, cod->Node, (void *)val, 2u);
         }
     }
-
     return(result);
 }
 
-/*
-* see function definition
-*/
 CO_ERR CODictRdLong(CO_DICT *cod, uint32_t key, uint32_t *val)
 {
     uint32_t sz;
     CO_ERR   result = CO_ERR_OBJ_NOT_FOUND;
-    uint8_t  nodeid;
     CO_OBJ  *obj;
 
-    if ((cod == 0) || (val == 0)) {
-        return (CO_ERR_BAD_ARG);
-    }
+    ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
+
     obj = CODictFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_LONG);
-        if (sz != (uint32_t)CO_LONG) {
-            cod->Node->Error = CO_ERR_OBJ_SIZE;
-            result           = CO_ERR_OBJ_SIZE;
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)4u);
+        if (sz != (uint32_t)4u) {
+            result = CO_ERR_OBJ_SIZE;
         } else {
-            nodeid = cod->Node->NodeId;
-            result = COObjRdValue(obj, cod->Node, (void *)val, CO_LONG, nodeid);
-            if (result != CO_ERR_NONE) {
-                cod->Node->Error = CO_ERR_OBJ_READ;
-            }
+            result = COObjRdValue(obj, cod->Node, (void *)val, 4u);
         }
     }
-
     return(result);
 }
 
-/*
-* see function definition
-*/
 CO_ERR CODictWrByte(CO_DICT *cod, uint32_t key, uint8_t val)
 {
     CO_ERR   result = CO_ERR_OBJ_NOT_FOUND;
     uint32_t sz;
-    uint8_t  nodeid;
     CO_OBJ  *obj;
 
-    if (cod == 0) {
-        return (CO_ERR_BAD_ARG);
-    }
+    ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
+
     obj = CODictFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_BYTE);
-        if (sz != (uint32_t)CO_BYTE) {
-            cod->Node->Error = CO_ERR_OBJ_SIZE;
-            result           = CO_ERR_OBJ_SIZE;
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)1u);
+        if (sz != (uint32_t)1u) {
+            result = CO_ERR_OBJ_SIZE;
         } else {
-            nodeid = cod->Node->NodeId;
-            result = COObjWrValue(obj, cod->Node, (void *)&val, CO_BYTE, nodeid);
-            if (result != CO_ERR_NONE) {
-                cod->Node->Error = CO_ERR_OBJ_WRITE;
-            }
+            result = COObjWrValue(obj, cod->Node, (void *)&val, 1u);
         }
     }
-
     return(result);
 }
 
-/*
-* see function definition
-*/
 CO_ERR CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val)
 {
     CO_ERR   result = CO_ERR_OBJ_NOT_FOUND;
     uint32_t sz;
-    uint8_t  nodeid;
     CO_OBJ  *obj;
 
-    if (cod == 0) {
-        return (CO_ERR_BAD_ARG);
-    }
+    ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_WORD);
-        if (sz != (uint32_t)CO_WORD) {
-            cod->Node->Error = CO_ERR_OBJ_SIZE;
-            result           = CO_ERR_OBJ_SIZE;
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)2u);
+        if (sz != (uint32_t)2u) {
+            result = CO_ERR_OBJ_SIZE;
         } else {
-            nodeid = cod->Node->NodeId;
-            result = COObjWrValue(obj, cod->Node, (void *)&val, CO_WORD, nodeid);
-            if (result != CO_ERR_NONE) {
-                cod->Node->Error = CO_ERR_OBJ_WRITE;
-            }
+            result = COObjWrValue(obj, cod->Node, (void *)&val, 2u);
         }
     }
-
     return(result);
 }
 
-/*
-* see function definition
-*/
 CO_ERR CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t val)
 {
     CO_ERR   result = CO_ERR_OBJ_NOT_FOUND;
     uint32_t sz;
-    uint8_t  nodeid;
     CO_OBJ  *obj;
 
-    if (cod == 0) {
-        return (CO_ERR_BAD_ARG);
-    }
+    ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
     if (obj != 0) {
-        sz = COObjGetSize(obj, cod->Node, (uint32_t)CO_LONG);
-        if (sz != (uint32_t)CO_LONG) {
-            cod->Node->Error = CO_ERR_OBJ_SIZE;
-            result           = CO_ERR_OBJ_SIZE;
+        sz = COObjGetSize(obj, cod->Node, (uint32_t)4u);
+        if (sz != (uint32_t)4u) {
+            result = CO_ERR_OBJ_SIZE;
         } else {
-            nodeid = cod->Node->NodeId;
-            result = COObjWrValue(obj, cod->Node, (void *)&val, CO_LONG, nodeid);
-            if (result != CO_ERR_NONE) {
-                cod->Node->Error = CO_ERR_OBJ_WRITE;
-            }
+            result = COObjWrValue(obj, cod->Node, (void *)&val, 4u);
         }
     }
-
     return(result);
 }
 
-/*
-* see function definition
-*/
 CO_ERR CODictRdBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len)
 {
     CO_ERR   result = CO_ERR_OBJ_NOT_FOUND;
     CO_OBJ  *obj;
 
-    if ((cod == 0) || (buf == 0)) {
-        return (CO_ERR_BAD_ARG);
-    }
+    ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buf, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
     if (obj != 0) {
         result = COObjRdBufStart(obj, cod->Node, (void *)buf, (uint8_t)len);
-        if (result != CO_ERR_NONE) {
-            cod->Node->Error = CO_ERR_OBJ_READ;
-        }
     }
-
     return(result);
 }
 
@@ -288,47 +199,34 @@ CO_ERR CODictWrBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len)
     CO_ERR   result = CO_ERR_OBJ_NOT_FOUND;
     CO_OBJ  *obj;
 
-    if ((cod == 0) || (buf == 0)) {
-        return (CO_ERR_BAD_ARG);
-    }
+    ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buf, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
     if (obj != 0) {
         result = COObjWrBufStart(obj, cod->Node, (void *)buf, (uint8_t)len);
-        if (result != CO_ERR_NONE) {
-            cod->Node->Error = CO_ERR_OBJ_WRITE;
-        }
     }
-
     return(result);
 }
 
-/*
-* see function definition
-*/
 int16_t CODictInit(CO_DICT *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
 {
     CO_OBJ   *obj;
     uint16_t  num = 0;
 
-    if ((cod == 0) || (node == 0) || (root == 0)) {
-        CONodeFatalError();
-        return (-1);
-    }
-    if (max == 0) {
-        node->Error = CO_ERR_BAD_ARG;
-        return (-1);
-    }
+    ASSERT_PTR_ERR(cod,  -1);
+    ASSERT_PTR_ERR(node, -1);
+    ASSERT_PTR_ERR(root, -1);
+    ASSERT_NOT_ERR(max, 0, -1);
+
     obj = root;
     while ((obj->Key != 0) && (num < max)) {
         num++;
         obj++;
     }
-
     cod->Root  = root;
     cod->Num   = num;
     cod->Max   = max;
     cod->Node  = node;
-
     return ((int16_t)num);
 }

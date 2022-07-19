@@ -35,13 +35,6 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_EMCY_COBID_OFF    ((uint32_t)1 << 31)    /*!< marked as unused    */
-#define CO_EMCY_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */
-#define CO_EMCY_COBID_MASK   ((uint32_t)0x1FFFFFFF) /*!< identifier mask     */
-
-#define CO_TEMCY   ((const CO_OBJ_TYPE *)&COTEmcy)    /*!< EMCY History      */
-#define CO_TEMCYID ((const CO_OBJ_TYPE *)&COTEmcyId)  /*!< Dynamic COB-ID    */
-
 #define CO_EMCY_STORAGE  (1+((CO_EMCY_N-1)/8))  /*!< bytes for CO_EMCY_N bit */
 
 /*! \brief EMCY CODE
@@ -99,24 +92,6 @@ extern "C" {
 #define CO_EMCY_REG_NUM            8   /*!< number of supported classes      */
 
 /******************************************************************************
-* PUBLIC CONSTANTS
-******************************************************************************/
-
-/*! \brief OBJECT TYPE EMCY HISTORY
-*
-*    This type is responsible for the access to the EMCY history.
-*/
-extern const CO_OBJ_TYPE COTEmcy;      /* Link to EMCY Object Type Structure */
-
-/*! \brief OBJECT TYPE EMCY IDENTIFIER
-*
-*    This object type specializes the general handling of objects for the
-*    object dictionary entries holding a EMCY identifier. This entry is
-*    designed to provide the feature of changing a EMCY identifier.
-*/
-extern const CO_OBJ_TYPE COTEmcyId;
-
-/******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
 
@@ -169,6 +144,27 @@ typedef struct CO_EMCY_T {
     uint8_t                Err[CO_EMCY_STORAGE];  /*!< error status storage  */
 
 } CO_EMCY;
+
+/******************************************************************************
+* PROTECTED API FUNCTIONS
+******************************************************************************/
+
+/*! \brief INIT EMCY MANAGEMENT
+*
+*    This function initializes the EMCY object and the internal error
+*    storage memory. Additionally, the links to the given user EMCY error
+*    codes to the given node are set.
+*
+* \param emcy
+*    pointer to the EMCY object
+*
+* \param node
+*    pointer to the CANopen device node information structure
+*
+* \param root
+*    pointer to the start of the User EMCY table
+*/
+void COEmcyInit(CO_EMCY *emcy, struct CO_NODE_T *node, CO_EMCY_TBL *root);
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
@@ -256,244 +252,6 @@ void COEmcyReset(CO_EMCY *emcy, uint8_t silent);
 *    pointer to the EMCY object
 */
 void COEmcyHistReset(struct CO_EMCY_T *emcy);
-
-/******************************************************************************
-* PRIVATE FUNCTIONS
-******************************************************************************/
-
-/*! \brief INIT EMCY MANAGEMENT
-*
-*    This function initializes the EMCY object and the internal error
-*    storage memory. Additionally, the links to the given user EMCY error
-*    codes to the given node are set.
-*
-* \param emcy
-*    pointer to the EMCY object
-*
-* \param node
-*    pointer to the CANopen device node information structure
-*
-* \param root
-*    pointer to the start of the User EMCY table
-*/
-void COEmcyInit(CO_EMCY *emcy, struct CO_NODE_T *node, CO_EMCY_TBL *root);
-
-/*! \brief CHECK EMCY PARAMETER STRUCTURE
-*
-*    This function helps to centralize the parameter checking of the
-*    emcy structure.
-*
-* \param emcy
-*    pointer to the EMCY object
-*
-* \retval  =0    the given parameter emcy is ok
-* \retval  <0    an error is detected in parameter emcy
-*/
-int16_t COEmcyCheck(CO_EMCY *emcy);
-
-/*! \brief GET INTERNAL ERROR STATE
-*
-*    This function gets the error state of the given error identifier out
-*    of the internal error storage memory.
-*
-* \note
-*    The parameter emcy shall be checked by the calling function.
-*
-* \param emcy
-*    pointer to the EMCY object
-*
-* \param err
-*    user error identifier
-*
-* \retval  =0    this error is not present
-* \retval  =1    the error is already detected
-*/
-int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err);
-
-/*! \brief  SET INTERNAL ERROR STATE
-*
-*    This function sets the error state of the given error identifier into
-*    the internal error storage memory.
-*
-* \note
-*    The parameter emcy shall be checked by the calling function.
-*
-* \param emcy
-*    pointer to the EMCY object
-*
-* \param err
-*    user error identifier
-*
-* \param state
-*    error state (=0: no error, !=0: error)
-*
-* \retval  =0    error state is unchanged
-* \retval  =1    the error state has changed
-*/
-int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state);
-
-/*! \brief  SEND EMCY MESSAGE
-*
-*    This function transmits the EMCY message to the configured CANbus.
-*
-* \note
-*    The parameter emcy shall be checked by the calling function.
-*
-* \param emcy
-*    pointer to the EMCY object
-*
-* \param err
-*    user error identifier
-*
-* \param usr
-*    manufacturer specific fields in EMCY message and/or EMCY message
-*
-* \param state
-*    error state (=0: no error, !=0: error)
-*/
-void COEmcySend(CO_EMCY     *emcy,
-                uint8_t      err,
-                CO_EMCY_USR *usr,
-                uint8_t      state);
-
-/*! \brief  UPDATE EMCY OBJECT ENTRIES
-*
-*    This function updates the EMCY object dictionary entries with the
-*    given error code change.
-*
-* \note
-*    The parameter emcy shall be checked by the calling function.
-*
-* \param emcy
-*    pointer to the EMCY object
-*
-* \param err
-*    user error identifier
-*
-* \param usr
-*    manufacturer specific fields in EMCY history and/or EMCY message
-*
-* \param state
-*    error state (=0: no error, !=0: error)
-*/
-void COEmcyUpdate(CO_EMCY     *emcy,
-                  uint8_t      err,
-                  CO_EMCY_USR *usr,
-                  uint8_t      state);
-
-/*! \brief  INIT EMCY HISTORY
-*
-*    This function initializes the EMCY history management. Additionally,
-*    the object entries, mandatory for EMCY history are checked for existance.
-*
-* \note
-*    The parameter emcy shall be checked by the calling function.
-*
-* \param emcy
-*    pointer to the EMCY object
-*/
-void COEmcyHistInit(CO_EMCY *emcy);
-
-/*! \brief  ADD EMCY IN HISTORY
-*
-*    This function appends a new EMCY entry into the history. To avoid moving
-*    the object entries with each new entry, the following algorithm is
-*    implemented:
-*
-*    -# This function will use the EMCY Entries as ringbuffer. Each
-*       Add-function call will use the next higher subindex for storage of
-*       the EMCY History informations.
-*    -# The read/write access functions will remap the different subindex
-*       entry values to the required order (latest EMCY add must appear at
-*       subindex 1).
-*
-* \note
-*    The parameter emcy shall be checked by the calling function.
-*
-* \param emcy
-*    pointer to the EMCY object
-*
-* \param err
-*    user error identifier
-*
-* \param usr
-*    manufacturer specific fields in EMCY message and/or EMCY message
-*/
-void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
-
-/*! \brief EMCY OBJECT READ ACCESS
-*
-*    This function is responsible for the correct read access within the
-*    EMCY History object entry (1003h).
-*
-* \note
-*    When accessing the EMCY history entries, the subidx is remapped to
-*    the correct value, because the ringbuffer must be transfered into
-*    a LIFO list.
-*
-* \param obj
-*    EMCY history object entry reference
-*
-* \param node
-*    Reference to parent node
-*
-* \param buf
-*    Pointer to buffer memory
-*
-* \param len
-*    Length of buffer memory
-*
-* \retval   =CO_ERR_NONE    emergency entry is read
-* \retval  !=CO_ERR_NONE    an error is detected and function aborted
-*/
-CO_ERR COTypeEmcyRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
-
-/*! \brief EMCY OBJECT WRITE ACCESS
-*
-*    This function is responsible for the correct write access within the
-*    EMCY History object entry (1003h). The access is only allowed in
-*    subidx 0; the only writeable value is 0; the result should be a complete
-*    reset of the EMCY history.
-*
-* \param obj
-*    EMCY history object entry reference
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Pointer to buffer memory
-*
-* \param len
-*    Length of buffer memory
-*
-* \retval  CO_ERR_NONE        emergency history is cleared
-* \retval  CO_ERR_TYPE_WR     an error is detected and function aborted
-*/
-CO_ERR COTypeEmcyWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
-
-/*! \brief EMCY COB-ID WRITE ACCESS
-*
-*    This function is responsible for the correct write access for the
-*    EMCY COB-ID object entry (1014h). The access to bit 0 to 29 is only
-*    allowed when bit 31 is set to 1.
-*
-* \param obj
-*    EMCY COB-ID object entry reference
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Pointer to buffer memory
-*
-* \param len
-*    Length of buffer memory
-*
-* \retval  CO_ERR_NONE        EMCY COB-ID object entry is written
-* \retval  CO_ERR_OBJ_RANGE   an error is detected and function aborted
-*/
-CO_ERR COTypeEmcyIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

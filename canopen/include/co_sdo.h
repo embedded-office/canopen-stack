@@ -33,6 +33,50 @@ extern "C"{
 * PUBLIC DEFINES
 ******************************************************************************/
 
+#define CO_SDO_ID_OFF      ((uint32_t)1<<31)  /*!< Disabled SDO server/COBID */
+
+/*! \brief SDO server/client COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1200..12ff: COB-ID for SDO servers and clients. The standard
+*    defines the following encoding:
+*    - bit31: valid: SDO exists (0) or not (1)
+*    - bit30: dyn: value is static (0) or dynamic (1)
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    EMCY exists (1), or not (0)
+*
+* \param dynamic
+*    the value is static (0) or dynamic (1)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_SDO_STD(valid, dynamic, id)                 \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)                  | \
+               (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+
+#define CO_COBID_SDO_EXT(valid, dynamic, id)                 \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)             | \
+               ((uint32_t)0x1u << 29u)                     | \
+               (((uint32_t)(dynamic) & 0x1u) << 30u)       | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+/*! \} */
+
+/*! \brief SDO Default Connection
+*
+*    The CANopen standard defines a mandatory connection for SDO server #0.
+*/
+#define CO_COBID_SDO_REQUEST()    CO_COBID_SDO_STD(1u,0u,0x600uL)
+#define CO_COBID_SDO_RESPONSE()   CO_COBID_SDO_STD(1u,0u,0x580uL)
+
 #define CO_SDO_ERR_TBIT         0x05030000    /*!< Toggle bit not alternated              */
 #define CO_SDO_ERR_TIMEOUT      0x05040000    /*!< SDO protocol timed out                 */
 #define CO_SDO_ERR_CMD          0x05040001    /*!< SDO command specifier invalid/unknown  */

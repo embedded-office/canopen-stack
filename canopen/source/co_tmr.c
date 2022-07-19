@@ -40,9 +40,6 @@ static void         COTmrRemove (CO_TMR *tmr, CO_TMR_TIME *tx);
 * PROTECTED FUNCTIONS
 ******************************************************************************/
 
-/*
-* see function definition
-*/
 void COTmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, uint16_t num, uint32_t freq)
 {
     COTmrLock();
@@ -56,9 +53,6 @@ void COTmrInit(CO_TMR *tmr, CO_NODE *node, CO_TMR_MEM *mem, uint16_t num, uint32
     COTmrUnlock();
 }
 
-/*
-* see function definition
-*/
 void COTmrClear(CO_TMR *tmr)
 {
     CO_NODE    *node = tmr->Node;
@@ -93,9 +87,6 @@ void COTmrClear(CO_TMR *tmr)
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-/*
-* see function definition
-*/
 uint32_t COTmrGetTicks(CO_TMR *tmr, uint16_t time, uint32_t unit)
 {
     uint32_t ticks = 0u;
@@ -113,9 +104,6 @@ uint32_t COTmrGetTicks(CO_TMR *tmr, uint16_t time, uint32_t unit)
     return (ticks);
 }
 
-/*
-* see function definition
-*/
 uint16_t COTmrGetMinTime(CO_TMR *tmr, uint32_t unit)
 {
     uint16_t time  = 1u;
@@ -131,9 +119,6 @@ uint16_t COTmrGetMinTime(CO_TMR *tmr, uint32_t unit)
     return (time);
 }
 
-/*
-* see function definition
-*/
 int16_t COTmrCreate(CO_TMR      *tmr,
                     uint32_t     startTicks,
                     uint32_t     cycleTicks,
@@ -196,9 +181,6 @@ int16_t COTmrCreate(CO_TMR      *tmr,
     return (result);
 }
 
-/*
-* see function definition
-*/
 int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
 {
     CO_TMR_TIME   *tx;
@@ -240,7 +222,6 @@ int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
             tx = tx->Next;
         }
     }
-
 
     /* not found: search in elapsed timer list */
     if (del == 0) {
@@ -292,9 +273,6 @@ int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
     return (result);
 }
 
-/*
-* see function definition
-*/
 int16_t COTmrService(CO_TMR *tmr)
 {
     CO_TMR_TIME *tn;
@@ -302,10 +280,7 @@ int16_t COTmrService(CO_TMR *tmr)
     int16_t      result = 0;
     int16_t      elapsed;
 
-    if (tmr == 0) {
-        CONodeFatalError();
-        return -1;
-    }
+    ASSERT_PTR_FATAL_ERR(tmr, -1);
 
     cif = &tmr->Node->If;
     elapsed = COIfTimerUpdate(cif);
@@ -396,9 +371,6 @@ void COTmrProcess(CO_TMR *tmr)
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-/*
-* see function definition
-*/
 static void COTmrReset(CO_TMR *tmr)
 {
     CO_TMR_MEM    *mem = (CO_TMR_MEM *)tmr->APool;
@@ -433,9 +405,6 @@ static void COTmrReset(CO_TMR *tmr)
     }
 }
 
-/*
-* see function definition
-*/
 static CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *action)
 {
     uint32_t     dTx;
@@ -537,9 +506,6 @@ static CO_TMR_TIME *COTmrInsert(CO_TMR *tmr, uint32_t dTnew, CO_TMR_ACTION *acti
     return tn;
 }
 
-/*
-* see function definition
-*/
 static void COTmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx)
 {
     CO_TMR_TIME *tn;

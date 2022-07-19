@@ -133,8 +133,8 @@ typedef enum CO_ERR_T {
     CO_ERR_MSG_CREATE,           /*!< error during creating a message        */
     CO_ERR_MSG_READ,             /*!< error during reading a message         */
 
+    CO_ERR_TYPE_INIT,            /*!< error during type initialization       */
     CO_ERR_TYPE_RD,              /*!< error during reading type              */
-    CO_ERR_TYPE_CTRL,            /*!< error during type control              */
     CO_ERR_TYPE_WR               /*!< error during writing type              */
 
 } CO_ERR;

@@ -22,29 +22,16 @@
 #include "co_core.h"
 
 /******************************************************************************
-* GLOBAL CONSTANTS
-******************************************************************************/
-
-const CO_OBJ_TYPE COTSyncId = { 0, 0, 0, COTypeSyncIdWrite };
-
-const CO_OBJ_TYPE COTSyncCycle = { 0, 0, 0, COTypeSyncCycleWrite };
-
-/******************************************************************************
 * FUNCTIONS
 ******************************************************************************/
 
-/*
-* see function definition
-*/
 void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
 {
     CO_ERR  err;
     uint8_t i;
 
-    if ((sync == 0) || (node == 0)) {
-        CONodeFatalError();
-        return;
-    }
+    ASSERT_PTR_FATAL(sync);
+    ASSERT_PTR_FATAL(node);
 
     sync->Node  = node;
     sync->Tmr   = -1;
@@ -62,13 +49,9 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
     if (err != CO_ERR_NONE) {
         sync->CobId = 0;
     }
-
     COSyncProdActivate(sync);
 }
 
-/*
-* see function definition
-*/
 void COSyncHandler (CO_SYNC *sync)
 {
     uint8_t i;
@@ -94,9 +77,6 @@ void COSyncHandler (CO_SYNC *sync)
     }
 }
 
-/*
-* see function definition
-*/
 void COSyncAdd (CO_SYNC *sync, uint16_t num, uint8_t msgType, uint8_t txtype)
 {
     /* transmit pdo */
@@ -115,9 +95,6 @@ void COSyncAdd (CO_SYNC *sync, uint16_t num, uint8_t msgType, uint8_t txtype)
     }
 }
 
-/*
-* see function definition
-*/
 void COSyncRemove (CO_SYNC *sync, uint16_t num, uint8_t msgType)
 {
     /* transmit pdo */
@@ -132,9 +109,6 @@ void COSyncRemove (CO_SYNC *sync, uint16_t num, uint8_t msgType)
     }
 }
 
-/*
-* see function definition
-*/
 void COSyncRx(CO_SYNC *sync, CO_IF_FRM *frm)
 {
     int16_t i;
@@ -151,9 +125,6 @@ void COSyncRx(CO_SYNC *sync, CO_IF_FRM *frm)
     }
 }
 
-/*
-* see function definition
-*/
 int16_t COSyncUpdate(CO_SYNC *sync, CO_IF_FRM *frm)
 {
     int16_t result = -1;
@@ -167,13 +138,9 @@ int16_t COSyncUpdate(CO_SYNC *sync, CO_IF_FRM *frm)
         }
         result = 0;
     }
-
     return (result);
 }
 
-/*
-* see function definition
-*/
 void COSyncRestart(CO_SYNC *sync)
 {
     uint8_t i;
@@ -185,9 +152,6 @@ void COSyncRestart(CO_SYNC *sync)
     }
 }
 
-/*
-* see function definition
-*/
 void COSyncProdActivate(CO_SYNC *sync) {
     uint32_t ticks, time;
     CO_ERR   err;
@@ -252,9 +216,6 @@ void COSyncProdActivate(CO_SYNC *sync) {
     }
 }
 
-/*
-* see function definition
-*/
 void COSyncProdDeactivate(CO_SYNC *sync) {
     int16_t tid;
 
@@ -267,9 +228,6 @@ void COSyncProdDeactivate(CO_SYNC *sync) {
     }
 }
 
-/*
-* see function definition
-*/
 void COSyncProdSend(void *parg) {
     CO_IF_FRM  frm;
     CO_SYNC   *sync;
@@ -287,104 +245,4 @@ void COSyncProdSend(void *parg) {
     CO_SET_DLC(&frm, 0);
 
     (void)COIfCanSend(&sync->Node->If, &frm);
-}
-
-/*
-* see function definition
-*/
-CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len) {
-    CO_ERR result = CO_ERR_NONE;
-    CO_SYNC *sync;
-    uint32_t nid;
-    uint32_t oid;
-
-    (void) len;
-
-    sync = &node->Sync;
-    nid = *(uint32_t*) buf;
-    (void) COObjRdDirect(obj, &oid, CO_LONG);
-
-    /* when current entry is generating SYNCs, bits 0 to 29 shall not be changed */
-    if ((oid & CO_SYNC_COBID_ON) != (uint32_t) 0) {
-        if ((nid & CO_SYNC_COBID_MASK) != (oid & CO_SYNC_COBID_MASK)) {
-            result = CO_ERR_OBJ_RANGE;
-        } else {
-            /* SYNC producer deactivation */
-            if ((nid & CO_SYNC_COBID_ON) == 0) {
-                COSyncProdDeactivate(sync);
-            }
-            sync->CobId = nid;
-            result = COObjWrDirect(obj, &nid, CO_LONG);
-            if (result != CO_ERR_NONE) {
-                result = CO_ERR_OBJ_RANGE;
-            }
-        }
-    } else {
-        /* SYNC producer activation */
-        if (((nid & CO_SYNC_COBID_ON) != 0)) {
-            sync->CobId = nid;
-            COSyncProdActivate(sync);
-            if (node->Error == CO_ERR_SYNC_RES) {
-                /*
-                 * Unable to start timer, return back
-                 * the old COB-ID and report error
-                 */
-                sync->CobId = oid;
-                result      = CO_ERR_OBJ_RANGE;
-                return (result);
-            }
-        }
-        sync->CobId = nid;
-        result = COObjWrDirect(obj, &nid, CO_LONG);
-        if (result != CO_ERR_NONE) {
-            result = CO_ERR_OBJ_RANGE;
-        }
-    }
-
-    return (result);
-}
-
-CO_ERR COTypeSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len) {
-    CO_ERR   result;
-    CO_SYNC *sync;
-    uint32_t nus, ous;
-
-
-    (void) len;
-    result  = CO_ERR_NONE;
-    sync    = &node->Sync;
-    nus     = *(uint32_t *) buf;
-    ous     = 0;
-
-    /*
-     * Fetch old settings (will be restored in
-     * case producer reactivation went wrong
-     */
-    (void) COObjRdDirect(obj, &ous, CO_LONG);
-
-    result = COObjWrDirect(obj, &nus, CO_LONG);
-    if (result != CO_ERR_NONE) {
-        /* Oops, write access went wrong */
-        return CO_ERR_OBJ_RANGE;
-    }
-
-    /* Reactivate sync producer with new cycle value */
-    if ((sync->CobId & CO_SYNC_COBID_ON) != 0) {
-        COSyncProdActivate(sync);
-        if (node->Error == CO_ERR_SYNC_RES) {
-            /*
-             * Restore old SYNC cycle value because used timer has
-             * resolution that is not able to produce SYNCs with new
-             * cycle.
-             *
-             * Object write access was successful once already,
-             * no result check is needed.
-             */
-            (void) COObjWrDirect(obj, &ous, CO_LONG);
-            sync->Cycle = ous;
-            result      = CO_ERR_OBJ_RANGE;
-        }
-    }
-
-    return (result);
 }

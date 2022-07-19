@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CO_SDO_SRV_H_
-#define CO_SDO_SRV_H_
+#ifndef CO_SSDO_H_
+#define CO_SSDO_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -33,24 +33,8 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_SDO_RD               1             /*!< Object read access                     */
-#define CO_SDO_WR               2             /*!< Object write access                    */
-
-#define CO_SDO_ID_OFF      ((uint32_t)1<<31)  /*!< Disabled SDO server / COBID            */
-
-#define CO_TSDOID  ((CO_OBJ_TYPE *)&COTSdoId) /*!< Object Type Dynamic SDO Identifier     */
-
-/******************************************************************************
-* PUBLIC CONSTANTS
-******************************************************************************/
-
-/*! \brief OBJECT TYPE SDO IDENTIFIER
-*
-*    This object type specializes the general handling of objects for the
-*    object dictionary entries holding a SDO identifier. These entries are
-*    designed to provide the feature of changing a SDO identifier.
-*/
-extern const CO_OBJ_TYPE COTSdoId;
+#define CO_SDO_RD               1             /*!< Object read access        */
+#define CO_SDO_WR               2             /*!< Object write access       */
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -586,4 +570,4 @@ CO_ERR COTypeSdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf,
 }
 #endif
 
-#endif  /* #ifndef CO_SDO_H_ */
+#endif  /* #ifndef CO_SSDO_H_ */

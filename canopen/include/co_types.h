@@ -58,4 +58,38 @@ typedef unsigned int        uintptr_t;
 
 #endif
 
+/******************************************************************************
+* PUBLIC MACROS
+******************************************************************************/
+
+#define UNUSED(var)    \
+    (void)var;
+
+#define ASSERT_PTR_ERR(ptr,err)    \
+    if (ptr == 0) { return (err); }
+
+#define ASSERT_EQU_ERR(var,val,err)    \
+    if (var != val) { return (err); }
+
+#define ASSERT_LOWER(var,val)    \
+    if (var >= val) { return; }
+
+#define ASSERT_LOWER_ERR(var, val, err)    \
+    if (var >= val) { return (err); }
+
+#define ASSERT_NOT(var,val)    \
+    if (var == val) { return; }
+
+#define ASSERT_NOT_ERR(var,val,err)    \
+    if (var == val) { return (err); }
+
+#define ASSERT_PTR(ptr)    \
+    if (ptr == 0) { return; }
+
+#define ASSERT_PTR_FATAL(ptr)    \
+    if (ptr == 0) { CONodeFatalError(); return; }
+
+#define ASSERT_PTR_FATAL_ERR(ptr, err)    \
+    if (ptr == 0) { CONodeFatalError(); return(err); }
+
 #endif /* ifndef CO_TYPES_H_ */

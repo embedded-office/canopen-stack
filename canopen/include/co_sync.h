@@ -34,35 +34,8 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_SYNC_COBID_ON     ((uint32_t)1 << 30)    /*!< generator flag         */
-#define CO_SYNC_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format        */
-#define CO_SYNC_COBID_MASK   ((uint32_t)0x1FFFFFFF) /*!< identifier mask        */
-
 #define CO_SYNC_FLG_TX       (0x01) /*!< message type indication  TPDO          */
 #define CO_SYNC_FLG_RX       (0x02) /*!< message type indication: RPDO          */
-
-#define CO_TSYNCID    ((const CO_OBJ_TYPE *)&COTSyncId) /*!< Dynamic COB-ID     */
-#define CO_TSYNCCYCLE ((const CO_OBJ_TYPE *)&COTSyncCycle) /*!< Dynamic cycle   */
-
-/******************************************************************************
-* PUBLIC CONSTANTS
-******************************************************************************/
-
-/*! \brief OBJECT TYPE SYNC COB-ID
-*
-*    This object type specializes the general handling of object for the
-*    object dictionary entry 0x1005. This entries is designed to provide
-*    the sync cob-id value and sync producer functionality.
-*/
-extern const CO_OBJ_TYPE COTSyncId;
-
-/*! \brief OBJECT TYPE SYNC COMMUNICATION CYCLE
-*
-*    This object type specializes the general handling of object for the
-*    object dictionary entry 0x1006. This entries is designed to provide
-*    the sync communication cycle value.
-*/
-extern const CO_OBJ_TYPE COTSyncCycle;
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -212,52 +185,6 @@ void COSyncProdDeactivate(CO_SYNC *sync);
  *    reference to SYNC structure
  */
 void COSyncProdSend(void *parg);
-
-/*! \brief SYNC COB-ID WRITE ACCESS
-*
-*    This function is responsible for the correct write access for the
-*    SYNC COB-ID object entry (1005h). The access to bit 0 to 29 is only
-*    allowed when bit 30 is set to 0.
-*
-* \param obj
-*    SYNC COB-ID object entry reference
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Pointer to buffer memory
-*
-* \param len
-*    Length of buffer memory
-*
-* \retval  CO_ERR_NONE        SYNC COB-ID object entry is written
-* \retval  CO_ERR_OBJ_RANGE   an error is detected and function aborted
-*/
-CO_ERR COTypeSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
-
-/*! \brief SYNC COMMUNICATION CYCLE WRITE ACCESS
-*
-*    This function is responsible for the correct write access for the
-*    SYNC communication cycle object entry (1006h). Value is presented
-*    as number of microseconds.
-*
-* \param obj
-*    SYNC communication cycle entry reference
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Pointer to buffer memory
-*
-* \param len
-*    Length of buffer memory
-*
-* \retval  CO_ERR_NONE        SYNC COB-ID object entry is written
-* \retval  CO_ERR_OBJ_RANGE   an error is detected and function aborted
-*/
-CO_ERR COTypeSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

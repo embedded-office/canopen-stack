@@ -104,44 +104,7 @@ CO_ERR CONodeGetErr(CO_NODE *node)
 
     return (result);
 }
-#if USE_PARAMS
-/*
-* see function definition
-*/
-CO_ERR CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type)
-{
-    CO_ERR    result = CO_ERR_NONE;
-    CO_ERR    err;
-    CO_DICT  *cod;
-    CO_OBJ   *obj;
-    CO_PARA  *pg;
-    uint32_t  bytes;
-    uint8_t   num = 0;
-    uint8_t   sub;
 
-    cod = &node->Dict;
-    err = CODictRdByte(cod, CO_DEV(0x1010, 0), &num);
-    if (err != CO_ERR_NONE) {
-        node->Error = CO_ERR_NONE;
-        return (result);
-    }
-    for (sub = 1; sub <= num; sub++) {
-        obj = CODictFind(cod, CO_DEV(0x1010, sub));
-        if (obj != 0) {
-            pg = (CO_PARA *)(obj->Data);
-            if (pg->Type == type) {
-                bytes = COIfNvmRead(&node->If, pg->Offset, pg->Start, pg->Size);
-                if (bytes != pg->Size) {
-                    node->Error = CO_ERR_IF_NVM_READ;
-                    result      = CO_ERR_IF_NVM_READ;
-                }
-            }
-        }
-    }
-
-    return (result);
-}
-#endif //USE_PARAMS
 /*
 * see function definition
 */

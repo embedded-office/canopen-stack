@@ -28,6 +28,28 @@ extern "C" {
 #include "co_types.h"
 #include "co_cfg.h"
 
+/* basic types */
+#include "co_domain.h"
+#include "co_string.h"
+#include "co_unsigned8.h"
+#include "co_unsigned16.h"
+#include "co_unsigned32.h"
+
+/* cia301 types */
+#include "co_emcy_hist.h"
+#include "co_emcy_id.h"
+#include "co_hb_cons.h"
+#include "co_hb_prod.h"
+#include "co_para_ctrl.h"
+#include "co_pdo_event.h"
+#include "co_pdo_id.h"
+#include "co_pdo_map.h"
+#include "co_pdo_num.h"
+#include "co_pdo_type.h"
+#include "co_sdo_id.h"
+#include "co_sync_cycle.h"
+#include "co_sync_id.h"
+
 #include "co_dict.h"
 #include "co_if.h"
 #include "co_emcy.h"
@@ -43,9 +65,7 @@ extern "C" {
 #endif //USE_LSS
 #include "co_err.h"
 #include "co_obj.h"
-#if USE_PARAMS
-#include "co_para.h"
-#endif //USE_PARAMS
+
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -170,31 +190,6 @@ CO_ERR CONodeGetErr(CO_NODE *node);
 *    Ptr to node info
 */
 void CONodeProcess(CO_NODE *node);
-
-#if USE_PARAMS
-/*! \brief LOAD PARAMETER FROM NVM
-*
-*    This function is responsible for the loading of all parameter groups
-*    with the given type. The single parameter group(s) will be loaded from
-*    NVM by calling the nvm driver function for reading data.
-*
-* \note
-*    This function considers all parameter groups, which are linked to the
-*    parameter store index (1010h) within the object dictionary. Every not
-*    linked parameter group is not scope of this function and must be handled
-*    within the application.
-*
-* \param node
-*    Ptr to node info
-*
-* \param type
-*    Reset type, e.g. CO_RESET_COM or CO_RESET_NODE
-*
-* \retval  ==CO_ERR_NONE    loading successful
-* \retval  !=CO_ERR_NONE    an error is detected and function aborted
-*/
-CO_ERR CONodeParaLoad(CO_NODE *node, CO_NMT_RESET type);
-#endif //USE_PARAMS
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

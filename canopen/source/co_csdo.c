@@ -26,13 +26,12 @@
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-CO_CSDO *COCSdoFind(struct CO_NODE_T *node, uint8_t num) {
+CO_CSDO *COCSdoFind(struct CO_NODE_T *node, uint8_t num)
+{
     CO_CSDO *result;
 
-    if ((node == 0) || (num >= CO_CSDO_N)) {
-        /* Invalid argument check */
-        return 0;
-    }
+    ASSERT_PTR_ERR(node, 0);
+    ASSERT_LOWER_ERR(num, CO_CSDO_N, 0);
 
     result = &node->CSdo[num];
     if (result->State <= CO_CSDO_STATE_INVALID) {
@@ -48,15 +47,16 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
                            uint8_t *buf,
                            uint32_t size,
                            CO_CSDO_CALLBACK_T callback,
-                           uint32_t timeout) {
+                           uint32_t timeout)
+{
     CO_IF_FRM frm;
     uint32_t  ticks;
 
-    if ((csdo == 0) || (callback == 0) ||
-        (buf  == 0) || (size     == 0)) {
-        /* Invalid argument */
-        return CO_ERR_BAD_ARG;
-    }
+    ASSERT_PTR_ERR(csdo, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buf, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(callback, CO_ERR_BAD_ARG);
+    ASSERT_NOT_ERR(size, 0, CO_ERR_BAD_ARG);
+
     if (csdo->State == CO_CSDO_STATE_INVALID) {
         /* Requested SDO client is disabled */
         return CO_ERR_SDO_OFF;
@@ -110,17 +110,18 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
                              uint8_t *buf,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
-                             uint32_t timeout) {
+                             uint32_t timeout)
+{
     CO_IF_FRM frm;
     uint8_t   cmd;
     uint8_t   n;
     uint32_t  ticks;
 
-    if ((csdo == 0) || (buf      == 0) ||
-        (size == 0) || (callback == 0)) {
-        /* Invalid argument */
-        return CO_ERR_BAD_ARG;
-    }
+    ASSERT_PTR_ERR(csdo, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buf, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(callback, CO_ERR_BAD_ARG);
+    ASSERT_NOT_ERR(size, 0, CO_ERR_BAD_ARG);
+
     if (csdo->State == CO_CSDO_STATE_INVALID) {
         /* Requested SDO client is disabled */
         return CO_ERR_SDO_OFF;
@@ -183,10 +184,11 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
 }
 
 /******************************************************************************
-* PRIVATE FUNCTIONS
+* PROTECTED API FUNCTIONS
 ******************************************************************************/
 
-void COCSdoInit(CO_CSDO *csdo, struct CO_NODE_T *node) {
+void COCSdoInit(CO_CSDO *csdo, struct CO_NODE_T *node)
+{
     uint8_t n;
 
     for (n = 0; n < CO_CSDO_N; n++) {
@@ -196,16 +198,13 @@ void COCSdoInit(CO_CSDO *csdo, struct CO_NODE_T *node) {
     }
 }
 
-void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
+void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node)
+{
     CO_CSDO *csdonum;
     int16_t  tid;
 
-    if (csdo == 0) {
-        return;
-    }
-    if (num > CO_CSDO_N) {
-        return;
-    }
+    ASSERT_PTR(csdo);
+    ASSERT_LOWER(num, CO_CSDO_N);
 
     if (csdo->State == CO_CSDO_STATE_BUSY) {
         /* Abort ongoing trasfer */
@@ -241,7 +240,8 @@ void COCSdoReset(CO_CSDO *csdo, uint8_t num, struct CO_NODE_T *node) {
     }
 }
 
-void COCSdoEnable(CO_CSDO *csdo, uint8_t num) {
+void COCSdoEnable(CO_CSDO *csdo, uint8_t num)
+{
     uint32_t  rxId;
     uint32_t  txId;
     uint8_t   nodeId;
@@ -249,9 +249,8 @@ void COCSdoEnable(CO_CSDO *csdo, uint8_t num) {
     CO_CSDO  *csdonum;
     CO_ERR    err;
 
-    if (num >= CO_CSDO_N) {
-        return;
-    }
+    ASSERT_LOWER(num, CO_CSDO_N);
+
     csdonum        = &csdo[num];
     csdonum->RxId  = CO_SDO_ID_OFF;
     csdonum->TxId  = CO_SDO_ID_OFF;
@@ -279,7 +278,8 @@ void COCSdoEnable(CO_CSDO *csdo, uint8_t num) {
     }
 }
 
-CO_CSDO *COCSdoCheck(CO_CSDO *csdo, CO_IF_FRM *frm) {
+CO_CSDO *COCSdoCheck(CO_CSDO *csdo, CO_IF_FRM *frm)
+{
     CO_CSDO *result;
     uint8_t  n;
 
@@ -318,7 +318,8 @@ CO_CSDO *COCSdoCheck(CO_CSDO *csdo, CO_IF_FRM *frm) {
     return (result);
 }
 
-CO_ERR COCSdoResponse(CO_CSDO *csdo) {
+CO_ERR COCSdoResponse(CO_CSDO *csdo)
+{
     CO_ERR   result = CO_ERR_SDO_SILENT;
     uint16_t index;
     uint8_t  cmd, sub;
@@ -373,7 +374,8 @@ CO_ERR COCSdoResponse(CO_CSDO *csdo) {
     return (result);
 }
 
-void COCSdoTimeout(void *parg) {
+void COCSdoTimeout(void *parg)
+{
     CO_CSDO *csdo;
 
     csdo = (CO_CSDO *)parg;
@@ -385,7 +387,8 @@ void COCSdoTimeout(void *parg) {
     }
 }
 
-void COCSdoTransferFinalize(CO_CSDO *csdo) {
+void COCSdoTransferFinalize(CO_CSDO *csdo)
+{
     CO_CSDO_CALLBACK_T call;
     uint16_t           idx;
     uint8_t            sub;
@@ -421,7 +424,8 @@ void COCSdoTransferFinalize(CO_CSDO *csdo) {
     }
 }
 
-void COCSdoAbort(CO_CSDO *csdo, uint32_t err) {
+void COCSdoAbort(CO_CSDO *csdo, uint32_t err)
+{
     CO_IF_FRM frm;
 
     /* In some cases, frame is not assigned
@@ -449,7 +453,8 @@ void COCSdoAbort(CO_CSDO *csdo, uint32_t err) {
 
 /* EXPEDITED UPLOAD */
 
-CO_ERR COCSdoUploadExpedited(CO_CSDO *csdo) {
+CO_ERR COCSdoUploadExpedited(CO_CSDO *csdo)
+{
     CO_ERR   result = CO_ERR_SDO_SILENT;
     uint32_t width;
     uint8_t  cmd;
@@ -472,14 +477,16 @@ CO_ERR COCSdoUploadExpedited(CO_CSDO *csdo) {
 
 /* EXPEDITED DOWNLOAD */
 
-CO_ERR COCSdoDownloadExpedited(CO_CSDO *csdo) {
+CO_ERR COCSdoDownloadExpedited(CO_CSDO *csdo)
+{
     COCSdoTransferFinalize(csdo);
     return CO_ERR_SDO_SILENT;
 }
 
 /* SEGMENTED UPLOAD */
 
-CO_ERR COCSdoInitUploadSegmented(CO_CSDO *csdo) {
+CO_ERR COCSdoInitUploadSegmented(CO_CSDO *csdo)
+{
     CO_ERR    result = CO_ERR_SDO_SILENT;
     uint32_t  obj_size;
     uint32_t  ticks;
@@ -520,7 +527,8 @@ CO_ERR COCSdoInitUploadSegmented(CO_CSDO *csdo) {
     return result;
 }
 
-CO_ERR COCSdoUploadSegmented(CO_CSDO *csdo) {
+CO_ERR COCSdoUploadSegmented(CO_CSDO *csdo)
+{
     CO_ERR    result = CO_ERR_SDO_SILENT;
     uint32_t  ticks;
     uint8_t   cmd;
@@ -570,7 +578,8 @@ CO_ERR COCSdoUploadSegmented(CO_CSDO *csdo) {
 
 /* SEGMENTED DOWNLOAD */
 
-CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo) {
+CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo)
+{
     CO_ERR    result = CO_ERR_SDO_SILENT;
     uint32_t  ticks;
     uint16_t  Idx;
@@ -621,7 +630,8 @@ CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo) {
     return result;
 }
 
-CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo) {
+CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo)
+{
     CO_ERR    result = CO_ERR_SDO_SILENT;
     uint32_t  ticks;
     uint8_t   cmd;
@@ -673,7 +683,8 @@ CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo) {
     return result;
 }
 
-CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo) {
+CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo)
+{
     COCSdoTransferFinalize(csdo);
     return CO_ERR_SDO_SILENT;
 }

@@ -72,10 +72,8 @@ void COLssInit (CO_LSS *lss, CO_NODE *node)
     uint32_t  size;
     uint8_t   subidx;
 
-    if ((lss == 0) || (node == 0)) {
-        CONodeFatalError();
-        return;
-    }
+    ASSERT_PTR_FATAL(lss);
+    ASSERT_PTR_FATAL(node);
 
     lss->Node        = node;
     lss->Mode        = CO_LSS_WAIT;
@@ -93,7 +91,7 @@ void COLssInit (CO_LSS *lss, CO_NODE *node)
             break;
         } else {
             size = COObjGetSize(obj, node, 0);
-            if (size != CO_LONG) {
+            if (size != 4u) {
                 lss->Mode = CO_LSS_EXIT;
                 node->Error = CO_ERR_CFG_1018;
                 break;

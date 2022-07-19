@@ -51,15 +51,115 @@ extern "C" {
 #define CO_RPDO_FLG__E      0x01                    /*!< enabled RPDO        */
 #define CO_RPDO_FLG_S_      0x02                    /*!< synchronized RPDO   */
 
-#define CO_TPDO_ASYNC       1    /*!< Ctrl function code: asynchronous TPDO  */
-#define CO_RPDO_ASYNC       1    /*!< Ctrl function code: asynchronous RPDO  */
 
-#define CO_TASYNC   ((const CO_OBJ_TYPE *)&COTAsync)   /*!< Asynchronous TPDO    */
-#define CO_TEVENT   ((const CO_OBJ_TYPE *)&COTEvent)   /*!< TPDO Event Timer     */
-#define CO_TPDONUM  ((const CO_OBJ_TYPE *)&COTPdoMapN) /*!< Dynamic Map Numbers  */
-#define CO_TPDOMAP  ((const CO_OBJ_TYPE *)&COTPdoMap)  /*!< Dynamic Mapping      */
-#define CO_TPDOID   ((const CO_OBJ_TYPE *)&COTPdoId)   /*!< Dynamic COB-ID       */
-#define CO_TPDOTYPE ((const CO_OBJ_TYPE *)&COTPdoType) /*!< Dynamic Transm. Type */
+/*! \brief RPDO COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1400..14ff: COB-ID for RPDO communication. The standard
+*    defines the following encoding:
+*    - bit31: valid: PDO exists (0) or not (1)
+*    - bit30: reserved: don't care
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    RPDO exists (1), or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_RPDO_STD(valid, id)                         \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)                  | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+
+#define CO_COBID_RPDO_EXT(valid, id)                         \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)             | \
+               ((uint32_t)0x1u << 29u)                     | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+/*! \} */
+
+#define CO_COBID_RPDO_BASE   (uint32_t)0x200
+#define CO_COBID_RPDO_INC    (uint32_t)0x100
+
+/*! \brief RPDO Default Connectionset
+*
+*    The CANopen standard recommends a default connection set. This set
+*    includes 4 RPDOs.
+*
+* \param rpdo
+*    the RPDO number (0..3)
+*/
+#define CO_COBID_RPDO_DEFAULT(rpdo)                                       \
+    CO_COBID_RPDO_STD(1u, CO_COBID_RPDO_BASE + (rpdo * CO_COBID_RPDO_INC))
+
+/*! \brief TPDO COB-ID parameter
+*
+*    These macros constructs the COB-ID for usage in object entries
+*    index 1800..18ff: COB-ID for TPDO communication. The standard
+*    defines the following encoding:
+*    - bit31: valid: PDO exists (0) or not (1)
+*    - bit30: RTR: RTR allowed on PDO (0) or not (1)
+*    - bit29: frame = 11bit CAN-ID (0) or 29bit CAN-ID (1)
+*    - bit28-0: CAN-ID
+*
+* \param valid
+*    TPDO exists (1), or not (0)
+*
+* \param id
+*    the CAN-ID (standard or extended format)
+*
+* \note: the macro inverts the given value for valid in comparison to the
+*        standard definition to avoid negated logic
+* \{
+*/
+#define CO_COBID_TPDO_STD(valid, id)                         \
+    (uint32_t)(((uint32_t)(id) & 0x7ffuL)                  | \
+               ((uint32_t)0x1u << 30u)                     | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+
+#define CO_COBID_TPDO_EXT(valid, id)                         \
+    (uint32_t)(((uint32_t)(id) & 0x1fffffffuL)             | \
+               ((uint32_t)0x1u << 29u)                     | \
+               ((uint32_t)0x1u << 30u)                     | \
+               ((uint32_t)(1uL - ((valid) & 0x1u)) << 31u))
+/*! \} */
+
+#define CO_COBID_TPDO_BASE   (uint32_t)0x180
+#define CO_COBID_TPDO_INC    (uint32_t)0x100
+
+/*! \brief TPDO Default Connectionset
+*
+*    The CANopen standard recommends a default connection set. This set
+*    includes 4 TPDOs.
+*
+* \param tpdo
+*    the TPDO number (0..3)
+*/
+#define CO_COBID_TPDO_DEFAULT(tpdo)                                       \
+    CO_COBID_TPDO_STD(1u, CO_COBID_TPDO_BASE + (tpdo * CO_COBID_TPDO_INC))
+
+/*! \brief OBJECT MAPPING LINK
+*
+*    This macro helps to build the CANopen object entry for a PDO mapping.
+*    This entry is used to specify the linked signal within a PDO.
+*
+* \param idx
+*    CANopen object index [0x0000..0xFFFF]
+*
+* \param sub
+*    CANopen object subindex [0x00..0xFF]
+*
+* \param bit
+*    Length of mapped signal in bits [8,16,24 or 32]
+*/
+#define CO_LINK(idx,sub,bit)                        \
+    (uint32_t)( ((uint32_t)(idx) & 0xFFFFL) << 16 | \
+                ((uint32_t)(sub) &   0xFFL) << 8  | \
+                ((uint32_t)(bit) &   0xFFL)      )
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -112,60 +212,6 @@ typedef struct CO_RPDO_T {
     uint8_t           Flag;        /*!< Flags attributed of PDO              */
 
 } CO_RPDO;
-
-/******************************************************************************
-* GLOBAL VARIABLES
-******************************************************************************/
-
-/*! \brief OBJECT TYPE: ASYNCHRONOUS TRANSMIT PDO OBJECT
-*
-*    This object type specializes the general handling of objects for
-*    object dictionary entries, which triggers a TPDO event on changed values.
-*/
-extern const CO_OBJ_TYPE COTAsync;          /*!< Async Object Type           */
-
-/*! \brief OBJECT TYPE: TRANSMIT PDO EVENT TIMER
-*
-*    This object type specializes the general handling of the event timer
-*    object within the TPDO communication profile.
-*/
-extern const CO_OBJ_TYPE COTEvent;          /*!< PDO Event Type              */
-
-/*! \brief OBJECT TYPE: NUMBER OF PDO MAPPINGS
-*
-*    This type is responsible for the access to the number of PDO mapping
-*    entries. Due to the special handling of PDO mapping change accesses, only
-*    the write access needs to be handled via the type structure; the read
-*    operation can be performed directly.
-*/
-extern const CO_OBJ_TYPE COTPdoMapN;        /*!< PDO Map Numbers Type        */
-
-/*! \brief OBJECT TYPE: PDO MAPPING ENTRY
-*
-*    This type is responsible for the access to the PDO mapping entries. Due
-*    to the special handling of PDO mapping change accesses, only the write
-*    access needs to be handled via the type structure; the read operation
-*    can be performed directly.
-*/
-extern const CO_OBJ_TYPE COTPdoMap;         /*!< PDO Mapping Type            */
-
-/*! \brief OBJECT TYPE: PDO IDENTIFIER
-*
-*    This type is responsible for the access to the PDO communication
-*    entries. Due to the special handling of PDO communication change
-*    accesses, only the write access needs to be handled via the type
-*    structure; the read operation can be performed directly.
-*/
-extern const CO_OBJ_TYPE COTPdoId;          /*!< PDO Identifier Type         */
-
-/*! \brief OBJECT TYPE: PDO TRANSMISSION TYPE
-*
-*    This type is responsible for the access to the PDO communication
-*    entries. Due to the special handling of PDO communication change
-*    accesses, only the write access needs to be handled via the type
-*    structure; the read operation can be performed directly.
-*/
-extern const CO_OBJ_TYPE COTPdoType;        /*!< PDO Transmission Type       */
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
@@ -283,7 +329,7 @@ CO_ERR COTPdoGetMap(CO_TPDO *pdo, uint16_t num);
 */
 void COTPdoTmrEvent(void *parg);
 
-/*! \brief TPDO END OF INHIBIT TIMER CALLBACK
+/*! \brief TPDO INHIBIT TIMER CALLBACK
 *
 *    This function is used to release the transmission stop after the PDO
 *    inhibit time.
@@ -291,7 +337,7 @@ void COTPdoTmrEvent(void *parg);
 * \param parg
 *    Pointer to TPDO element
 */
-void COTPdoEndInhibit(void *parg);
+void COTPdoTmrInhibit(void *parg);
 
 /*! \brief TPDO TRANSMIT
 *
@@ -304,16 +350,6 @@ void COTPdoEndInhibit(void *parg);
 *    Pointer to TPDO element
 */
 void COTPdoTx(CO_TPDO *pdo);
-
-/*! \brief TPDO CLEAR LINK MAP
-*
-*    This function is used to initialize the signal to TPDO link mapping
-*    table.
-*
-* \param map
-*    Pointer to start of link mapping table
-*/
-void COTPdoMapClear(CO_TPDO_LINK *map);
 
 /*! \brief TPDO LINK MAP ADD
 *
@@ -356,50 +392,6 @@ void COTPdoMapDelNum(CO_TPDO_LINK *map, uint16_t num);
 *    Pointer to object entry
 */
 void COTPdoMapDelSig(CO_TPDO_LINK *map, struct CO_OBJ_T *obj);
-
-/*! \brief TPDO OBJECT ACCESS CONTROL
-*
-*    This function is used to trigger all mapped TPDOs on change of the
-*    corresponding object entry value.
-*
-* \param obj
-*    Pointer to object entry
-*
-* \param node
-*    reference to parent node
-*
-* \param func
-*    Control function code (must be \ref CO_TPDO_ASYNC)
-*
-* \param para
-*    unused (should be 0)
-*
-* \retval  ==CO_ERR_NONE    Successful TPDO event triggered
-* \retval  !=CO_ERR_NONE    Function aborted due to detected error
-*/
-CO_ERR COTypeAsyncCtrl(struct CO_OBJ_T* obj, struct CO_NODE_T *node, uint16_t func, uint32_t para);
-
-/*! \brief TPDO EVENT TIMER OBJECT WRITE ACCESS
-*
-*    This function is responsible for performing all neccessary activities
-*    during a write access of the TPDO event timer communication object entry.
-*
-* \param obj
-*    Ptr to addressed parameter object entry
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Ptr to data buffer
-*
-* \param size
-*    Size of given data in buffer
-*
-* \retval  ==CO_ERR_NONE    writing successful
-* \retval  !=CO_ERR_NONE    error is detected and function aborted
-*/
-CO_ERR COTypeEventWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /*! \brief RPDO CLEAR
 *
@@ -515,94 +507,6 @@ void CORPdoRx(CO_RPDO *pdo, CO_IF_FRM *frm);
 *    Received CAN message frame
 */
 void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm);
-
-/*! \brief  WRITE NUMPER OF PDO MAPPINGS
-*
-*    This function allows the write access to the number of PDO mappings
-*    within the PDO mapping profile.
-*
-* \param obj
-*    Pointer to PDO number of mappings object
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Pointer to write data value
-*
-* \param size
-*    Object size in byte
-*
-* \retval   =CO_ERR_NONE    Successfully operation
-* \retval  !=CO_ERR_NONE    An error is detected
-*/
-CO_ERR COTypePdoMapNumWrite(struct CO_OBJ_T* obj, struct CO_NODE_T *node, void *buf, uint32_t size);
-
-/*! \brief  WRITE PDO MAPPING
-*
-*    This function allows the write access to the PDO mapping within
-*    the PDO mapping profile.
-*
-* \param obj
-*    Pointer to PDO mapping object
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Pointer to write data value
-*
-* \param size
-*    Object size in byte
-*
-* \retval   =CO_ERR_NONE    Successfully operation
-* \retval  !=CO_ERR_NONE    An error is detected
-*/
-CO_ERR COTypePdoMapWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
-
-/*! \brief  WRITE PDO IDENTIFIER
-*
-*    This function allows the write access to the PDO identifier within
-*    the PDO communication profile.
-*
-* \param obj
-*    Pointer to PDO identifier object
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Pointer to write data value
-*
-* \param size
-*    Object size in byte
-*
-* \retval   =CO_ERR_NONE    Successfully operation
-* \retval  !=CO_ERR_NONE    An error is detected
-*/
-CO_ERR COTypePdoComIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
-
-/*! \brief  WRITE PDO IDENTIFIER
-*
-*    This function allows the write access to the PDO transmission type within
-*    the PDO communication profile.
-*
-* \param obj
-*    Pointer to PDO transmission type object
-*
-* \param node
-*    reference to parent node
-*
-* \param buf
-*    Pointer to write data value
-*
-* \param size
-*    Object size in byte
-*
-* \retval   =CO_ERR_NONE    Successfully operation
-* \retval  !=CO_ERR_NONE    An error is detected
-*/
-CO_ERR COTypePdoComTypeWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS
