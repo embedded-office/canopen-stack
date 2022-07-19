@@ -116,7 +116,7 @@ The CANopen dictionary is an array of object entries, which we can allocate stat
 ```c
 const CO_OBJ MyDict[MY_DICT_LEN] = {
     /* setup application specific dictionary, example entry: */
-    { CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0u) },
+    { CO_KEY(0x1000, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0u) },
     /* : */
 };
 ```
