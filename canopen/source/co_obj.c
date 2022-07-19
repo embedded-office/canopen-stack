@@ -45,6 +45,22 @@ static void COObjReset (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 * PROTECTED API FUNCTIONS
 ******************************************************************************/
 
+CO_ERR COObjInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_NONE;      /* optional function: no default error */
+    const CO_OBJ_TYPE *type;
+
+    ASSERT_PTR_ERR(obj,       CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(obj->Type, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(node,      CO_ERR_BAD_ARG);
+
+    type = obj->Type;
+    if (type->Init != 0) {
+        result = type->Init(obj, node);
+    }
+    return (result);
+}
+
 CO_ERR COObjRdBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
 {
     const CO_OBJ_TYPE *type;

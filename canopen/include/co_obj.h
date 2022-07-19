@@ -284,51 +284,13 @@ typedef struct CO_OBJ_TYPE_T {
 } CO_OBJ_TYPE;
 
 /******************************************************************************
-* PUBLIC FUNCTIONS
+* PROTECTED API FUNCTIONS
 ******************************************************************************/
 
-/*! \brief  GET SIZE OF OBJECT ENTRY
+/*! \brief  INITIALIZE OBJECT ENTRY
 *
-*    This function returns the size of the given object dictionary entry.
-*
-* \param obj
-*    pointer to the dictionary entry
-*
-* \param node
-*    reference to parent node
-*
-* \param width
-*    Expected object size in byte (or 0 if unknown)
-*
-* \retval  >0    Object entry size in bytes
-* \retval  =0    An error is detected
-*/
-uint32_t COObjGetSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
-
-/*! \brief  READ VALUE FROM OBJECT ENTRY
-*
-*    This function reads a value from the given object dictionary entry.
-*
-* \param obj
-*    pointer to the dictionary entry
-*
-* \param node
-*    reference to parent node
-*
-* \param value
-*    pointer to the result variable
-*
-* \param width
-*    width of result variable (must match the type size)
-*
-* \retval   =CO_ERR_NONE    Successfully operation
-* \retval  !=CO_ERR_NONE    An error is detected
-*/
-CO_ERR COObjRdValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, uint8_t width);
-
-/*! \brief  WRITE VALUE TO OBJECT ENTRY
-*
-*    This function writes a value to the given object dictionary entry.
+*    This function initializes the object dictionary entry and the underlying
+*    type module.
 *
 * \param obj
 *    pointer to the object dictionary entry
@@ -336,16 +298,10 @@ CO_ERR COObjRdValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, u
 * \param node
 *    reference to parent node
 *
-* \param value
-*    pointer to the source variable
-*
-* \param width
-*    width of result variable (must match the type size)
-*
 * \retval   =CO_ERR_NONE    Successfully operation
 * \retval  !=CO_ERR_NONE    An error is detected
 */
-CO_ERR COObjWrValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, uint8_t width);
+CO_ERR COObjInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /*! \brief  START READ BUFFER FROM OBJECT ENTRY
 *
@@ -438,10 +394,6 @@ CO_ERR COObjWrBufStart(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uin
 */
 CO_ERR COObjWrBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len);
 
-/******************************************************************************
-* PRIVATE FUNCTIONS
-******************************************************************************/
-
 /*! \brief TYPE SPECIFIC SDO ABORT CODE
 *
 *    This function is responsible to set a user defined SDO abort code
@@ -460,6 +412,70 @@ CO_ERR COObjWrBufCont(CO_OBJ *obj, struct CO_NODE_T *node, uint8_t *buffer, uint
 *    Requested abort code (or 0 for standardized abort code)
 */
 void COObjTypeUserSDOAbort(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t abort);
+
+/******************************************************************************
+* PUBLIC FUNCTIONS
+******************************************************************************/
+
+/*! \brief  GET SIZE OF OBJECT ENTRY
+*
+*    This function returns the size of the given object dictionary entry.
+*
+* \param obj
+*    pointer to the dictionary entry
+*
+* \param node
+*    reference to parent node
+*
+* \param width
+*    Expected object size in byte (or 0 if unknown)
+*
+* \retval  >0    Object entry size in bytes
+* \retval  =0    An error is detected
+*/
+uint32_t COObjGetSize(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t width);
+
+/*! \brief  READ VALUE FROM OBJECT ENTRY
+*
+*    This function reads a value from the given object dictionary entry.
+*
+* \param obj
+*    pointer to the dictionary entry
+*
+* \param node
+*    reference to parent node
+*
+* \param value
+*    pointer to the result variable
+*
+* \param width
+*    width of result variable (must match the type size)
+*
+* \retval   =CO_ERR_NONE    Successfully operation
+* \retval  !=CO_ERR_NONE    An error is detected
+*/
+CO_ERR COObjRdValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, uint8_t width);
+
+/*! \brief  WRITE VALUE TO OBJECT ENTRY
+*
+*    This function writes a value to the given object dictionary entry.
+*
+* \param obj
+*    pointer to the object dictionary entry
+*
+* \param node
+*    reference to parent node
+*
+* \param value
+*    pointer to the source variable
+*
+* \param width
+*    width of result variable (must match the type size)
+*
+* \retval   =CO_ERR_NONE    Successfully operation
+* \retval  !=CO_ERR_NONE    An error is detected
+*/
+CO_ERR COObjWrValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, uint8_t width);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

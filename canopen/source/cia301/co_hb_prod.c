@@ -39,7 +39,6 @@ static CO_ERR   COTNmtHbProdWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, 
 static CO_ERR   COTNmtHbProdInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /* helper functions */
-
 static void CONmtHbProdSend(void *parg);
 
 /******************************************************************************

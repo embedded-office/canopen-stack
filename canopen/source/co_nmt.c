@@ -188,7 +188,7 @@ uint8_t CONmtModeEncode(CO_MODE mode)
 
 void CONmtInit(CO_NMT *nmt, CO_NODE *node)
 {
-    const CO_OBJ_TYPE *prod = CO_THB_PROD;
+    CO_ERR  err;
     const CO_OBJ_TYPE *cons = CO_THB_CONS;
     CO_OBJ *obj;
 
@@ -200,7 +200,13 @@ void CONmtInit(CO_NMT *nmt, CO_NODE *node)
     CONmtSetMode(nmt, CO_INIT);
 
     obj = CODictFind(&node->Dict, CO_DEV(0x1017,0));
-    prod->Init(obj, node);
+    if (obj != 0) {  /* TBC: remove this condition, when mandatory 1017 is enforced */
+        err = COObjInit(obj, node);
+        if (err != CO_ERR_NONE) {
+            node->Error = CO_ERR_CFG_1017_0;
+        }
+    }
+
     obj = CODictFind(&node->Dict, CO_DEV(0x1016,0));
     cons->Init(obj, node);
 }
