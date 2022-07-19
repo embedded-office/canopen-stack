@@ -42,9 +42,30 @@
 /* allocate global variables for runtime value of objects */
 static uint8_t  Obj1001_00_08 = 0;
 
+static uint16_t Obj1017_00_10 = 0;
+
 static uint32_t Obj2100_01_20 = 0;
 static uint8_t  Obj2100_02_08 = 0;
 static uint8_t  Obj2100_03_08 = 0;
+
+/* allocate variables for constant values in FLASH */
+const  uint32_t Obj1000_00_20 = 0x00000000L;
+
+const  uint32_t Obj1014_00_20 = 0x00000080L;
+
+const  uint32_t Obj1018_01_20 = 0x00000000L;
+const  uint32_t Obj1018_02_20 = 0x00000000L;
+const  uint32_t Obj1018_03_20 = 0x00000000L;
+const  uint32_t Obj1018_04_20 = 0x00000000L;
+
+const  uint32_t Obj1200_01_20 = CO_COBID_SDO_REQUEST();
+const  uint32_t Obj1200_02_20 = CO_COBID_SDO_RESPONSE();
+
+const  uint32_t Obj1800_01_20 = CO_COBID_TPDO_DEFAULT(0);
+
+const  uint32_t Obj1A00_01_20 = CO_LINK(0x2100, 0x01, 32);
+const  uint32_t Obj1A00_02_20 = CO_LINK(0x2100, 0x02,  8);
+const  uint32_t Obj1A00_03_20 = CO_LINK(0x2100, 0x03,  8);
 
 /* allocate the dynamic object dictionary */
 static CO_OBJ ClockOD[APP_OBJ_N];
@@ -108,33 +129,31 @@ struct CO_NODE_SPEC_T AppSpec = {
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static void ODCreateSDOServer(OD_DYN *self, uint8_t srv, uint32_t request, uint32_t response)
+static void ODCreateSDOServer(OD_DYN *self, uint8_t srv, CO_DATA request, CO_DATA response)
 {
     if (srv == 0) {
         request  = (uint32_t)0x600;
         response = (uint32_t)0x580;
     }
-    ODAddUpdate(self, CO_KEY(0x1200+srv, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(0x02));
-    ODAddUpdate(self, CO_KEY(0x1200+srv, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(request));
-    ODAddUpdate(self, CO_KEY(0x1200+srv, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(response));
+    ODAddUpdate(self, CO_KEY(0x1200+srv, 0, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(2));
+    ODAddUpdate(self, CO_KEY(0x1200+srv, 1, CO_OBJ_DN__R_), CO_TUNSIGNED32, request);
+    ODAddUpdate(self, CO_KEY(0x1200+srv, 2, CO_OBJ_DN__R_), CO_TUNSIGNED32, response);
 }
 
-static void ODCreateTPDOCom(OD_DYN *self, uint8_t num, uint32_t id, uint8_t type, uint16_t inhibit, uint16_t evtimer)
+static void ODCreateTPDOCom(OD_DYN *self, uint8_t num, CO_DATA id, uint8_t type)
 {
-    ODAddUpdate(self, CO_KEY(0x1800+num, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(0x05));
-    ODAddUpdate(self, CO_KEY(0x1800+num, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(id));
-    ODAddUpdate(self, CO_KEY(0x1800+num, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(type));
-    ODAddUpdate(self, CO_KEY(0x1800+num, 3, CO_UNSIGNED16|CO_OBJ_D__RW), 0, (CO_DATA)(inhibit));
-    ODAddUpdate(self, CO_KEY(0x1800+num, 5, CO_UNSIGNED16|CO_OBJ_D__RW), CO_TEVENT, (CO_DATA)(evtimer));
+    ODAddUpdate(self, CO_KEY(0x1800+num, 0, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(2));
+    ODAddUpdate(self, CO_KEY(0x1800+num, 1, CO_OBJ__N__R_), CO_TUNSIGNED32, id);
+    ODAddUpdate(self, CO_KEY(0x1800+num, 2, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(type));
 }
 
 static void ODCreateTPdoMap(OD_DYN *self, uint8_t num, uint32_t *map, uint8_t len)
 {
     uint8_t n;
 
-    ODAddUpdate(self, CO_KEY(0x1A00+num, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(len));
+    ODAddUpdate(self, CO_KEY(0x1A00+num, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(len));
     for (n = 0; n < len; n++) {
-        ODAddUpdate(self, CO_KEY(0x1A00+num, 1+n, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(map[n]));
+        ODAddUpdate(self, CO_KEY(0x1A00+num, 1+n, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(map[n]));
     }
 }
 
@@ -143,31 +162,30 @@ static void ODCreateDict(OD_DYN *self)
 {
     uint32_t map[3];
 
-    Obj1001_00_08 = 0;
+    ODAddUpdate(self, CO_KEY(0x1000, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1000_00_20));
+    ODAddUpdate(self, CO_KEY(0x1001, 0, CO_OBJ____PR_), CO_TUNSIGNED8,  (CO_DATA)(&Obj1001_00_08));
+    ODAddUpdate(self, CO_KEY(0x1014, 0, CO_OBJ_D___R_), CO_TEMCY_ID,    (CO_DATA)(&Obj1014_00_20));
+    ODAddUpdate(self, CO_KEY(0x1017, 0, CO_OBJ_D___R_), CO_THB_PROD,    (CO_DATA)(&Obj1017_00_10));
 
-    ODAddUpdate(self, CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0x00000000));
-    ODAddUpdate(self, CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)(&Obj1001_00_08));
-    ODAddUpdate(self, CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0x80));
-    ODAddUpdate(self, CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (CO_DATA)(0));
-    ODAddUpdate(self, CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(4));
-    ODAddUpdate(self, CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0));
-    ODAddUpdate(self, CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0));
-    ODAddUpdate(self, CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0));
-    ODAddUpdate(self, CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0));
+    ODAddUpdate(self, CO_KEY(0x1018, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(4));
+    ODAddUpdate(self, CO_KEY(0x1018, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1018_01_20));
+    ODAddUpdate(self, CO_KEY(0x1018, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1018_02_20));
+    ODAddUpdate(self, CO_KEY(0x1018, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1018_03_20));
+    ODAddUpdate(self, CO_KEY(0x1018, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1018_04_20));
 
-    ODCreateSDOServer(self, 0, CO_COBID_SDO_REQUEST(), CO_COBID_SDO_RESPONSE());
+    ODCreateSDOServer(self, 0, (CO_DATA)&Obj1200_01_20, (CO_DATA)&Obj1200_02_20);
 
-    ODCreateTPDOCom(self, 0, CO_COBID_TPDO_DEFAULT(0), 254, 0, 0);
+    ODCreateTPDOCom(self, 0, (CO_DATA)&Obj1800_01_20, 254);
 
-    map[0] = CO_LINK(0x2100, 1, 32);
-    map[1] = CO_LINK(0x2100, 2,  8);
-    map[2] = CO_LINK(0x2100, 3,  8);
+    map[0] = (CO_DATA)&Obj1A00_01_20;
+    map[1] = (CO_DATA)&Obj1A00_02_20;
+    map[2] = (CO_DATA)&Obj1A00_03_20;
     ODCreateTPdoMap(self, 0, map, 3);
 
-    ODAddUpdate(self, CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(3));
-    ODAddUpdate(self, CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, (CO_DATA)(&Obj2100_01_20));
-    ODAddUpdate(self, CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)(&Obj2100_02_08));
-    ODAddUpdate(self, CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), CO_TASYNC, (CO_DATA)(&Obj2100_03_08));
+    ODAddUpdate(self, CO_KEY(0x2100, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(3));
+    ODAddUpdate(self, CO_KEY(0x2100, 1, CO_OBJ____PR_), CO_TUNSIGNED32, (CO_DATA)(&Obj2100_01_20));
+    ODAddUpdate(self, CO_KEY(0x2100, 2, CO_OBJ____PR_), CO_TUNSIGNED8 , (CO_DATA)(&Obj2100_02_08));
+    ODAddUpdate(self, CO_KEY(0x2100, 3, CO_OBJ___APR_), CO_TUNSIGNED8 , (CO_DATA)(&Obj2100_03_08));
 }
 
 /******************************************************************************

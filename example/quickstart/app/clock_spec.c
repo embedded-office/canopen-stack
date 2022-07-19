@@ -39,101 +39,67 @@
 * PRIVATE VARIABLES
 ******************************************************************************/
 
-/* allocate global variables for runtime value of objects */
+/* allocate variables for dynamic runtime value in RAM */
 static uint8_t  Obj1001_00_08 = 0;
+
+static uint16_t Obj1017_00_10 = 0;
 
 static uint32_t Obj2100_01_20 = 0;
 static uint8_t  Obj2100_02_08 = 0;
 static uint8_t  Obj2100_03_08 = 0;
 
-#if UINTPTR_MAX >= UINT32_MAX
-/* define the static object dictionary with using direct storage */
-static struct CO_OBJ_T ClockOD[APP_OBJ_N] = {
-    {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0x00000000)    },
-    {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (CO_DATA)(&Obj1001_00_08)},
-    {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0x80)          },
-    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (CO_DATA)(0)             },
+/* allocate variables for constant values in FLASH */
+const  uint32_t Obj1000_00_20 = 0x00000000L;
 
-    {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(4)},
-    {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
-    {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
-    {CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
-    {CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
+const  uint32_t Obj1014_00_20 = 0x00000080L;
 
-    {CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(2)                      },
-    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(CO_COBID_SDO_REQUEST()) },
-    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(CO_COBID_SDO_RESPONSE())},
+const  uint32_t Obj1018_01_20 = 0x00000000L;
+const  uint32_t Obj1018_02_20 = 0x00000000L;
+const  uint32_t Obj1018_03_20 = 0x00000000L;
+const  uint32_t Obj1018_04_20 = 0x00000000L;
 
-    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(2)                       },
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(CO_COBID_TPDO_DEFAULT(0))},
-    {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(254)                     },
+const  uint32_t Obj1200_01_20 = CO_COBID_SDO_REQUEST();
+const  uint32_t Obj1200_02_20 = CO_COBID_SDO_RESPONSE();
 
-    {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(3)                        },
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(CO_LINK(0x2100, 0x01, 32))},
-    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(CO_LINK(0x2100, 0x02,  8))},
-    {CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(CO_LINK(0x2100, 0x03,  8))},
+const  uint32_t Obj1800_01_20 = CO_COBID_TPDO_DEFAULT(0);
 
-    {CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(3)                     },
-    {CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, (CO_DATA)(&Obj2100_01_20)        },
-    {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)(&Obj2100_02_08)        },
-    {CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), CO_TASYNC, (CO_DATA)(&Obj2100_03_08)},
-
-    CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
-};
-#else
-/* allocate constant variables for 32bit values of objects */
-const uint32_t Obj1000_00_20 = 0x00000000L;
-
-const uint32_t Obj1005_00_20 = 0x00000080L;
-
-const uint32_t Obj1018_01_20 = 0x00000000L;
-const uint32_t Obj1018_02_20 = 0x00000000L;
-const uint32_t Obj1018_03_20 = 0x00000000L;
-const uint32_t Obj1018_04_20 = 0x00000000L;
-
-const uint32_t Obj1200_01_20 = CO_COBID_SDO_REQUEST();
-const uint32_t Obj1200_02_20 = CO_COBID_SDO_RESPONSE();
-
-const uint32_t Obj1800_01_20 = CO_COBID_TPDO_DEFAULT(0);
-
-const uint32_t Obj1A00_01_20 = CO_LINK(0x2100, 0x01, 32);
-const uint32_t Obj1A00_02_20 = CO_LINK(0x2100, 0x02,  8);
-const uint32_t Obj1A00_03_20 = CO_LINK(0x2100, 0x03,  8);
+const  uint32_t Obj1A00_01_20 = CO_LINK(0x2100, 0x01, 32);
+const  uint32_t Obj1A00_02_20 = CO_LINK(0x2100, 0x02,  8);
+const  uint32_t Obj1A00_03_20 = CO_LINK(0x2100, 0x03,  8);
 
 /* define the static object dictionary */
 static struct CO_OBJ_T ClockOD[APP_OBJ_N] = {
-    {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1000_00_20)},
-    {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (CO_DATA)(&Obj1001_00_08)},
-    {CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1005_00_20)},
-    {CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (CO_DATA)(0)             },
+    {CO_KEY(0x1000, 0, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1000_00_20)},
+    {CO_KEY(0x1001, 0, CO_OBJ_____R_), CO_TUNSIGNED8 , (CO_DATA)(&Obj1001_00_08)},
+    {CO_KEY(0x1014, 0, CO_OBJ_____R_), CO_TEMCY_ID,    (CO_DATA)(&Obj1014_00_20)},
+    {CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD,    (CO_DATA)(&Obj1017_00_10)},
 
-    {CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(4)             },
-    {CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1018_01_20)},
-    {CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1018_02_20)},
-    {CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1018_03_20)},
-    {CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1018_04_20)},
+    {CO_KEY(0x1018, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(4)             },
+    {CO_KEY(0x1018, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1018_01_20)},
+    {CO_KEY(0x1018, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1018_02_20)},
+    {CO_KEY(0x1018, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1018_03_20)},
+    {CO_KEY(0x1018, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1018_04_20)},
 
-    {CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(2)             },
-    {CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ__N_R_), 0, (CO_DATA)(&Obj1200_01_20)},
-    {CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ__N_R_), 0, (CO_DATA)(&Obj1200_02_20)},
+    {CO_KEY(0x1200, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(2)             },
+    {CO_KEY(0x1200, 1, CO_OBJ__N__R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1200_01_20)},
+    {CO_KEY(0x1200, 2, CO_OBJ__N__R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1200_02_20)},
 
-    {CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(2)             },
-    {CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ__N_R_), 0, (CO_DATA)(&Obj1800_01_20)},
-    {CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(254)           },
+    {CO_KEY(0x1800, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(2)             },
+    {CO_KEY(0x1800, 1, CO_OBJ__N__R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1800_01_20)},
+    {CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(254)           },
 
-    {CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(3)             },
-    {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1A00_01_20)},
-    {CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1A00_02_20)},
-    {CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1A00_03_20)},
+    {CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(3)             },
+    {CO_KEY(0x1A00, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1A00_01_20)},
+    {CO_KEY(0x1A00, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1A00_02_20)},
+    {CO_KEY(0x1A00, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1A00_03_20)},
 
-    {CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(3)                     },
-    {CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, (CO_DATA)(&Obj2100_01_20)        },
-    {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)(&Obj2100_02_08)        },
-    {CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), CO_TASYNC, (CO_DATA)(&Obj2100_03_08)},
+    {CO_KEY(0x2100, 0, CO_OBJ_D___R_), CO_TUNSIGNED8 , (CO_DATA)(3)             },
+    {CO_KEY(0x2100, 1, CO_OBJ____PR_), CO_TUNSIGNED32, (CO_DATA)(&Obj2100_01_20)},
+    {CO_KEY(0x2100, 2, CO_OBJ____PR_), CO_TUNSIGNED8 , (CO_DATA)(&Obj2100_02_08)},
+    {CO_KEY(0x2100, 3, CO_OBJ___APR_), CO_TUNSIGNED8 , (CO_DATA)(&Obj2100_03_08)},
 
-    CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
+    CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
 };
-#endif
 
 /* Each software timer needs some memory for managing
  * the lists and states of the timed action events.

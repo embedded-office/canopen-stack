@@ -18,7 +18,7 @@
 * INCLUDES
 ******************************************************************************/
 
-#include "app_dict.h"
+#include "clock_dict.h"
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -68,7 +68,7 @@ static int16_t ObjCmp(CO_OBJ *a, CO_OBJ *b)
 void ODInit (OD_DYN *self, CO_OBJ *root, uint32_t length)
 {
     uint32_t  idx;
-    CO_OBJ    end = CO_OBJ_DIR_ENDMARK;
+    CO_OBJ    end = CO_OBJ_DICT_ENDMARK;
     CO_OBJ   *od;
 
     idx = 0;

@@ -176,7 +176,7 @@ void COPdoSyncUpdate(CO_RPDO *pdo)
      */
 }
 
-int16_t COParaDefault(CO_PARA *pg)
+int16_t COParaDefault(struct CO_PARA_T *pg)
 {
     (void)pg;
 

@@ -62,9 +62,9 @@ static void AppClock(void *p_arg)
         od_min = CODictFind(&node->Dict, CO_DEV(0x2100, 2));
         od_hr  = CODictFind(&node->Dict, CO_DEV(0x2100, 1));
 
-        COObjRdValue(od_sec, node, (void *)&second, sizeof(second), 0);
-        COObjRdValue(od_min, node, (void *)&minute, sizeof(minute), 0);
-        COObjRdValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
+        COObjRdValue(od_sec, node, (void *)&second, sizeof(second));
+        COObjRdValue(od_min, node, (void *)&minute, sizeof(minute));
+        COObjRdValue(od_hr , node, (void *)&hour  , sizeof(hour));
 
         second++;
         if (second >= 60) {
@@ -76,9 +76,9 @@ static void AppClock(void *p_arg)
             hour++;
         }
 
-        COObjWrValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
-        COObjWrValue(od_min, node, (void *)&minute, sizeof(minute), 0);
-        COObjWrValue(od_sec, node, (void *)&second, sizeof(second), 0);
+        COObjWrValue(od_hr , node, (void *)&hour  , sizeof(hour));
+        COObjWrValue(od_min, node, (void *)&minute, sizeof(minute));
+        COObjWrValue(od_sec, node, (void *)&second, sizeof(second));
     }
 }
 
@@ -91,10 +91,12 @@ int main(void)
 {
     uint32_t ticks;
 
-    /* Initialize your hardware layer and the CANopen stack.
-     * Stop execution if an error is detected.
-     */
+    /* Initialize your hardware layer */
     /* BSPInit(); */
+
+    /* Initialize the CANopen stack. Stop execution if an
+     * error is detected.
+     */
     ClkStartNode(&Clk);
     if (CONodeGetErr(&Clk) != CO_ERR_NONE) {
         while(1);
