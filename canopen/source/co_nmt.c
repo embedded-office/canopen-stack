@@ -189,7 +189,6 @@ uint8_t CONmtModeEncode(CO_MODE mode)
 void CONmtInit(CO_NMT *nmt, CO_NODE *node)
 {
     CO_ERR  err;
-    const CO_OBJ_TYPE *cons = CO_THB_CONS;
     CO_OBJ *obj;
 
     ASSERT_PTR_FATAL(nmt);
@@ -208,7 +207,12 @@ void CONmtInit(CO_NMT *nmt, CO_NODE *node)
     }
 
     obj = CODictFind(&node->Dict, CO_DEV(0x1016,0));
-    cons->Init(obj, node);
+    if (obj != 0) {
+        err = COObjInit(obj, node);
+        if (err != CO_ERR_NONE) {
+            node->Error = CO_ERR_CFG_1016;
+        }
+    }
 }
 
 void CONmtBootup(CO_NMT *nmt)

@@ -54,6 +54,7 @@ const CO_OBJ_TYPE COTNmtHbCons = { COTNmtHbConsSize, COTNmtHbConsInit, COTNmtHbC
 
 static uint32_t COTNmtHbConsSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
 {
+    const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     uint32_t result = (uint32_t)0;
 
     UNUSED(node);
@@ -61,13 +62,18 @@ static uint32_t COTNmtHbConsSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, u
 
     /* check for valid reference */
     if ((obj->Data) != (CO_DATA)0) {
-        result = COT_ENTRY_SIZE;
+        if (CO_GET_SUB(obj->Key) == 0) {
+            result = uint8->Size(obj, node, width);
+        } else {
+            result = COT_ENTRY_SIZE;
+        }
     }
     return (result);
 }
 
-static CO_ERR COTNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+static CO_ERR COTNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
+    const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     CO_ERR     result = CO_ERR_NONE;
     CO_HBCONS *hbc;
     uint32_t   value;
@@ -75,16 +81,20 @@ static CO_ERR COTNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
     UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
-    hbc    = (CO_HBCONS *)(obj->Data);
-    value  = (uint32_t)(hbc->Time);
-    value |= ((uint32_t)(hbc->NodeId)) << 16;
-    if (len == COT_ENTRY_SIZE) {
-        *((uint32_t *)buf) = value;
+    if (CO_GET_SUB(obj->Key) == 0) {
+        result = uint8->Read(obj, node, buffer, size);
+    } else {
+        hbc    = (CO_HBCONS *)(obj->Data);
+        value  = (uint32_t)(hbc->Time);
+        value |= ((uint32_t)(hbc->NodeId)) << 16;
+        if (size == COT_ENTRY_SIZE) {
+            *((uint32_t *)buffer) = value;
+        }
     }
     return (result);
 }
 
-static CO_ERR COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+static CO_ERR COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_ERR      result = CO_ERR_TYPE_WR;
     CO_HBCONS  *hbc;
@@ -93,10 +103,10 @@ static CO_ERR COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
     uint8_t     nodeid;
 
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
-    ASSERT_EQU_ERR(len, COT_ENTRY_SIZE, CO_ERR_BAD_ARG);
+    ASSERT_EQU_ERR(size, COT_ENTRY_SIZE, CO_ERR_BAD_ARG);
 
     hbc    = (CO_HBCONS *)(obj->Data);
-    value  = *((uint32_t *)buf);
+    value  = *((uint32_t *)buffer);
     time   = (uint16_t)value;
     nodeid = (uint8_t)(value >> 16);
     result = CONmtHbConsActivate(&node->Nmt, hbc, time, nodeid);
