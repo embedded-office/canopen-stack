@@ -24,9 +24,10 @@
 * PRIVATE DEFINES
 ******************************************************************************/
 
-#define COT_ENTRY_SIZE    (uint32_t)4
-#define COT_OBJECT        (uint16_t)0x1016
-#define COT_HB_COBID      (uint32_t)0x00000700
+#define COT_SUBINDEX_0_SIZE  ((uint32_t)1)
+#define COT_ENTRY_SIZE       ((uint32_t)4)
+#define COT_OBJECT           ((uint16_t)0x1016)
+#define COT_HB_COBID         ((uint32_t)0x00000700)
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -39,7 +40,7 @@ static CO_ERR   COTNmtHbConsWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, 
 static CO_ERR   COTNmtHbConsInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /* helper functions */
-static CO_ERR   CONmtHbConsActivate(CO_NMT *nmt, CO_HBCONS *hbc, uint16_t time, uint8_t nodeid);
+static CO_ERR   CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid);
 static void     CONmtHbConsMonitor(void *parg);
 
 /******************************************************************************
@@ -54,7 +55,6 @@ const CO_OBJ_TYPE COTNmtHbCons = { COTNmtHbConsSize, COTNmtHbConsInit, COTNmtHbC
 
 static uint32_t COTNmtHbConsSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
 {
-    const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     uint32_t result = (uint32_t)0;
 
     UNUSED(node);
@@ -62,8 +62,8 @@ static uint32_t COTNmtHbConsSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, u
 
     /* check for valid reference */
     if ((obj->Data) != (CO_DATA)0) {
-        if (CO_GET_SUB(obj->Key) == 0) {
-            result = uint8->Size(obj, node, width);
+        if (CO_GET_SUB(obj->Key) == (uint8_t)0u) {
+            result = COT_SUBINDEX_0_SIZE;
         } else {
             result = COT_ENTRY_SIZE;
         }
@@ -81,7 +81,7 @@ static CO_ERR COTNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
     UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
-    if (CO_GET_SUB(obj->Key) == 0) {
+    if (CO_GET_SUB(obj->Key) == (uint8_t)0u) {
         result = uint8->Read(obj, node, buffer, size);
     } else {
         hbc    = (CO_HBCONS *)(obj->Data);
@@ -96,6 +96,7 @@ static CO_ERR COTNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
 
 static CO_ERR COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
+    const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     CO_ERR      result = CO_ERR_TYPE_WR;
     CO_HBCONS  *hbc;
     uint32_t    value  = 0;
@@ -105,19 +106,23 @@ static CO_ERR COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
     ASSERT_EQU_ERR(size, COT_ENTRY_SIZE, CO_ERR_BAD_ARG);
 
-    hbc    = (CO_HBCONS *)(obj->Data);
-    value  = *((uint32_t *)buffer);
-    time   = (uint16_t)value;
-    nodeid = (uint8_t)(value >> 16);
-    result = CONmtHbConsActivate(&node->Nmt, hbc, time, nodeid);
+    if (CO_GET_SUB(obj->Key) == 0) {
+        result = uint8->Write(obj, node, buffer, size);
+    } else {
+        hbc    = (CO_HBCONS *)(obj->Data);
+        value  = *((uint32_t *)buffer);
+        time   = (uint16_t)value;
+        nodeid = (uint8_t)(value >> 16);
+        result = CONmtHbConsActivate(hbc, time, nodeid);
+    }
     return (result);
 }
 
 static CO_ERR COTNmtHbConsInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
+    const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     CO_ERR     err;
     CO_HBCONS *hbc;
-    CO_NMT    *nmt;
     uint8_t    num;
 
     ASSERT_PTR_ERR(obj,        CO_ERR_BAD_ARG);
@@ -126,28 +131,21 @@ static CO_ERR COTNmtHbConsInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 
     /* check for heartbeat consumer object */
     if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
-        /* clear consumer linked list */
-        nmt = &node->Nmt;
-
-        /* get number of consumers */
-        (void)COObjRdValue(obj, node, &num, sizeof(num));
+        /* loop through configured number of consumers */
+        (void)uint8->Read(obj, node, &num, sizeof(num));
         while (num > 0) {
-            /* get consumer subindex */
+            /* check if consumer subindex exists */
             obj = CODictFind(&node->Dict, CO_DEV(COT_OBJECT, num));
-
-            /* check object entry */
-            if (obj == 0) {
+            if ((obj == 0) || (obj->Data == (CO_DATA)0)){
                 return(CO_ERR_TYPE_INIT);
             }
+
+            /* activate the consumer subindex for this node */
             hbc = (CO_HBCONS *)(obj->Data);
-            if (hbc == 0) {
-                return(CO_ERR_TYPE_INIT);
-            }
-
-            /* activate consumer */
-            err = CONmtHbConsActivate(nmt, hbc, hbc->Time, hbc->NodeId);
+            hbc->Node = node;
+            err = CONmtHbConsActivate(hbc, hbc->Time, hbc->NodeId);
             if (err != CO_ERR_NONE) {
-                node->Error = err;
+                return(CO_ERR_TYPE_INIT);
             }
 
             num--;
@@ -160,14 +158,16 @@ static CO_ERR COTNmtHbConsInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 * PRIVATE HELPER FUNCTIONS
 ******************************************************************************/
 
-static CO_ERR CONmtHbConsActivate(CO_NMT *nmt, CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
+static CO_ERR CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
 {
-    CO_ERR      result  = CO_ERR_NONE;
+    CO_ERR      result = CO_ERR_NONE;
     int16_t     err;
+    CO_NMT     *nmt;
     CO_HBCONS  *act;
     CO_HBCONS  *prev;
     CO_HBCONS  *found = 0;
 
+    nmt = &(hbc->Node->Nmt);
     prev = 0;
     act  = nmt->HbCons;
     while (act != 0) {

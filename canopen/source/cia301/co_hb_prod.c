@@ -65,13 +65,13 @@ static uint32_t COTNmtHbProdSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, u
     return (result);
 }
 
-static CO_ERR COTNmtHbProdRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t len)
+static CO_ERR COTNmtHbProdRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint16 = CO_TUNSIGNED16;
-    return uint16->Read(obj, node, val, len);
+    return uint16->Read(obj, node, buffer, size);
 }
 
-static CO_ERR COTNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t size)
+static CO_ERR COTNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint16 = CO_TUNSIGNED16;
     CO_ERR    result = CO_ERR_OBJ_ACC;
@@ -82,12 +82,12 @@ static CO_ERR COTNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
     int16_t   tid;
 
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
-    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
     ASSERT_EQU_ERR(size, COT_ENTRY_SIZE, CO_ERR_BAD_ARG);
 
     if (CO_GET_IDX(obj->Key) == COT_OBJECT) {
         /* get new cycle time */
-        cycTime = *((uint16_t *)val);
+        cycTime = *((uint16_t *)buffer);
 
         /* get active heartbeat producer timer */
         nmt = &node->Nmt;
