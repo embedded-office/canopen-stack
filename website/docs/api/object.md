@@ -12,11 +12,11 @@ classDiagram
   class CO_OBJ {
     -uint32_t Key
     +COObjGetSize(width) uint32_t
-    +COObjRdBufCont(destination, length) int16_t
-    +COObjRdBufStart(destination, length) int16_t
+    +COObjRdBufCont(destination, size) int16_t
+    +COObjRdBufStart(destination, size) int16_t
     +COObjRdValue(destination, width, nodeId) int16_t
-    +COObjWrBufCont(source, length) int16_t
-    +COObjWrBufStart(source, length) int16_t
+    +COObjWrBufCont(source, size) int16_t
+    +COObjWrBufStart(source, size) int16_t
     +COObjWrValue(source, width, nodeId) int16_t
     +COObjTypeUserSDOAbort(node, code) void
   }
@@ -88,7 +88,7 @@ The function is used together with `COObjRdBufStart()` to read an object entry w
 int16_t COObjRdBufCont(CO_OBJ  *obj,
                        CO_NODE *node,
                        void    *buffer,
-                       uint8_t  length);
+                       uint8_t  size);
 ```
 
 **Arguments**
@@ -98,7 +98,7 @@ int16_t COObjRdBufCont(CO_OBJ  *obj,
 | obj       | pointer to object entry       |
 | node      | pointer to parent node        |
 | buffer    | pointer to destination memory |
-| length    | length of destination buffer  |
+| size      | size of destination buffer    |
 
 **Returned Value**
 
@@ -123,7 +123,7 @@ The function is used together with `COObjRdBufCont()` to read an object entry wi
 int16_t COObjRdBufStart(CO_OBJ  *obj,
                         CO_NODE *node,
                         void    *buffer,
-                        uint8_t  length);
+                        uint8_t  size);
 ```
 
 **Arguments**
@@ -133,7 +133,7 @@ int16_t COObjRdBufStart(CO_OBJ  *obj,
 | obj       | pointer to object entry       |
 | node      | pointer to parent node        |
 | buffer    | pointer to destination memory |
-| length    | length of destination buffer  |
+| size      | size of destination buffer    |
 
 **Returned Value**
 
@@ -189,19 +189,17 @@ The access with this function to an object entry will be done with the casting o
 int16_t COObjRdValue(CO_OBJ  *obj ,
                      CO_NODE *node,
                      void    *value,
-                     uint8_t  width,
-                     uint8_t  nodeId);
+                     uint8_t  width);
 ```
 
 **Arguments**
 
-| Parameter | Description                                                                                    |
-| --------- | ---------------------------------------------------------------------------------------------- |
-| obj       | pointer to object entry                                                                        |
-| node      | pointer to parent node                                                                         |
-| value     | pointer to destination memory                                                                  |
-| width     | width of read value (must be 1, 2 or 4 and reflecting the width of the referenced value space) |
-| nodeId    | device node ID (only relevant in case of node ID dependent value)                              |
+| Parameter | Description                                                                                 |
+| --------- | ------------------------------------------------------------------------------------------- |
+| obj       | pointer to object entry                                                                     |
+| node      | pointer to parent node                                                                      |
+| value     | pointer to destination variable                                                             |
+| width     | width of read value (must be 1, 2 or 4 and reflecting the width of the referenced variable) |
 
 **Returned Value**
 
@@ -217,7 +215,7 @@ uint32_t  value;
 CO_OBJ   *entry;
   :
 entry = CODictFind  (&(AppNode.Dict), CO_DEV(0x1234,0x56));
-err   = COObjRdValue(entry, &AppNode, &value, sizeof(value), 0);
+err   = COObjRdValue(entry, &AppNode, &value, sizeof(value));
   :
 ```
 
@@ -254,7 +252,7 @@ const CO_OBJ_TYPE COTDemo = { 0, 0, 0, DemoWrite };
 
 #define CO_TDEMO ((CO_OBJ_TYPE*)&COTDemo)
 
-int16_t DemoWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+int16_t DemoWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
   /* define the SDO Abort code */
   COObjTypeUserSDOAbort(obj, node, 0x01020304);
@@ -278,7 +276,7 @@ The function is used together with `COObjWrBufStart()` to write an object entry 
 int16_t COObjWrBufCont(CO_OBJ  *obj,
                        CO_NODE *node,
                        void    *buffer,
-                       uint8_t  length);
+                       uint8_t  size);
 ```
 
 **Arguments**
@@ -288,7 +286,7 @@ int16_t COObjWrBufCont(CO_OBJ  *obj,
 | obj       | pointer to object entry  |
 | node      | pointer to parent node   |
 | buffer    | pointer to source memory |
-| length    | length of source buffer  |
+| size      | size of source buffer    |
 
 **Returned Value**
 
@@ -309,7 +307,7 @@ The function is used together with `COObjWrBufCont()` to write an object entry w
 int16_t COObjWrBufStart(CO_OBJ  *obj,
                         CO_NODE *node,
                         void    *buffer,
-                        uint8_t  length);
+                        uint8_t  size);
 ```
 
 **Arguments**
@@ -319,7 +317,7 @@ int16_t COObjWrBufStart(CO_OBJ  *obj,
 | obj       | pointer to object entry  |
 | node      | pointer to parent node   |
 | buffer    | pointer to source memory |
-| length    | length of source buffer  |
+| size      | size of source buffer    |
 
 **Returned Value**
 
@@ -364,19 +362,17 @@ The access with this function to an object entry will be done with the casting o
 int16_t COObjWrValue(CO_OBJ  *obj ,
                      CO_NODE *node,
                      void    *value,
-                     uint8_t  width,
-                     uint8_t  nodeId);
+                     uint8_t  width);
 ```
 
 **Arguments**
 
-| Parameter | Description                                                                                                            |
-| --------- | ---------------------------------------------------------------------------------------------------------------------- |
-| obj       | pointer to object entry                                                                                                |
-| node      | pointer to parent node                                                                                                 |
-| value     | pointer to source memory                                                                                               |
-| width     | width of write value (must be 1, 2 or 4 and reflecting the width of the referenced variable, given by parameter value) |
-| nodeId    | device node ID (only relevant in case of node ID dependent value)                                                      |
+| Parameter | Description                                                                                  |
+| --------- | -------------------------------------------------------------------------------------------- |
+| obj       | pointer to object entry                                                                      |
+| node      | pointer to parent node                                                                       |
+| value     | pointer to source memory                                                                     |
+| width     | width of write value (must be 1, 2 or 4 and reflecting the width of the referenced variable) |
 
 **Returned Value**
 
@@ -393,7 +389,7 @@ uint32_t  value = 1234;
 CO_OBJ   *entry;
   :
 entry = CODictFind  (&(AppNode.Dict), CO_DEV(0x1234,0x56));
-err   = COObjWrValue(entry, &AppNode, &value, sizeof(value), 0);
+err   = COObjWrValue(entry, &AppNode, &value, sizeof(value));
   :
 ```
 

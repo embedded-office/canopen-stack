@@ -116,7 +116,7 @@ The next service function will provide us a clean and empty object dictionary.
 void ODInit(OD_DYN *self, CO_OBJ *root, uint32_t length)
 {
   uint32_t  idx;
-  CO_OBJ    end = CO_OBJ_DIR_ENDMARK;
+  CO_OBJ    end = CO_OBJ_DICT_ENDMARK;
   CO_OBJ   *od;
 
   idx = 0;
@@ -133,7 +133,7 @@ void ODInit(OD_DYN *self, CO_OBJ *root, uint32_t length)
 }
 ```
 
-Note the marked line for setting the maximal number of object entries. The CANopen stack requires a `CO_OBJ_DIR_ENDMARK` at the end of the used object dictionary area. For this reason, we reduce the maximal number of (user) object entries by 1.
+Note the marked line for setting the maximal number of object entries. The CANopen stack requires a `CO_OBJ_DICT_ENDMARK` at the end of the used object dictionary area. For this reason, we reduce the maximal number of (user) object entries by 1.
 
 
 ### Add & Update Function
@@ -142,7 +142,7 @@ The function for adding a new object entry needs three arguments besides the obj
 
 - First argument is the `key` which includes the information of index, subindex, type and some additional flags to a single 32bit value. We should create this value with the macro CO_KEY(..).
 
-- The second argument, `type`  is a reference to a structure of type-functions. For primitive object types, this argument is 0. The CANopen reference manual explains the system data types. Some selected system data types are described in later examples, too.
+- The second argument, `type`  is a reference to a structure of type-functions.
 
 - The last argument `data` holds the data of this object entry. The interpretation of this data depends on the flags in the argument `key`. We have a look at this relationship later in the examples.
 

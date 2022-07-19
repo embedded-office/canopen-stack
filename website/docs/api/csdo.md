@@ -15,8 +15,8 @@ classDiagram
     -uint32_t TxId
     -uint8_t NodeId
     +COCSdoFind(num)
-    +COCSdoRequestUpload(key, buf, size, callback, timeout)
-    +COCSdoRequestDownload(key, buf, size, callback, timeout)
+    +COCSdoRequestUpload(key, buffer, size, callback, timeout)
+    +COCSdoRequestDownload(key, buffer, size, callback, timeout)
   }
   class CO_CSDO_STATE {
     <<enumeration>>
@@ -91,7 +91,7 @@ The function starts an SDO download transfer in the calling node to write data t
 ```c
 CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
                              uint32_t key,
-                             uint8_t *buf,
+                             uint8_t *buffer,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
                              uint32_t timeout);
@@ -103,7 +103,7 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
 | --------- | ------------------------------------------------- |
 | csdo      | Pointer to SDO client object                      |
 | key       | destination object entry on SDO server Node-Id    |
-| buf       | pointer to buffer with data                       |
+| buffer    | pointer to buffer with data                       |
 | size      | size in byte of data within the buffer            |
 | callback  | user provided callback for transfer finalization  |
 | timeout   | transfer timeout in milliseconds                  |
@@ -168,7 +168,7 @@ The function starts an SDO upload transfer in the calling node to read data from
 ```c
 CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
                            uint32_t key,
-                           uint8_t *buf,
+                           uint8_t *buffer,
                            uint32_t size,
                            CO_CSDO_CALLBACK_T callback,
                            uint32_t timeout);
@@ -180,7 +180,7 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
 | --------- | ------------------------------------------------- |
 | csdo      | Pointer to SDO client object                      |
 | key       | destination object entry on SDO server Node-Id    |
-| buf       | pointer to buffer with data                       |
+| buffer    | pointer to buffer with data                       |
 | size      | size in byte of data within the buffer            |
 | callback  | user provided callback for transfer finalization  |
 | timeout   | transfer timeout in milliseconds                  |

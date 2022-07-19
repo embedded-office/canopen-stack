@@ -37,9 +37,9 @@ The write function is called, when the CAN network writes to the related object 
 Now we want to allow the write algorithm for the constant FLASH value after a serial-no is written to the object entry at subindex 4.
 
 ```c
-int16_t OtpWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+int16_t OtpWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
-  uint32_t value  = *((uint32_t *)buf);
+  uint32_t value  = *((uint32_t *)buffer);
   uint32_t serial = *((uinter_t *)obj->Data);
   CO_ERR   result = CO_ERR_TYPE_WR;
 
@@ -52,7 +52,7 @@ int16_t OtpWrite(CO_OBJ *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
     HwFlashWriteAlgorithm(obj->Data, value, 4);
   }
 
-  return result;
+  return (result);
 }
 ```
 
@@ -64,7 +64,7 @@ We use our user type to define the calibration object entry:
 ```c
 const CO_OBJ ExampleObjDir[] = {
     :
-  { CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), CO_TOTP, (CO_DATA)(&serialNo) },
+  { CO_KEY(0x1018, 4, CO_OBJ_D___R_), CO_TOTP, (CO_DATA)(&serialNo) },
     :
 };
 ```

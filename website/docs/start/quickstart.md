@@ -17,7 +17,7 @@ const CO_OBJ ClockOD[] = {
     :
   /* here is your object dictionary */
     :
-  CO_OBJ_DIR_ENDMARK  /* mark end of used objects */
+  CO_OBJ_DICT_ENDMARK  /* mark end of used objects */
 };
 /* set number of object entries */
 const uint16_t ClockODLen = sizeof(ClockOD)/sizeof(CO_OBJ);
@@ -52,15 +52,15 @@ These mandatory entries are added with the following lines of code:
 
 ```c
   :
-{CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
-{CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (CO_DATA)(&Obj1001_00_08)},
-{CO_KEY(0x1005, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0x80)},
-{CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
-{CO_KEY(0x1018, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(4)},
-{CO_KEY(0x1018, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
-{CO_KEY(0x1018, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
-{CO_KEY(0x1018, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
-{CO_KEY(0x1018, 4, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0)},
+{CO_KEY(0x1000, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0)},
+{CO_KEY(0x1001, 0, CO_OBJ_____R_), CO_TUNSIGNED8,  (CO_DATA)(&Obj1001_00_08)},
+{CO_KEY(0x1005, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0x80)},
+{CO_KEY(0x1017, 0, CO_OBJ_D___R_), CO_TUNSIGNED16, (CO_DATA)(0)},
+{CO_KEY(0x1018, 0, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(4)},
+{CO_KEY(0x1018, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0)},
+{CO_KEY(0x1018, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0)},
+{CO_KEY(0x1018, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0)},
+{CO_KEY(0x1018, 4, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0)},
   :
 ```
 
@@ -74,7 +74,7 @@ Most of these entries are constant, and their values can be stored directly insi
 uint8_t Obj1001_00_08 = 0;
 ```
 
-A pointer to this variable is stored in the corresponding object dictionary entry. This entry must be marked as `CO_OBJ____R_` instead of `CO_OBJ_D__R_` to let the stack know that this entry contains a pointer instead of a direct value.
+A pointer to this variable is stored in the corresponding object dictionary entry. This entry must be marked as `CO_OBJ_____R_` instead of `CO_OBJ_D___R_` to let the stack know that this entry contains a pointer instead of a direct value.
 
 !!! warning "Important"
     
@@ -88,7 +88,7 @@ A pointer to this variable is stored in the corresponding object dictionary entr
 
     ```c
       :
-    {CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ____R_), 0, (CO_DATA)(&Obj1000_00_32)},
+    {CO_KEY(0x1000, 0, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&Obj1000_00_32)},
       :
     ```
 
@@ -104,15 +104,15 @@ The settings for the SDO server are defined in CiA301 and must contain the follo
 
 !!! info
 
-    The predefined COBIDs are dependent on the actual node ID. For this reason, the CANopen stack allows you to specify entries whose value depends on the current node ID at runtime. This behavior is specified using the `CO_OBJ__N___` flag.
+    The predefined COBIDs are dependent on the actual node ID. For this reason, the CANopen stack allows you to specify entries whose value depends on the current node ID at runtime. This behavior is specified using the `CO_OBJ__N____` flag.
 
 The following lines add the SDO server entries to the object dictionary:
 
 ```c
   :
-{CO_KEY(0x1200, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(2)},
-{CO_KEY(0x1200, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(CO_COBID_SDO_REQUEST())},
-{CO_KEY(0x1200, 2, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(CO_COBID_SDO_RESPONSE())},
+{CO_KEY(0x1200, 0, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(2)},
+{CO_KEY(0x1200, 1, CO_OBJ_DN__R_), CO_TUNSIGNED32, (CO_DATA)(CO_COBID_SDO_REQUEST())},
+{CO_KEY(0x1200, 2, CO_OBJ_DN__R_), CO_TUNSIGNED32, (CO_DATA)(CO_COBID_SDO_RESPONSE())},
   :
 ```
 
@@ -135,10 +135,10 @@ These entries are created using the following lines of code:
 
 ```c
   :
-{CO_KEY(0x2100, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(3)},
-{CO_KEY(0x2100, 1, CO_UNSIGNED32|CO_OBJ___PR_), 0, (CO_DATA)(&Obj2100_01_20)},
-{CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)(&Obj2100_02_08)},
-{CO_KEY(0x2100, 3, CO_UNSIGNED8 |CO_OBJ___PR_), CO_TASYNC, (CO_DATA)(&Obj2100_03_08)},
+{CO_KEY(0x2100, 0, CO_OBJ_D___R_), CO_UNSIGNED8,  (CO_DATA)(3)},
+{CO_KEY(0x2100, 1, CO_OBJ____PR_), CO_UNSIGNED32, (CO_DATA)(&Obj2100_01_20)},
+{CO_KEY(0x2100, 2, CO_OBJ____PR_), CO_UNSIGNED8,  (CO_DATA)(&Obj2100_02_08)},
+{CO_KEY(0x2100, 3, CO_OBJ____PR_), CO_UNSIGNED8,  (CO_DATA)(&Obj2100_03_08)},
   :
 ```
 
@@ -172,9 +172,9 @@ See the following lines in the object dictionary:
 
 ```c
   :
-{CO_KEY(0x1800, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(2)},
-{CO_KEY(0x1800, 1, CO_UNSIGNED32|CO_OBJ_DN_R_), 0, (CO_DATA)(CO_COBID_TPDO_DEFAULT(0))},
-{CO_KEY(0x1800, 2, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(254)},
+{CO_KEY(0x1800, 0, CO_OBJ_D___R_), CO_UNSIGNED8,  (CO_DATA)(2)},
+{CO_KEY(0x1800, 1, CO_OBJ_DN__R_), CO_UNSIGNED32, (CO_DATA)(CO_COBID_TPDO_DEFAULT(0))},
+{CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_UNSIGNED8,  (CO_DATA)(254)},
   :
 ```
 
@@ -193,10 +193,10 @@ How we get these values is explained in section [configuration of PDO mapping][3
 
 ```c
   :
-{CO_KEY(0x1A00, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0, (CO_DATA)(3)},
-{CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(CO_LINK(0x2100, 0x01, 32))},
-{CO_KEY(0x1A00, 2, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(CO_LINK(0x2100, 0x02,  8))},
-{CO_KEY(0x1A00, 3, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(CO_LINK(0x2100, 0x03,  8))},
+{CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_UNSIGNED8,  (CO_DATA)(3)},
+{CO_KEY(0x1A00, 1, CO_OBJ_D___R_), CO_UNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x01, 32))},
+{CO_KEY(0x1A00, 2, CO_OBJ_D___R_), CO_UNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x02,  8))},
+{CO_KEY(0x1A00, 3, CO_OBJ_D___R_), CO_UNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x03,  8))},
   :
 ```
 
@@ -364,9 +364,9 @@ static void AppClock(void *p_arg)
     od_min = CODictFind(&node->Dict, CO_DEV(0x2100, 2));
     od_hr  = CODictFind(&node->Dict, CO_DEV(0x2100, 1));
 
-    COObjRdValue(od_sec, node, (void *)&second, sizeof(second), 0);
-    COObjRdValue(od_min, node, (void *)&minute, sizeof(minute), 0);
-    COObjRdValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
+    COObjRdValue(od_sec, node, (void *)&second, sizeof(second));
+    COObjRdValue(od_min, node, (void *)&minute, sizeof(minute));
+    COObjRdValue(od_hr , node, (void *)&hour  , sizeof(hour));
 
     second++;
     if (second >= 60) {
@@ -378,9 +378,9 @@ static void AppClock(void *p_arg)
       hour++;
     }
 
-    COObjWrValue(od_hr , node, (void *)&hour  , sizeof(hour),   0);
-    COObjWrValue(od_min, node, (void *)&minute, sizeof(minute), 0);
-    COObjWrValue(od_sec, node, (void *)&second, sizeof(second), 0);
+    COObjWrValue(od_hr , node, (void *)&hour  , sizeof(hour));
+    COObjWrValue(od_min, node, (void *)&minute, sizeof(minute));
+    COObjWrValue(od_sec, node, (void *)&second, sizeof(second));
   }
 }
 ```

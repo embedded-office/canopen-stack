@@ -13,11 +13,11 @@ classDiagram
     -uint16_t Num
     -uint16_t Max
     +CODictFind(key) CO_OBJ
-    +CODictRdBuffer(key, destination, length) CO_ERR
+    +CODictRdBuffer(key, destination, size) CO_ERR
     +CODictRdByte(key, destination) CO_ERR
     +CODictRdLong(key, destination) CO_ERR
     +CODictRdWord(key, destination) CO_ERR
-    +CODictWrBuffer(key, source, length) CO_ERR
+    +CODictWrBuffer(key, source, size) CO_ERR
     +CODictWrByte(key, value) CO_ERR
     +CODictWrLong(key, value) CO_ERR
     +CODictWrWord(key, value) CO_ERR
@@ -110,7 +110,7 @@ The object entry is addressed with the given key and the bytes will be read from
 CO_ERR CODictRdBuffer(CO_DICT  *cod,
                       uint32_t  key,
                       uint8_t  *buffer,
-                      uint32_t  length);
+                      uint32_t  size);
 ```
 
 **Arguments**
@@ -120,7 +120,7 @@ CO_ERR CODictRdBuffer(CO_DICT  *cod,
 | cod       | pointer to the object dictionary                    |
 | key       | object entry key; should be generated with `CO_DEV` |
 | buffer    | pointer to the destination bytes                    |
-| length    | length of destination buffer in number of bytes     |
+| size      | size of destination buffer in number of bytes       |
 
 **Returned Value**
 
@@ -290,7 +290,7 @@ if (err != CO_ERR_NONE) {
 
 #### CODictWrBuffer()
 
-The object entry is addressed with the given key and the bytes will be read from to the given source buffer of the given length.
+The object entry is addressed with the given key and the bytes will be read from to the given source buffer of the given size.
 
 **Prototype**
 
@@ -298,7 +298,7 @@ The object entry is addressed with the given key and the bytes will be read from
 CO_ERR CODictWrBuffer(CO_DICT  *cod,
                       uint32_t  key,
                       uint8_t  *buffer,
-                      uint32_t  length);
+                      uint32_t  size);
 ```
 
 **Arguments**
@@ -308,7 +308,7 @@ CO_ERR CODictWrBuffer(CO_DICT  *cod,
 | cod       | pointer to the object dictionary                    |
 | key       | object entry key; should be generated with `CO_DEV` |
 | buffer    | pointer to the source bytes                         |
-| length    | length of source buffer                             |
+| size      | size of source buffer                               |
 
 **Returned Value**
 

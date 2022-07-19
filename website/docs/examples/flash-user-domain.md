@@ -14,8 +14,8 @@ We define some manufacturer specific entries in the object dictionary (free choi
 
 | Index | Subindex | Type       | Access     | Value | Description        |
 | ----- | -------- | ---------- | ---------- | ----- | ------------------ |
-| 6789h | 0        | UNSIGNED32 | Const      | 2     | Highest Subindex   |
-| 6789h | 1        | UNSIGNED32 | Read Write | 1     | Control Commands   |
+| 6789h | 0        | UNSIGNED8  | Const      | 2     | Highest Subindex   |
+| 6789h | 1        | UNSIGNED32 | Write Only | 1     | Control Commands   |
 | 6789h | 2        | DOMAIN     | Write Only | 0     | Firmware Image     |
 
 The **subindex 1h** is used to control the firmware reprogramming with some specific commands. For example writing the value `0xdead` will erase the current firmware. Some other command ideas are:
@@ -31,9 +31,10 @@ The **subindex 2h** is used to program the firmware image into the FLASH memory 
 Lets implement the firmware control user type as shown in [CANopen Usage: User Object][1]:
 
 ```c
-CO_ERR FwCtrlWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len);
+uint32_t FwCtrlSize (CO_OBJ *obj, CO_NODE *node, uint32_t width);
+CO_ERR   FwCtrlWrite(CO_OBJ *obj, CO_NODE *node, void *buffer, uint32_t size);
 
-const CO_OBJ_TYPE FwCtrl = { 0, 0, 0, FwCtrlWrite };
+const CO_OBJ_TYPE FwCtrl = { FwCtrlSize, 0, 0, FwCtrlWrite };
 
 #define FW_CTRL ((CO_OBJ_TYPE*)&FwCtrl)
 ```
@@ -43,9 +44,14 @@ const CO_OBJ_TYPE FwCtrl = { 0, 0, 0, FwCtrlWrite };
 The write access to this object entry triggers actions depending on the writing value. For a most simple implementation, we start erasing the firmware when writing the value `0xdeadbeef` to the object entry. All other write values are ignored.
 
 ```c
-CO_ERR FwCtrlWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len)
+uint32_t FwCtrlSize(CO_OBJ *obj, CO_NODE *node, uint32_t width)
 {
-  uint32_t command = *((uint32_t *)buf);
+  const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
+  return uint32->Size(obj, node, width);
+}
+CO_ERR FwCtrlWrite(CO_OBJ *obj, CO_NODE *node, void *buffer, uint32_t size)
+{
+  uint32_t command = *((uint32_t *)buffer);
   CO_ERR   result  = CO_ERR_TYPE_WR;
 
   if (command == '0xdeadbeef') {
@@ -68,10 +74,10 @@ Implementing the firmware image upload user type needs three callback functions:
 
 ```c
 uint32_t FwImageSize (CO_OBJ *obj, CO_NODE *node, uint32_t width);
-CO_ERR   FwImageCtrl (CO_OBJ *obj, CO_NODE *node, uint16_t id, uint32_t para);
-CO_ERR   FwImageWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len);
+CO_ERR   FwImageInit (CO_OBJ *obj, CO_NODE *node);
+CO_ERR   FwImageWrite(CO_OBJ *obj, CO_NODE *node, void *buffer, uint32_t size);
 
-const CO_OBJ_TYPE FwImage = { FwImageSize, FwImageCtrl, 0, FwImageWrite };
+const CO_OBJ_TYPE FwImage = { FwImageSize, FwImageInit, 0, FwImageWrite };
 
 #define FW_IMAGE ((CO_OBJ_TYPE*)&FwImage)
 ```
@@ -94,21 +100,17 @@ uint32_t FwImageSize(CO_OBJ *obj, CO_NODE *node, uint32_t width);
 }
 ```
 
-#### Image control
+#### Image initialization
 
 During multiple the SDO server transfers, the working offset changes. This is internaly done with calling this function with the function id `CO_CTRL_SET_OFF` and a corresponsing offset value in the argument `para`
 
 ```c
-CO_ERR FwImageCtrl(CO_OBJ *obj, CO_NODE *node, uint16_t func, uint32_t para)
+CO_ERR FwImageInit(CO_OBJ *obj, CO_NODE *node)
 {
   CO_OBJ_DOM *domain = (CO_OBJ_DOM*)(obj->Data);
-  CO_ERR      result = CO_ERR_TYPE_CTRL;
 
-  if (func == CO_CTRL_SET_OFF) {
-    domain->Offset = para;
-    result = CO_ERR_NONE;
-  }
-  return (result);
+  domain->Offset = 0;
+  return (CO_ERR_NONE);
 }
 ```
 
@@ -117,7 +119,7 @@ CO_ERR FwImageCtrl(CO_OBJ *obj, CO_NODE *node, uint16_t func, uint32_t para)
 The core of the firmware image write function is your project specific FLASH write function. The required basic information for calling your function are managed by the stack.
 
 ```c
-CO_ERR FwImageWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len);
+CO_ERR FwImageWrite(CO_OBJ *obj, CO_NODE *node, void *buffer, uint32_t size);
 {
   CO_OBJ_DOM *domain  = (CO_OBJ_DOM*)(obj->Data);
   CO_ERR      result  = CO_ERR_TYPE_WR;
@@ -125,10 +127,10 @@ CO_ERR FwImageWrite(CO_OBJ *obj, CO_NODE *node, void *buf, uint32_t len);
   uint32_t    success;
 
   /* use your FLASH driver for writing the buffer to given address, e.g.: */
-  success = MyFlashDriverWrite(address, (uint8_t *buf), len);
+  success = MyFlashDriverWrite(address, (uint8_t *buffer), size);
 
   if (success)
-    domain->Offset += len;
+    domain->Offset += size;
     result = CO_ERR_NONE
   }
 

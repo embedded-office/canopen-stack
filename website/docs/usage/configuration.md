@@ -27,11 +27,11 @@ typedef struct ALL_PARA_MEM_T {
 
 This example defines multiple parameter groups:
 
-- a parameter group containing the communication profile parameter (COM_PARA_MEM)
+- a parameter group containing the communication profile parameter (`COM_PARA_MEM`)
 
-- a parameter group containing the application-specific parameter (APP_PARA_MEM)
+- a parameter group containing the application-specific parameter (`APP_PARA_MEM`)
 
-- The third definition collects the previously defined parameter groups to a single parameter group to allow loading and storage of both parameter groups with single access (ALL_PARA_MEM)
+- The third definition collects the previously defined parameter groups to a single parameter group to allow loading and storage of both parameter groups with single access (`ALL_PARA_MEM`)
 
 These structure type definitions are recommended to force the linker to place the corresponding parameter variables in a consecutive memory block. Any other technique to get this result is reasonable, too.
 
@@ -100,21 +100,21 @@ The following descriptions explains the details of the table members:
 The object entries, handling the saving and restoring of parameters, shall be set for the example to the following values:
 
 ```c
-{ CO_KEY(0x1010, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0,        (CO_DATA)(0x03)        },
-{ CO_KEY(0x1010, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)(&AllParaObj) },
-{ CO_KEY(0x1010, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)(&ComParaObj) },
-{ CO_KEY(0x1010, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)(&AppParaObj) },
+{ CO_KEY(0x1010, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(0x03)        },
+{ CO_KEY(0x1010, 1, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&AllParaObj) },
+{ CO_KEY(0x1010, 2, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&ComParaObj) },
+{ CO_KEY(0x1010, 3, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&AppParaObj) },
 
-{ CO_KEY(0x1011, 0, CO_UNSIGNED8 |CO_OBJ_D__R_), 0,        (CO_DATA)(0x03)        },
-{ CO_KEY(0x1011, 1, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)(&AllParaObj) },
-{ CO_KEY(0x1011, 2, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)(&ComParaObj) },
-{ CO_KEY(0x1011, 3, CO_UNSIGNED32|CO_OBJ____RW), CO_TPARA, (CO_DATA)(&AppParaObj) },
+{ CO_KEY(0x1011, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(0x03)        },
+{ CO_KEY(0x1011, 1, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&AllParaObj) },
+{ CO_KEY(0x1011, 2, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&ComParaObj) },
+{ CO_KEY(0x1011, 3, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&AppParaObj) },
 ```
 
 The single parameters are most likely used within the object directory. The example definition of an object entry is shown for one parameter:
 
 ```c
-{ CO_KEY(0x1017, 0, CO_UNSIGNED16|CO_OBJ____RW), 0, (CO_DATA)(&Para.App.DemoWord) },
+{ CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)(&Para.App.DemoWord) },
 ```
 
 ### Domain Definition
@@ -144,7 +144,7 @@ The following descriptions explains the details of the structure members:
 The object entry, presenting the example domain above to the CANopen network, should be defined within the manufacturer-specific area (e.g. index 0x2500, subindex 0x00) with the following object directory entry definition line:
 
 ```c
-{ CO_KEY(0x2500, 0, CO_DOMAIN|CO_OBJ____RW), CO_TDOMAIN, (CO_DATA)(&AppDomain) },
+{ CO_KEY(0x2500, 0, CO_OBJ_____RW), CO_TDOMAIN, (CO_DATA)(&AppDomain) },
 ```
 
 Note: The standard type implementation `CO_TDOMAIN` assumes, that the domain memory is located in RAM and is direct accessible. For other types of domain, a project-specific domain type shall be implemented.
@@ -175,8 +175,8 @@ The following descriptions explains the details of the structure members, which 
 The object entry, presenting the example domain above to the CANopen network, should be defined within the heartbeat consumer area (index 0x1016, subindex 0x01 ff.) with the following object directory entry definition line:
 
 ```c
-{ CO_KEY(0x1016, 0, CO_DOMAIN|CO_OBJ_D__R_),           0, (CO_DATA)(1)                },
-{ CO_KEY(0x1016, 1, CO_DOMAIN|CO_OBJ____RW), CO_THB_CONS, (CO_DATA)(&AppHbConsumer_1) },
+{ CO_KEY(0x1016, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(1)                },
+{ CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS,   (CO_DATA)(&AppHbConsumer_1) },
 ```
 
 Note: Even, if the members "Time" and "NodeId" are static, the heartbeat consumer must be placed in RAM. There are multiple internal members for managing the heartbeat consumer included as well.
@@ -236,7 +236,7 @@ const CO_OBJ AppObjDir[] = {
       :
   { <ObjEntryKey_N>, <ObjTypeRef_N>, <ObjData_N> }, /* last object entry  */
 
-  CO_OBJ_DIR_ENDMARK
+  CO_OBJ_DICT_ENDMARK
 };
 ```
 
@@ -249,109 +249,84 @@ The following chapters describes the details of the table members.
 The object entry key [`uint32_t`] shall be constructed with the following macro:
 
 ```c
-CO_KEY(<index>, <subindex>, <specification>)
+CO_KEY(<index>, <subindex>, <property flags>)
 ```
 
-- The index is a 16bit value with possible range from 0x0000 to 0xFFFF
+- The index is a 16bit value with possible range from `0x0000` to `0xFFFF`
 
-- The subindex is an 8bit value with the possible range from 0x00 to 0xFF
+- The subindex is an 8bit value with the possible range from `0x00` to `0xFF`
 
-  *Note: to be compliant to the CANopen specification, the defined index and subindex ranges shall be considered.*
+- The property flags shall be set to a bitwise disjunction of the listed values
 
-- The object specification shall be set to a bitwise disjunction of the listed values for object entry size and the object access mode.
+##### Property Flags
 
-  | Object Entry Size | Description                  |
-  | ----------------- | ---------------------------- |
-  | `CO_UNSIGNED8`    | CANopen Datatype: UNSIGNED8  |
-  | `CO_UNSIGNED16`   | CANopen Datatype: UNSIGNED16 |
-  | `CO_UNSIGNED32`   | CANopen Datatype: UNSIGNED32 |
-  | `CO_SIGNED8`      | CANopen Datatype: SIGNED8    |
-  | `CO_SIGNED16`     | CANopen Datatype: SIGNED16   |
-  | `CO_SIGNED32`     | CANopen Datatype: SIGNED32   |
-  | `CO_DOMAIN`       | CANopen Datatype: DOMAIN     |
-  | `CO_STRING`       | CANopen Datatype: STRING     |
+The following table shows the possible property flags. The bitwise disjunction is possible with setting multiple letters in a prepared define (e.g. `CO_OBJ__N_PRW`), or using them separately.
 
-  Object entry access mode field shall be set to one of the following values:
+| Access Mode Flags  | Description                               |
+| ------------------ | ----------------------------------------- |
+| `CO_OBJ______W`    | Write only                                |
+| `CO_OBJ_____R_`    | Read only                                 |
 
-  | Object Access Mode | Description                            |
-  | ------------------ | -------------------------------------- |
-  | `CO_OBJ____R_`     | Read Only                              |
-  | `CO_OBJ_____W`     | Write Only                             |
-  | `CO_OBJ____RW`     | Read/Write                             |
-  | `CO_OBJ___PR_`     | Read Only, PDO Map                     |
-  | `CO_OBJ___P_W`     | Write Only, PDO Map                    |
-  | `CO_OBJ___PRW`     | Read/Write, PDO Map                    |
-  | `CO_OBJ__N_R_`     | Read Only, + Node-Id                   |
-  | `CO_OBJ__N__W`     | Write Only, - Node-Id                  |
-  | `CO_OBJ__N_RW`     | Read/Write, +/- Node-Id                |
-  | `CO_OBJ__NPR_`     | Read Only, PDO Map, + Node-Id          |
-  | `CO_OBJ__NP_W`     | Write Only, PDO Map, - Node-Id         |
-  | `CO_OBJ__NPRW`     | Read/Write, PDO Map, +/- Node-Id       |
-  | `CO_OBJ_D__R_`     | Read Only, Direct Access               |
-  | `CO_OBJ_D___W`     | Write Only, Direct Access              |
-  | `CO_OBJ_D__RW`     | Read/Write, Direct Access              |
-  | `CO_OBJ_DN_R_`     | Read Only, + Node-Id, Direct Access    |
-  | `CO_OBJ_DN__W`     | Write Only, - Node-Id, Direct Access   |
-  | `CO_OBJ_DN_RW`     | Read/Write, +/- Node-Id, Direct Access |
+!!! note
 
-  *Note: The access types read-only, write-only and read/write specifies the possible access types from the CANopen network to that object entry. The application is always able to read and write the object entry.*
+    The access types specifies the possible access types from the CANopen network to that object entry. The application is always able to read and write the object entry.
 
-When placing the object entry table in read-only memory (with keyword "const"), the direct access modes (tread pointer as object entry value), are limited to read-only access, even by the application.
+| Type Flags         | Description                               |
+| ------------------ | ----------------------------------------- |
+| `CO_OBJ____P__`    | PDO mappable object                       |
+| `CO_OBJ___A___`    | Use asynchronous PDO trigger on change    |
+| `CO_OBJ__N____`    | Add Node-ID to object value               |
+
+!!! note
+
+    The type flags are used in the communication modules for the basic object types `CO_TUNSIGNED8`, `CO_TUNSIGNED16`, and `CO_TUNSIGNED32` only.
+
+| Storage Flags      | Description                               |
+| ------------------ | ----------------------------------------- |
+| `CO_OBJ_D_____`    | Store the value in data pointer memory    |
 
 !!! warning "Important"
     
     When using architectures with pointer types lower than 32bit (e.g. 16bit microcontrollers), you can store only values up to the pointer width directly in the object dictionary. For larger values declare a constant variable and place a pointer to this constant into the object dictionary.
 
-#### Object Type Reference
+#### Object Type Interface
 
-The object entry type structure reference [`CO_OBJ_TYPE *`] shall be set to one of the following values:
+The object entry type function interface [`CO_OBJ_TYPE *`] shall be set to one of the following values:
 
-| Object Type     | Description                           |
-| --------------- | ------------------------------------- |
-| 0 (zero)        | Basic type, no special handling       |
-| `CO_TASYNC`     | Asynchronous PDO signal entry         |
-| `CO_TDOMAIN`    | Domain entry                          |
-| `CO_TEMCY`      | EMCY history entry                    |
-| `CO_TEMCYID`    | Dynamic EMCY COB-ID                   |
-| `CO_TEVENT`     | PDO event timer entry                 |
-| `CO_THB_PROD`*) | Heartbeat producer entry              |
-| `CO_THB_CONS`   | Heartbeat consumer entry              |
-| `CO_TPARA`      | Parameter group store/restore entry   |
-| `CO_TPDOID`     | Dynamic PDO COB-ID entry              |
-| `CO_TPDOMAP`    | Dynamic PDO mapping entry             |
-| `CO_TPDONUM`    | Dynamic PDO number of mapping entries |
-| `CO_TPDOTYPE`   | Dynamic PDO transmission type entry   |
-| `CO_TSDOID`     | Dynamic SDO COB-ID entry              |
-| `CO_TSTRING`    | Unlimited read-only string            |
-| `CO_TSYNCID`    | Dynamic SYNC COB-ID                   |
+##### Basic types
 
-*) The object type `CO_THEARTBEAT` is obsolete and replaced by the new `CO_THB_PROD`. We keep the previous type for compatibility reasons, but you should change your object type to the new one.
+| Object Type     | Description                           | Data Variable |
+| --------------- | ------------------------------------- | ------------- |
+| `CO_TUNSIGNED8` | Basic 8bit type                       | `uint8_t`     |
+| `CO_TUNSIGNED16`| Basic 16bit type                      | `uint16_t`    |
+| `CO_TUNSIGNED32`| Basic 32bit type                      | `uint32_t`    |
+| `CO_TDOMAIN`    | Domain entry                          | `CO_OBJ_DOM`  |
+| `CO_TSTRING`    | Unlimited read-only string            | `CO_OBJ_STR`  |
+
+##### CiA301 Specific Types
+
+| Object Type     | Description                           | Data Variable |
+| --------------- | ------------------------------------- | ------------- |
+| `CO_TEMCY_HIST` | EMCY history entry (subindex 0)       | `uint8_t`     |
+| `CO_TEMCY_HIST` | EMCY history entry (subindex 1..254)  | `uint32_t`    |
+| `CO_TEMCY_ID`   | Dynamic EMCY COB-ID                   | `uint32_t`    |
+| `CO_TEVENT`     | PDO event timer entry                 | `uint16_t`    |
+| `CO_THB_CONS`   | Heartbeat consumer entry              | `CO_HBCONS`   |
+| `CO_THB_PROD`   | Heartbeat producer entry              | `uint16_t`    |
+| `CO_TPARA_CTRL` | Parameter group store/restore entry   | `CO_PARA`     |
+| `CO_TPDO_ID`    | Dynamic PDO COB-ID entry              | `uint32_t`    |
+| `CO_TPDO_MAP`   | Dynamic PDO mapping entry             | `uint32_t`    |
+| `CO_TPDO_NUM`   | Dynamic PDO number of mapping entries | `uint8_t`     |
+| `CO_TPDO_TYPE`  | Dynamic PDO transmission type entry   | `uint8_t`     |
+| `CO_TSDO_ID`    | Dynamic SDO COB-ID entry              | `uint32_t`    |
+| `CO_TSYNC_CYCLE`| SYNC producer cycle time              | `uint32_t`    |
+| `CO_TSYNC_ID`   | Dynamic SYNC COB-ID                   | `uint32_t`    |
 
 #### Object Data Reference
 
-The object data reference [`CO_DATA`] shall be set in dependence to the object flags and the object type structure reference to different values.
+The object data reference [`CO_DATA`] shall be set in dependence to the object type to a variable pointer of a specific type. See above for the type specific data variable types.
 
-| Object Type   | Object Flags   | Required Content in Data Pointer          |
-| ------------- | -------------- | ----------------------------------------- |
-| 0 (zero)      | `CO_OBJ__xxxx` | address of variable                       |
-| 0 (zero)      | `CO_OBJ_Dxxxx` | value in data pointer                     |
-| `CO_TASYNC`   | N/A            | address of variable                       |
-| `CO_TDOMAIN`  | N/A            | address of domain info structure          |
-| `CO_TEMCY`    | N/A            | address of EMCY history entry             |
-| `CO_TEMCYID`  | N/A            | address of variable                       |
-| `CO_TEVENT`   | N/A            | address of variable                       |
-| `CO_THB_PROD` | N/A            | address of variable                       |
-| `CO_THB_CONS` | N/A            | address of heartbeat consumer structure   |
-| `CO_TPARA`    | N/A            | address of parameter group info structure |
-| `CO_TPDOID`   | N/A            | address of variable                       |
-| `CO_TPDOMAP`  | N/A            | address of variable                       |
-| `CO_TPDONUM`  | N/A            | address of variable                       |
-| `CO_TPDOTYPE` | N/A            | address of variable                       |
-| `CO_TSDOID`   | N/A            | address of variable                       |
-| `CO_TSTRING`  | N/A            | address of string info structure          |
-| `CO_TSYNCID`  | N/A            | address of variable                       |
-
-#### PDO Mapping Value
+### PDO Mapping Value
 
 For the PDO mapping object entries, we must encode the object data value in the following way:
 
@@ -375,12 +350,12 @@ uint8_t MyData = 0u;
 const CO_OBJ AppObjDir[] = {
     :
   /* PDO mapping entry */
-  {CO_KEY(0x1A00, 1, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(CO_LINK(0x2100, 0x02, 8))},
+  {CO_KEY(0x1A00, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x02, 8))},
     :
   /* mapped object entry */
-  {CO_KEY(0x2100, 2, CO_UNSIGNED8 |CO_OBJ___PR_), 0, (CO_DATA)(&MyData)},
+  {CO_KEY(0x2100, 2, CO_OBJ____PR_), CO_TUNSIGNED8,  (CO_DATA)(&MyData)},
     :
-  CO_OBJ_DIR_ENDMARK
+  CO_OBJ_DICT_ENDMARK
 };
 ```
 
@@ -390,14 +365,14 @@ const CO_OBJ AppObjDir[] = {
 
 This chapter describes the PDO communication record for a transmit PDO. The object record contains the following object entries:
 
-| Index:sub  | Type         | Object Type                        | Description                             |
-| ---------- | ------------ | ---------------------------------- | --------------------------------------- |
-| `1800h:00` | `UNSIGNED8`  | `const`                            | *Communication Object TPDO #0*          |
-| `1800h:01` | `UNSIGNED32` | `const` or `rw` with `CO_TPDOID`   | COB-ID used by TPDO                     |
-| `1800h:02` | `UNSIGNED8`  | `const` or `rw` with `CO_TPDOTYPE` | Transmission type                       |
-| `1800h:03` | `UNSIGNED16` | `const` or `rw`                    | Inhibit time with LSB 100us (0=disable) |
-| `1800h:04` | n/a          | n/a                                | reserved, shall not be implemented      |
-| `1800h:05` | `UNSIGNED16` | `const` or `rw` with `CO_TEVENT`   | Event timer LSB 1ms (0=disable)         |
+| Index:sub  | Type         | Object Type                         | Description                             |
+| ---------- | ------------ | ----------------------------------- | --------------------------------------- |
+| `1800h:00` | `UNSIGNED8`  | `const`                             | *Communication Object TPDO #0*          |
+| `1800h:01` | `UNSIGNED32` | `const` or `rw` with `CO_TPDO_ID`   | COB-ID used by TPDO                     |
+| `1800h:02` | `UNSIGNED8`  | `const` or `rw` with `CO_TPDO_TYPE` | Transmission type                       |
+| `1800h:03` | `UNSIGNED16` | `const` or `rw`                     | Inhibit time with LSB 100us (0=disable) |
+| `1800h:04` | n/a          | n/a                                 | reserved, shall not be implemented      |
+| `1800h:05` | `UNSIGNED16` | `const` or `rw` with `CO_TPDO_EVENT`| Event timer LSB 1ms (0=disable)         |
 
 The index identifies which PDO is configured (1800h: TPDO #0, 1801h: TPDO #1, ..., 19ffh: TPDO #511). The object type is `const` in case of static communication settings. When the communication settings are parameters or dynamic variables, the listed object types ensures the correct change behavior for these records.
 
@@ -410,7 +385,6 @@ The encoding for the transmission type (subindex 2) is standardized:
 | F1h..FDh | reserved                               |
 | FEh      | event-driven (manufacturer specific)   |
 | FFh      | event-driven (device profile specific) |
-
 
 ### Timer Memory Block
 
