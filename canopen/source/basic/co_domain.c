@@ -33,7 +33,7 @@ static CO_ERR   COTDomainInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTDomain = { COTDomainSize, COTDomainInit, COTDomainRead, COTDomainWrite };
+const CO_OBJ_TYPE COTDomain = { COTDomainSize, COTDomainInit, COTDomainRead, COTDomainWrite, 0 };
 
 /******************************************************************************
 * FUNCTIONS

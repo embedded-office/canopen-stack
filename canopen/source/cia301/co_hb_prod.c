@@ -36,7 +36,7 @@
 static uint32_t COTNmtHbProdSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
 static CO_ERR   COTNmtHbProdRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
 static CO_ERR   COTNmtHbProdWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTNmtHbProdInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
+static CO_ERR   COTNmtHbProdInit (struct CO_OBJ_T *, struct CO_NODE_T *);
 
 /* helper functions */
 static void CONmtHbProdSend(void *parg);
@@ -45,7 +45,7 @@ static void CONmtHbProdSend(void *parg);
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTNmtHbProd = { COTNmtHbProdSize, COTNmtHbProdInit, COTNmtHbProdRead, COTNmtHbProdWrite };
+const CO_OBJ_TYPE COTNmtHbProd = { COTNmtHbProdSize, COTNmtHbProdInit, COTNmtHbProdRead, COTNmtHbProdWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS

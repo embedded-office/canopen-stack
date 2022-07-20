@@ -38,7 +38,7 @@ static CO_ERR   COTUInt32Write(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uin
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTUInt32 = { COTUInt32Size, 0, COTUInt32Read, COTUInt32Write };
+const CO_OBJ_TYPE COTUInt32 = { COTUInt32Size, 0, COTUInt32Read, COTUInt32Write, 0 };
 
 /******************************************************************************
 * FUNCTIONS

@@ -71,10 +71,9 @@ static const uint8_t CONmtModeCode[CO_MODE_NUM] = {
 
 void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 {
+    CO_OBJ *obj;
     uint8_t nobootup = 1;
-#if USE_LSS
     int16_t err;
-#endif //USE_LSS
 
     ASSERT_PTR_FATAL(nmt);
 
@@ -83,21 +82,33 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
         nobootup = 0;
     }
 
-#if USE_PARAMS
     if (type == CO_RESET_NODE) {
-        CONodeParaLoad(nmt->Node, CO_RESET_NODE);
+        /* check for parameter storage */
+        obj = CODictFind(&nmt->Node->Dict, (0x1010, 0));
+        if (obj != 0) {
+            /* reload application related parameters */
+            err = obj->Type->Reset(obj, nmt->Node, CO_RESET_NODE);
+            if (err != CO_ERR_NONE) {
+                nmt->Node->Error = err;
+            }
+        }
     }
-#endif //USE_PARAMS
 
     if (type <= CO_RESET_COM) {
-#if USE_PARAMS
-        CONodeParaLoad(nmt->Node, CO_RESET_COM);
-#endif //USE_PARAMS
+        /* check for parameter storage */
+        obj = CODictFind(&nmt->Node->Dict, (0x1010, 0));
+        if (obj != 0) {
+            /* reload communication related parameters */
+            err = obj->Type->Reset(obj, nmt->Node, CO_RESET_COM);
+            if (err != CO_ERR_NONE) {
+                nmt->Node->Error = err;
+            }
+        }
+
 #if USE_LSS
         err = COLssLoad(&nmt->Node->Baudrate, &nmt->Node->NodeId);
         if (err != CO_ERR_NONE) {
             nmt->Node->Error = CO_ERR_LSS_LOAD;
-            return;
         }
         COLssInit(&nmt->Node->Lss, nmt->Node);
 #endif //USE_LSS
@@ -197,22 +208,6 @@ void CONmtInit(CO_NMT *nmt, CO_NODE *node)
     nmt->Node = node;
     nmt->HbCons = 0;
     CONmtSetMode(nmt, CO_INIT);
-
-    obj = CODictFind(&node->Dict, CO_DEV(0x1017,0));
-    if (obj != 0) {  /* TBC: remove this condition, when mandatory 1017 is enforced */
-        err = COObjInit(obj, node);
-        if (err != CO_ERR_NONE) {
-            node->Error = CO_ERR_CFG_1017_0;
-        }
-    }
-
-    obj = CODictFind(&node->Dict, CO_DEV(0x1016,0));
-    if (obj != 0) {
-        err = COObjInit(obj, node);
-        if (err != CO_ERR_NONE) {
-            node->Error = CO_ERR_CFG_1016;
-        }
-    }
 }
 
 void CONmtBootup(CO_NMT *nmt)

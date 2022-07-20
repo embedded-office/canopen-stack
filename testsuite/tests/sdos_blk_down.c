@@ -1065,7 +1065,7 @@ TS_DEF_MAIN(TS_BlkWr_DomainNullPtr)
     CHK_MLTPX(frm, idx, sub);                         /* check multiplexer                        */
     CHK_DATA (frm, 0x08000020);                       /* check abort code                         */
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    CHK_ERR(&node, CO_ERR_OBJ_INIT);                  /* check for expected error                 */
 }
 
 

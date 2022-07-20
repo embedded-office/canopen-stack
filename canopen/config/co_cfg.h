@@ -71,15 +71,6 @@
 #define USE_LSS                 1
 #endif
 
-/*! \brief DEFAULT ENABLE PARAMETERS
-*
-*    This configuration define specifies whether parameters will be supported
-*    by the library.
-*/
-#ifndef USE_PARAMS
-#define USE_PARAMS              1
-#endif
-
 /*! \brief DEFAULT ENABLE SDO CLIENT
 *
 *    This configuration define specifies whether SDO client will be supported

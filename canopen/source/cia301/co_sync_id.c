@@ -40,7 +40,7 @@ static CO_ERR   COTSyncIdWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uin
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTSyncId = { COTSyncIdSize, 0, COTSyncIdRead, COTSyncIdWrite };
+const CO_OBJ_TYPE COTSyncId = { COTSyncIdSize, 0, COTSyncIdRead, COTSyncIdWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS

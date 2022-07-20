@@ -39,7 +39,7 @@ static CO_ERR   COTSdoIdWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTSdoId = { COTSdoIdSize, 0, COTSdoIdRead, COTSdoIdWrite };
+const CO_OBJ_TYPE COTSdoId = { COTSdoIdSize, 0, COTSdoIdRead, COTSdoIdWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -68,7 +68,7 @@ static CO_ERR COTSdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
-    ASSERT_EQU_ERR(size, 4u, CO_ERR_BAD_ARG);    
+    ASSERT_EQU_ERR(size, 4u, CO_ERR_BAD_ARG);
 
     newval = *(uint32_t *)val;
     (void)uint32->Read(obj, node, &curval, sizeof(curval));

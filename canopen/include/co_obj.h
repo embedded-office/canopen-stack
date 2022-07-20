@@ -269,6 +269,8 @@ typedef CO_ERR   (*CO_OBJ_INIT_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *);
 typedef CO_ERR   (*CO_OBJ_READ_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
 /*!< Write type function prototype */
 typedef CO_ERR   (*CO_OBJ_WRITE_FUNC)(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+/*!< Reset type function prototype */
+typedef CO_ERR   (*CO_OBJ_RESET_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
 
 /*! \brief OBJECT TYPE
 *
@@ -280,6 +282,7 @@ typedef struct CO_OBJ_TYPE_T {
     CO_OBJ_INIT_FUNC   Init;           /*!< Init type module function        */
     CO_OBJ_READ_FUNC   Read;           /*!< Read type value function         */
     CO_OBJ_WRITE_FUNC  Write;          /*!< Write type value function        */
+    CO_OBJ_RESET_FUNC  Reset;          /*!< Reset type value function        */
 
 } CO_OBJ_TYPE;
 

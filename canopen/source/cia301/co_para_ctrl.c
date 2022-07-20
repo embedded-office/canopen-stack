@@ -40,15 +40,17 @@
 static uint32_t COTParaCtrlSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
 static CO_ERR   COTParaCtrlRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
 static CO_ERR   COTParaCtrlWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+static CO_ERR   COTParaCtrlInit (struct CO_OBJ_T *, struct CO_NODE_T *);
+static CO_ERR   COTParaCtrlReset(struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
 
 /* helper functions */
-static CO_ERR COParaCheck(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size);
+static CO_ERR COParaCheck(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTParaCtrl = { COTParaCtrlSize, 0, COTParaCtrlRead, COTParaCtrlWrite };
+const CO_OBJ_TYPE COTParaCtrl = { COTParaCtrlSize, COTParaCtrlInit, COTParaCtrlRead, COTParaCtrlWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -60,23 +62,23 @@ static uint32_t COTParaCtrlSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, ui
     return uint32->Size(obj, node, width);
 }
 
-static CO_ERR COTParaCtrlRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t len)
+static CO_ERR COTParaCtrlRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_PARA *pg;
 
     UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
-    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
-    ASSERT_EQU_ERR(len, 4u, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
+    ASSERT_EQU_ERR(size, 4u, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_OBJ_READ);
 
     pg = (CO_PARA *)(obj->Data);
-    *(uint32_t *)val = pg->Value;
+    *(uint32_t *)buffer = pg->Value;
 
     return (CO_ERR_NONE);
 }
 
-static CO_ERR COTParaCtrlWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t size)
+static CO_ERR COTParaCtrlWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_ERR    select;
     CO_DICT  *cod;
@@ -88,11 +90,11 @@ static CO_ERR COTParaCtrlWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
 
     UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
-    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
     ASSERT_EQU_ERR(size, 4u, CO_ERR_BAD_ARG);
 
     /* check parameter and configuration */
-    select = COParaCheck(obj, node, val, size);
+    select = COParaCheck(obj, node, buffer, size);
     if (select != CO_ERR_NONE) {
         return (select);
     }
@@ -126,11 +128,43 @@ static CO_ERR COTParaCtrlWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
     return (CO_ERR_NONE);
 }
 
+static CO_ERR COTParaCtrlInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_TYPE_INIT;
+
+    UNUSED(node);
+
+    /* check for parameter store object */
+    if (CO_DEV(COT_OBJECT_STORE, 0) == CO_GET_DEV(obj->Key)) {
+        /* nothing to do */
+    }
+
+    /* check for parameter restore object */
+    if (CO_DEV(COT_OBJECT_RESTORE, 0) == CO_GET_DEV(obj->Key)) {
+        CONodeParaLoad(node, CO_RESET_COM);
+        CONodeParaLoad(node, CO_RESET_NODE);
+    }
+
+    return (result);
+}
+
+static CO_ERR COTParaCtrlReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para)
+{
+    CO_ERR result = CO_ERR_TYPE_RESET;
+    UNUSED(node);
+    ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
+
+    if (CO_DEV(COT_OBJECT_STORE, 0) == CO_GET_DEV(obj->Key)) {
+        result = CONodeParaLoad(node, para);
+    }
+    return (result);
+}
+
 /******************************************************************************
 * PRIVATE HELPER FUNCTIONS
 ******************************************************************************/
 
-static CO_ERR COParaCheck(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
+static CO_ERR COParaCheck(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_ERR    result = CO_ERR_PARA_IDX;
     CO_ERR    err;
@@ -157,13 +191,13 @@ static CO_ERR COParaCheck(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *bu
         if ((sub < 1) || (sub > num)) {
             return (CO_ERR_BAD_ARG);
         }
-        signature = *((uint32_t *)buf);
+        signature = *((uint32_t *)buffer);
         if (signature != CO_PARA_STORE_SIG) {
             return (CO_ERR_OBJ_ACC);
         }
         result = CO_ERR_NONE;
     }
-    
+
     /* restore parameters */
     if (CO_GET_IDX(obj->Key) == COT_OBJECT_RESTORE) {
         err = CODictRdByte(cod, CO_DEV(COT_OBJECT_RESTORE,0), &num);
@@ -178,7 +212,7 @@ static CO_ERR COParaCheck(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *bu
         if ((sub < 1) || (sub > num)) {
             return (CO_ERR_BAD_ARG);
         }
-        signature = *((uint32_t *)buf);
+        signature = *((uint32_t *)buffer);
         if (signature != CO_PARA_RESTORE_SIG) {
             return (CO_ERR_OBJ_ACC);
         }

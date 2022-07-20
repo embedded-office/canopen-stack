@@ -230,3 +230,26 @@ int16_t CODictInit(CO_DICT *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
     cod->Node  = node;
     return ((int16_t)num);
 }
+
+CO_ERR CODictObjInit(CO_DICT *cod, CO_NODE *node)
+{
+    CO_ERR    result = CO_ERR_NONE;
+    CO_ERR    err;
+    CO_OBJ   *obj;
+    uint16_t  num = 0;
+
+    ASSERT_PTR_ERR(cod,  -1);
+    ASSERT_PTR_ERR(node, -1);
+
+    obj = cod->Root;
+    while (obj->Key != 0) {
+        obj++;
+        if (obj->Key != 0) {
+            err = COObjInit(obj, node);
+            if (err != CO_ERR_NONE) {
+                result = err;
+            }
+        }
+    }
+    return (result);
+}

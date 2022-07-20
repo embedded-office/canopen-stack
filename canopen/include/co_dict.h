@@ -34,7 +34,7 @@ extern "C" {
 
 struct CO_NODE_T;              /* Declaration of canopen node structure      */
 struct CO_OBJ_T;               /* Declaration of object entry structure      */
-    
+
 /*! \brief OBJECT dictionary
 *
 *    This data structure holds all informations, which represents the
@@ -268,6 +268,22 @@ int16_t CODictInit(CO_DICT *cod,
                   struct CO_NODE_T *node,
                   struct CO_OBJ_T *root,
                   uint16_t max);
+
+/*! \brief  INIT OBJECT DICTIONARY OBJECTS
+*
+*    This function calls all existing type init functions for all object
+*    entries within the configured object dictionary.
+*
+* \param cod
+*    pointer to object dictionary which must be initialized
+*
+* \param node
+*    pointer to the CANopen device node information structure
+*
+* \retval   =CO_ERR_NONE    Successfully operation
+* \retval  !=CO_ERR_NONE    An error is detected
+*/
+CO_ERR CODictObjInit(CO_DICT *cod, struct CO_NODE_T *node);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

@@ -38,7 +38,7 @@ static CO_ERR   COTUInt8Write(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTUInt8 = { COTUInt8Size, 0, COTUInt8Read, COTUInt8Write };
+const CO_OBJ_TYPE COTUInt8 = { COTUInt8Size, 0, COTUInt8Read, COTUInt8Write, 0 };
 
 /******************************************************************************
 * FUNCTIONS

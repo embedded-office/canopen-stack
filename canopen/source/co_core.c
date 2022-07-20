@@ -41,7 +41,6 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     err = COLssLoad(&node->Baudrate, &node->NodeId);
     if (err != CO_ERR_NONE) {
         node->Error = CO_ERR_LSS_LOAD;
-        return;
     }
 #endif //USE_LSS
     COIfInit(&node->If, node, spec->TmrFreq);
@@ -50,10 +49,6 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
     if (err < 0) {
         return;
     }
-#if USE_PARAMS
-    CONodeParaLoad(node, CO_RESET_COM);
-    CONodeParaLoad(node, CO_RESET_NODE);
-#endif //USE_PARAMS
     CONmtInit(&node->Nmt, node);
     COSdoInit(node->Sdo, node);
 #if USE_CSDO
@@ -66,6 +61,10 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 #if USE_LSS
     COLssInit(&node->Lss, node);
 #endif //USE_LSS
+    err = CODictObjInit(&node->Dict, node);
+    if (err != CO_ERR_NONE) {
+        node->Error = CO_ERR_OBJ_INIT;
+    }
     COIfCanEnable(&node->If, node->Baudrate);
 }
 

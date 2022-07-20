@@ -43,10 +43,11 @@ typedef enum CO_ERR_T {
 
     CO_ERR_BAD_ARG = CO_ERR_BASE,/*!< invalid argument                       */
 
-    CO_ERR_OBJ_NOT_FOUND,        /*!< searched object not found in dictionary */
-    CO_ERR_OBJ_READ,             /*!< error during reading a object entry    */
-    CO_ERR_OBJ_WRITE,            /*!< error during writing a object entry    */
+    CO_ERR_OBJ_NOT_FOUND,        /*!< object not found in dictionary         */
+    CO_ERR_OBJ_READ,             /*!< error in reading an object entry       */
+    CO_ERR_OBJ_WRITE,            /*!< error in writing an object entry       */
     CO_ERR_OBJ_SIZE,             /*!< read/write with wrong size to object   */
+    CO_ERR_OBJ_INIT,             /*!< error in initializing an object entry  */
 
     CO_ERR_OBJ_MAP_LEN,          /*!< invalid mapping length                 */
     CO_ERR_OBJ_MAP_TYPE,         /*!< invalid mapping type                   */
@@ -135,7 +136,8 @@ typedef enum CO_ERR_T {
 
     CO_ERR_TYPE_INIT,            /*!< error during type initialization       */
     CO_ERR_TYPE_RD,              /*!< error during reading type              */
-    CO_ERR_TYPE_WR               /*!< error during writing type              */
+    CO_ERR_TYPE_WR,              /*!< error during writing type              */
+    CO_ERR_TYPE_RESET            /*!< error during reset type                */
 
 } CO_ERR;
 

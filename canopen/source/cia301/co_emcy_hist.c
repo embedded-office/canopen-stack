@@ -41,7 +41,7 @@ static CO_ERR   COTEmcyHistInit (struct CO_OBJ_T *, struct CO_NODE_T *);
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTEmcyHist = { COTEmcyHistSize, COTEmcyHistInit, COTEmcyHistRead, COTEmcyHistWrite };
+const CO_OBJ_TYPE COTEmcyHist = { COTEmcyHistSize, COTEmcyHistInit, COTEmcyHistRead, COTEmcyHistWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -131,31 +131,33 @@ static CO_ERR COTEmcyHistInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
     ASSERT_PTR_ERR(node, CO_ERR_BAD_ARG);
 
     /* check for emergency history object */
-    if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
-        emcy = &node->Emcy;
+    if (CO_GET_IDX(obj->Key) == COT_OBJECT) {
+        if (CO_GET_SUB(obj->Key) == 0u) {
+            emcy = &node->Emcy;
 
-        emcy->Hist.Max = 0;
-        emcy->Hist.Num = 0;
-        emcy->Hist.Off = 0;
+            emcy->Hist.Max = 0;
+            emcy->Hist.Num = 0;
+            emcy->Hist.Off = 0;
 
-        /* scan through all existing array entries */
-        cod = &node->Dict;
-        for (sub = 0; (obj != 0) && (sub < 255); sub++) {
-            obj = CODictFind(cod, CO_DEV(COT_OBJECT, 1 + sub));
-            if (obj != 0) {
-                sub++;
+            /* scan through all existing array entries */
+            cod = &node->Dict;
+            for (sub = 0; (obj != 0) && (sub < 255); sub++) {
+                obj = CODictFind(cod, CO_DEV(COT_OBJECT, 1 + sub));
+                if (obj != 0) {
+                    sub++;
+                }
             }
-        }
-        /* clear node error from scanning array length */
-       (void)CONodeGetErr(cod->Node);
+            /* clear node error from scanning array length */
+            (void)CONodeGetErr(cod->Node);
 
-        /* check minimum length of emergency history */
-        if (sub < 1) {
-            return (result);
-        }
+            /* check minimum length of emergency history */
+            if (sub < 1) {
+                return (result);
+            }
 
-        emcy->Hist.Max = sub;
-        emcy->Hist.Off = 0;
+            emcy->Hist.Max = sub;
+            emcy->Hist.Off = 0;
+        }
         result = CO_ERR_NONE;
     }
     return (result);

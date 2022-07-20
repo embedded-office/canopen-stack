@@ -39,7 +39,6 @@ mandatory settings
 ```
 settings for optimizing resource usage
 - USE_LSS       : enable/disable support for LSS functionality (default: 1)
-- USE_PARAMS    : enable/disable support for NVM parameters (default: 1)
 - USE_CSDO      : enable/disable support for SDO clients (default: 1)
 ```
 

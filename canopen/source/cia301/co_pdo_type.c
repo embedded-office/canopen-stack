@@ -42,7 +42,7 @@ static CO_ERR   COTPdoTypeWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, ui
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPdoType = { COTPdoTypeSize, 0, COTPdoTypeRead, COTPdoTypeWrite };
+const CO_OBJ_TYPE COTPdoType = { COTPdoTypeSize, 0, COTPdoTypeRead, COTPdoTypeWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS

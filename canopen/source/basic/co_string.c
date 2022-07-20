@@ -32,7 +32,7 @@ static CO_ERR   COTStringInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTString = { COTStringSize, COTStringInit, COTStringRead, 0 };
+const CO_OBJ_TYPE COTString = { COTStringSize, COTStringInit, COTStringRead, 0, 0 };
 
 /******************************************************************************
 * FUNCTIONS

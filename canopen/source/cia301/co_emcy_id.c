@@ -42,7 +42,7 @@ static CO_ERR   COTEmcyIdInit (struct CO_OBJ_T *, struct CO_NODE_T *);
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTEmcyId = { COTEmcyIdSize, COTEmcyIdInit, COTEmcyIdRead, COTEmcyIdWrite };
+const CO_OBJ_TYPE COTEmcyId = { COTEmcyIdSize, COTEmcyIdInit, COTEmcyIdRead, COTEmcyIdWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS

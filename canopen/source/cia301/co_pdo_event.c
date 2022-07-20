@@ -39,7 +39,7 @@ static CO_ERR   COTPdoEventWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, u
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPdoEvent = { COTPdoEventSize, 0, COTPdoEventRead, COTPdoEventWrite };
+const CO_OBJ_TYPE COTPdoEvent = { COTPdoEventSize, 0, COTPdoEventRead, COTPdoEventWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS

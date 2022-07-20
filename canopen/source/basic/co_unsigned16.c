@@ -38,7 +38,7 @@ static CO_ERR   COTUInt16Write(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uin
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTUInt16 = { COTUInt16Size, 0, COTUInt16Read, COTUInt16Write };
+const CO_OBJ_TYPE COTUInt16 = { COTUInt16Size, 0, COTUInt16Read, COTUInt16Write, 0 };
 
 /******************************************************************************
 * FUNCTIONS

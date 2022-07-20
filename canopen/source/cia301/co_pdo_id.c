@@ -42,7 +42,7 @@ static CO_ERR   COTPdoIdWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPdoId = { COTPdoIdSize, 0, COTPdoIdRead, COTPdoIdWrite };
+const CO_OBJ_TYPE COTPdoId = { COTPdoIdSize, 0, COTPdoIdRead, COTPdoIdWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -75,7 +75,7 @@ static CO_ERR COTPdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     UNUSED(size);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
-    
+
     if (CO_GET_SUB(obj->Key) != 1) {
         return (CO_ERR_TPDO_COM_OBJ);
     }

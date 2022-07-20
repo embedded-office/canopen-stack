@@ -37,7 +37,7 @@
 static uint32_t COTNmtHbConsSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
 static CO_ERR   COTNmtHbConsRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
 static CO_ERR   COTNmtHbConsWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTNmtHbConsInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
+static CO_ERR   COTNmtHbConsInit (struct CO_OBJ_T *, struct CO_NODE_T *);
 
 /* helper functions */
 static CO_ERR   CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid);
@@ -47,7 +47,7 @@ static void     CONmtHbConsMonitor(void *parg);
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTNmtHbCons = { COTNmtHbConsSize, COTNmtHbConsInit, COTNmtHbConsRead, COTNmtHbConsWrite };
+const CO_OBJ_TYPE COTNmtHbCons = { COTNmtHbConsSize, COTNmtHbConsInit, COTNmtHbConsRead, COTNmtHbConsWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS

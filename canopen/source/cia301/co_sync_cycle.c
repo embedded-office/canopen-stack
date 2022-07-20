@@ -40,7 +40,7 @@ static CO_ERR   COTSyncCycleWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, 
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTSyncCycle = { COTSyncCycleSize, 0, COTSyncCycleRead, COTSyncCycleWrite };
+const CO_OBJ_TYPE COTSyncCycle = { COTSyncCycleSize, 0, COTSyncCycleRead, COTSyncCycleWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS

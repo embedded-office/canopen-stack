@@ -589,7 +589,7 @@ TS_DEF_MAIN(TS_SegWr_DomainNullPtr)
 
     CHK_SDO0_ERR(idx, sub, 0x08000020);
 
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    CHK_ERR(&node, CO_ERR_OBJ_INIT);                  /* check for expected error                 */
 }
 
 /*------------------------------------------------------------------------------------------------*/

@@ -42,7 +42,7 @@ static CO_ERR   COTPdoMapNWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, ui
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPdoMapN = { COTPdoMapNSize, 0, COTPdoMapNRead, COTPdoMapNWrite };
+const CO_OBJ_TYPE COTPdoMapN = { COTPdoMapNSize, 0, COTPdoMapNRead, COTPdoMapNWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
