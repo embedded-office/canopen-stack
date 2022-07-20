@@ -78,13 +78,13 @@ void COIfCanReceive(CO_IF_FRM *frm)
 This **optional** function is called with new configuration data, which is set by the LSS service. If the configuration data should stay unchanged, the argument is 0. The CAN frame pointer is checked to be valid before the CANopen stack calls this function.
 
 ```c
-int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
+CO_ERR COLssStore(uint32_t baudrate, uint8_t nodeId)
 {
   /* Optional: place here some code, which is called
    * when LSS client is in use and the CANopen node
    * needs to store updated values.
    */
-  return (0u);
+  return (CO_ERR_NONE);
 }
 ```
 
@@ -97,8 +97,8 @@ int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
 
 **Returned Value**
 
-- `==0` : configuration stored
-- `!=0` : error is detected
+- `==CO_ERR_NONE` : configuration stored
+- `!=CO_ERR_NONE` : error is detected
 
 
 ### COLssLoad()
@@ -106,13 +106,13 @@ int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
 This **optional** function is called during reset communication to load the stored LSS configuration. If no storage for the configuration data is found, the referenced argument should stay unchanged. The CAN frame pointer is checked to be valid before the CANopen stack calls this function.
 
 ```c
-int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
+CO_ERR COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
 {
   /* Optional: place here some code, which is called
    * when LSS client is in use and the CANopen node
    * is initialized.
    */
-  return (0u);
+  return (CO_ERR_NONE);
 }
 ```
 
@@ -125,8 +125,8 @@ int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
 
 **Returned Value**
 
-- `==0` : configuration loaded
-- `!=0` : error is detected
+- `==CO_ERR_NONE` : configuration loaded
+- `!=CO_ERR_NONE` : error is detected
 
 
 ### CONmtModeChange()

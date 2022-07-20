@@ -303,7 +303,7 @@ int16_t COLssConfigureNodeId(CO_LSS *lss, CO_IF_FRM *frm)
 
 int16_t COLssStoreConfiguration(CO_LSS *lss, CO_IF_FRM *frm)
 {
-    int16_t err;
+    CO_ERR err;
 
     err = COLssStore(lss->CfgBaudrate, lss->CfgNodeId);
     if (err == CO_ERR_NONE) {

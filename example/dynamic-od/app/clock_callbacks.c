@@ -109,7 +109,7 @@ void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE mode)
      */
 }
 
-int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
+CO_ERR COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
 {
     (void)baudrate;
     (void)nodeId;
@@ -118,10 +118,10 @@ int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
      * when LSS client is in use and the CANopen node
      * is initialized.
      */
-    return (0u);
+    return (CO_ERR_NONE);
 }
 
-int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
+CO_ERR COLssStore(uint32_t baudrate, uint8_t nodeId)
 {
     (void)baudrate;
     (void)nodeId;
@@ -130,7 +130,7 @@ int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
      * when LSS client is in use and the CANopen node
      * needs to store updated values.
      */
-    return (0u);
+    return (CO_ERR_NONE);
 }
 
 void COIfCanReceive(CO_IF_FRM *frm)

@@ -156,14 +156,14 @@ int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm);
 *
 * \param baudrate
 *    The configured baudrate for storage
-*    
+*
 * \param nodeId
 *    The configured node id for storage
 *
 * \retval  =CO_ERR_NONE   configuration stored
 * \retval !=CO_ERR_NONE   error is detected
 */
-extern int16_t COLssStore(uint32_t baudrate, uint8_t nodeId);
+extern CO_ERR COLssStore(uint32_t baudrate, uint8_t nodeId);
 
 /*! \brief LSS CONFIGURATION LOAD CALLBACK
 *
@@ -177,14 +177,14 @@ extern int16_t COLssStore(uint32_t baudrate, uint8_t nodeId);
 *
 * \param baudrate
 *    Reference to the baudrate, which should be set to storage value
-*    
+*
 * \param nodeId
 *    Reference to the baudrate, which should be set to storage value
 *
 * \retval  =CO_ERR_NONE   configuration stored
 * \retval !=CO_ERR_NONE   error is detected
 */
-extern int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId);
+extern CO_ERR COLssLoad(uint32_t *baudrate, uint8_t *nodeId);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

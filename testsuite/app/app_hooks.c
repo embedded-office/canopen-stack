@@ -202,9 +202,9 @@ void CONmtHbConsChange(CO_NMT *nmt, uint8_t nodeId, CO_MODE state)
     }
 }
 
-int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
+CO_ERR COLssStore(uint32_t baudrate, uint8_t nodeId)
 {
-    int16_t result = CO_ERR_NONE;
+    CO_ERR result = CO_ERR_NONE;
 
     RamStorage_Baudrate = baudrate;
     RamStorage_NodeId   = nodeId;
@@ -219,9 +219,9 @@ int16_t COLssStore(uint32_t baudrate, uint8_t nodeId)
     return (result);
 }
 
-int16_t COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
+CO_ERR COLssLoad(uint32_t *baudrate, uint8_t *nodeId)
 {
-    int16_t result = CO_ERR_NONE;
+    CO_ERR result = CO_ERR_NONE;
 
     if (RamStorage_Baudrate != 0xFFFFFFFFL) {
         *baudrate = RamStorage_Baudrate;
