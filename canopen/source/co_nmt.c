@@ -84,7 +84,7 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 
     if (type == CO_RESET_NODE) {
         /* check for parameter storage */
-        obj = CODictFind(&nmt->Node->Dict, (0x1010, 0));
+        obj = CODictFind(&nmt->Node->Dict, CO_DEV(0x1010, 0));
         if (obj != 0) {
             /* reload application related parameters */
             err = obj->Type->Reset(obj, nmt->Node, CO_RESET_NODE);
@@ -96,7 +96,7 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 
     if (type <= CO_RESET_COM) {
         /* check for parameter storage */
-        obj = CODictFind(&nmt->Node->Dict, (0x1010, 0));
+        obj = CODictFind(&nmt->Node->Dict, CO_DEV(0x1010, 0));
         if (obj != 0) {
             /* reload communication related parameters */
             err = obj->Type->Reset(obj, nmt->Node, CO_RESET_COM);
