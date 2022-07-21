@@ -428,26 +428,19 @@ void COCSdoAbort(CO_CSDO *csdo, uint32_t err)
 {
     CO_IF_FRM frm;
 
-    /* In some cases, frame is not assigned
-     * to SDO client handle. A local instance
-     * of frame will be attached and transmitted
-     * directly during function call.
-     */
-    if (csdo->Frm == 0) {
-        csdo->Frm = &frm;
-        CO_SET_ID(csdo->Frm, csdo->TxId);
-    }
-
+    /* store abort code */
     csdo->Tfer.Abort = err;
 
-    CO_SET_BYTE(csdo->Frm,           0x80, 0);
-    CO_SET_WORD(csdo->Frm, csdo->Tfer.Idx, 1);
-    CO_SET_BYTE(csdo->Frm, csdo->Tfer.Sub, 3);
-    CO_SET_LONG(csdo->Frm,            err, 4);
-    CO_SET_DLC (csdo->Frm,                 8);
-
+    /* send the SDO timeout response */
     if (err == CO_SDO_ERR_TIMEOUT) {
-        (void)COIfCanSend(&csdo->Node->If, csdo->Frm);
+        CO_SET_ID  (&frm, csdo->TxId);
+        CO_SET_BYTE(&frm,           0x80, 0);
+        CO_SET_WORD(&frm, csdo->Tfer.Idx, 1);
+        CO_SET_BYTE(&frm, csdo->Tfer.Sub, 3);
+        CO_SET_LONG(&frm,            err, 4);
+        CO_SET_DLC (&frm,                 8);
+
+        (void)COIfCanSend(&csdo->Node->If, &frm);
     }
 }
 
