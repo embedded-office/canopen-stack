@@ -34,7 +34,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TPDO_TYPE ((const CO_OBJ_TYPE *)&COTPdoType)  /*!< PDO Transm. Type */
+#define CO_TPDO_TYPE  ((const CO_OBJ_TYPE *)&COTPdoType)
 
 /******************************************************************************
 * PUBLIC CONSTANTS

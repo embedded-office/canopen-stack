@@ -94,7 +94,7 @@ extern "C" {
 *    the RPDO number (0..3)
 */
 #define CO_COBID_RPDO_DEFAULT(rpdo)                                       \
-    CO_COBID_RPDO_STD(1u, CO_COBID_RPDO_BASE + (rpdo * CO_COBID_RPDO_INC))
+    CO_COBID_RPDO_STD(1u, CO_COBID_RPDO_BASE + ((rpdo) * CO_COBID_RPDO_INC))
 
 /*! \brief TPDO COB-ID parameter
 *
@@ -140,7 +140,7 @@ extern "C" {
 *    the TPDO number (0..3)
 */
 #define CO_COBID_TPDO_DEFAULT(tpdo)                                       \
-    CO_COBID_TPDO_STD(1u, CO_COBID_TPDO_BASE + (tpdo * CO_COBID_TPDO_INC))
+    CO_COBID_TPDO_STD(1u, CO_COBID_TPDO_BASE + ((tpdo) * CO_COBID_TPDO_INC))
 
 /*! \brief OBJECT MAPPING LINK
 *
@@ -156,10 +156,10 @@ extern "C" {
 * \param bit
 *    Length of mapped signal in bits [8,16,24 or 32]
 */
-#define CO_LINK(idx,sub,bit)                        \
-    (uint32_t)( ((uint32_t)(idx) & 0xFFFFL) << 16 | \
-                ((uint32_t)(sub) &   0xFFL) << 8  | \
-                ((uint32_t)(bit) &   0xFFL)      )
+#define CO_LINK(idx,sub,bit)    \
+    (uint32_t)( (((uint32_t)(idx) & 0xFFFFL) << 16) | \
+                (((uint32_t)(sub) &   0xFFL) << 8 ) | \
+                 ((uint32_t)(bit) &   0xFFL) )
 
 /******************************************************************************
 * PUBLIC TYPES

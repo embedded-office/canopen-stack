@@ -34,7 +34,7 @@ extern "C" {
 * DEFINES
 ******************************************************************************/
 
-#define CO_TPDO_EVENT  ((CO_OBJ_TYPE *)&COTPdoEvent)    /*!< PDO Event Timer */
+#define CO_TPDO_EVENT  ((const CO_OBJ_TYPE *)&COTPdoEvent)
 
 /******************************************************************************
 * PUBLIC CONSTANTS

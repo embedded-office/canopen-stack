@@ -33,7 +33,7 @@ extern "C" {
 * DEFINES
 ******************************************************************************/
 
-#define CO_TUNSIGNED16        ((const CO_OBJ_TYPE *)&COTUInt16)
+#define CO_TUNSIGNED16  ((const CO_OBJ_TYPE *)&COTUInt16)
 
 /******************************************************************************
 * PUBLIC CONSTANTS

@@ -33,7 +33,7 @@ extern "C" {
 * DEFINES
 ******************************************************************************/
 
-#define CO_TSTRING        ((const CO_OBJ_TYPE *)&COTString)
+#define CO_TSTRING  ((const CO_OBJ_TYPE *)&COTString)
 
 /******************************************************************************
 * PUBLIC TYPE DEFINITION

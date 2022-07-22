@@ -24,9 +24,9 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static uint32_t COTDomainSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTDomainRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTDomainWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+static uint32_t COTDomainSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTDomainRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTDomainInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
@@ -56,12 +56,13 @@ static uint32_t COTDomainSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     return (result);
 }
 
-static CO_ERR COTDomainRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+static CO_ERR COTDomainRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_OBJ_DOM *dom;
     uint8_t    *src;
     uint8_t    *dst;
     uint32_t    num;
+    uint32_t    len;
 
     UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
@@ -69,7 +70,8 @@ static CO_ERR COTDomainRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     dom = (CO_OBJ_DOM *)(obj->Data);
     src = (uint8_t *)(dom->Start + dom->Offset);
     num = dom->Size - dom->Offset;
-    dst = (uint8_t *)buf;
+    dst = (uint8_t *)buffer;
+    len = size;
     while ((len > 0) && (num > 0)) {
         *dst = *src;
         src++;
@@ -81,12 +83,13 @@ static CO_ERR COTDomainRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     return (CO_ERR_NONE);
 }
 
-static CO_ERR COTDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+static CO_ERR COTDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_OBJ_DOM *dom;
     uint8_t    *src;
     uint8_t    *dst;
     uint32_t    num;
+    uint32_t    len;
 
     UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
@@ -94,7 +97,8 @@ static CO_ERR COTDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     dom = (CO_OBJ_DOM *)(obj->Data);
     dst = (uint8_t *)(dom->Start + dom->Offset);
     num = dom->Size - dom->Offset;
-    src = (uint8_t *)buf;
+    src = (uint8_t *)buffer;
+    len = size;
     while ((len > 0) && (num > 0)) {
         *dst = *src;
         src++;

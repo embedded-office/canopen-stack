@@ -24,8 +24,8 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static uint32_t COTStringSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTStringRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+static uint32_t COTStringSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTStringRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTStringInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
@@ -57,9 +57,10 @@ static uint32_t COTStringSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     return (strlen);
 }
 
-static CO_ERR COTStringRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t len)
+static CO_ERR COTStringRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     uint32_t    offset;
+    uint32_t    num;
     CO_OBJ_STR *str;
     uint8_t    *ptr;
     uint8_t    *dst;
@@ -70,13 +71,14 @@ static CO_ERR COTStringRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     str    = (CO_OBJ_STR *)(obj->Data);
     offset = str->Offset;
     ptr    = (uint8_t *)(str->Start) + offset;
-    dst    = (uint8_t *)buf;
-    while ((*ptr != 0) && (len > 0)) {
+    dst    = (uint8_t *)buffer;
+    num    = size;
+    while ((*ptr != 0) && (num > 0)) {
         *dst = *ptr;
         offset++;
         ptr++;
         dst++;
-        len--;
+        num--;
     }
     str->Offset = offset;
     return (CO_ERR_NONE);

@@ -36,7 +36,7 @@ static void COObjReset (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 
     /* obj, node and obj->type already checked by calling function */
     type = obj->Type;
-    if (type->Init != 0) {
+    if (type->Init != NULL) {
         (void)type->Init(obj, node);
     }
 }
@@ -55,7 +55,7 @@ CO_ERR COObjInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
     ASSERT_PTR_ERR(node,      CO_ERR_BAD_ARG);
 
     type = obj->Type;
-    if (type->Init != 0) {
+    if (type->Init != NULL) {
         result = type->Init(obj, node);
     }
     return (result);
@@ -72,7 +72,7 @@ CO_ERR COObjRdBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *bu
     ASSERT_PTR_ERR(buffer,    CO_ERR_BAD_ARG);
 
     type = obj->Type;
-    if (type->Read != 0) {
+    if (type->Read != NULL) {
         COObjReset(obj, node);
         result = type->Read(obj, node, (void *)buffer, len);
     }
@@ -90,7 +90,7 @@ CO_ERR COObjRdBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buf
     ASSERT_PTR_ERR(buffer,    CO_ERR_BAD_ARG);
 
     type = obj->Type;
-    if (type->Read != 0) {
+    if (type->Read != NULL) {
         result = type->Read(obj, node, (void *)buffer, len);
     }
     return (result);
@@ -107,7 +107,7 @@ CO_ERR COObjWrBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *bu
     ASSERT_PTR_ERR(buffer,    CO_ERR_BAD_ARG);
 
     type = obj->Type;
-    if (type->Write != 0) {
+    if (type->Write != NULL) {
         COObjReset(obj, node);
         result = type->Write(obj, node, (void *)buffer, len);
     }
@@ -125,13 +125,13 @@ CO_ERR COObjWrBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buf
     ASSERT_PTR_ERR(buffer,    CO_ERR_BAD_ARG);
 
     type = obj->Type;
-    if (type->Write != 0) {
+    if (type->Write != NULL) {
         result = type->Write(obj, node, (void *)buffer, len);
     }
     return (result);
 }
 
-void COObjTypeUserSDOAbort(CO_OBJ *obj, struct CO_NODE_T *node, uint32_t abort)
+void COObjTypeUserSDOAbort(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t abort)
 {
     uint8_t n;
 
@@ -159,7 +159,7 @@ uint32_t COObjGetSize(struct CO_OBJ_T *obj, CO_NODE *node, uint32_t width)
     ASSERT_PTR_ERR(node,      0);
 
     type = obj->Type;
-    if (type->Size != 0) {
+    if (type->Size != NULL) {
         result = type->Size(obj, node, width);
     }
     return (result);
@@ -176,7 +176,7 @@ CO_ERR COObjRdValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, u
     ASSERT_PTR_ERR(value,     CO_ERR_BAD_ARG);
 
     type = obj->Type;
-    if (type->Read != 0) {
+    if (type->Read != NULL) {
         result = type->Read(obj, node, value, width);
     }
     return(result);
@@ -193,7 +193,7 @@ CO_ERR COObjWrValue(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *value, u
     ASSERT_PTR_ERR(value,     CO_ERR_BAD_ARG);
 
     type = obj->Type;
-    if (type->Write != 0) {
+    if (type->Write != NULL) {
         result = type->Write(obj, node, value, width);
     }
     return (result);

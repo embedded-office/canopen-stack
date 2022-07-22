@@ -34,7 +34,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TSYNC_ID ((const CO_OBJ_TYPE *)&COTSyncId)    /*!< Sync COB-ID    */
+#define CO_TSYNC_ID  ((const CO_OBJ_TYPE *)&COTSyncId)
 
 #define CO_SYNC_COBID_ON     ((uint32_t)1 << 30)    /*!< generator flag         */
 #define CO_SYNC_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format        */

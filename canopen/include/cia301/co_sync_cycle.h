@@ -34,7 +34,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TSYNC_CYCLE ((const CO_OBJ_TYPE *)&COTSyncCycle)  /*!< SYNC Cycle Time */
+#define CO_TSYNC_CYCLE  ((const CO_OBJ_TYPE *)&COTSyncCycle)
 
 /******************************************************************************
 * PUBLIC CONSTANTS

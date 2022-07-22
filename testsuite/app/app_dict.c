@@ -68,7 +68,7 @@ void ODInit(OD_DYN *self, CO_OBJ *root, uint32_t len)
     idx = 0;
     od  = root;
     while (idx < len) {
-        OD_SET(od, 0, 0, (CO_DATA)(0));
+        OD_SET(od, 0, 0, (CO_DATA)(NULL));
         od++;
         idx++;
     }

@@ -34,9 +34,9 @@
 ******************************************************************************/
 
 /* type functions */
-static uint32_t COTPdoMapNSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTPdoMapNRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTPdoMapNWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+static uint32_t COTPdoMapNSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTPdoMapNRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTPdoMapNWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 
 /******************************************************************************
 * PUBLIC GLOBALS
@@ -54,13 +54,13 @@ static uint32_t COTPdoMapNSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uin
     return uint8->Size(obj, node, width);
 }
 
-static CO_ERR COTPdoMapNRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t len)
+static CO_ERR COTPdoMapNRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
-    return uint8->Read(obj, node, val, len);
+    return uint8->Read(obj, node, buffer, size);
 }
 
-static CO_ERR COTPdoMapNWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t size)
+static CO_ERR COTPdoMapNWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     CO_ERR    result = CO_ERR_NONE;
@@ -74,13 +74,13 @@ static CO_ERR COTPdoMapNWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void
     uint8_t   i;
 
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
-    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
     ASSERT_EQU_ERR(size, 1u, CO_ERR_BAD_ARG);
 
     if (CO_GET_SUB(obj->Key) != 0) {
         return (CO_ERR_TPDO_MAP_OBJ);
     }
-    mapnum = (uint8_t)(*(uint8_t *)val);
+    mapnum = (uint8_t)(*(uint8_t *)buffer);
     if (mapnum > 8) {
         return (CO_ERR_OBJ_MAP_LEN);
     }

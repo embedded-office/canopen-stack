@@ -32,9 +32,9 @@
 ******************************************************************************/
 
 /* type functions */
-static uint32_t COTSyncIdSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTSyncIdRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTSyncIdWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+static uint32_t COTSyncIdSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTSyncIdRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 
 /******************************************************************************
 * PUBLIC GLOBALS
@@ -52,13 +52,13 @@ static uint32_t COTSyncIdSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     return uint32->Size(obj, node, width);
 }
 
-static CO_ERR COTSyncIdRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t len)
+static CO_ERR COTSyncIdRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
-    return uint32->Read(obj, node, val, len);
+    return uint32->Read(obj, node, buffer, size);
 }
 
-static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t size)
+static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
     CO_ERR result = CO_ERR_NONE;
@@ -69,7 +69,7 @@ static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     UNUSED(size);
 
     sync = &node->Sync;
-    nid = *(uint32_t*)val;
+    nid = *(uint32_t*)buffer;
     (void)uint32->Read(obj, node, &oid, sizeof(oid));
 
     /* when current entry is generating SYNCs, bits 0 to 29 shall not be changed */

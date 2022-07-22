@@ -37,11 +37,11 @@
 ******************************************************************************/
 
 /* type functions */
-static uint32_t COTParaCtrlSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTParaCtrlRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTParaCtrlWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTParaCtrlInit (struct CO_OBJ_T *, struct CO_NODE_T *);
-static CO_ERR   COTParaCtrlReset(struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
+static uint32_t COTParaCtrlSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTParaCtrlRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTParaCtrlWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTParaCtrlInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
+static CO_ERR   COTParaCtrlReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para);
 
 /* helper functions */
 static CO_ERR COParaCheck(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);

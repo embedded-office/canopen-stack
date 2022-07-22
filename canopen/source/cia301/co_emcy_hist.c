@@ -32,10 +32,10 @@
 ******************************************************************************/
 
 /* type functions */
-static uint32_t COTEmcyHistSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTEmcyHistRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTEmcyHistWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTEmcyHistInit (struct CO_OBJ_T *, struct CO_NODE_T *);
+static uint32_t COTEmcyHistSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTEmcyHistRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTEmcyHistWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTEmcyHistInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
 * PUBLIC GLOBALS
@@ -51,6 +51,7 @@ static uint32_t COTEmcyHistSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, ui
 {
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
+
     if (CO_GET_SUB(obj->Key) == 0) {
         return uint8->Size(obj, node, width);
     } else {
@@ -63,6 +64,7 @@ static CO_ERR COTEmcyHistRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     CO_ERR   result = CO_ERR_TYPE_RD;
+    CO_OBJ  *subObj;
     CO_DICT *cod;
     CO_EMCY *emcy;
     uint8_t  sub;
@@ -85,8 +87,8 @@ static CO_ERR COTEmcyHistRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void
             }
 
             /* get object entry and stored read value */
-            obj = CODictFind(cod, CO_DEV(COT_OBJECT, map));
-            result = uint32->Read(obj, node, val, COT_ENTRY_SIZE);
+            subObj = CODictFind(cod, CO_DEV(COT_OBJECT, map));
+            result = uint32->Read(subObj, node, val, COT_ENTRY_SIZE);
         } else {
             if (sub < emcy->Hist.Max) {
                 *((uint32_t *)val) = (uint32_t)0;
@@ -100,7 +102,7 @@ static CO_ERR COTEmcyHistWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
 {
     CO_ERR   result = CO_ERR_TYPE_WR;
     CO_EMCY *emcy;
-    uint8_t  value = 0;
+    uint8_t  value;
 
     UNUSED(size);
 
@@ -124,6 +126,7 @@ static CO_ERR COTEmcyHistInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_ERR   result = CO_ERR_TYPE_INIT;
     CO_EMCY *emcy;
+    CO_OBJ  *subobj;
     CO_DICT *cod;
     uint8_t  sub;
 
@@ -141,14 +144,13 @@ static CO_ERR COTEmcyHistInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 
             /* scan through all existing array entries */
             cod = &node->Dict;
-            for (sub = 0; (obj != 0) && (sub < 255); sub++) {
-                obj = CODictFind(cod, CO_DEV(COT_OBJECT, 1 + sub));
-                if (obj != 0) {
+            sub = 0;
+            do {
+                subobj = CODictFind(cod, CO_DEV(COT_OBJECT, sub + 1));
+                if (subobj != NULL) {
                     sub++;
                 }
-            }
-            /* clear node error from scanning array length */
-            (void)CONodeGetErr(cod->Node);
+            } while (subobj != NULL);
 
             /* check minimum length of emergency history */
             if (sub < 1) {
@@ -172,7 +174,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     CO_NODE *node;
-    CO_DICT  *cod;
+    CO_DICT *cod;
     CO_OBJ  *obj;
     uint32_t val = 0;
     uint8_t  sub;
@@ -193,7 +195,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 
     /* write generated value to history */
     val = (uint32_t)emcy->Root[err].Code;
-    if (usr != 0) {
+    if (usr != NULL) {
         val |= (((uint32_t)usr->Hist) << 16);
     }
     obj = CODictFind(cod, CO_DEV(COT_OBJECT, sub));
@@ -232,7 +234,7 @@ void COEmcyHistReset(CO_EMCY *emcy)
 
     /* clear number of emergencies in history */
     obj = CODictFind(cod, CO_DEV(COT_OBJECT, 0));
-    if (obj == 0) {
+    if (obj == NULL) {
         node->Error = CO_ERR_NONE;
         return;
     }

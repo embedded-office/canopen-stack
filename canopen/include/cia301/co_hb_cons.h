@@ -34,7 +34,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_THB_CONS  ((CO_OBJ_TYPE *)&COTNmtHbCons)  /*!< Heartbeat Consumer */
+#define CO_THB_CONS  ((const CO_OBJ_TYPE *)&COTNmtHbCons)
 
 /******************************************************************************
 * PUBLIC TYPES

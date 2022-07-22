@@ -29,25 +29,26 @@
 
 CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key)
 {
-    CO_OBJ  *result = 0;
-    CO_OBJ  *obj    = 0;
-    int32_t  start  = 0;
+    CO_OBJ  *result = NULL;
+    CO_OBJ  *obj;
+    uint32_t pattern;
+    int32_t  start = 0;
     int32_t  end;
     int32_t  center;
 
-    ASSERT_PTR_ERR(cod, 0);
-    ASSERT_NOT_ERR(key, 0, 0);
+    ASSERT_PTR_ERR(cod, NULL);
+    ASSERT_NOT_ERR(key, 0, NULL);
 
-    key = CO_GET_DEV(key);
+    pattern = CO_GET_DEV(key);
     end = cod->Num;
     while (start <= end) {
         center = start + ((end - start) / 2);
         obj    = &(cod->Root[center]);
-        if (CO_GET_DEV(obj->Key) == key) {
+        if (CO_GET_DEV(obj->Key) == pattern) {
             result = obj;
             break;
         }
-        if (CO_GET_DEV(obj->Key) > key) {
+        if (CO_GET_DEV(obj->Key) > pattern) {
             end    = center - 1;
         } else {
             start  = center + 1;
@@ -66,7 +67,7 @@ CO_ERR CODictRdByte(CO_DICT *cod, uint32_t key, uint8_t *val)
     ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
-    if (obj != 0) {
+    if (obj != NULL) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)1u);
         if (sz != (uint32_t)1u) {
             result = CO_ERR_OBJ_SIZE;
@@ -87,7 +88,7 @@ CO_ERR CODictRdWord(CO_DICT *cod, uint32_t key, uint16_t *val)
     ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
-    if (obj != 0) {
+    if (obj != NULL) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)2u);
         if (sz != (uint32_t)2u) {
             result = CO_ERR_OBJ_SIZE;
@@ -108,7 +109,7 @@ CO_ERR CODictRdLong(CO_DICT *cod, uint32_t key, uint32_t *val)
     ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
-    if (obj != 0) {
+    if (obj != NULL) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)4u);
         if (sz != (uint32_t)4u) {
             result = CO_ERR_OBJ_SIZE;
@@ -128,7 +129,7 @@ CO_ERR CODictWrByte(CO_DICT *cod, uint32_t key, uint8_t val)
     ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
-    if (obj != 0) {
+    if (obj != NULL) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)1u);
         if (sz != (uint32_t)1u) {
             result = CO_ERR_OBJ_SIZE;
@@ -148,7 +149,7 @@ CO_ERR CODictWrWord(CO_DICT *cod, uint32_t key, uint16_t val)
     ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
-    if (obj != 0) {
+    if (obj != NULL) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)2u);
         if (sz != (uint32_t)2u) {
             result = CO_ERR_OBJ_SIZE;
@@ -168,7 +169,7 @@ CO_ERR CODictWrLong(CO_DICT *cod, uint32_t key, uint32_t val)
     ASSERT_PTR_ERR(cod, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
-    if (obj != 0) {
+    if (obj != NULL) {
         sz = COObjGetSize(obj, cod->Node, (uint32_t)4u);
         if (sz != (uint32_t)4u) {
             result = CO_ERR_OBJ_SIZE;
@@ -188,7 +189,7 @@ CO_ERR CODictRdBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len)
     ASSERT_PTR_ERR(buf, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
-    if (obj != 0) {
+    if (obj != NULL) {
         result = COObjRdBufStart(obj, cod->Node, (void *)buf, (uint8_t)len);
     }
     return(result);
@@ -203,7 +204,7 @@ CO_ERR CODictWrBuffer(CO_DICT *cod, uint32_t key, uint8_t *buf, uint32_t len)
     ASSERT_PTR_ERR(buf, CO_ERR_BAD_ARG);
 
     obj = CODictFind(cod, key);
-    if (obj != 0) {
+    if (obj != NULL) {
         result = COObjWrBufStart(obj, cod->Node, (void *)buf, (uint8_t)len);
     }
     return(result);
@@ -217,7 +218,7 @@ int16_t CODictInit(CO_DICT *cod, CO_NODE *node, CO_OBJ *root, uint16_t max)
     ASSERT_PTR_ERR(cod,  -1);
     ASSERT_PTR_ERR(node, -1);
     ASSERT_PTR_ERR(root, -1);
-    ASSERT_NOT_ERR(max, 0, -1);
+    ASSERT_NOT_ERR(max, (uint16_t)0, -1);
 
     obj = root;
     while ((obj->Key != 0) && (num < max)) {
@@ -236,7 +237,6 @@ CO_ERR CODictObjInit(CO_DICT *cod, CO_NODE *node)
     CO_ERR    result = CO_ERR_NONE;
     CO_ERR    err;
     CO_OBJ   *obj;
-    uint16_t  num = 0;
 
     ASSERT_PTR_ERR(cod,  -1);
     ASSERT_PTR_ERR(node, -1);

@@ -99,10 +99,10 @@ extern "C" {
 * \param flags
 *    The additional object property flags
 */
-#define CO_KEY(idx,sub,flags)                       \
-    (uint32_t)( ((uint32_t)(  idx) & 0xFFFF)<<16  | \
-                ((uint32_t)(  sub) &   0xFF)<< 8  | \
-                ((uint32_t)(flags) &   0xFF)     )
+#define CO_KEY(idx,sub,flags)    \
+    (uint32_t)( (((uint32_t)(  idx) & 0xFFFF)<<16) | \
+                (((uint32_t)(  sub) &   0xFF)<< 8) | \
+                 ((uint32_t)(flags) &   0xFF) )
 
 /*! \brief OBJECT DEVICE
 *
@@ -116,9 +116,9 @@ extern "C" {
 * \param sub
 *    CANopen object subindex [0x00..0xFF]
 */
-#define CO_DEV(idx,sub)                           \
-    (uint32_t)( ((uint32_t)(idx) & 0xFFFF)<<16  | \
-                ((uint32_t)(sub) &   0xFF)<<8  )
+#define CO_DEV(idx,sub)    \
+    (uint32_t)( (((uint32_t)(idx) & 0xFFFF)<<16) | \
+                (((uint32_t)(sub) &   0xFF)<<8 ) )
 
 /*! \brief EXTRACT DEVICE
 *
@@ -262,15 +262,15 @@ typedef struct CO_OBJ_T {
 } CO_OBJ;
 
 /*!< Size type function prototype */
-typedef uint32_t (*CO_OBJ_SIZE_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
+typedef uint32_t (*CO_OBJ_SIZE_FUNC) (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 /*!< Initialze type function prototype */
-typedef CO_ERR   (*CO_OBJ_INIT_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *);
+typedef CO_ERR   (*CO_OBJ_INIT_FUNC) (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 /*!< Read type function prototype */
-typedef CO_ERR   (*CO_OBJ_READ_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+typedef CO_ERR   (*CO_OBJ_READ_FUNC) (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 /*!< Write type function prototype */
-typedef CO_ERR   (*CO_OBJ_WRITE_FUNC)(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+typedef CO_ERR   (*CO_OBJ_WRITE_FUNC)(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 /*!< Reset type function prototype */
-typedef CO_ERR   (*CO_OBJ_RESET_FUNC) (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
+typedef CO_ERR   (*CO_OBJ_RESET_FUNC)(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para);
 
 /*! \brief OBJECT TYPE
 *

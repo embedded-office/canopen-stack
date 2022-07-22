@@ -29,7 +29,8 @@
 */
 void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 {
-    int16_t  err;
+    int16_t num;
+    CO_ERR  err;
 
     node->If.Drv   = spec->Drv;
     node->SdoBuf   = spec->SdoBuf;
@@ -45,27 +46,28 @@ void CONodeInit(CO_NODE *node, CO_NODE_SPEC *spec)
 #endif //USE_LSS
     COIfInit(&node->If, node, spec->TmrFreq);
     COTmrInit(&node->Tmr, node, spec->TmrMem, spec->TmrNum, spec->TmrFreq);
-    err = CODictInit(&node->Dict, node, spec->Dict, spec->DictLen);
-    if (err < 0) {
-        return;
+    num = CODictInit(&node->Dict, node, spec->Dict, spec->DictLen);
+    if (num < 0) {
+        node->Error = CO_ERR_DICT_INIT;
+    } else {
+        CONmtInit(&node->Nmt, node);
+        COSdoInit(node->Sdo, node);
+    #if USE_CSDO
+        COCSdoInit(node->CSdo, node);
+    #endif
+        COTPdoClear(node->TPdo, node);
+        CORPdoClear(node->RPdo, node);
+        COEmcyInit(&node->Emcy, node, spec->EmcyCode);
+        COSyncInit(&node->Sync, node);
+    #if USE_LSS
+        COLssInit(&node->Lss, node);
+    #endif //USE_LSS
+        err = CODictObjInit(&node->Dict, node);
+        if (err != CO_ERR_NONE) {
+            node->Error = CO_ERR_OBJ_INIT;
+        }
+        COIfCanEnable(&node->If, node->Baudrate);
     }
-    CONmtInit(&node->Nmt, node);
-    COSdoInit(node->Sdo, node);
-#if USE_CSDO
-    COCSdoInit(node->CSdo, node);
-#endif
-    COTPdoClear(node->TPdo, node);
-    CORPdoClear(node->RPdo, node);
-    COEmcyInit(&node->Emcy, node, spec->EmcyCode);
-    COSyncInit(&node->Sync, node);
-#if USE_LSS
-    COLssInit(&node->Lss, node);
-#endif //USE_LSS
-    err = CODictObjInit(&node->Dict, node);
-    if (err != CO_ERR_NONE) {
-        node->Error = CO_ERR_OBJ_INIT;
-    }
-    COIfCanEnable(&node->If, node->Baudrate);
 }
 
 /*
@@ -135,9 +137,9 @@ void CONodeProcess(CO_NODE *node)
 #endif //USE_LSS
     }
 
-    if ((allowed & CO_SDO_ALLOWED) != 0) {
+    if ((allowed & CO_SDO_ALLOWED) != (uint8_t)0) {
         srv = COSdoCheck(node->Sdo, &frm);
-        if (srv != 0) {
+        if (srv != NULL) {
             err = COSdoResponse(srv);
             if ((err == CO_ERR_NONE     ) ||
                 (err == CO_ERR_SDO_ABORT)) {
@@ -147,7 +149,7 @@ void CONodeProcess(CO_NODE *node)
 #if USE_CSDO
         } else {
             csdo = COCSdoCheck(node->CSdo, &frm);
-            if (csdo != 0) {
+            if (csdo != NULL) {
                 err = COCSdoResponse(csdo);
                 if ((err == CO_ERR_NONE) ||
                     (err == CO_ERR_SDO_ABORT)) {
@@ -159,15 +161,16 @@ void CONodeProcess(CO_NODE *node)
         }
     }
 
-    if ((allowed & CO_NMT_ALLOWED) != 0) {
+    if ((allowed & CO_NMT_ALLOWED) != (uint8_t)0) {
         if (CONmtCheck(&node->Nmt, &frm) >= 0) {
             allowed = 0;
-        } else if (CONmtHbConsCheck(&node->Nmt, &frm) >= 0) {
+        }
+        if (CONmtHbConsCheck(&node->Nmt, &frm) >= 0) {
             allowed = 0;
         }
     }
 
-    if ((allowed & CO_PDO_ALLOWED) != 0) {
+    if ((allowed & CO_PDO_ALLOWED) != (uint8_t)0) {
         rpdo = CORPdoCheck(node->RPdo, &frm);
         if (rpdo != NULL) {
             CORPdoRx(rpdo, &frm);
@@ -175,7 +178,7 @@ void CONodeProcess(CO_NODE *node)
         }
     }
 
-    if ((allowed & CO_SYNC_ALLOWED) != 0) {
+    if ((allowed & CO_SYNC_ALLOWED) != (uint8_t)0) {
         result = COSyncUpdate(&node->Sync, &frm);
         if (result >= 0) {
             COSyncHandler(&node->Sync);
@@ -183,7 +186,7 @@ void CONodeProcess(CO_NODE *node)
         }
     }
 
-    if (allowed != 0) {
+    if (allowed != (uint8_t)0) {
         COIfCanReceive(&frm);
     }
 }

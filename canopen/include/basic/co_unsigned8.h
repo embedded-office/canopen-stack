@@ -33,7 +33,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TUNSIGNED8        ((const CO_OBJ_TYPE *)&COTUInt8)
+#define CO_TUNSIGNED8  ((const CO_OBJ_TYPE *)&COTUInt8)
 
 /******************************************************************************
 * PUBLIC CONSTANTS

@@ -34,7 +34,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TEMCY_ID ((const CO_OBJ_TYPE *)&COTEmcyId)    /*!< Emcy COB-ID    */
+#define CO_TEMCY_ID  ((const CO_OBJ_TYPE *)&COTEmcyId)
 
 #define CO_EMCY_COBID_OFF    ((uint32_t)1 << 31)    /*!< marked as unused    */
 #define CO_EMCY_COBID_EXT    ((uint32_t)1 << 29)    /*!< extended format     */

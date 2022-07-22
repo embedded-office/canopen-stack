@@ -66,14 +66,14 @@ static const uint8_t CONmtModeCode[CO_MODE_NUM] = {
 };
 
 /******************************************************************************
-* FUNCTIONS
+* PROTECTED API FUNCTIONS
 ******************************************************************************/
 
 void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 {
     CO_OBJ *obj;
     uint8_t nobootup = 1;
-    int16_t err;
+    CO_ERR  err;
 
     ASSERT_PTR_FATAL(nmt);
 
@@ -84,8 +84,8 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 
     if (type == CO_RESET_NODE) {
         /* check for parameter storage */
-        obj = CODictFind(&nmt->Node->Dict, CO_DEV(0x1010, 0));
-        if (obj != 0) {
+        obj = CODictFind(&(nmt->Node->Dict), CO_DEV(0x1010, 0));
+        if (obj != NULL) {
             /* reload application related parameters */
             err = obj->Type->Reset(obj, nmt->Node, CO_RESET_NODE);
             if (err != CO_ERR_NONE) {
@@ -97,7 +97,7 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
     if (type <= CO_RESET_COM) {
         /* check for parameter storage */
         obj = CODictFind(&nmt->Node->Dict, CO_DEV(0x1010, 0));
-        if (obj != 0) {
+        if (obj != NULL) {
             /* reload communication related parameters */
             err = obj->Type->Reset(obj, nmt->Node, CO_RESET_COM);
             if (err != CO_ERR_NONE) {
@@ -123,6 +123,69 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
         }
     }
 }
+
+void CONmtInit(CO_NMT *nmt, CO_NODE *node)
+{
+    ASSERT_PTR_FATAL(nmt);
+    ASSERT_PTR_FATAL(node);
+
+    nmt->Node = node;
+    nmt->HbCons = NULL;
+    CONmtSetMode(nmt, CO_INIT);
+}
+
+void CONmtBootup(CO_NMT *nmt)
+{
+    CO_IF_FRM frm;
+
+    if (nmt->Mode == CO_INIT) {
+        CONmtSetMode(nmt, CO_PREOP);
+
+        CO_SET_ID  (&frm, 1792 + nmt->Node->NodeId);
+        CO_SET_DLC (&frm, 1);
+        CO_SET_BYTE(&frm, 0, 0);
+
+        (void)COIfCanSend(&nmt->Node->If, &frm);
+    }
+}
+
+int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
+{
+    int16_t result = -1;
+
+    if (frm->Identifier == 0) {
+        result = 0;
+        if ((frm->Data[1] == nmt->Node->NodeId) ||
+            (frm->Data[1] == 0u               )) {
+            switch(frm->Data[0u]) {
+                case 1:
+                    CONmtSetMode(nmt, CO_OPERATIONAL);
+                    break;
+                case 2:
+                    CONmtSetMode(nmt, CO_STOP);
+                    break;
+                case 128:
+                    CONmtSetMode(nmt, CO_PREOP);
+                    break;
+                case 129:
+                    CONmtReset(nmt, CO_RESET_NODE);
+                    CONmtResetRequest(nmt, CO_RESET_NODE);
+                    break;
+                case 130:
+                    CONmtReset(nmt, CO_RESET_COM);
+                    CONmtResetRequest(nmt, CO_RESET_COM);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+    return(result);
+}
+
+/******************************************************************************
+* PUBLIC API FUNCTIONS
+******************************************************************************/
 
 void CONmtSetMode(CO_NMT *nmt, CO_MODE mode)
 {
@@ -168,7 +231,7 @@ uint8_t CONmtGetNodeId(CO_NMT *nmt)
 
     ASSERT_PTR_FATAL_ERR(nmt, 0);
 
-    if (nmt->Node != 0) {
+    if (nmt->Node != NULL) {
         result = nmt->Node->NodeId;
     }
     return result;
@@ -195,65 +258,4 @@ uint8_t CONmtModeEncode(CO_MODE mode)
         result = CONmtModeCode[mode];
     }
     return (result);
-}
-
-void CONmtInit(CO_NMT *nmt, CO_NODE *node)
-{
-    CO_ERR  err;
-    CO_OBJ *obj;
-
-    ASSERT_PTR_FATAL(nmt);
-    ASSERT_PTR_FATAL(node);
-
-    nmt->Node = node;
-    nmt->HbCons = 0;
-    CONmtSetMode(nmt, CO_INIT);
-}
-
-void CONmtBootup(CO_NMT *nmt)
-{
-    CO_IF_FRM frm;
-
-    if (nmt->Mode == CO_INIT) {
-        CONmtSetMode(nmt, CO_PREOP);
-
-        CO_SET_ID(&frm, 1792 + nmt->Node->NodeId);
-        CO_SET_DLC  (&frm, 1);
-        CO_SET_BYTE (&frm, 0, 0);
-
-        (void)COIfCanSend(&nmt->Node->If, &frm);
-    }
-}
-
-int16_t CONmtCheck(CO_NMT *nmt, CO_IF_FRM *frm)
-{
-    int16_t result = -1;
-
-    if (frm->Identifier == 0) {
-        result = 0;
-        if ((frm->Data[1] == nmt->Node->NodeId) || (frm->Data[1] == 0)) {
-            switch(frm->Data[0]) {
-                case 1:
-                    CONmtSetMode(nmt, CO_OPERATIONAL);
-                    break;
-                case 2:
-                    CONmtSetMode(nmt, CO_STOP);
-                    break;
-                case 128:
-                    CONmtSetMode(nmt, CO_PREOP);
-                    break;
-                case 129:
-                    CONmtReset(nmt, CO_RESET_NODE);
-                    CONmtResetRequest(nmt, CO_RESET_NODE);
-                    break;
-                case 130:
-                    CONmtReset(nmt, CO_RESET_COM);
-                    CONmtResetRequest(nmt, CO_RESET_COM);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
-    return(result);
 }

@@ -33,7 +33,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TPARA_CTRL ((const CO_OBJ_TYPE *)&COTParaCtrl)  /*!< PARA Control */
+#define CO_TPARA_CTRL  ((const CO_OBJ_TYPE *)&COTParaCtrl)
 
 #define CO_PARA____   0x0000     /*!< disable                                */
 #define CO_PARA___E   0x0001     /*!< enable  (on command)                   */

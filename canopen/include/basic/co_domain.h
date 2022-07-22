@@ -33,7 +33,7 @@ extern "C" {
 * DEFINES
 ******************************************************************************/
 
-#define CO_TDOMAIN        ((const CO_OBJ_TYPE *)&COTDomain)
+#define CO_TDOMAIN  ((const CO_OBJ_TYPE *)&COTDomain)
 
 /******************************************************************************
 * PUBLIC TYPE DEFINITION

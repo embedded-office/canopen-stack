@@ -213,7 +213,7 @@ static bool TS_IsEnabled(uint8_t group, uint8_t suite)
     bool result = true;
 
     if ((group < TS_GROUP_MAX) && (suite < TS_SUITE_MAX)) {
-        if ((TestData.Env.Disable[group] & (1L << suite)) != 0) {
+        if ((TestData.Env.Disable[group] & (1uL << suite)) != 0) {
             /* Test suite is disabled */
             result = false;
         }
@@ -513,14 +513,14 @@ void TS_Init (void)
 
 int32_t TS_Start (void)
 {
-    int32_t            result = 0;
     const TS_INFOFUNC *test;
-    TS_INFO            Info;
+    int32_t result = 0;
+    TS_INFO Info;
 
     TS_SummaryInit();                                 /* reset summary statistic                  */
 
-    test = (TS_INFOFUNC *)&TEST_SECTION_START;
-    while (test < (TS_INFOFUNC *)&TEST_SECTION_END) {
+    test = (const TS_INFOFUNC *)&TEST_SECTION_START;
+    while (test < (const TS_INFOFUNC *)&TEST_SECTION_END) {
         if (*test) {
             (*test)(&Info);                           /* get test suite info data                 */
             if (TS_IsEnabled(Info.Group, Info.Suite)) {

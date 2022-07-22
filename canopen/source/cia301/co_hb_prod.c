@@ -33,10 +33,10 @@
 ******************************************************************************/
 
 /* type functions */
-static uint32_t COTNmtHbProdSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTNmtHbProdRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTNmtHbProdWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTNmtHbProdInit (struct CO_OBJ_T *, struct CO_NODE_T *);
+static uint32_t COTNmtHbProdSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTNmtHbProdRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTNmtHbProdInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /* helper functions */
 static void CONmtHbProdSend(void *parg);

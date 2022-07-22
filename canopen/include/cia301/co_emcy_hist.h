@@ -34,7 +34,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TEMCY_HIST ((const CO_OBJ_TYPE *)&COTEmcyHist) /*!< Emcy History  */
+#define CO_TEMCY_HIST  ((const CO_OBJ_TYPE *)&COTEmcyHist)
 
 /******************************************************************************
 * PUBLIC TYPES

@@ -54,6 +54,8 @@ typedef enum CO_ERR_T {
     CO_ERR_OBJ_ACC,              /*!< unsupported access                     */
     CO_ERR_OBJ_RANGE,            /*!< value range of parameter exceeded      */
     CO_ERR_OBJ_INCOMPATIBLE,     /*!< incompatible parameter value           */
+    
+    CO_ERR_DICT_INIT,            /*!< error in initialization of dictionary  */
 
     CO_ERR_PARA_IDX,             /*!< wrong index for parameter type         */
     CO_ERR_PARA_STORE,           /*!< error during storing parameter         */

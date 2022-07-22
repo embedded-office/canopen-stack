@@ -32,7 +32,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_THB_PROD  ((CO_OBJ_TYPE *)&COTNmtHbProd)  /*!< Heartbeat Producer */
+#define CO_THB_PROD  ((const CO_OBJ_TYPE *)&COTNmtHbProd)
 
 /******************************************************************************
 * PUBLIC TYPES

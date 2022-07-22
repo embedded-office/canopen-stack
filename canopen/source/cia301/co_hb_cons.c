@@ -34,10 +34,10 @@
 ******************************************************************************/
 
 /* type functions */
-static uint32_t COTNmtHbConsSize (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTNmtHbConsRead (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTNmtHbConsWrite(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTNmtHbConsInit (struct CO_OBJ_T *, struct CO_NODE_T *);
+static uint32_t COTNmtHbConsSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTNmtHbConsRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTNmtHbConsInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /* helper functions */
 static CO_ERR   CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid);

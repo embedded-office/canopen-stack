@@ -30,9 +30,9 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static uint32_t COTUInt32Size (struct CO_OBJ_T *, struct CO_NODE_T *, uint32_t);
-static CO_ERR   COTUInt32Read (struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
-static CO_ERR   COTUInt32Write(struct CO_OBJ_T *, struct CO_NODE_T *, void*, uint32_t);
+static uint32_t COTUInt32Size (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTUInt32Read (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTUInt32Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 
 /******************************************************************************
 * PUBLIC GLOBALS
@@ -51,10 +51,8 @@ static uint32_t COTUInt32Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     UNUSED(node);
     UNUSED(width);
 
-    if (CO_IS_DIRECT(obj->Key)) {
-#if UINTPTR_MAX >= UINT32_MAX
+    if (CO_IS_DIRECT(obj->Key) != 0) {
         result = (uint32_t)COT_ENTRY_SIZE;
-#endif
     } else {
         /* check for valid reference */
         if ((obj->Data) != (CO_DATA)0) {
@@ -64,68 +62,54 @@ static uint32_t COTUInt32Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     return (result);
 }
 
-static CO_ERR COTUInt32Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t len)
+static CO_ERR COTUInt32Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
-    CO_ERR  result = CO_ERR_NONE;
+    CO_ERR   result = CO_ERR_NONE;
     uint32_t value;
 
     UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
-    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
 
-    if (CO_IS_DIRECT(obj->Key)) {
-#if UINTPTR_MAX >= UINT32_MAX
+    if (CO_IS_DIRECT(obj->Key) != 0) {
         value = (uint32_t)(obj->Data);
-#else
-        /* Your pointer width is no suitable for storing 32bit values.
-         * Consider allocating and referencing a variable.
-         */
-        result = CO_ERR_OBJ_RANGE;
-#endif
     } else {
         value = *((uint32_t *)(obj->Data));
     }
     if (CO_IS_NODEID(obj->Key) != 0) {
         value += node->NodeId;
     }
-    if (len == COT_ENTRY_SIZE) {
-        *((uint32_t *)val) = value;
+    if (size == COT_ENTRY_SIZE) {
+        *((uint32_t *)buffer) = value;
     } else {
         result = CO_ERR_BAD_ARG;
     }
     return (result);
 }
 
-static CO_ERR COTUInt32Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t len)
+static CO_ERR COTUInt32Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
-    CO_ERR  result = CO_ERR_NONE;
+    CO_ERR   result = CO_ERR_NONE;
     uint32_t value;
     uint32_t oldValue;
 
     UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
-    ASSERT_PTR_ERR(val, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
 
-    value = *((uint32_t *)val);
-    if (len == COT_ENTRY_SIZE) {
+    value = *((uint32_t *)buffer);
+    if (size == COT_ENTRY_SIZE) {
         if (CO_IS_NODEID(obj->Key) != 0) {
             value -= node->NodeId;
         }
-        if (CO_IS_DIRECT(obj->Key)) {
-#if UINTPTR_MAX >= UINT32_MAX
+        if (CO_IS_DIRECT(obj->Key) != 0) {
             oldValue = obj->Data;
             obj->Data = (CO_DATA)(value);
-#else
-            /* Your pointer width is no suitable for storing 32bit values.
-             * Consider allocating and referencing a variable.
-             */
-            result = CO_ERR_OBJ_RANGE;
-#endif
         } else {
             oldValue = *((uint32_t *)(obj->Data));
             *((uint32_t *)(obj->Data)) = value;
         }
-        if (CO_IS_PDO_ASYNC(obj->Key)) {
+        if (CO_IS_PDO_ASYNC(obj->Key) != 0) {
             if (value != oldValue) {
                 COTPdoTrigObj(node->TPdo, obj);
             }
