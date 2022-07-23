@@ -7,10 +7,14 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
+### Changed
+
+- Fix some static test issues, detected by `cppcheck`
+- Separate all CiA301 specific type functions into separate files
+
 ### Breaking Changed
 
-- Move default basic type implementations to separate type function files
-- Separate all CiA301 specific type functions into separate files
+- Handle basic type implementations with separate type function files
 - Change Object entry flags from `CO_OBJ_DNPRW` to `CO_OBJ_DNAPRW`
 
 ## [4.3.1] - 2022-07-14
