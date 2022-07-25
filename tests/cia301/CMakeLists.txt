@@ -16,3 +16,4 @@
 
 # CiA301 types
 add_subdirectory(co_emcy_hist)
+add_subdirectory(co_emcy_id)
