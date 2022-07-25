@@ -59,7 +59,7 @@ static uint32_t COTEmcyHistSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, ui
     }
 }
 
-static CO_ERR COTEmcyHistRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *val, uint32_t len)
+static CO_ERR COTEmcyHistRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
@@ -75,7 +75,7 @@ static CO_ERR COTEmcyHistRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void
     sub  = CO_GET_SUB(obj->Key);
 
     if (sub == 0) {
-        result = uint8->Read(obj, node, val, len);
+        result = uint8->Read(obj, node, buffer, size);
     } else {
         if (sub <= emcy->Hist.Num) {
             /* re-map entries to get newest at start of array */
@@ -88,10 +88,10 @@ static CO_ERR COTEmcyHistRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void
 
             /* get object entry and stored read value */
             subObj = CODictFind(cod, CO_DEV(COT_OBJECT, map));
-            result = uint32->Read(subObj, node, val, COT_ENTRY_SIZE);
+            result = uint32->Read(subObj, node, buffer, COT_ENTRY_SIZE);
         } else {
             if (sub < emcy->Hist.Max) {
-                *((uint32_t *)val) = (uint32_t)0;
+                *((uint32_t *)buffer) = (uint32_t)0;
             }
         }
     }
