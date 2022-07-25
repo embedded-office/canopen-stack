@@ -14,10 +14,5 @@
 #   limitations under the License.
 #******************************************************************************
 
-# Select Example
-if (APP STREQUAL "quickstart")
-  add_subdirectory(quickstart)
-endif()
-if (APP STREQUAL "dynamic-od")
-  add_subdirectory(dynamic-od)
-endif()
+add_subdirectory(quickstart)
+add_subdirectory(dynamic-od)

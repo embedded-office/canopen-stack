@@ -7,15 +7,30 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
+### Add
+
+- Add unit tests for basic type functions
+- Add unit tests for CiA301 type: co_emcy_hist
+
 ### Changed
 
 - Fix some static test issues, detected by `cppcheck`
+- Separate all basic type functions into separate files
 - Separate all CiA301 specific type functions into separate files
 
-### Breaking Changed
+### Attention: This release introduces a breaking change:
 
-- Handle basic type implementations with separate type function files
-- Change Object entry flags from `CO_OBJ_DNPRW` to `CO_OBJ_DNAPRW`
+Handle basic type implementations with separate type function files and in consequence enlarge the object entry flags from `CO_OBJ_DNPRW` to `CO_OBJ_DNAPRW`. This change required adjustments in existing object dictionary definitions:
+
+```c
+old:
+  {CO_KEY(0x1001, 0, CO_UNSIGNED8 |CO_OBJ____R_), 0, (CO_DATA)(&Obj1001_00_08)},
+
+new:
+  {CO_KEY(0x1001, 0, CO_OBJ_____R_), CO_TUNSIGNED8, (CO_DATA)(&Obj1001_00_08)},
+    add an underscore or A ---^         ^
+    ensure type starts with CO_T -------'
+```
 
 ## [4.3.1] - 2022-07-14
 

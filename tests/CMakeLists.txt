@@ -14,25 +14,17 @@
 #   limitations under the License.
 #******************************************************************************
 
-# Preamble
-cmake_minimum_required(VERSION 3.15)
-project(CanopenStack)
-enable_testing()
-enable_language(C ASM)
+add_library(TestEnv)
+target_sources(TestEnv
+  PRIVATE
+    env/callbacks.c
+)
+target_include_directories(TestEnv
+  PUBLIC
+    env
+)
+target_link_libraries(TestEnv Canopen)
 
-# Project wide setup
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED YES)
-set(CMAKE_C_EXTENSIONS NO)
-
-# Main targets built by this project
-add_subdirectory(canopen)
-add_subdirectory(driver)
-
-# Typically needed only if we are the top level project
-if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-add_subdirectory(tests)      # unit tests (object type modules)
-add_subdirectory(testsuite)  # integration tests (module interactions)
-add_subdirectory(example)    # validation tests (demo apps)
-endif()
+# object type unit tests
+add_subdirectory(basic)
+add_subdirectory(cia301)
