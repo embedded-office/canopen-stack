@@ -31,5 +31,6 @@ add_test(NAME co_emcy_hist/write/sub_1      COMMAND co_emcy_hist write_sub_1    
 add_test(NAME co_emcy_hist/write/bad_node   COMMAND co_emcy_hist write_bad_node  )
 add_test(NAME co_emcy_hist/init/hist_min    COMMAND co_emcy_hist init_hist_min   )
 add_test(NAME co_emcy_hist/init/hist_8      COMMAND co_emcy_hist init_hist_8     )
+add_test(NAME co_emcy_hist/init/bad_index   COMMAND co_emcy_hist init_bad_index  )
 add_test(NAME co_emcy_hist/init/bad_hist    COMMAND co_emcy_hist init_bad_hist   )
 add_test(NAME co_emcy_hist/reset/unused     COMMAND co_emcy_hist reset_unused    )
