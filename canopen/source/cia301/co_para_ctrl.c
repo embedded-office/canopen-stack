@@ -132,17 +132,15 @@ static CO_ERR COTParaCtrlInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_ERR result = CO_ERR_TYPE_INIT;
 
-    UNUSED(node);
-
     /* check for parameter store object */
     if (CO_DEV(COT_OBJECT_STORE, 0) == CO_GET_DEV(obj->Key)) {
-        /* nothing to do */
+        CONodeParaLoad(node, CO_RESET_COM);
+        CONodeParaLoad(node, CO_RESET_NODE);
     }
 
     /* check for parameter restore object */
     if (CO_DEV(COT_OBJECT_RESTORE, 0) == CO_GET_DEV(obj->Key)) {
-        CONodeParaLoad(node, CO_RESET_COM);
-        CONodeParaLoad(node, CO_RESET_NODE);
+        /* nothing to do */
     }
 
     return (result);
