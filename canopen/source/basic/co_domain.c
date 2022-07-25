@@ -28,12 +28,13 @@ static uint32_t COTDomainSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uin
 static CO_ERR   COTDomainRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTDomainInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
+static CO_ERR   COTDomainReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTDomain = { COTDomainSize, COTDomainInit, COTDomainRead, COTDomainWrite, 0 };
+const CO_OBJ_TYPE COTDomain = { COTDomainSize, COTDomainInit, COTDomainRead, COTDomainWrite, COTDomainReset };
 
 /******************************************************************************
 * FUNCTIONS
@@ -119,5 +120,17 @@ static CO_ERR COTDomainInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 
     dom = (CO_OBJ_DOM *)(obj->Data);
     dom->Offset = 0;
+    return (CO_ERR_NONE);
+}
+
+static CO_ERR COTDomainReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para)
+{
+    CO_OBJ_DOM *dom;
+
+    UNUSED(node);
+    ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
+
+    dom = (CO_OBJ_DOM *)(obj->Data);
+    dom->Offset = para;
     return (CO_ERR_NONE);
 }

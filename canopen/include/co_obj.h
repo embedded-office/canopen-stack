@@ -306,6 +306,25 @@ typedef struct CO_OBJ_TYPE_T {
 */
 CO_ERR COObjInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
+/*! \brief  RESET OBJECT ENTRY
+*
+*    This function resets the object dictionary entry and the underlying
+*    type module.
+*
+* \param obj
+*    pointer to the object dictionary entry
+*
+* \param node
+*    reference to parent node
+*
+* \param para
+*    reset parameter (type specific use)
+*
+* \retval   =CO_ERR_NONE    Successfully operation
+* \retval  !=CO_ERR_NONE    An error is detected
+*/
+CO_ERR COObjReset (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para);
+
 /*! \brief  START READ BUFFER FROM OBJECT ENTRY
 *
 *    This function starts the read operation at the beginning of the byte

@@ -64,7 +64,7 @@ static uint32_t COTUInt16Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
 
 static CO_ERR COTUInt16Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
-    CO_ERR  result = CO_ERR_NONE;
+    CO_ERR   result = CO_ERR_NONE;
     uint16_t value;
 
     UNUSED(node);
@@ -89,7 +89,7 @@ static CO_ERR COTUInt16Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
 
 static CO_ERR COTUInt16Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
-    CO_ERR  result = CO_ERR_NONE;
+    CO_ERR   result = CO_ERR_NONE;
     uint16_t value;
     uint16_t oldValue;
 

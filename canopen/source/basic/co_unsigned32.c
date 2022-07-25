@@ -103,7 +103,7 @@ static CO_ERR COTUInt32Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
             value -= node->NodeId;
         }
         if (CO_IS_DIRECT(obj->Key) != 0) {
-            oldValue = obj->Data;
+            oldValue = (uint32_t)obj->Data;
             obj->Data = (CO_DATA)(value);
         } else {
             oldValue = *((uint32_t *)(obj->Data));

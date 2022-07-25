@@ -27,12 +27,13 @@
 static uint32_t COTStringSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 static CO_ERR   COTStringRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTStringInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
+static CO_ERR   COTStringReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTString = { COTStringSize, COTStringInit, COTStringRead, 0, 0 };
+const CO_OBJ_TYPE COTString = { COTStringSize, COTStringInit, COTStringRead, 0, COTStringReset };
 
 /******************************************************************************
 * FUNCTIONS
@@ -93,5 +94,17 @@ static CO_ERR COTStringInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 
     str = (CO_OBJ_STR *)(obj->Data);
     str->Offset = 0;
+    return (CO_ERR_NONE);
+}
+
+static CO_ERR COTStringReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para)
+{
+    CO_OBJ_STR *str;
+
+    UNUSED(node);
+    ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
+
+    str = (CO_OBJ_STR *)(obj->Data);
+    str->Offset = para;
     return (CO_ERR_NONE);
 }

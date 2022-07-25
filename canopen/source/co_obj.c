@@ -21,27 +21,6 @@
 #include "co_core.h"
 
 /******************************************************************************
-* PRIVATE FUNCTION PROTOTYPES
-******************************************************************************/
-
-static void COObjReset (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
-
-/******************************************************************************
-* PRIVATE HELPER FUNCTIONS
-******************************************************************************/
-
-static void COObjReset (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
-{
-    const CO_OBJ_TYPE *type;
-
-    /* obj, node and obj->type already checked by calling function */
-    type = obj->Type;
-    if (type->Init != NULL) {
-        (void)type->Init(obj, node);
-    }
-}
-
-/******************************************************************************
 * PROTECTED API FUNCTIONS
 ******************************************************************************/
 
@@ -61,7 +40,23 @@ CO_ERR COObjInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
     return (result);
 }
 
-CO_ERR COObjRdBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
+CO_ERR COObjReset (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t para)
+{
+    CO_ERR result = CO_ERR_NONE;      /* optional function: no default error */
+    const CO_OBJ_TYPE *type;
+
+    ASSERT_PTR_ERR(obj,       CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(obj->Type, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(node,      CO_ERR_BAD_ARG);
+
+    type = obj->Type;
+    if (type->Reset != NULL) {
+        result = type->Reset(obj, node, para);
+    }
+    return (result);
+}
+
+CO_ERR COObjRdBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *type;
     CO_ERR result = CO_ERR_OBJ_ACC;
@@ -73,13 +68,13 @@ CO_ERR COObjRdBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *bu
 
     type = obj->Type;
     if (type->Read != NULL) {
-        COObjReset(obj, node);
-        result = type->Read(obj, node, (void *)buffer, len);
+        (void)COObjReset(obj, node, 0);
+        result = type->Read(obj, node, (void *)buffer, size);
     }
     return (result);
 }
 
-CO_ERR COObjRdBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
+CO_ERR COObjRdBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *type;
     CO_ERR result = CO_ERR_OBJ_ACC;
@@ -91,12 +86,12 @@ CO_ERR COObjRdBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buf
 
     type = obj->Type;
     if (type->Read != NULL) {
-        result = type->Read(obj, node, (void *)buffer, len);
+        result = type->Read(obj, node, (void *)buffer, size);
     }
     return (result);
 }
 
-CO_ERR COObjWrBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
+CO_ERR COObjWrBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *type;
     CO_ERR result = CO_ERR_OBJ_ACC;
@@ -108,13 +103,13 @@ CO_ERR COObjWrBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *bu
 
     type = obj->Type;
     if (type->Write != NULL) {
-        COObjReset(obj, node);
-        result = type->Write(obj, node, (void *)buffer, len);
+        (void)COObjReset(obj, node, 0);
+        result = type->Write(obj, node, (void *)buffer, size);
     }
     return (result);
 }
 
-CO_ERR COObjWrBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t len)
+CO_ERR COObjWrBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *type;
     CO_ERR result = CO_ERR_OBJ_ACC;
@@ -126,7 +121,7 @@ CO_ERR COObjWrBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buf
 
     type = obj->Type;
     if (type->Write != NULL) {
-        result = type->Write(obj, node, (void *)buffer, len);
+        result = type->Write(obj, node, (void *)buffer, size);
     }
     return (result);
 }
