@@ -27,7 +27,7 @@
 
 void test_size_unknown(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x11223344;
     CO_OBJ   Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     uint32_t size;
@@ -39,7 +39,7 @@ void test_size_unknown(void)
 
 void test_size_known(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x11223344;
     CO_OBJ   Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     uint32_t size;
@@ -51,7 +51,7 @@ void test_size_known(void)
 
 void test_bad_size(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x1122;
     CO_OBJ   Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     uint32_t size;
@@ -67,7 +67,7 @@ void test_bad_size(void)
 
 void test_read_ref(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x11223344;
     CO_OBJ   Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     uint32_t var;
@@ -81,7 +81,7 @@ void test_read_ref(void)
 
 void test_read_direct(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     CO_OBJ   Obj = { CO_KEY(0, 0, CO_OBJ_D___RW), CO_TUNSIGNED32, (CO_DATA)(0x22334455)};
     uint32_t var;
     CO_ERR   err;
@@ -94,7 +94,7 @@ void test_read_direct(void)
 
 void test_read_nodeid(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x33445566;
     CO_OBJ   Obj = { CO_KEY(0, 0, CO_OBJ__N__RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     uint32_t var;
@@ -125,7 +125,7 @@ void test_read_bad_node(void)
 
 void test_write_ref(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x11223344;
     CO_OBJ   Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     uint32_t var = 0x22334455;
@@ -139,7 +139,7 @@ void test_write_ref(void)
 
 void test_write_direct(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     CO_OBJ   Obj = { CO_KEY(0, 0, CO_OBJ_D___RW), CO_TUNSIGNED32, (CO_DATA)(0x22334455)};
     uint32_t var = 0x33445566;
     CO_ERR   err;
@@ -152,7 +152,7 @@ void test_write_direct(void)
 
 void test_write_nodeid(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x33445566;
     CO_OBJ   Obj = { CO_KEY(0, 0, CO_OBJ__N__RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     uint32_t var = 0x44556677 + 7;
@@ -183,7 +183,7 @@ void test_write_bad_node(void)
 
 void test_init_unused(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x11223344;
     CO_OBJ   Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     CO_ERR   err;
@@ -200,7 +200,7 @@ void test_init_unused(void)
 
 void test_reset_unused(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x11223344;
     CO_OBJ   Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)(&data)};
     CO_ERR   err;

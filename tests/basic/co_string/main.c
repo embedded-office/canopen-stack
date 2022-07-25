@@ -27,7 +27,7 @@
 
 void test_size_unknown(void)
 {
-    CO_NODE    AppNode;
+    CO_NODE    AppNode = { 0 };
     uint8_t    mem[8] = { 'a','b','c','d','e','f','g', 0 };
     CO_OBJ_STR data = { 0, (uint8_t *)&mem[0] };
     CO_OBJ     Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TSTRING, (CO_DATA)(&data)};
@@ -40,7 +40,7 @@ void test_size_unknown(void)
 
 void test_size_known(void)
 {
-    CO_NODE    AppNode;
+    CO_NODE    AppNode = { 0 };
     uint8_t    mem[8] = { 'a','b','c','d','e','f','g', 0 };
     CO_OBJ_STR data = { 0, (uint8_t *)&mem[0] };
     CO_OBJ     Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TSTRING, (CO_DATA)(&data)};
@@ -53,7 +53,7 @@ void test_size_known(void)
 
 void test_bad_size(void)
 {
-    CO_NODE    AppNode;
+    CO_NODE    AppNode = { 0 };
     uint8_t    mem[8] = { 'a','b','c','d','e','f','g', 0 };
     CO_OBJ_STR data = { 0, (uint8_t *)&mem[0] };
     CO_OBJ     Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TSTRING, (CO_DATA)(&data)};
@@ -70,7 +70,7 @@ void test_bad_size(void)
 
 void test_read_ref(void)
 {
-    CO_NODE    AppNode;
+    CO_NODE    AppNode = { 0 };
     uint8_t    mem[8] = { 'a','b','c','d','e','f','g', 0 };
     uint8_t    var[8] = { 0 };
     CO_OBJ_STR data = { 0, (uint8_t *)&mem[0] };
@@ -107,7 +107,7 @@ void test_read_bad_node(void)
 
 void test_write_ref(void)
 {
-    CO_NODE    AppNode;
+    CO_NODE    AppNode = { 0 };
     uint8_t    mem[8] = { 0 };
     uint8_t    var[8] = { 'a','b','c','d','e','f','g', 0 };
     CO_OBJ_STR data = { 0, (uint8_t *)&mem[0] };
@@ -144,7 +144,7 @@ void test_write_bad_node(void)
 
 void test_init_offset(void)
 {
-    CO_NODE    AppNode;
+    CO_NODE    AppNode = { 0 };
     uint8_t    mem[8] = { 'a','b','c','d','e','f','g', 0 };
     CO_OBJ_STR data = { 4, (uint8_t *)&mem[0] };
     CO_OBJ     Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TSTRING, (CO_DATA)(&data)};
@@ -162,7 +162,7 @@ void test_init_offset(void)
 
 void test_reset_offset(void)
 {
-    CO_NODE    AppNode;
+    CO_NODE    AppNode = { 0 };
     uint8_t    mem[8] = { 'a','b','c','d','e','f','g', 0 };
     CO_OBJ_STR data = { 4, (uint8_t *)&mem[0] };
     CO_OBJ     Obj  = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TSTRING, (CO_DATA)(&data)};

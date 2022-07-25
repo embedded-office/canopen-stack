@@ -27,7 +27,7 @@
 
 void test_size_sub_0(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint8_t  data;
     CO_OBJ   Obj = { CO_KEY(0x1003, 0, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data)};
     uint32_t size;
@@ -39,7 +39,7 @@ void test_size_sub_0(void)
 
 void test_size_sub_1(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data;
     CO_OBJ   Obj = { CO_KEY(0x1003, 1, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data)};
     uint32_t size;
@@ -51,7 +51,7 @@ void test_size_sub_1(void)
 
 void test_size_bad_size(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data;
     CO_OBJ   Obj = { CO_KEY(0x1003, 1, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data)};
     uint32_t size;
@@ -67,7 +67,7 @@ void test_size_bad_size(void)
 
 void test_read_sub_0(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint8_t  data = 0x22;
     uint8_t  val  = 0;
     CO_ERR   err;
@@ -81,7 +81,7 @@ void test_read_sub_0(void)
 
 void test_read_sub_1(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x22334455;
     uint32_t val  = 0;
     CO_ERR   err;
@@ -98,7 +98,6 @@ void test_read_sub_1(void)
 
 void test_read_bad_node(void)
 {
-    CO_NODE  AppNode;
     uint8_t  data = 0x33;
     uint8_t  val  = 0x44;
     CO_ERR   err;
@@ -116,7 +115,7 @@ void test_read_bad_node(void)
 
 void test_write_sub_0(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint8_t  data = 0x22;
     uint8_t  val  = 0;
     CO_ERR   err;
@@ -129,7 +128,7 @@ void test_write_sub_0(void)
 
 void test_write_bad_sub_0(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint8_t  data = 0x33;
     uint8_t  val  = 0x44;
     CO_ERR   err;
@@ -142,7 +141,7 @@ void test_write_bad_sub_0(void)
 
 void test_write_sub_1(void)
 {
-    CO_NODE  AppNode;
+    CO_NODE  AppNode = { 0 };
     uint32_t data = 0x33445566;
     uint32_t val  = 0;
     CO_ERR   err;
@@ -155,7 +154,6 @@ void test_write_sub_1(void)
 
 void test_write_bad_node(void)
 {
-    CO_NODE  AppNode;
     uint8_t  data = 0x33;
     uint8_t  val  = 0;
     CO_ERR   err;
@@ -172,7 +170,7 @@ void test_write_bad_node(void)
 
 void test_init_hist_min(void)
 {
-    CO_NODE AppNode;
+    CO_NODE AppNode = { 0 };
     uint8_t data8;
     uint8_t data32;
     CO_ERR  err;
@@ -190,7 +188,7 @@ void test_init_hist_min(void)
 
 void test_init_hist_8(void)
 {
-    CO_NODE AppNode;
+    CO_NODE AppNode = { 0 };
     uint8_t data8 = 3;
     uint8_t data32;   /* just for testing initialization: one data for all */
     CO_ERR  err;
@@ -210,7 +208,7 @@ void test_init_hist_8(void)
 
 void test_init_bad_hist(void)
 {
-    CO_NODE AppNode;
+    CO_NODE AppNode = { 0 };
     uint8_t data8;
     CO_ERR  err;
     CO_OBJ  Obj = { CO_KEY(0x1003, 0, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data8)};
@@ -228,7 +226,7 @@ void test_init_bad_hist(void)
 
 void test_reset_unused(void)
 {
-    CO_NODE AppNode;
+    CO_NODE AppNode = { 0 };
     uint8_t data8;
     CO_ERR  err;
     CO_OBJ  Obj = { CO_KEY(0x1003, 0, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data8)};
