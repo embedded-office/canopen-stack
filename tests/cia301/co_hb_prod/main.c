@@ -145,7 +145,6 @@ void test_init_check(void)
 {
     CO_NODE  AppNode = { 0 };
     uint16_t data = 0;
-    uint16_t val  = 0;
     CO_ERR   err;
     CO_OBJ   Obj = { CO_KEY(0x1017, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)(&data)};
     AppNode.Nmt.Tmr = -1;
@@ -159,7 +158,6 @@ void test_init_bad_index(void)
 {
     CO_NODE  AppNode = { 0 };
     uint16_t data = 0x2233;
-    uint16_t val  = 0;
     CO_ERR   err;
     CO_OBJ   Obj = { CO_KEY(0x3456, 0, CO_OBJ_____RW), CO_THB_PROD, (CO_DATA)(&data)};
 
