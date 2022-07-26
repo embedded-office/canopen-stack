@@ -18,18 +18,8 @@
 * INCLUDES
 ******************************************************************************/
 
-#define CONmtHbConsActivate Stub_CONmtHbConsActivate
 #include "co_core.h"
 #include "acutest.h"
-
-/******************************************************************************
-* STUB FUNCTIONS
-******************************************************************************/
-
-CO_ERR CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
-{
-    return CO_ERR_NONE;
-}
 
 /******************************************************************************
 * TEST CASES - SIZE
