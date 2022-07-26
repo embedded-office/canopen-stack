@@ -104,16 +104,17 @@ static CO_ERR COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
     uint8_t     nodeid;
 
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
-    ASSERT_EQU_ERR(size, COT_ENTRY_SIZE, CO_ERR_BAD_ARG);
 
     if (CO_GET_SUB(obj->Key) == 0) {
         result = uint8->Write(obj, node, buffer, size);
     } else {
-        hbc    = (CO_HBCONS *)(obj->Data);
-        value  = *((uint32_t *)buffer);
-        time   = (uint16_t)value;
-        nodeid = (uint8_t)(value >> 16);
-        result = CONmtHbConsActivate(hbc, time, nodeid);
+        if (size == COT_ENTRY_SIZE) {
+            hbc    = (CO_HBCONS *)(obj->Data);
+            value  = *((uint32_t *)buffer);
+            time   = (uint16_t)value;
+            nodeid = (uint8_t)(value >> 16);
+            result = CONmtHbConsActivate(hbc, time, nodeid);
+        }
     }
     return (result);
 }
@@ -121,7 +122,7 @@ static CO_ERR COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
 static CO_ERR COTNmtHbConsInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
-    CO_ERR     err;
+    CO_ERR     result = CO_ERR_TYPE_INIT;
     CO_HBCONS *hbc;
     uint8_t    num;
 
@@ -137,21 +138,20 @@ static CO_ERR COTNmtHbConsInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
             /* check if consumer subindex exists */
             obj = CODictFind(&node->Dict, CO_DEV(COT_OBJECT, num));
             if ((obj == 0) || (obj->Data == (CO_DATA)0)){
-                return(CO_ERR_TYPE_INIT);
+                return (CO_ERR_TYPE_INIT);
             }
 
             /* activate the consumer subindex for this node */
             hbc = (CO_HBCONS *)(obj->Data);
             hbc->Node = node;
-            err = CONmtHbConsActivate(hbc, hbc->Time, hbc->NodeId);
-            if (err != CO_ERR_NONE) {
-                return(CO_ERR_TYPE_INIT);
+            result = CONmtHbConsActivate(hbc, hbc->Time, hbc->NodeId);
+            if (result != CO_ERR_NONE) {
+                return (CO_ERR_TYPE_INIT);
             }
-
             num--;
         }
     }
-    return (CO_ERR_NONE);
+    return (result);
 }
 
 /******************************************************************************
