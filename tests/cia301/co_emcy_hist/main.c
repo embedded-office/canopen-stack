@@ -170,11 +170,11 @@ void test_write_bad_node(void)
 
 void test_init_hist_min(void)
 {
-    CO_NODE AppNode = { 0 };
-    uint8_t data8  = 1;
-    uint8_t data32 = 0x11223344;
-    CO_ERR  err;
-    CO_OBJ  Obj[2] = {
+    CO_NODE  AppNode = { 0 };
+    uint8_t  data8  = 1;
+    uint32_t data32 = 0x11223344;
+    CO_ERR   err;
+    CO_OBJ   Obj[2] = {
         { CO_KEY(0x1003, 0, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data8)},
         { CO_KEY(0x1003, 1, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data32)},
     };
@@ -188,11 +188,11 @@ void test_init_hist_min(void)
 
 void test_init_hist_8(void)
 {
-    CO_NODE AppNode = { 0 };
-    uint8_t data8 = 3;
-    uint8_t data32 = 0x11223344;  /* dummy initialization: one data for all */
-    CO_ERR  err;
-    CO_OBJ  Obj[4] = {
+    CO_NODE  AppNode = { 0 };
+    uint8_t  data8 = 3;
+    uint32_t data32 = 0x11223344;  /* dummy initialization: one data for all */
+    CO_ERR   err;
+    CO_OBJ   Obj[4] = {
         { CO_KEY(0x1003, 0, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data8)},
         { CO_KEY(0x1003, 1, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data32)},
         { CO_KEY(0x1003, 2, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data32)},
@@ -208,11 +208,11 @@ void test_init_hist_8(void)
 
 void test_init_bad_index(void)
 {
-    CO_NODE AppNode = { 0 };
-    uint8_t data8 = 1;
-    uint8_t data32 = 0x11223344;
-    CO_ERR  err;
-    CO_OBJ  Obj[2] = {
+    CO_NODE  AppNode = { 0 };
+    uint8_t  data8 = 1;
+    uint32_t data32 = 0x11223344;
+    CO_ERR   err;
+    CO_OBJ   Obj[2] = {
         { CO_KEY(0x2123, 0, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data8)},
         { CO_KEY(0x2123, 1, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data32)},
     };
@@ -243,11 +243,11 @@ void test_init_bad_hist(void)
 
 void test_reset_unused(void)
 {
-    CO_NODE AppNode = { 0 };
-    uint8_t data8  = 1;
-    uint8_t data32 = 0x11223344;
-    CO_ERR  err;
-    CO_OBJ  Obj[2] = {
+    CO_NODE  AppNode = { 0 };
+    uint8_t  data8  = 1;
+    uint32_t data32 = 0x11223344;
+    CO_ERR   err;
+    CO_OBJ   Obj[2] = {
         { CO_KEY(0x1003, 0, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data8)},
         { CO_KEY(0x1003, 1, CO_OBJ_____RW), CO_TEMCY_HIST, (CO_DATA)(&data32)},
     };
