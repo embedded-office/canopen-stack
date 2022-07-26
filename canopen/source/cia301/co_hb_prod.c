@@ -74,7 +74,7 @@ static CO_ERR COTNmtHbProdRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
 static CO_ERR COTNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint16 = CO_TUNSIGNED16;
-    CO_ERR    result = CO_ERR_OBJ_ACC;
+    CO_ERR    result = CO_ERR_TYPE_WR;
     CO_TMR   *tmr;
     CO_NMT   *nmt;
     uint32_t  ticks;

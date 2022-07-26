@@ -18,3 +18,4 @@
 add_subdirectory(co_emcy_hist)
 add_subdirectory(co_emcy_id)
 add_subdirectory(co_hb_cons)
+add_subdirectory(co_hb_prod)
