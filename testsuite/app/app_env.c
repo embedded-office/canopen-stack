@@ -468,7 +468,7 @@ int16_t TS_DomainCheck(CO_OBJ_DOM *dom, uint8_t start, uint8_t missing)
 {
     int16_t  result = 0;
     uint32_t size   = dom->Size;
-    uint8_t  data   = 0;
+    uint8_t  data;
     uint8_t  value  = start;
     uint8_t *ptr    = dom->Start;
 
@@ -480,7 +480,6 @@ int16_t TS_DomainCheck(CO_OBJ_DOM *dom, uint8_t start, uint8_t missing)
                 result = value;
             }
         } else {
-            data = *ptr;
             ptr++;
         }
         size--;

@@ -160,7 +160,7 @@ void test_write_bad_node(void)
 * TEST CASES - INIT
 ******************************************************************************/
 
-void test_init_consumer(void)
+void test_init_sub_0(void)
 {
     CO_NODE   AppNode = { 0 };
     uint8_t   data8  = 1;
@@ -175,6 +175,25 @@ void test_init_consumer(void)
     CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
 
     err = COObjInit(&Obj[0], &AppNode);
+
+    TEST_CHECK(err == CO_ERR_NONE);
+}
+
+void test_init_sub_1(void)
+{
+    CO_NODE   AppNode = { 0 };
+    uint8_t   data8  = 1;
+    CO_HBCONS data = { 0 };
+    CO_ERR    err;
+    CO_OBJ    Obj[2] = {
+        { CO_KEY(0x1016, 0, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data8)},
+        { CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data)},
+    };
+    data.NodeId = 0x11;
+    data.Time = 0x2233;
+    CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
+
+    err = COObjInit(&Obj[1], &AppNode);
 
     TEST_CHECK(err == CO_ERR_NONE);
 }
@@ -233,7 +252,8 @@ TEST_LIST = {
     { "write_sub_0",     test_write_sub_0     },
     { "write_consumer",  test_write_consumer  },
     { "write_bad_node",  test_write_bad_node  },
-    { "init_consumer",   test_init_consumer   },
+    { "init_sub_0",      test_init_sub_0      },
+    { "init_sub_1",      test_init_sub_1      },
     { "init_bad_index",  test_init_bad_index  },
     { "reset_unused",    test_reset_unused    },
     { NULL, NULL }
