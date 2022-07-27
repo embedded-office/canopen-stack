@@ -104,7 +104,7 @@ If this parameter group is controllable from the CAN network side, the standard 
 ```c
 const CO_OBJ DemoOD[] = {
     :
-  { CO_KEY(0x1010, 1, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&DemoParaObj) },
+  { CO_KEY(0x1010, 1, CO_OBJ_____RW), CO_TPARA_STORE, (CO_DATA)(&DemoParaObj) },
     :
 };
 ```

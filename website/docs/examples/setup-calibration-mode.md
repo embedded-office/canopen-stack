@@ -125,7 +125,7 @@ Finally, in the standard parameter store/restore entries, we use a separate subi
 ```c
 const CO_OBJ ExampleObjDir[] = {
     :
-  { CO_KEY(0x1010, 2, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&CalParaObj) },
+  { CO_KEY(0x1010, 2, CO_OBJ_____RW), CO_TPARA_STORE, (CO_DATA)(&CalParaObj) },
     :
 };
 ```

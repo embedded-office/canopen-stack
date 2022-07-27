@@ -46,7 +46,7 @@ The changes in the NVM of the given parameter group will be replaced with the de
 **Prototype**
 
 ```c
-void COParaRestore(CO_PARA *pg, CO_NODE *node);
+CO_ERR COParaRestore(CO_PARA *pg, CO_NODE *node);
 ```
 
 **Arguments**
@@ -58,7 +58,8 @@ void COParaRestore(CO_PARA *pg, CO_NODE *node);
 
 **Returned Value**
 
-- none
+- `==CO_ERR_NONE` : successful operation
+- `!=CO_ERR_NONE` : an error is detected
 
 #### COParaStore()
 
@@ -67,7 +68,7 @@ The whole parameter group will be stored in NVM by calling the NVM driver functi
 **Prototype**
 
 ```c
-void COParaStore(CO_PARA *pg, CO_NODE *node);
+CO_ERR COParaStore(CO_PARA *pg, CO_NODE *node);
 ```
 
 **Arguments**
@@ -79,4 +80,5 @@ void COParaStore(CO_PARA *pg, CO_NODE *node);
 
 **Returned Value**
 
-- none
+- `==CO_ERR_NONE` : successful operation
+- `!=CO_ERR_NONE` : an error is detected

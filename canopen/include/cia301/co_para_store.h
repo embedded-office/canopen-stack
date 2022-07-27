@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CO_PARA_CTRL_H_
-#define CO_PARA_CTRL_H_
+#ifndef CO_PARA_STORE_H_
+#define CO_PARA_STORE_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -33,36 +33,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TPARA_CTRL  ((const CO_OBJ_TYPE *)&COTParaCtrl)
-
-#define CO_PARA____   0x0000     /*!< disable                                */
-#define CO_PARA___E   0x0001     /*!< enable  (on command)                   */
-#define CO_PARA__A_   0x0002     /*!< enable  (autonomously)                 */
-#define CO_PARA__AE   0x0003     /*!< enable  (autonomously and on command)  */
-
-/******************************************************************************
-* PUBLIC TYPES
-******************************************************************************/
-
-/*! \brief PARAMETER GROUP INFO
-*
-*    This structure holds the informations of a parameter group. The
-*    parameter group is used within the special function parameter object in
-*    an object dictionary.
-*
-* \note
-*    This structure may be placed into ROM to reduce RAM usage.
-*/
-typedef struct CO_PARA_T {
-    uint32_t             Offset;   /*!< Offset in non-volatile memory area   */
-    uint32_t             Size;     /*!< Size of parameter memory block       */
-    uint8_t             *Start;    /*!< Start of parameter memory block      */
-    uint8_t             *Default;  /*!< Start of default memory block        */
-    enum CO_NMT_RESET_T  Type;     /*!< Parameter reset type                 */
-    void                *Ident;    /*!< Ptr to User Ident-Code               */
-    uint32_t             Value;    /*!< value when reading parameter object  */
-
-} CO_PARA;
+#define CO_TPARA_STORE  ((const CO_OBJ_TYPE *)&COTParaStore)
 
 /******************************************************************************
 * PUBLIC CONSTANTS
@@ -75,7 +46,7 @@ typedef struct CO_PARA_T {
 *    to provide the store and restore feature of a configurable parameter
 *    group.
 */
-extern const CO_OBJ_TYPE COTParaCtrl;
+extern const CO_OBJ_TYPE COTParaStore;
 
 /******************************************************************************
 * PROTECTED API FUNCTIONS
@@ -119,48 +90,14 @@ CO_ERR CONodeParaLoad(struct CO_NODE_T *node, CO_NMT_RESET type);
 *
 * \param node
 *    Ptr to node info
+*
+* \retval  ==CO_ERR_NONE    loading successful
+* \retval  !=CO_ERR_NONE    an error is detected and function aborted
 */
-void COParaStore(CO_PARA *pg, struct CO_NODE_T *node);
-
-/*! \brief PARAMETER RESTORE DEFAULT
-*
-*    This function is responsible for removing the changes on the parameter
-*    values of the given parameter group. The changes in NVM of the given
-*    parameter group will be replaced with the default values by calling
-*    the user callback function \ref COParaDefault().
-*
-* \param pg
-*    Ptr to parameter group info
-*
-* \param node
-*    Ptr to node info
-*/
-void COParaRestore(CO_PARA *pg, struct CO_NODE_T *node);
-
-/******************************************************************************
-* CALLBACK FUNCTIONS
-******************************************************************************/
-
-/*! \brief SET DEFAULT PARAMETER VALUES CALLBACK
-*
-*    This callback function will be called during restoring the default values
-*    of a parameter group. The function is responsible for setting the factory
-*    defaults in the current parameter group memory.
-*
-* \note
-*    The parameter group info pointer is checked to be valid before calling
-*    this function.
-*
-* \param pg
-*    Ptr to parameter group info
-*
-* \retval  =0    parameter loading successful
-* \retval  <0    error is detected and function aborted
-*/
-extern int16_t COParaDefault(CO_PARA *pg);
+CO_ERR COParaStore(CO_PARA *pg, struct CO_NODE_T *node);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 
-#endif  /* #ifndef CO_PARA_CTRL_H_ */
+#endif  /* #ifndef CO_PARA_STORE_H_ */

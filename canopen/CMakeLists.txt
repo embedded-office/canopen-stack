@@ -65,7 +65,8 @@ target_sources(Canopen
     source/cia301/co_emcy_id.c
     source/cia301/co_hb_cons.c
     source/cia301/co_hb_prod.c
-    source/cia301/co_para_ctrl.c
+    source/cia301/co_para_store.c
+    source/cia301/co_para_restore.c
     source/cia301/co_pdo_event.c
     source/cia301/co_pdo_id.c
     source/cia301/co_pdo_map.c

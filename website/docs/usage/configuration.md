@@ -100,15 +100,15 @@ The following descriptions explains the details of the table members:
 The object entries, handling the saving and restoring of parameters, shall be set for the example to the following values:
 
 ```c
-{ CO_KEY(0x1010, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(0x03)        },
-{ CO_KEY(0x1010, 1, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&AllParaObj) },
-{ CO_KEY(0x1010, 2, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&ComParaObj) },
-{ CO_KEY(0x1010, 3, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&AppParaObj) },
+{ CO_KEY(0x1010, 0, CO_OBJ_D___R_), CO_TPARA_STORE, (CO_DATA)(0x03)        },
+{ CO_KEY(0x1010, 1, CO_OBJ_____RW), CO_TPARA_STORE, (CO_DATA)(&AllParaObj) },
+{ CO_KEY(0x1010, 2, CO_OBJ_____RW), CO_TPARA_STORE, (CO_DATA)(&ComParaObj) },
+{ CO_KEY(0x1010, 3, CO_OBJ_____RW), CO_TPARA_STORE, (CO_DATA)(&AppParaObj) },
 
-{ CO_KEY(0x1011, 0, CO_OBJ_D___R_), CO_TUNSIGNED8, (CO_DATA)(0x03)        },
-{ CO_KEY(0x1011, 1, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&AllParaObj) },
-{ CO_KEY(0x1011, 2, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&ComParaObj) },
-{ CO_KEY(0x1011, 3, CO_OBJ_____RW), CO_TPARA_CTRL, (CO_DATA)(&AppParaObj) },
+{ CO_KEY(0x1011, 0, CO_OBJ_D___R_), CO_TPARA_RESTORE, (CO_DATA)(0x03)        },
+{ CO_KEY(0x1011, 1, CO_OBJ_____RW), CO_TPARA_RESTORE, (CO_DATA)(&AllParaObj) },
+{ CO_KEY(0x1011, 2, CO_OBJ_____RW), CO_TPARA_RESTORE, (CO_DATA)(&ComParaObj) },
+{ CO_KEY(0x1011, 3, CO_OBJ_____RW), CO_TPARA_RESTORE, (CO_DATA)(&AppParaObj) },
 ```
 
 The single parameters are most likely used within the object directory. The example definition of an object entry is shown for one parameter:
@@ -295,32 +295,35 @@ The object entry type function interface [`CO_OBJ_TYPE *`] shall be set to one o
 
 ##### Basic types
 
-| Object Type     | Description                           | Data Variable |
-| --------------- | ------------------------------------- | ------------- |
-| `CO_TUNSIGNED8` | Basic 8bit type                       | `uint8_t`     |
-| `CO_TUNSIGNED16`| Basic 16bit type                      | `uint16_t`    |
-| `CO_TUNSIGNED32`| Basic 32bit type                      | `uint32_t`    |
-| `CO_TDOMAIN`    | Domain entry                          | `CO_OBJ_DOM`  |
-| `CO_TSTRING`    | Unlimited read-only string            | `CO_OBJ_STR`  |
+| Object Type     | Description                | Data Variable |
+| --------------- | -------------------------- | ------------- |
+| `CO_TUNSIGNED8` | Basic 8bit type            | `uint8_t`     |
+| `CO_TUNSIGNED16`| Basic 16bit type           | `uint16_t`    |
+| `CO_TUNSIGNED32`| Basic 32bit type           | `uint32_t`    |
+| `CO_TDOMAIN`    | Domain entry               | `CO_OBJ_DOM`  |
+| `CO_TSTRING`    | Unlimited read-only string | `CO_OBJ_STR`  |
 
 ##### CiA301 Specific Types
 
-| Object Type     | Description                           | Data Variable |
-| --------------- | ------------------------------------- | ------------- |
-| `CO_TEMCY_HIST` | EMCY history entry (subindex 0)       | `uint8_t`     |
-| `CO_TEMCY_HIST` | EMCY history entry (subindex 1..254)  | `uint32_t`    |
-| `CO_TEMCY_ID`   | Dynamic EMCY COB-ID                   | `uint32_t`    |
-| `CO_TEVENT`     | PDO event timer entry                 | `uint16_t`    |
-| `CO_THB_CONS`   | Heartbeat consumer entry              | `CO_HBCONS`   |
-| `CO_THB_PROD`   | Heartbeat producer entry              | `uint16_t`    |
-| `CO_TPARA_CTRL` | Parameter group store/restore entry   | `CO_PARA`     |
-| `CO_TPDO_ID`    | Dynamic PDO COB-ID entry              | `uint32_t`    |
-| `CO_TPDO_MAP`   | Dynamic PDO mapping entry             | `uint32_t`    |
-| `CO_TPDO_NUM`   | Dynamic PDO number of mapping entries | `uint8_t`     |
-| `CO_TPDO_TYPE`  | Dynamic PDO transmission type entry   | `uint8_t`     |
-| `CO_TSDO_ID`    | Dynamic SDO COB-ID entry              | `uint32_t`    |
-| `CO_TSYNC_CYCLE`| SYNC producer cycle time              | `uint32_t`    |
-| `CO_TSYNC_ID`   | Dynamic SYNC COB-ID                   | `uint32_t`    |
+| Object Type        | Description                               | Data Variable |
+| ------------------ | ----------------------------------------- | ------------- |
+| `CO_TEMCY_HIST`    | EMCY history entry (subindex 0)           | `uint8_t`     |
+| `CO_TEMCY_HIST`    | EMCY history entry (subindex 1..254)      | `uint32_t`    |
+| `CO_TEMCY_ID`      | Dynamic EMCY COB-ID                       | `uint32_t`    |
+| `CO_TEVENT`        | PDO event timer entry                     | `uint16_t`    |
+| `CO_THB_CONS`      | Heartbeat consumer entry                  | `CO_HBCONS`   |
+| `CO_THB_PROD`      | Heartbeat producer entry                  | `uint16_t`    |
+| `CO_TPARA_STORE`   | Parameter group store (subindex 0)        | `uint8_t`     |
+| `CO_TPARA_STORE`   | Parameter group store (subindex 1..254)   | `CO_PARA`     |
+| `CO_TPARA_RESTORE` | Parameter group restore (subindex 0)      | `uint8_t`     |
+| `CO_TPARA_RESTORE` | Parameter group restore (subindex 1..254) | `CO_PARA`     |
+| `CO_TPDO_ID`       | Dynamic PDO COB-ID entry                  | `uint32_t`    |
+| `CO_TPDO_MAP`      | Dynamic PDO mapping entry                 | `uint32_t`    |
+| `CO_TPDO_NUM`      | Dynamic PDO number of mapping entries     | `uint8_t`     |
+| `CO_TPDO_TYPE`     | Dynamic PDO transmission type entry       | `uint8_t`     |
+| `CO_TSDO_ID`       | Dynamic SDO COB-ID entry                  | `uint32_t`    |
+| `CO_TSYNC_CYCLE`   | SYNC producer cycle time                  | `uint32_t`    |
+| `CO_TSYNC_ID`      | Dynamic SYNC COB-ID                       | `uint32_t`    |
 
 #### Object Data Reference
 
@@ -365,16 +368,16 @@ const CO_OBJ AppObjDir[] = {
 
 This chapter describes the PDO communication record for a transmit PDO. The object record contains the following object entries:
 
-| Index:sub  | Type         | Object Type                         | Description                             |
-| ---------- | ------------ | ----------------------------------- | --------------------------------------- |
-| `1800h:00` | `UNSIGNED8`  | `const`                             | *Communication Object TPDO #0*          |
-| `1800h:01` | `UNSIGNED32` | `const` or `rw` with `CO_TPDO_ID`   | COB-ID used by TPDO                     |
-| `1800h:02` | `UNSIGNED8`  | `const` or `rw` with `CO_TPDO_TYPE` | Transmission type                       |
-| `1800h:03` | `UNSIGNED16` | `const` or `rw`                     | Inhibit time with LSB 100us (0=disable) |
-| `1800h:04` | n/a          | n/a                                 | reserved, shall not be implemented      |
-| `1800h:05` | `UNSIGNED16` | `const` or `rw` with `CO_TPDO_EVENT`| Event timer LSB 1ms (0=disable)         |
+| Index:sub  | Static Type      | Dynamic Type      | Description                             |
+| ---------- | ---------------- | ----------------- | --------------------------------------- |
+| `1800h:00` | `CO_TUNSIGNED8`  | `CO_TUNSIGNED8`   | *Communication Object TPDO #0*          |
+| `1800h:01` | `CO_TUNSIGNED32` | `CO_TPDO_ID`      | COB-ID used by TPDO                     |
+| `1800h:02` | `CO_TUNSIGNED8`  | `CO_TPDO_TYPE`    | Transmission type                       |
+| `1800h:03` | `CO_TUNSIGNED16` | `CO_TUNSIGNED16`  | Inhibit time with LSB 100us (0=disable) |
+| `1800h:04` | n/a              | n/a               | reserved, shall not be implemented      |
+| `1800h:05` | `CO_TUNSIGNED16` | `CO_TPDO_EVENT`   | Event timer LSB 1ms (0=disable)         |
 
-The index identifies which PDO is configured (1800h: TPDO #0, 1801h: TPDO #1, ..., 19ffh: TPDO #511). The object type is `const` in case of static communication settings. When the communication settings are parameters or dynamic variables, the listed object types ensures the correct change behavior for these records.
+The index identifies which PDO is configured (1800h: TPDO #0, 1801h: TPDO #1, ..., 19ffh: TPDO #511). The object entries are setup with basic types in case of static communication settings. When the communication settings are parameters or dynamic variables, the listed dynamic object types ensures the correct change behavior for these records.
 
 The encoding for the transmission type (subindex 2) is standardized:
 
