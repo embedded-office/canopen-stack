@@ -37,12 +37,13 @@
 static uint32_t COTPdoTypeSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 static CO_ERR   COTPdoTypeRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTPdoTypeWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTPdoTypeInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPdoType = { COTPdoTypeSize, 0, COTPdoTypeRead, COTPdoTypeWrite, 0 };
+const CO_OBJ_TYPE COTPdoType = { COTPdoTypeSize, COTPdoTypeInit, COTPdoTypeRead, COTPdoTypeWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -73,23 +74,34 @@ static CO_ERR COTPdoTypeWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
     ASSERT_EQU_ERR(size, 1, CO_ERR_BAD_ARG);
 
-    if (CO_GET_SUB(obj->Key) != 2) {
-        return (CO_ERR_PARA_IDX);
-    }
-
-    type    = *(uint8_t*)buffer;
+    /* change only inactive PDO */
     cod     = &node->Dict;
     pcomidx = CO_GET_IDX(obj->Key);
-    if ((pcomidx >= COT_OBJECT_RPDO) && (pcomidx <= COT_OBJECT_RPDO + COT_OBJECT_NUM)) {
-    } else if ((pcomidx >= COT_OBJECT_TPDO) && (pcomidx <= COT_OBJECT_TPDO + COT_OBJECT_NUM)) {
-    } else {
-        return (CO_ERR_PARA_IDX);
-    }
     (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
     if ((id & CO_TPDO_COBID_OFF) == 0) {
-        result = CO_ERR_OBJ_RANGE;
-    } else {
-        result = uint8->Write(obj, node, &type, sizeof(type));
+        return (CO_ERR_OBJ_RANGE);
+    }
+
+    /* write new PDO type */
+    type    = *(uint8_t*)buffer;
+    result = uint8->Write(obj, node, &type, sizeof(type));
+    return (result);
+}
+
+static CO_ERR COTPdoTypeInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_TYPE_INIT;
+
+    if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_RPDO) &&
+        (CO_GET_IDX(obj->Key) <= COT_OBJECT_RPDO + COT_OBJECT_NUM)) {
+        if (CO_GET_SUB(obj->Key) == 2) {
+            result = CO_ERR_NONE;
+        }
+    } else if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_TPDO) &&
+               (CO_GET_IDX(obj->Key) <= COT_OBJECT_TPDO + COT_OBJECT_NUM)) {
+        if (CO_GET_SUB(obj->Key) == 2) {
+            result = CO_ERR_NONE;
+        }
     }
     return (result);
 }
