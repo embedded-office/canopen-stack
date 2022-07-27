@@ -34,7 +34,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TPDO_NUM  ((const CO_OBJ_TYPE *)&COTPdoMapN)
+#define CO_TPDO_NUM  ((const CO_OBJ_TYPE *)&COTPdoNum)
 
 /******************************************************************************
 * PUBLIC CONSTANTS
@@ -47,7 +47,7 @@ extern "C" {
 *    the write access needs to be handled via the type structure; the read
 *    operation can be performed directly.
 */
-extern const CO_OBJ_TYPE COTPdoMapN;        /*!< PDO Map Numbers Type        */
+extern const CO_OBJ_TYPE COTPdoNum;         /*!< PDO Map Numbers Type        */
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

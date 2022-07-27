@@ -34,33 +34,34 @@
 ******************************************************************************/
 
 /* type functions */
-static uint32_t COTPdoMapNSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
-static CO_ERR   COTPdoMapNRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
-static CO_ERR   COTPdoMapNWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static uint32_t COTPdoNumSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTPdoNumRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTPdoNumWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTPdoNumInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPdoMapN = { COTPdoMapNSize, 0, COTPdoMapNRead, COTPdoMapNWrite, 0 };
+const CO_OBJ_TYPE COTPdoNum = { COTPdoNumSize, COTPdoNumInit, COTPdoNumRead, COTPdoNumWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
 ******************************************************************************/
 
-static uint32_t COTPdoMapNSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
+static uint32_t COTPdoNumSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
 {
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     return uint8->Size(obj, node, width);
 }
 
-static CO_ERR COTPdoMapNRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
+static CO_ERR COTPdoNumRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     return uint8->Read(obj, node, buffer, size);
 }
 
-static CO_ERR COTPdoMapNWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
+static CO_ERR COTPdoNumWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
     CO_ERR    result = CO_ERR_NONE;
@@ -77,41 +78,53 @@ static CO_ERR COTPdoMapNWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
     ASSERT_EQU_ERR(size, 1u, CO_ERR_BAD_ARG);
 
-    if (CO_GET_SUB(obj->Key) != 0) {
-        return (CO_ERR_TPDO_MAP_OBJ);
+    /* check changing only inactive PDOs */
+    cod     = &node->Dict;
+    pmapidx = CO_GET_IDX(obj->Key);
+    pcomidx = pmapidx - 0x200;
+    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
+    if ((id & CO_TPDO_COBID_OFF) == 0) {
+        return (CO_ERR_OBJ_ACC);
     }
+
+    /* check maximal number of linked objects */        
     mapnum = (uint8_t)(*(uint8_t *)buffer);
     if (mapnum > 8) {
         return (CO_ERR_OBJ_MAP_LEN);
     }
 
-    cod     = &node->Dict;
-    pmapidx = CO_GET_IDX(obj->Key);
-    if ((pmapidx >= COT_OBJECT_RPDO) && (pmapidx <= COT_OBJECT_RPDO + COT_OBJECT_NUM)) {
-    } else if ((pmapidx >= COT_OBJECT_TPDO) && (pmapidx <= COT_OBJECT_TPDO + COT_OBJECT_NUM)) {
-    } else {
-        return (CO_ERR_TPDO_MAP_OBJ);
+    /* check number of mapped bytes in PDO */
+    mapbytes = 0;
+    for (i = 1; i <= mapnum; i++) {
+        result = CODictRdLong(cod, CO_DEV(pmapidx, i), &mapentry);
+        if (result != CO_ERR_NONE) {
+            return (CO_ERR_OBJ_MAP_TYPE);
+        }
+        mapbytes += ((uint8_t)mapentry) >> 3u;
+    }
+    if (mapbytes > 8) {
+        return (CO_ERR_OBJ_MAP_LEN);
     }
 
-    pcomidx = pmapidx - 0x200;
-    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
-    if ((id & CO_TPDO_COBID_OFF) == 0) {
-        result = CO_ERR_OBJ_ACC;
-    } else {
-        mapbytes = 0;
-        for (i = 1; i <= mapnum; i++) {
-            result = CODictRdLong(cod, CO_DEV(pmapidx, i), &mapentry);
-            if (result != CO_ERR_NONE) {
-                return (CO_ERR_OBJ_MAP_TYPE);
-            }
-            mapbytes += ((uint8_t)mapentry) >> 3u;
-        }
+    /* finaly: store new number of PDO mappings */
+    result = uint8->Write(obj, node, &mapnum, sizeof(mapnum));
+    return (result);
+}
 
-        if (mapbytes > 8) {
-            return (CO_ERR_OBJ_MAP_LEN);
-        }
+static CO_ERR COTPdoNumInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_TYPE_INIT;
 
-        result = uint8->Write(obj, node, &mapnum, sizeof(mapnum));
+    if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_RPDO) &&
+        (CO_GET_IDX(obj->Key) <= COT_OBJECT_RPDO + COT_OBJECT_NUM)) {
+        if (CO_GET_SUB(obj->Key) == 0) {
+            result = CO_ERR_NONE;
+        }
+    } else if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_TPDO) &&
+               (CO_GET_IDX(obj->Key) <= COT_OBJECT_TPDO + COT_OBJECT_NUM)) {
+        if (CO_GET_SUB(obj->Key) == 0) {
+            result = CO_ERR_NONE;
+        }
     }
     return (result);
 }

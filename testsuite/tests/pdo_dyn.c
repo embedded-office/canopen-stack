@@ -467,7 +467,6 @@ TS_DEF_MAIN(TS_TPdo_IdChange_Op)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_BadIdSubIdxCfg)
 {
-    int16_t  result;
     CO_NODE  node;
     uint32_t pdo_id      = 0x40000180;
     uint8_t  pdo_type    = 1;
@@ -484,7 +483,6 @@ TS_DEF_MAIN(TS_RPdo_BadIdSubIdxCfg)
 
 TS_DEF_MAIN(TS_TPdo_BadIdSubIdxCfg)
 {
-    int16_t  result;
     CO_NODE  node;
     uint32_t pdo_id      = 0x40000180;
     uint8_t  pdo_type    = 1;
@@ -510,7 +508,6 @@ TS_DEF_MAIN(TS_TPdo_BadIdSubIdxCfg)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_RPdo_BadIdIdxCfg)
 {
-    int16_t  result;
     CO_NODE  node;
     uint32_t pdo_id      = 0x40000180;
     uint8_t  pdo_type    = 1;
