@@ -25,6 +25,8 @@
 ******************************************************************************/
 
 #define COT_ENTRY_SIZE    (uint32_t)2
+#define COT_OBJECT        (uint16_t)0x1800
+#define COT_OBJECT_SUB    (uint8_t)5
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -34,12 +36,13 @@
 static uint32_t COTPdoEventSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 static CO_ERR   COTPdoEventRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTPdoEventWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTPdoEventInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPdoEvent = { COTPdoEventSize, 0, COTPdoEventRead, COTPdoEventWrite, 0 };
+const CO_OBJ_TYPE COTPdoEvent = { COTPdoEventSize, COTPdoEventInit, COTPdoEventRead, COTPdoEventWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -70,11 +73,8 @@ static CO_ERR COTPdoEventWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
     int16_t   tid;
     CO_ERR    err;
 
-    UNUSED(size);
-
     /* update value in object entry */
-    cycTime = (uint16_t)(*(uint16_t *)buffer);
-    err = uint16->Write(obj, node, &cycTime, sizeof(cycTime));
+    err = uint16->Write(obj, node, buffer, size);
     if (err != CO_ERR_NONE) {
         return (err);
     }
@@ -103,6 +103,7 @@ static CO_ERR COTPdoEventWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
     cod = &node->Dict;
     (void)CODictRdLong(cod, CO_DEV(0x1800+num, 1), &cobid);
     if ((cobid & CO_TPDO_COBID_OFF) == 0) {
+        cycTime = (uint16_t)(*(uint16_t *)buffer);
         nmt = &node->Nmt;
         if (nmt->Mode == CO_OPERATIONAL) {
             pdo->Event = COTmrGetTicks(tmr, cycTime, CO_TMR_UNIT_1MS);
@@ -116,4 +117,14 @@ static CO_ERR COTPdoEventWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
         }
     }
     return (CO_ERR_NONE);
+}
+
+static CO_ERR COTPdoEventInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_TYPE_INIT;
+
+    if (CO_GET_DEV(obj->Key) == CO_DEV(COT_OBJECT, COT_OBJECT_SUB)) {
+        result = CO_ERR_NONE;
+    }
+    return (result);
 }
