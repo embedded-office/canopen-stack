@@ -24,7 +24,9 @@
 * PRIVATE DEFINES
 ******************************************************************************/
 
-#define COT_ENTRY_SIZE    (uint32_t)4
+#define COT_ENTRY_SIZE  (uint32_t)4
+#define COT_OBJECT      (uint32_t)0x1200
+#define COT_OBJECT_NUM  (uint32_t)0xFF   /* 00h..7fh server; 80h..ffh client */
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -34,12 +36,13 @@
 static uint32_t COTSdoIdSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 static CO_ERR   COTSdoIdRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTSdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTSdoIdInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTSdoId = { COTSdoIdSize, 0, COTSdoIdRead, COTSdoIdWrite, 0 };
+const CO_OBJ_TYPE COTSdoId = { COTSdoIdSize, COTSdoIdInit, COTSdoIdRead, COTSdoIdWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -91,4 +94,18 @@ static CO_ERR COTSdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     }
 
     return (err);
+}
+
+static CO_ERR COTSdoIdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_TYPE_INIT;
+
+    if ((CO_GET_IDX(obj->Key) >= COT_OBJECT) &&
+        (CO_GET_IDX(obj->Key) <= COT_OBJECT + COT_OBJECT_NUM)) {
+        if ((CO_GET_SUB(obj->Key) == 1) ||
+            (CO_GET_SUB(obj->Key) == 2)) {
+            result = CO_ERR_NONE;
+        }
+    }
+    return (result);
 }

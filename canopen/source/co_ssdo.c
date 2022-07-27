@@ -617,7 +617,6 @@ CO_ERR COSdoEndDownloadBlock(CO_SDO *srv)
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
             COSdoAbort(srv, CO_SDO_ERR_TOS);
-            result = CO_ERR_SDO_ABORT;
         }
         CO_SET_BYTE(srv->Frm, 0xA1, 0);
         CO_SET_WORD(srv->Frm, 0, 1);
@@ -762,10 +761,10 @@ CO_ERR COSdoInitUploadBlock(CO_SDO *srv)
 CO_ERR COSdoUploadBlock(CO_SDO *srv)
 {
     CO_ERR   result = CO_ERR_SDO_SILENT;
-    CO_ERR   err = CO_ERR_SDO_READ;
+    CO_ERR   err;
     uint32_t size;
     uint32_t num = 0;
-    uint32_t txNum = 0;
+    uint32_t txNum;
     uint32_t byteOk = 0;
     uint8_t *txBuf;
     uint8_t  finished =  0;
