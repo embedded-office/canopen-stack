@@ -37,12 +37,13 @@
 static uint32_t COTPdoIdSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 static CO_ERR   COTPdoIdRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTPdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTPdoIdInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTPdoId = { COTPdoIdSize, 0, COTPdoIdRead, COTPdoIdWrite, 0 };
+const CO_OBJ_TYPE COTPdoId = { COTPdoIdSize, COTPdoIdInit, COTPdoIdRead, COTPdoIdWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -72,32 +73,28 @@ static CO_ERR COTPdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     uint16_t  pcomidx;
     uint16_t  num;
 
-    UNUSED(size);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
-
-    if (CO_GET_SUB(obj->Key) != 1) {
-        return (CO_ERR_TPDO_COM_OBJ);
-    }
+    ASSERT_EQU_ERR(size, 4u, CO_ERR_BAD_ARG);
 
     nid = *(uint32_t*)buffer;
+    /* PDO with extended CAN identifiers is not supported */
     if ((nid & CO_TPDO_COBID_EXT) != 0) {
         return (CO_ERR_OBJ_RANGE);
     }
 
     nmt     = &node->Nmt;
     pcomidx = CO_GET_IDX(obj->Key);
-    if ((pcomidx >= COT_OBJECT_RPDO) && (pcomidx <= COT_OBJECT_RPDO + COT_OBJECT_NUM)) {
+    if (pcomidx <= COT_OBJECT_RPDO + COT_OBJECT_NUM) {
         rpdo = node->RPdo;
-        num  = pcomidx & 0x1FF;
-    } else if ((pcomidx >= COT_OBJECT_TPDO) && (pcomidx <= COT_OBJECT_TPDO + COT_OBJECT_NUM)) {
+        num  = pcomidx & COT_OBJECT_NUM;
+    } else {
+        /* PDO with RTR allowed is not supported */
         if ((nid & CO_TPDO_COBID_REMOTE) == 0) {
             return (CO_ERR_OBJ_RANGE);
         }
         tpdo = node->TPdo;
         num  = pcomidx & COT_OBJECT_NUM;
-    } else {
-        return (CO_ERR_TPDO_COM_OBJ);
     }
 
     (void)uint32->Read(obj, node, &oid, sizeof(oid));
@@ -128,6 +125,24 @@ static CO_ERR COTPdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
                     CORPdoReset(rpdo, num);
                 }
             }
+        }
+    }
+    return (result);
+}
+
+static CO_ERR COTPdoIdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_TYPE_INIT;
+
+    if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_RPDO) &&
+        (CO_GET_IDX(obj->Key) <= COT_OBJECT_RPDO + COT_OBJECT_NUM)) {
+        if (CO_GET_SUB(obj->Key) == 1) {
+            result = CO_ERR_NONE;
+        }
+    } else if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_TPDO) &&
+               (CO_GET_IDX(obj->Key) <= COT_OBJECT_TPDO + COT_OBJECT_NUM)) {
+        if (CO_GET_SUB(obj->Key) == 1) {
+            result = CO_ERR_NONE;
         }
     }
     return (result);

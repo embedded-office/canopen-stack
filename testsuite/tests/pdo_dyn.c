@@ -479,11 +479,7 @@ TS_DEF_MAIN(TS_RPdo_BadIdSubIdxCfg)
     TS_ODAdd(CO_KEY(0x1400, 3, CO_OBJ__N__RW), CO_TPDO_ID, (CO_DATA)(&pdo_id));
     TS_CreateNode(&node,0);
 
-    /* no PDO COB-ID sub-index */
-    result = CODictWrLong(&node.Dict, CO_DEV(0x1400,3), 0xC0000201);
-    TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
-
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    CHK_ERR(&node, CO_ERR_OBJ_INIT);                  /* check for expected error                 */
 }
 
 TS_DEF_MAIN(TS_TPdo_BadIdSubIdxCfg)
@@ -502,10 +498,7 @@ TS_DEF_MAIN(TS_TPdo_BadIdSubIdxCfg)
     TS_CreateTPdoMap(0, 0, &pdo_len);
     TS_CreateNode(&node,0);
 
-    result = CODictWrLong(&node.Dict, CO_DEV(0x1800,6), 0xC0000181);
-    TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
-
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    CHK_ERR(&node, CO_ERR_OBJ_INIT);                  /* check for expected error                 */
 }
 
 /*------------------------------------------------------------------------------------------------*/
@@ -529,11 +522,7 @@ TS_DEF_MAIN(TS_RPdo_BadIdIdxCfg)
     TS_ODAdd(CO_KEY(0x2502, 1, CO_OBJ__N__RW), CO_TPDO_ID, (CO_DATA)(&pdo_id));
     TS_CreateNode(&node,0);
 
-    /* no PDO communication parameter index */
-    result = CODictWrLong(&node.Dict, CO_DEV(0x2502,1), 0xC0000201);
-    TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
-
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    CHK_ERR(&node, CO_ERR_OBJ_INIT);                  /* check for expected error                 */
 }
 
 TS_DEF_MAIN(TS_TPdo_BadIdIdxCfg)
@@ -552,11 +541,7 @@ TS_DEF_MAIN(TS_TPdo_BadIdIdxCfg)
     TS_CreateTPdoMap(0, 0, &pdo_len);
     TS_CreateNode(&node,0);
 
-    /* no PDO communication parameter index */
-    result = CODictWrLong(&node.Dict, CO_DEV(0x2501,1), 0xC0000181);
-    TS_ASSERT(CO_ERR_TPDO_COM_OBJ == result);
-
-    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+    CHK_ERR(&node, CO_ERR_OBJ_INIT);                  /* check for expected error                 */
 }
 
 /*------------------------------------------------------------------------------------------------*/
