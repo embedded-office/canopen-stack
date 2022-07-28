@@ -138,6 +138,9 @@ static CO_ERR COTParaStoreInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_ERR result = CO_ERR_TYPE_INIT;
     
+    ASSERT_PTR_ERR(node, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
+
     /* check for parameter store object */
     if (CO_GET_IDX(obj->Key) == COT_OBJECT) {
 

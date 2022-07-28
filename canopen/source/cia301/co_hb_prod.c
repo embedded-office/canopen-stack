@@ -128,6 +128,9 @@ static CO_ERR COTNmtHbProdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
     uint16_t cycTime;
     uint32_t ticks;
 
+    ASSERT_PTR_ERR(node, CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
+
     /* check for heartbeat producer object */
     if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
         /* stop timer if heartbeat producer is already active */

@@ -108,6 +108,9 @@ static CO_ERR COTSyncCycleInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_ERR result = CO_ERR_TYPE_INIT;
 
+    UNUSED(node);
+    ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
+
     /* check for sync producer object */
     if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
         result = CO_ERR_NONE;
