@@ -35,12 +35,13 @@
 static uint32_t COTSyncCycleSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 static CO_ERR   COTSyncCycleRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTSyncCycleInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTSyncCycle = { COTSyncCycleSize, 0, COTSyncCycleRead, COTSyncCycleWrite, 0 };
+const CO_OBJ_TYPE COTSyncCycle = { COTSyncCycleSize, COTSyncCycleInit, COTSyncCycleRead, COTSyncCycleWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -99,6 +100,17 @@ static CO_ERR COTSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
             sync->Cycle = ous;
             result      = CO_ERR_OBJ_RANGE;
         }
+    }
+    return (result);
+}
+
+static CO_ERR COTSyncCycleInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_TYPE_INIT;
+
+    /* check for sync producer object */
+    if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
+        result = CO_ERR_NONE;
     }
     return (result);
 }
