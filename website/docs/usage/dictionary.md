@@ -198,7 +198,7 @@ const CO_OBJ DemoOD[] = {
 
 User type objects are provided to implement special behavior of read and/or write access to an object entry. The complex system types are using this mechanism to provide the specified behavior of several pre-defined CANopen object entries.
 
-The implemented access hook functions (called "type functions") are used for any access to the object entry, regardless of the accessing component (CAN network via CAN messages or the application via API functions).
+The implemented access functions (called "type functions") are used for any access to the object entry, regardless of the accessing component (CAN network via CAN messages or the application via the API functions).
 
 An example user type (called "DemoType") is declared with the following structure.
 
@@ -207,19 +207,21 @@ CO_OBJ_TYPE DemoType = {
   DemoSize,  /* type function to get object size         */
   DemoInit,  /* type function to initialize type object  */
   DemoRead,  /* type function to read object content     */
-  DemoWrite  /* type function to write object content    */
+  DemoWrite, /* type function to write object content    */
+  DemoReset  /* type function to reset the object        */
 };
 ```
 
-If a new user type didn't need to have special behavior on accessing (e.g. get-size, control, read-data or write-data), the corresponding type function can be set to 0 to switch this access to basic behavior.
+If a new user type didn't need to have special behavior on initialization or reset events, the corresponding type function can be set to 0 to ignore potential calls and just return no error.
 
-The following list shows the type function prototypes. The return value of the size type function (e.g. `DemoSize()`) shall return the size of the user type in bytes. The other type functions shall return `CO_ERR_NONE` after the successful operation. If an error is detected the corresponding error codes must be returned: `CO_ERR_TYPE_RD`, `CO_ERR_TYPE_WR` or `CO_ERR_TYPE_INIT`.
+The following list shows the type function prototypes. The return value of the size type function (e.g. `DemoSize()`) shall return the size of the user type in bytes. The other type functions shall return `CO_ERR_NONE` after the successful operation. If an error is detected the corresponding error codes must be returned: `CO_ERR_TYPE_RD`, `CO_ERR_TYPE_WR`, `CO_ERR_TYPE_INIT`, or `CO_ERR_TYPE_RESET`.
 
 ```c
 uint32_t DemoSize (CO_OBJ *obj, CO_NODE *node, uint32_t width);
 CO_ERR   DemoInit (CO_OBJ *obj, CO_NODE *node);
 CO_ERR   DemoRead (CO_OBJ *obj, CO_NODE *node, void *buffer, uint32_t size);
 CO_ERR   DemoWrite(CO_OBJ *obj, CO_NODE *node, void *buffer, uint32_t size);
+CO_ERR   DemoReset(CO_OBJ *obj, CO_NODE *node, uint32_t para);
 ```
 
 To enable the usage of this demo type to the CAN network side, the demo object must be added to the object directory. See the following object entry with index=0x6789 and subindex=0 as an example:
