@@ -155,27 +155,6 @@ int16_t COSyncUpdate(CO_SYNC *sync, CO_IF_FRM *frm);
 */
 void COSyncRestart(CO_SYNC *sync);
 
-/*! \brief ACTIVATE SYNC PRODUCER
-*
-*    This function is used to activate SYNC producer functionality.
-*    It's called on NMT Start Pre-Operational or sync COB-ID update
-*    (1005h) with bit 30 set to 1.
-*
-* \param sync
-*    Pointer to SYNC object
-*/
-void COSyncProdActivate(CO_SYNC *sync);
-
-/*! \brief ACTIVATE SYNC PRODUCER
-*
-*    This function is used to deactivate SYNC producer functionality.
-*    It's called on sync COB-ID update (1005h) with bit 30 set to 0.
-*
-* \param sync
-*    Pointer to SYNC object
-*/
-void COSyncProdDeactivate(CO_SYNC *sync);
-
 /*! \brief SYNC PRODUCER TRANSMISSION TRIGGER
  *
  *   This function is used for periodic transmission of SYNC frames

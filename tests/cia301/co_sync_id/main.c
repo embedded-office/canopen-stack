@@ -19,7 +19,33 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT StubReset()
+
 #include "acutest.h"
+
+/******************************************************************************
+* TEST CASE - STUB FUNCTIONS
+******************************************************************************/
+
+uint32_t StubDeaktivate = 0;
+void COSyncProdDeactivate(CO_SYNC *sync)
+{
+    StubDeaktivate++;
+}
+
+uint32_t StubAktivate = 0;
+void COSyncProdActivate(CO_SYNC *sync)
+{
+    StubAktivate++;
+}
+
+void StubReset(void)
+{
+    StubDeaktivate = 0;
+    StubAktivate = 0;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -113,32 +139,34 @@ void test_write_activate(void)
 {
     CO_NODE  AppNode = { 0 };
     uint32_t data = 0x55667788 & (0xBFFFFFFF); /* bit31 = 0: inactive ID */
-    uint32_t val  = 0x55667788 | (1ul << 30);  /* bit31 = 1: active ID */
+    uint32_t val  = 0x11223344 | (1ul << 30);  /* bit31 = 1: active ID */
     CO_ERR   err;
     CO_OBJ   Obj[2] = {
         { CO_KEY(0x1005, 0, CO_OBJ_____RW), CO_TSYNC_ID,    (CO_DATA)(&data)},
         { CO_KEY(0x1006, 0, CO_OBJ_D___RW), CO_TSYNC_CYCLE, (CO_DATA)(0x12345678)}
     };
     CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
-    AppNode.Sync.Node = &AppNode;
 
     err = COObjWrValue(&Obj[0], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(data == val);
+    TEST_CHECK(StubAktivate == 1);
 }
 
 void test_write_deactivate(void)
 {
     CO_NODE  AppNode = { 0 };
-    uint32_t data = 0x88776655 | (1uL << 30);  /* bit30 = 1: active ID */
-    uint32_t val  = 0x88776655 & (0xBFFFFFFF); /* bit30 = 0: inactive ID */
+    uint32_t data = 0x22334455 | (1uL << 30);  /* bit30 = 1: active ID */
+    uint32_t val  = 0x22334455 & (0xBFFFFFFF); /* bit30 = 0: inactive ID */
     CO_ERR   err;
     CO_OBJ   Obj = { CO_KEY(0, 0, CO_OBJ_____RW), CO_TSYNC_ID, (CO_DATA)(&data)};
-    AppNode.Sync.Tmr = -1;
 
     err = COObjWrValue(&Obj, &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(data == val);
+    TEST_CHECK(StubDeaktivate == 1);
 }
 
 void test_write_active(void)

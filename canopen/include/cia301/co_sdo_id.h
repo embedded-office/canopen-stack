@@ -28,7 +28,7 @@ extern "C" {
 #include "co_types.h"
 #include "co_err.h"
 #include "co_obj.h"
-#include "co_emcy.h"
+#include "co_sync.h"
 
 /******************************************************************************
 * PUBLIC DEFINES
@@ -47,6 +47,31 @@ extern "C" {
 *    designed to provide the feature of changing a SDO identifier.
 */
 extern const CO_OBJ_TYPE COTSdoId;
+
+/******************************************************************************
+* PROTECTED HELBER FUNCTIONS
+******************************************************************************/
+
+/*! \brief ACTIVATE SYNC PRODUCER
+*
+*    This function is used to activate SYNC producer functionality.
+*    It's called on NMT Start Pre-Operational or sync COB-ID update
+*    (1005h) with bit 30 set to 1.
+*
+* \param sync
+*    Pointer to SYNC object
+*/
+void COSyncProdActivate(CO_SYNC *sync);
+
+/*! \brief ACTIVATE SYNC PRODUCER
+*
+*    This function is used to deactivate SYNC producer functionality.
+*    It's called on sync COB-ID update (1005h) with bit 30 set to 0.
+*
+* \param sync
+*    Pointer to SYNC object
+*/
+void COSyncProdDeactivate(CO_SYNC *sync);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }

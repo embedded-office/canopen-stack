@@ -35,7 +35,8 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
 
     sync->Node  = node;
     sync->Tmr   = -1;
-    sync->Cycle =  0;
+    sync->Cycle = 0;
+    sync->CobId = 0;
 
     for (i = 0; i < CO_TPDO_N; i++) {
         sync->TSync[i] = 0;
@@ -44,36 +45,6 @@ void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
     }
     for (i = 0; i < CO_RPDO_N; i++) {
         sync->RPdo[i]  = (CO_RPDO *)0;
-    }
-    err = CODictRdLong(&node->Dict, CO_DEV(0x1005, 0), &sync->CobId);
-    if (err != CO_ERR_NONE) {
-        sync->CobId = 0;
-    }
-    COSyncProdActivate(sync);
-}
-
-void COSyncHandler (CO_SYNC *sync)
-{
-    uint8_t i;
-
-    for (i = 0; i < CO_TPDO_N; i++) {
-        if (sync->TPdo[i] != 0) {
-            if (sync->TNum[i] == 0) {
-                COTPdoTx(sync->TPdo[i]);
-            } else {
-                if (sync->TSync[i] == sync->TNum[i]) {
-                    COTPdoTx(sync->TPdo[i]);
-                    sync->TSync[i] = 0;
-                }
-            }
-        }
-    }
-
-    for (i = 0; i < CO_RPDO_N; i++) {
-        if (sync->RPdo[i] != 0) {
-            CORPdoWrite(sync->RPdo[i], &sync->RFrm[i]);
-            COPdoSyncUpdate(sync->RPdo[i]);
-        }
     }
 }
 
@@ -87,6 +58,7 @@ void COSyncAdd (CO_SYNC *sync, uint16_t num, uint8_t msgType, uint8_t txtype)
         sync->TNum[num]  = txtype;
         sync->TSync[num] = 0;
     }
+
     /* receive pdo */
     if (msgType == CO_SYNC_FLG_RX) {
         if (sync->RPdo[num] == 0) {
@@ -103,6 +75,7 @@ void COSyncRemove (CO_SYNC *sync, uint16_t num, uint8_t msgType)
         sync->TNum[num]  = 0;
         sync->TSync[num] = 0;
     }
+
     /* receive pdo */
     if (msgType == CO_SYNC_FLG_RX) {
         sync->RPdo[num]  = 0;
@@ -152,78 +125,27 @@ void COSyncRestart(CO_SYNC *sync)
     }
 }
 
-void COSyncProdActivate(CO_SYNC *sync) {
-    uint32_t ticks, time;
-    CO_ERR   err;
-    CO_NODE *node;
-    int16_t  tid;
+void COSyncHandler (CO_SYNC *sync)
+{
+    uint8_t i;
 
-    node = sync->Node;
-
-    if ((sync->CobId & CO_SYNC_COBID_ON) == 0) {
-        /* 
-         * SYNC producer is disabled, activation is skipped 
-         * and system is accepted as is.
-         */
-        return;
-    }
-
-    err = CODictRdLong(&node->Dict, CO_DEV(0x1006, 0), &sync->Cycle);
-    if (err != CO_ERR_NONE) {
-        /*
-         * In case of enabled SYNC producer, entry 1006h is mandatory
-         * and invalid read operation results in configuration error.
-         */
-        node->Error = CO_ERR_CFG_1006_0;
-        sync->Cycle = 0;
-        return;
-    }
-
-    time = COTmrGetMinTime(&node->Tmr, CO_TMR_UNIT_100US);
-    if ((time * 100) > sync->Cycle) {
-        /* 
-         * Provided timer driver has small resolution for configured 
-         * value, it is not possible to handle SYNCs on requested 
-         * communication cycle.
-         * 
-         * TODO: refactor SYNC producer to use highest possible 
-         * resolution of COTmr API (which is currently 100 us).
-         */
-        node->Error = CO_ERR_SYNC_RES;
-        return;
-    }
-
-    if (sync->Tmr >= 0) {
-        tid = COTmrDelete(&node->Tmr, sync->Tmr);
-        if (tid < 0) {
-            node->Error = CO_ERR_TMR_DELETE;
+    for (i = 0; i < CO_TPDO_N; i++) {
+        if (sync->TPdo[i] != 0) {
+            if (sync->TNum[i] == 0) {
+                COTPdoTx(sync->TPdo[i]);
+            } else {
+                if (sync->TSync[i] == sync->TNum[i]) {
+                    COTPdoTx(sync->TPdo[i]);
+                    sync->TSync[i] = 0;
+                }
+            }
         }
     }
 
-    time = (sync->Cycle / 100);
-    if (time > 0) {
-        ticks = COTmrGetTicks(&node->Tmr, time, CO_TMR_UNIT_100US);
-        sync->Tmr = COTmrCreate(&node->Tmr,
-            ticks,
-            ticks,
-            COSyncProdSend,
-            sync);
-        if (sync->Tmr < 0) {
-            node->Error = CO_ERR_TMR_CREATE;
-        }
-    } else {
-        sync->Tmr = -1;
-    }
-}
-
-void COSyncProdDeactivate(CO_SYNC *sync) {
-    int16_t tid;
-
-    if (sync->Tmr >= 0) {
-        tid       = COTmrDelete(&sync->Node->Tmr, sync->Tmr);
-        sync->Tmr = -1;
-        if (tid < 0) {
-            sync->Node->Error = CO_ERR_TMR_DELETE;
+    for (i = 0; i < CO_RPDO_N; i++) {
+        if (sync->RPdo[i] != 0) {
+            CORPdoWrite(sync->RPdo[i], &sync->RFrm[i]);
+            COPdoSyncUpdate(sync->RPdo[i]);
         }
     }
 }

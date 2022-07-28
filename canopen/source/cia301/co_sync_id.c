@@ -114,6 +114,7 @@ static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
 
 static CO_ERR COTSyncIdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
+    const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
     CO_ERR result = CO_ERR_TYPE_INIT;
 
     UNUSED(node);
@@ -121,7 +122,92 @@ static CO_ERR COTSyncIdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 
     /* check for emergency cob-id object */
     if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
-        result = CO_ERR_NONE;
+        result = uint32->Read(obj, node, &node->Sync.CobId, 4);
+        COSyncProdActivate(&node->Sync);
     }
     return (result);
+}
+
+/******************************************************************************
+* PROTECTED HELPER FUNCTIONS
+******************************************************************************/
+
+WEAK
+void COSyncProdActivate(CO_SYNC *sync)
+{
+    uint32_t ticks, time;
+    CO_ERR   err;
+    CO_NODE *node;
+    int16_t  tid;
+
+    node = sync->Node;
+
+    if ((sync->CobId & CO_SYNC_COBID_ON) == 0) {
+        /* 
+         * SYNC producer is disabled, activation is skipped 
+         * and system is accepted as is.
+         */
+        return;
+    }
+
+    err = CODictRdLong(&node->Dict, CO_DEV(0x1006, 0), &sync->Cycle);
+    if (err != CO_ERR_NONE) {
+        /*
+         * In case of enabled SYNC producer, entry 1006h is mandatory
+         * and invalid read operation results in configuration error.
+         */
+        node->Error = CO_ERR_CFG_1006_0;
+        sync->Cycle = 0;
+        return;
+    }
+
+    time = COTmrGetMinTime(&node->Tmr, CO_TMR_UNIT_100US);
+    if ((time * 100) > sync->Cycle) {
+        /* 
+         * Provided timer driver has small resolution for configured 
+         * value, it is not possible to handle SYNCs on requested 
+         * communication cycle.
+         * 
+         * TODO: refactor SYNC producer to use highest possible 
+         * resolution of COTmr API (which is currently 100 us).
+         */
+        node->Error = CO_ERR_SYNC_RES;
+        return;
+    }
+
+    if (sync->Tmr >= 0) {
+        tid = COTmrDelete(&node->Tmr, sync->Tmr);
+        if (tid < 0) {
+            node->Error = CO_ERR_TMR_DELETE;
+        }
+    }
+
+    time = (sync->Cycle / 100);
+    if (time > 0) {
+        ticks = COTmrGetTicks(&node->Tmr, time, CO_TMR_UNIT_100US);
+        sync->Tmr = COTmrCreate(&node->Tmr,
+            ticks,
+            ticks,
+            COSyncProdSend,
+            sync);
+        if (sync->Tmr < 0) {
+            node->Error = CO_ERR_TMR_CREATE;
+        }
+    } else {
+        sync->Tmr = -1;
+    }
+}
+
+WEAK
+void COSyncProdDeactivate(CO_SYNC *sync)
+{
+    int16_t tid;
+
+    if (sync->Tmr >= 0) {
+        tid       = COTmrDelete(&sync->Node->Tmr, sync->Tmr);
+        sync->Tmr = -1;
+        if (tid < 0) {
+            sync->Node->Error = CO_ERR_TMR_DELETE;
+        }
+    }
 }
