@@ -35,12 +35,13 @@
 static uint32_t COTSyncIdSize (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
 static CO_ERR   COTSyncIdRead (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 static CO_ERR   COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTSyncIdInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTSyncId = { COTSyncIdSize, 0, COTSyncIdRead, COTSyncIdWrite, 0 };
+const CO_OBJ_TYPE COTSyncId = { COTSyncIdSize, COTSyncIdInit, COTSyncIdRead, COTSyncIdWrite, 0 };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -107,6 +108,20 @@ static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
         if (result != CO_ERR_NONE) {
             result = CO_ERR_OBJ_RANGE;
         }
+    }
+    return (result);
+}
+
+static CO_ERR COTSyncIdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
+{
+    CO_ERR result = CO_ERR_TYPE_INIT;
+
+    UNUSED(node);
+    ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
+
+    /* check for emergency cob-id object */
+    if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
+        result = CO_ERR_NONE;
     }
     return (result);
 }
