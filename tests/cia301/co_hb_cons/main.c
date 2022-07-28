@@ -19,7 +19,25 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT   StubReset()
+
 #include "acutest.h"
+
+CO_ERR StubReturn = CO_ERR_NONE;
+uint32_t StubActivate = 0;
+CO_ERR CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
+{
+    StubActivate++;
+    return StubReturn;
+}
+
+void StubReset(void)
+{
+    StubActivate = 0;
+    StubReturn = CO_ERR_NONE;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -133,15 +151,11 @@ void test_write_consumer(void)
     uint32_t val  = 0x55667788;
     CO_ERR   err;
     CO_OBJ   Obj = { CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data)};
-    data.Time = 0x2233;
-    data.NodeId = 0x44;
-    data.Node = &AppNode;
 
     err = COObjWrValue(&Obj, &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
-    TEST_CHECK(data.Time == 0x7788);
-    TEST_CHECK(data.NodeId == 0x66);
+    TEST_CHECK(StubActivate == 1);
 }
 
 void test_write_bad_node(void)
@@ -160,53 +174,50 @@ void test_write_bad_node(void)
 * TEST CASES - INIT
 ******************************************************************************/
 
-void test_init_sub_0(void)
+void test_init_single(void)
 {
     CO_NODE   AppNode = { 0 };
-    uint8_t   data8  = 1;
     CO_HBCONS data = { 0 };
     CO_ERR    err;
     CO_OBJ    Obj[2] = {
-        { CO_KEY(0x1016, 0, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data8)},
+        { CO_KEY(0x1016, 0, CO_OBJ_D___RW), CO_THB_CONS, (CO_DATA)(1)},
         { CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data)},
     };
-    data.NodeId = 0x11;
-    data.Time = 0x2233;
     CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
 
     err = COObjInit(&Obj[0], &AppNode);
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubActivate == 1);
 }
 
-void test_init_sub_1(void)
+void test_init_multiple(void)
 {
     CO_NODE   AppNode = { 0 };
-    uint8_t   data8  = 1;
     CO_HBCONS data = { 0 };
     CO_ERR    err;
-    CO_OBJ    Obj[2] = {
-        { CO_KEY(0x1016, 0, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data8)},
+    CO_OBJ    Obj[4] = {
+        { CO_KEY(0x1016, 0, CO_OBJ_D___RW), CO_THB_CONS, (CO_DATA)(2)},
         { CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data)},
+        { CO_KEY(0x1016, 2, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data)},
+        { CO_KEY(0x1016, 3, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data)}, /* above sub #0 */
     };
-    data.NodeId = 0x11;
-    data.Time = 0x2233;
-    CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
+    CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 4);
 
-    err = COObjInit(&Obj[1], &AppNode);
+    err = COObjInit(&Obj[0], &AppNode);
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubActivate == 2);
 }
 
 void test_init_bad_index(void)
 {
     CO_NODE  AppNode = { 0 };
-    uint8_t  data8 = 1;
-    uint32_t data32 = 0x11223344;
+    uint32_t data = 0x11223344;
     CO_ERR   err;
     CO_OBJ   Obj[2] = {
-        { CO_KEY(0x2123, 0, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data8)},
-        { CO_KEY(0x2123, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data32)},
+        { CO_KEY(0x2123, 0, CO_OBJ_D___RW), CO_THB_CONS, (CO_DATA)(1)},
+        { CO_KEY(0x2123, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data)},
     };
     CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
 
@@ -222,23 +233,17 @@ void test_init_bad_index(void)
 void test_reset_unused(void)
 {
     CO_NODE   AppNode = { 0 };
-    uint8_t   data8 = 1;
     CO_HBCONS data = { 0 };
     CO_ERR    err;
     CO_OBJ    Obj[2] = {
-        { CO_KEY(0x1016, 0, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data8)},
+        { CO_KEY(0x1016, 0, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(1)},
         { CO_KEY(0x1016, 1, CO_OBJ_____RW), CO_THB_CONS, (CO_DATA)(&data)},
     };
-    data.NodeId = 0x11;
-    data.Time = 0x2233;
     CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
 
     err = COObjReset(&Obj[0], &AppNode, 7);
 
     TEST_CHECK(err == CO_ERR_NONE);
-    TEST_CHECK(data8 == 1);
-    TEST_CHECK(data.NodeId == 0x11);
-    TEST_CHECK(data.Time == 0x2233);
 }
 
 
@@ -252,8 +257,8 @@ TEST_LIST = {
     { "write_sub_0",     test_write_sub_0     },
     { "write_consumer",  test_write_consumer  },
     { "write_bad_node",  test_write_bad_node  },
-    { "init_sub_0",      test_init_sub_0      },
-    { "init_sub_1",      test_init_sub_1      },
+    { "init_single",     test_init_single     },
+    { "init_multiple",   test_init_multiple   },
     { "init_bad_index",  test_init_bad_index  },
     { "reset_unused",    test_reset_unused    },
     { NULL, NULL }

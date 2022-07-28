@@ -109,6 +109,21 @@ int16_t CONmtGetHbEvents(CO_NMT *nmt, uint8_t nodeId);
 */
 CO_MODE CONmtLastHbState(CO_NMT *nmt, uint8_t nodeId);
 
+/*! \brief  HEARTBEAT CONSUMER ACTIVATION
+*
+*    This function activates a single heartbeat consumer.
+*
+* \param nmt
+*    reference to NMT structure
+*
+* \param hbc
+*    reference to heartbeat consumer structure
+*
+* \retval   =CO_ERR_NONE    successfull activated, or consumer is deactivated by command
+* \retval  !=CO_ERR_NONE    error detected (double activation, timer delete problem)
+*/
+CO_ERR CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid);
+
 /******************************************************************************
 * CALLBACK FUNCTIONS
 ******************************************************************************/

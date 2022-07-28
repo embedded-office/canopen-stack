@@ -40,7 +40,6 @@ static CO_ERR   COTNmtHbConsWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, 
 static CO_ERR   COTNmtHbConsInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node);
 
 /* helper functions */
-static CO_ERR   CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid);
 static void     CONmtHbConsMonitor(void *parg);
 
 /******************************************************************************
@@ -159,10 +158,11 @@ static CO_ERR COTNmtHbConsInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 }
 
 /******************************************************************************
-* PRIVATE HELPER FUNCTIONS
+* PROTECTED HELPER FUNCTIONS
 ******************************************************************************/
 
-static CO_ERR CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
+WEAK
+CO_ERR CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
 {
     CO_ERR      result = CO_ERR_NONE;
     int16_t     err;
@@ -225,6 +225,10 @@ static CO_ERR CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
     return (result);
 }
 
+/******************************************************************************
+* PROTECTED COM FUNCTION
+******************************************************************************/
+
 static void CONmtHbConsMonitor(void *parg)
 {
     CO_NODE   *node;
@@ -249,10 +253,6 @@ static void CONmtHbConsMonitor(void *parg)
     }
     CONmtHbConsEvent(&node->Nmt, hbc->NodeId);
 }
-
-/******************************************************************************
-* PROTECTED API FUNCTION
-******************************************************************************/
 
 int16_t CONmtHbConsCheck(CO_NMT *nmt, CO_IF_FRM *frm)
 {
