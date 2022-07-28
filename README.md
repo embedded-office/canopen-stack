@@ -183,16 +183,40 @@ Feel free to write bug reports, questions or and feedback as issue within this g
 
 ## Development Environment
 
-The development environment for the CANopen stack takes place on our local windows machine with the free MSVC compiler and the hardware independent test framework.
-
-*Remember: For usage in embedded systems, the source code needs to get recompiled with the cross-compiler of your choice. Good practise is the generation, testing and release of a static library with your cross-compiler for usage in your project.*
+The development environment for the CANopen stack takes place on the host machine with the free LLVM compiler. In release 4.5, we decided to switch from the Windows-only MSVC compiler and build tools to the LLVM compiler. The main reason for this decision was that this compiler is available for Windows, Linux, and Mac OS users.
 
 ### Required Tools
 
 Download and install these free tools:
 
-- [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) - the free C compiler for Windows, which includes the used build tools `CMake`, `Ninja` and `Make`
+- Install the build tools [Cmake](https://cmake.org/)
+- Install the build system [Ninja](https://ninja-build.org/)
+- Install the static checker [cppcheck](http://cppcheck.net/) 
+- Install the compiler [LLVM](https://clang.llvm.org/) for your host machine
 
-- [Visual Studio Code](https://code.visualstudio.com/download) - this is my editor for coding. You can use your prefered coding editor without trouble.
+Check your installed environment (listed with version in time of writing these lines):
 
-Perform the configuration and setup for the environment by following the nice [Tutorial](https://code.visualstudio.com/docs/cpp/config-msvc).
+```bash
+$ cmake --version
+cmake version 3.23.2
+
+CMake suite maintained and supported by Kitware (kitware.com/cmake).
+$ ninja --version
+1.11.0
+
+$ cppcheck --version
+Cppcheck 2.8
+
+$ clang --version
+clang version 14.0.6
+Target: x86_64-pc-windows-msvc
+Thread model: posix
+InstalledDir: C:\tools\llvm\bin
+```
+
+
+### Recommended Tools
+
+- Install the editor [Visual Studio Code](https://code.visualstudio.com) for your host machine
+
+When starting Visual Studio Code the first time, you should install the recommended extensions. Which extensions are recommended for working in this project, see the file `.vscode/extensions.json`.
