@@ -49,10 +49,18 @@ static uint32_t COTDomainSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     ASSERT_PTR_ERR(obj->Data, 0);
 
     dom = (CO_OBJ_DOM *)(obj->Data);
-    if ((width > 0) && (width < dom->Size)) {
-        result = width;
-    } else {
+
+    /* given width of 0 returns domain size */
+    if (width == 0) {
         result = dom->Size;
+    } else {
+
+        /* return minimum of given width and domain size */
+        if (width < dom->Size) {
+            result = width;
+        } else {
+            result = dom->Size;
+        }
     }
     return (result);
 }
@@ -70,16 +78,23 @@ static CO_ERR COTDomainRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
 
     dom = (CO_OBJ_DOM *)(obj->Data);
     src = (uint8_t *)(dom->Start + dom->Offset);
-    num = dom->Size - dom->Offset;
     dst = (uint8_t *)buffer;
-    len = size;
-    while ((len > 0) && (num > 0)) {
+
+    /* set length to minimum of buffer and remaining domain size */
+    num = dom->Size - dom->Offset;
+    if (num >= size) {
+        len = size;
+    } else {
+        len = num;
+    }
+
+    /* copy length bytes to given buffer */
+    while (len > 0) {
         *dst = *src;
         src++;
         dst++;
         len--;
         dom->Offset++;
-        num--;
     }
     return (CO_ERR_NONE);
 }
@@ -97,16 +112,23 @@ static CO_ERR COTDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
 
     dom = (CO_OBJ_DOM *)(obj->Data);
     dst = (uint8_t *)(dom->Start + dom->Offset);
-    num = dom->Size - dom->Offset;
     src = (uint8_t *)buffer;
-    len = size;
-    while ((len > 0) && (num > 0)) {
+
+    /* set length to minimum of buffer and remaining domain size */
+    num = dom->Size - dom->Offset;
+    if (num >= size) {
+        len = size;
+    } else {
+        len = num;
+    }
+
+    /* copy length bytes to domain */
+    while (len > 0) {
         *dst = *src;
         src++;
         dst++;
         len--;
         dom->Offset++;
-        num--;
     }
     return (CO_ERR_NONE);
 }
