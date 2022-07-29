@@ -16,6 +16,7 @@
 
 add_executable(co_emcy_hist main.c)
 target_link_libraries(co_emcy_hist Canopen TestEnv)
+target_code_coverage(co_emcy_hist ALL EXTERNAL)
 
 #--- type function interface tests ---
 

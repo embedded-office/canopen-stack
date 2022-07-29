@@ -16,15 +16,17 @@
 
 # Preamble
 cmake_minimum_required(VERSION 3.15)
-project(CanopenStack)
+project(CanopenStack C ASM)
 enable_testing()
-enable_language(C ASM)
 
 # Project wide setup
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-set(CMAKE_C_STANDARD 99)
-set(CMAKE_C_STANDARD_REQUIRED YES)
-set(CMAKE_C_EXTENSIONS NO)
+include(c-standards)
+include(code-coverage)
+# require standard C99
+c_99()
+# enable coverage measurement over all test executables
+add_code_coverage_all_targets(EXCLUDE config/* include/* tests/*)
 
 # Main targets built by this project
 add_subdirectory(canopen)

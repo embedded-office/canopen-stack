@@ -16,6 +16,7 @@
 
 add_executable(co_domain main.c)
 target_link_libraries(co_domain Canopen TestEnv)
+target_code_coverage(co_domain ALL EXTERNAL)
 
 #--- type function interface tests ---
 

@@ -188,11 +188,11 @@ The development environment for the CANopen stack takes place on the host machin
 ### Required Tools
 
 Download and install these free tools:
-
-- Install the build tools [Cmake](https://cmake.org/)
-- Install the build system [Ninja](https://ninja-build.org/)
-- Install the static checker [cppcheck](http://cppcheck.net/) 
-- Install the compiler [LLVM](https://clang.llvm.org/) for your host machine
+- Install the build tools [Cmake](https://cmake.org/): `choco install cmake`
+- Install the build system [Ninja](https://ninja-build.org/): `choco install ninja`
+- Install the static checker [cppcheck](http://cppcheck.net/) : `choco install cppcheck`
+- Install the compiler [LLVM](https://clang.llvm.org/) for your host machine: `choco install llvm`
+- Install the [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) to get the right Windows SDK
 
 Check your installed environment (listed with version in time of writing these lines):
 
@@ -209,9 +209,6 @@ Cppcheck 2.8
 
 $ clang --version
 clang version 14.0.6
-Target: x86_64-pc-windows-msvc
-Thread model: posix
-InstalledDir: C:\tools\llvm\bin
 ```
 
 

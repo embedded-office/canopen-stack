@@ -1,7 +1,7 @@
 {
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
   "cmake.configureOnOpen": true,
-  
+
   "cmakeExplorer.suiteDelimiter": "/",
 
   "c-cpp-flylint.debug": true,
@@ -17,11 +17,11 @@
   "c-cpp-flylint.cppcheck.standard": [ "c99" ],
   "c-cpp-flylint.cppcheck.force": true,
   "c-cpp-flylint.cppcheck.suppressions": [
-      "variableScope",          // reason: we want to declare all used variables in a function at the top
-      "unusedStructMember",     // reason: we provide structures for use in the application
-      "comparePointers",        // reason: we need to loop through the testcase structures in the test section
-      "constParameter",         // reason: we want to avoid const parameters for easier function usage
-      "ConfigurationNotChecked" // reason: we want to avoid problems with the C test framework 'acutest.h'
+    "variableScope",          // reason: we want to declare all used variables in a function at the top
+    "unusedStructMember",     // reason: we provide structures for use in the application
+    "comparePointers",        // reason: we need to loop through the testcase structures in the test section
+    "constParameter",         // reason: we want to avoid const parameters for easier function usage
+    "ConfigurationNotChecked" // reason: we want to avoid problems with the C test framework 'acutest.h'
   ],
   "c-cpp-flylint.cppcheck.includePaths": [
     "canopen/config",

@@ -16,6 +16,7 @@
 
 add_executable(co_unsigned16 main.c)
 target_link_libraries(co_unsigned16 Canopen TestEnv)
+target_code_coverage(co_unsigned16 ALL EXTERNAL)
 
 #--- type function interface tests ---
 
