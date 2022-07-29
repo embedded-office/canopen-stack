@@ -111,19 +111,11 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
         pdo->Node->Error = CO_ERR_TPDO_COM_OBJ;
         return;
     }
-    err = CODictRdWord(cod, CO_DEV(0x1800 + num, 3), &inhibit);
-    if (err != CO_ERR_NONE) {
-        err = (int16_t)CO_ERR_NONE;
-        pdo->Node->Error = CO_ERR_NONE;
-    }
+    (void)CODictRdWord(cod, CO_DEV(0x1800 + num, 3), &inhibit);
     pdo[num].Inhibit = COTmrGetTicks(tmr, inhibit, CO_TMR_UNIT_100US);
 
     if ((type == 254) || (type == 255)) {
-        err = CODictRdWord(cod, CO_DEV(0x1800 + num, 5), &timer);
-        if (err != CO_ERR_NONE) {
-            err = (int16_t)CO_ERR_NONE;
-            pdo->Node->Error = CO_ERR_NONE;
-        }
+        (void)CODictRdWord(cod, CO_DEV(0x1800 + num, 5), &timer);
     }
 
     err = CODictRdLong(cod, CO_DEV(0x1800 + num, 1), &id);
