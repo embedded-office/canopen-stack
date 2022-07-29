@@ -19,7 +19,26 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT StubReset()
+
 #include "acutest.h"
+
+/******************************************************************************
+* TEST CASE - STUB FUNCTIONS
+******************************************************************************/
+
+uint32_t StubAktivate = 0;
+void COSyncProdActivate(CO_SYNC *sync)
+{
+    StubAktivate++;
+}
+
+void StubReset(void)
+{
+    StubAktivate = 0;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -96,18 +115,36 @@ void test_read_bad_node(void)
 * TEST CASES - WRITE
 ******************************************************************************/
 
-void test_write_time(void)
+void test_write_active(void)
 {
     CO_NODE  AppNode = { 0 };
     uint32_t data = 0x22334455;
-    uint32_t val  = 0;
+    uint32_t val  = 0x11223344;
     CO_ERR   err;
     CO_OBJ   Obj = { CO_KEY(0x1006, 0, CO_OBJ_____RW), CO_TSYNC_CYCLE, (CO_DATA)(&data)};
+    AppNode.Sync.CobId = (1uL << 30);   /* generator active */
 
     err = COObjWrValue(&Obj, &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
-    TEST_CHECK(data == 0);
+    TEST_CHECK(data == 0x11223344);
+    TEST_CHECK(StubAktivate == 1);
+}
+
+void test_write_inactive(void)
+{
+    CO_NODE  AppNode = { 0 };
+    uint32_t data = 0x33445566;
+    uint32_t val  = 0x22334455;
+    CO_ERR   err;
+    CO_OBJ   Obj = { CO_KEY(0x1006, 0, CO_OBJ_____RW), CO_TSYNC_CYCLE, (CO_DATA)(&data)};
+    AppNode.Sync.CobId = (0uL << 30);   /* generator inactive */
+
+    err = COObjWrValue(&Obj, &AppNode, &val, sizeof(val));
+
+    TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(data == 0x22334455);
+    TEST_CHECK(StubAktivate == 0);
 }
 
 void test_write_bad_node(void)
@@ -187,7 +224,8 @@ TEST_LIST = {
     { "size_bad_size",   test_size_bad_size   },
     { "read_time",       test_read_time       },
     { "read_bad_node",   test_read_bad_node   },
-    { "write_time",      test_write_time      },
+    { "write_active",    test_write_active    },
+    { "write_inactive",  test_write_inactive  },
     { "write_bad_node",  test_write_bad_node  },
     { "init_check",      test_init_check      },
     { "init_bad_index",  test_init_bad_index  },

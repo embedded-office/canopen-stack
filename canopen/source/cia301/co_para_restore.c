@@ -161,6 +161,7 @@ static CO_ERR COTParaRestoreInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 * PUBLIC API FUNCTIONS
 ******************************************************************************/
 
+WEAK
 CO_ERR COParaRestore(struct CO_PARA_T *pg, struct CO_NODE_T *node)
 {
     CO_ERR  result = CO_ERR_NONE;

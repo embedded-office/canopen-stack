@@ -19,7 +19,43 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT  StubReset()
+
 #include "acutest.h"
+
+/******************************************************************************
+* TEST CASES - STUB FUNCTIONS
+******************************************************************************/
+
+uint32_t StubTmrDelete = 0;
+int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
+{
+    StubTmrDelete++;
+    return (0);
+}
+
+uint32_t StubTmrCreate = 0;
+int16_t COTmrCreate(CO_TMR *tmr, uint32_t startTicks, uint32_t cycleTicks, CO_TMR_FUNC func, void *para)
+{
+    StubTmrCreate++;
+    return (0);
+}
+
+uint32_t StubTmrTicks = 0;
+uint32_t COTmrGetTicks(CO_TMR *tmr, uint16_t time, uint32_t unit)
+{
+    StubTmrTicks++;
+    return (time);
+}
+
+void StubReset (void)
+{
+    StubTmrDelete = 0;
+    StubTmrCreate = 0;
+    StubTmrTicks = 0;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -109,14 +145,15 @@ void test_read_bad_node(void)
 * TEST CASES - WRITE
 ******************************************************************************/
 
-void test_write_value(void)
+void test_write_start(void)
 {
     CO_NODE  AppNode = { 0 };
-    uint16_t data = 0x8877;
+    uint16_t data = 0;
     uint16_t val  = 0x6655;
     CO_ERR   err;
     CO_OBJ   Obj[1] = { CO_KEY(0x1800, 5, CO_OBJ_____RW), CO_TPDO_EVENT, (CO_DATA)(&data)};
     CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 1);
+    AppNode.Nmt.Mode = CO_OPERATIONAL;
     AppNode.TPdo[0].EvTmr = -1;
     AppNode.TPdo[0].InTmr = -1;
 
@@ -124,6 +161,48 @@ void test_write_value(void)
 
     TEST_CHECK(err == CO_ERR_NONE);
     TEST_CHECK(data == val);
+    TEST_CHECK(StubTmrDelete == 0);
+    TEST_CHECK(StubTmrCreate == 1);
+}
+
+void test_write_change(void)
+{
+    CO_NODE  AppNode = { 0 };
+    uint16_t data = 0x8877;
+    uint16_t val  = 0x6655;
+    CO_ERR   err;
+    CO_OBJ   Obj[1] = { CO_KEY(0x1800, 5, CO_OBJ_____RW), CO_TPDO_EVENT, (CO_DATA)(&data)};
+    CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 1);
+    AppNode.Nmt.Mode = CO_OPERATIONAL;
+    AppNode.TPdo[0].EvTmr = 1;
+    AppNode.TPdo[0].InTmr = -1;
+
+    err = COObjWrValue(&Obj[0], &AppNode, &val, sizeof(val));
+
+    TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(data == val);
+    TEST_CHECK(StubTmrDelete == 1);
+    TEST_CHECK(StubTmrCreate == 1);
+}
+
+void test_write_stop(void)
+{
+    CO_NODE  AppNode = { 0 };
+    uint16_t data = 0x8877;
+    uint16_t val  = 0;
+    CO_ERR   err;
+    CO_OBJ   Obj[1] = { CO_KEY(0x1800, 5, CO_OBJ_____RW), CO_TPDO_EVENT, (CO_DATA)(&data)};
+    CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 1);
+    AppNode.Nmt.Mode = CO_OPERATIONAL;
+    AppNode.TPdo[0].EvTmr = 1;
+    AppNode.TPdo[0].InTmr = 1;
+
+    err = COObjWrValue(&Obj[0], &AppNode, &val, sizeof(val));
+
+    TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(data == val);
+    TEST_CHECK(StubTmrDelete == 2);
+    TEST_CHECK(StubTmrCreate == 0);
 }
 
 void test_write_bad_node(void)
@@ -202,7 +281,9 @@ TEST_LIST = {
     { "read_ref",         test_read_ref         },
     { "read_direct",      test_read_direct      },
     { "read_bad_node",    test_read_bad_node    },
-    { "write_value",      test_write_value      },
+    { "write_start",      test_write_start      },
+    { "write_change",     test_write_change     },
+    { "write_stop",       test_write_stop       },
     { "write_bad_node",   test_write_bad_node   },
     { "init_check",       test_init_check       },
     { "init_bad_index",   test_init_bad_index   },

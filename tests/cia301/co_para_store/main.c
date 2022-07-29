@@ -19,7 +19,35 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT   StubReset()
+
 #include "acutest.h"
+
+/******************************************************************************
+* TEST CASES - STUB FUNCTIONS
+******************************************************************************/
+
+uint32_t StubLoad = 0;
+CO_ERR CONodeParaLoad(struct CO_NODE_T *node, enum CO_NMT_RESET_T type)
+{
+    StubLoad++;
+    return (CO_ERR_NONE);
+}
+
+uint32_t StubStore = 0;
+CO_ERR COParaStore(struct CO_PARA_T *pg, struct CO_NODE_T *node)
+{
+    StubStore++;
+    return (CO_ERR_NONE);
+}
+
+void StubReset (void)
+{
+    StubLoad = 0;
+    StubStore = 0;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -127,6 +155,7 @@ void test_write_single(void)
     err = COObjWrValue(&Obj[1], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubStore == 1);
 }
 
 void test_write_all(void)
@@ -147,6 +176,7 @@ void test_write_all(void)
     err = COObjWrValue(&Obj[1], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubStore == 2);
 }
 
 void test_write_bad_signature(void)
@@ -164,6 +194,7 @@ void test_write_bad_signature(void)
     err = COObjWrValue(&Obj[1], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_TYPE_WR);
+    TEST_CHECK(StubStore == 0);
 }
 
 void test_write_bad_index(void)
@@ -210,9 +241,10 @@ void test_init_check(void)
     };
     CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
 
-    err = COObjInit(&Obj[1], &AppNode);
+    err = COObjInit(&Obj[0], &AppNode);
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubLoad == 2);
 }
 
 void test_init_bad_index(void)
@@ -226,7 +258,7 @@ void test_init_bad_index(void)
     };
     CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 2);
 
-    err = COObjInit(&Obj[1], &AppNode);
+    err = COObjInit(&Obj[0], &AppNode);
 
     TEST_CHECK(err == CO_ERR_TYPE_INIT);
 }
@@ -235,16 +267,30 @@ void test_init_bad_index(void)
 * TEST CASES - RESET
 ******************************************************************************/
 
-void test_reset_unused(void)
+void test_reset_com(void)
 {
     CO_NODE  AppNode = { 0 };
     CO_PARA  data = { 0 };
     CO_ERR   err;
     CO_OBJ   Obj = { CO_KEY(0x1010, 0, CO_OBJ_____RW), CO_TPARA_STORE, (CO_DATA)(&data)};
 
-    err = COObjReset(&Obj, &AppNode, 7);
+    err = COObjReset(&Obj, &AppNode, CO_RESET_COM);
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubLoad == 1);
+}
+
+void test_reset_node(void)
+{
+    CO_NODE  AppNode = { 0 };
+    CO_PARA  data = { 0 };
+    CO_ERR   err;
+    CO_OBJ   Obj = { CO_KEY(0x1010, 0, CO_OBJ_____RW), CO_TPARA_STORE, (CO_DATA)(&data)};
+
+    err = COObjReset(&Obj, &AppNode, CO_RESET_NODE);
+
+    TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubLoad == 1);
 }
 
 
@@ -262,6 +308,7 @@ TEST_LIST = {
     { "write_bad_node",      test_write_bad_node      },
     { "init_check",          test_init_check          },
     { "init_bad_index",      test_init_bad_index      },
-    { "reset_unused",        test_reset_unused        },
+    { "reset_com",           test_reset_com           },
+    { "reset_node",          test_reset_node          },
     { NULL, NULL }
 };

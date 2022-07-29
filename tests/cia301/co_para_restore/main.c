@@ -19,7 +19,27 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT  StubReset()
+
 #include "acutest.h"
+
+/******************************************************************************
+* TEST CASES - SIZE
+******************************************************************************/
+
+uint32_t StubRestore = 0;
+CO_ERR COParaRestore(struct CO_PARA_T *pg, struct CO_NODE_T *node)
+{
+    StubRestore++;
+    return (CO_ERR_NONE);
+}
+
+void StubReset (void)
+{
+    StubRestore = 0;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -128,6 +148,7 @@ void test_write_single(void)
     err = COObjWrValue(&Obj[1], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubRestore == 1);
 }
 
 void test_write_all(void)
@@ -148,6 +169,7 @@ void test_write_all(void)
     err = COObjWrValue(&Obj[1], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubRestore == 2);
 }
 
 void test_write_bad_signature(void)
@@ -165,6 +187,7 @@ void test_write_bad_signature(void)
     err = COObjWrValue(&Obj[1], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_TYPE_WR);
+    TEST_CHECK(StubRestore == 0);
 }
 
 void test_write_bad_index(void)

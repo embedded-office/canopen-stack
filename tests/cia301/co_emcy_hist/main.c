@@ -19,7 +19,26 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT StubReset()
+
 #include "acutest.h"
+
+/******************************************************************************
+* TEST CASE - STUB FUNCTIONS
+******************************************************************************/
+
+uint32_t StubHistReset = 0;
+void COEmcyHistReset(CO_EMCY *emcy)
+{
+    StubHistReset++;
+}
+
+void StubReset(void)
+{
+    StubHistReset = 0;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -113,7 +132,7 @@ void test_read_bad_node(void)
 * TEST CASES - WRITE
 ******************************************************************************/
 
-void test_write_sub_0(void)
+void test_write_reset(void)
 {
     CO_NODE  AppNode = { 0 };
     uint8_t  data = 0x22;
@@ -124,9 +143,10 @@ void test_write_sub_0(void)
     err = COObjWrValue(&Obj, &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubHistReset == 1);
 }
 
-void test_write_bad_sub_0(void)
+void test_write_no_reset(void)
 {
     CO_NODE  AppNode = { 0 };
     uint8_t  data = 0x33;
@@ -137,6 +157,7 @@ void test_write_bad_sub_0(void)
     err = COObjWrValue(&Obj, &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_OBJ_RANGE);
+    TEST_CHECK(StubHistReset == 0);
 }
 
 void test_write_sub_1(void)
@@ -268,8 +289,8 @@ TEST_LIST = {
     { "read_sub_0",      test_read_sub_0      },
     { "read_sub_1",      test_read_sub_1      },
     { "read_bad_node",   test_read_bad_node   },
-    { "write_sub_0",     test_write_sub_0     },
-    { "write_bad_sub_0", test_write_bad_sub_0 },
+    { "write_reset",     test_write_reset     },
+    { "write_no_reset",  test_write_no_reset  },
     { "write_sub_1",     test_write_sub_1     },
     { "write_bad_node",  test_write_bad_node  },
     { "init_hist_min",   test_init_hist_min   },

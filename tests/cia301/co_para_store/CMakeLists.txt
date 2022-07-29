@@ -32,4 +32,5 @@ add_test(NAME co_para_store/write/bad_index      COMMAND co_para_store write_bad
 add_test(NAME co_para_store/write/bad_node       COMMAND co_para_store write_bad_node      )
 add_test(NAME co_para_store/init/check           COMMAND co_para_store init_check          )
 add_test(NAME co_para_store/init/bad_index       COMMAND co_para_store init_bad_index      )
-add_test(NAME co_para_store/reset/unused         COMMAND co_para_store reset_unused        )
+add_test(NAME co_para_store/reset/com            COMMAND co_para_store reset_com           )
+add_test(NAME co_para_store/reset/node           COMMAND co_para_store reset_node          )

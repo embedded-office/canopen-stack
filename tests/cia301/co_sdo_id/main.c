@@ -19,7 +19,33 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT   StubReset()
+
 #include "acutest.h"
+
+/******************************************************************************
+* TEST CASES - STUB FUNCTIONS
+******************************************************************************/
+
+uint32_t StubSdoReset = 0;
+void COSdoReset(CO_SDO *srv, uint8_t num, CO_NODE *node)
+{
+    StubSdoReset++;
+}
+
+uint32_t StubSdoEnable = 0;
+void COSdoEnable(CO_SDO *srv, uint8_t num)
+{
+    StubSdoEnable++;
+}
+
+void StubReset (void)
+{
+    StubSdoReset = 0;
+    StubSdoEnable = 0;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -124,6 +150,8 @@ void test_write_activate(void)
     err = COObjWrValue(&Obj[0], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubSdoReset == 0);
+    TEST_CHECK(StubSdoEnable == 1);
 }
 
 void test_write_deactivate(void)
@@ -141,6 +169,8 @@ void test_write_deactivate(void)
     err = COObjWrValue(&Obj[1], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(StubSdoReset == 1);
+    TEST_CHECK(StubSdoEnable == 1);
 }
 
 void test_write_active(void)
@@ -158,6 +188,8 @@ void test_write_active(void)
     err = COObjWrValue(&Obj[0], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_OBJ_RANGE);
+    TEST_CHECK(StubSdoReset == 0);
+    TEST_CHECK(StubSdoEnable == 0);
 }
 
 void test_write_bad_node(void)

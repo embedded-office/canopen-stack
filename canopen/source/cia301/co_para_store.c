@@ -44,7 +44,7 @@ static CO_ERR   COTParaStoreReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, 
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTParaStore = { COTParaStoreSize, COTParaStoreInit, COTParaStoreRead, COTParaStoreWrite, 0 };
+const CO_OBJ_TYPE COTParaStore = { COTParaStoreSize, COTParaStoreInit, COTParaStoreRead, COTParaStoreWrite, COTParaStoreReset };
 
 /******************************************************************************
 * PRIVATE TYPE FUNCTIONS
@@ -173,6 +173,7 @@ static CO_ERR COTParaStoreReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, ui
     UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
 
+    /* we use reset on subindex 0 to load all parameter groups of a given type */
     if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
         result = CONodeParaLoad(node, para);
     }
@@ -183,6 +184,7 @@ static CO_ERR COTParaStoreReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, ui
 * PROTECTED API FUNCTIONS
 ******************************************************************************/
 
+WEAK
 CO_ERR CONodeParaLoad(struct CO_NODE_T *node, enum CO_NMT_RESET_T type)
 {
     CO_ERR    result = CO_ERR_NONE;
@@ -224,6 +226,7 @@ CO_ERR CONodeParaLoad(struct CO_NODE_T *node, enum CO_NMT_RESET_T type)
 * PUBLIC API FUNCTIONS
 ******************************************************************************/
 
+WEAK
 CO_ERR COParaStore(struct CO_PARA_T *pg, struct CO_NODE_T *node)
 {
     CO_ERR   result = CO_ERR_NONE;
