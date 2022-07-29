@@ -21,12 +21,10 @@ enable_testing()
 
 # Project wide setup
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-include(c-standards)
-include(code-coverage)
 # require standard C99
-c_99()
-# enable coverage measurement over all test executables
-add_code_coverage_all_targets(EXCLUDE config/* include/* tests/*)
+set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
 
 # Main targets built by this project
 add_subdirectory(canopen)

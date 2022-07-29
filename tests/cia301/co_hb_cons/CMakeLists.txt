@@ -16,7 +16,6 @@
 
 add_executable(co_hb_cons main.c)
 target_link_libraries(co_hb_cons Canopen TestEnv)
-target_code_coverage(co_hb_cons ALL EXTERNAL)
 
 #--- type function interface tests ---
 

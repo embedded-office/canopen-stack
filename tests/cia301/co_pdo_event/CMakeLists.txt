@@ -16,7 +16,6 @@
 
 add_executable(co_pdo_event main.c)
 target_link_libraries(co_pdo_event Canopen TestEnv)
-target_code_coverage(co_pdo_event ALL EXTERNAL)
 
 #--- type function interface tests ---
 

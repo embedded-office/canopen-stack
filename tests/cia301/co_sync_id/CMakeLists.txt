@@ -16,7 +16,6 @@
 
 add_executable(co_sync_id main.c)
 target_link_libraries(co_sync_id Canopen TestEnv)
-target_code_coverage(co_sync_id ALL EXTERNAL)
 
 #--- type function interface tests ---
 

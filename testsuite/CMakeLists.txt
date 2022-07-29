@@ -18,7 +18,6 @@
 # define the test application executable
 #
 add_executable(CanopenTest)
-target_code_coverage(CanopenTest ALL EXTERNAL)
 
 #---
 # test application with test runner and supporting functions

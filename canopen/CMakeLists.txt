@@ -76,5 +76,3 @@ target_sources(Canopen
     source/cia301/co_sync_cycle.c
     source/cia301/co_sync_id.c
 )
-
-target_code_coverage(Canopen ALL)

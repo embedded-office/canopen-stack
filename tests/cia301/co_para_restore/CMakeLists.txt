@@ -16,7 +16,6 @@
 
 add_executable(co_para_restore main.c)
 target_link_libraries(co_para_restore Canopen TestEnv)
-target_code_coverage(co_para_restore ALL EXTERNAL)
 
 #--- type function interface tests ---
 
