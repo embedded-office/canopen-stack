@@ -219,10 +219,6 @@ err   = COObjRdValue(entry, &AppNode, &value, sizeof(value));
   :
 ```
 
-!!! note
-
-    The example shows the read access with the knowledge, that the addressed object entry is independent of the node ID. To be independent of this knowledge, the API function `CONmtGetNodeId()` may be used to get the current node ID.
-
 #### COObjTypeUserSDOAbort()
 
 This function allows the definition of user defined SDO abort codes within user type function implementations.
@@ -392,10 +388,6 @@ entry = CODictFind  (&(AppNode.Dict), CO_DEV(0x1234,0x56));
 err   = COObjWrValue(entry, &AppNode, &value, sizeof(value));
   :
 ```
-
-!!! note
-
-    The example shows the write access with the knowledge, that the addressed object entry is independent of the node ID. To be independent of this knowledge, the API function `CONmtGetNodeId()` may be used to get the current node ID.
 
 
 [1]: ../object/#coobjrdbufstart
