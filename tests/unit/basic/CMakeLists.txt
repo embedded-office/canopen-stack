@@ -14,8 +14,9 @@
 #   limitations under the License.
 #******************************************************************************
 
-#---
-# tests in different test depths:
-#
-add_subdirectory(unit)
-add_subdirectory(integration)
+# basic types
+add_subdirectory(co_domain)
+add_subdirectory(co_string)
+add_subdirectory(co_unsigned8)
+add_subdirectory(co_unsigned16)
+add_subdirectory(co_unsigned32)

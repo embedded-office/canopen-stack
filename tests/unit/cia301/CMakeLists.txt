@@ -14,8 +14,18 @@
 #   limitations under the License.
 #******************************************************************************
 
-#---
-# tests in different test depths:
-#
-add_subdirectory(unit)
-add_subdirectory(integration)
+# CiA301 types
+add_subdirectory(co_emcy_hist)
+add_subdirectory(co_emcy_id)
+add_subdirectory(co_hb_cons)
+add_subdirectory(co_hb_prod)
+add_subdirectory(co_para_store)
+add_subdirectory(co_para_restore)
+add_subdirectory(co_pdo_event)
+add_subdirectory(co_pdo_id)
+add_subdirectory(co_pdo_map)
+add_subdirectory(co_pdo_num)
+add_subdirectory(co_pdo_type)
+add_subdirectory(co_sdo_id)
+add_subdirectory(co_sync_cycle)
+add_subdirectory(co_sync_id)

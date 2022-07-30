@@ -15,7 +15,16 @@
 #******************************************************************************
 
 #---
-# tests in different test depths:
+# test environment library
 #
-add_subdirectory(unit)
-add_subdirectory(integration)
+add_library(TestEnv INTERFACE)
+target_include_directories(TestEnv
+  INTERFACE
+    env
+)
+
+#---
+# object type unit tests
+#
+add_subdirectory(basic)
+add_subdirectory(cia301)

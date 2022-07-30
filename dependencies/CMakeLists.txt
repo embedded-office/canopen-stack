@@ -15,7 +15,5 @@
 #******************************************************************************
 
 #---
-# tests in different test depths:
+# no external dependency
 #
-add_subdirectory(unit)
-add_subdirectory(integration)

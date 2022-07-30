@@ -9,14 +9,12 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ### Add
 
-- Add unit tests for basic type functions
-- Add unit tests for CiA301 type: co_emcy_hist and co_emcy_id
+- Add unit tests for all object type functions
 
 ### Changed
 
-- Fix some static test issues, detected by `cppcheck`
-- Separate all basic type functions into separate files
-- Separate all CiA301 specific type functions into separate files
+- Separate all object type functions into separate files
+- Adjust repository structure to recommendations in "Professional CMake - A Practical Guide"
 
 ### Attention: This release introduces a breaking change:
 

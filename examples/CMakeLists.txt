@@ -14,8 +14,5 @@
 #   limitations under the License.
 #******************************************************************************
 
-#---
-# tests in different test depths:
-#
-add_subdirectory(unit)
-add_subdirectory(integration)
+add_subdirectory(quickstart)
+add_subdirectory(dynamic-od)

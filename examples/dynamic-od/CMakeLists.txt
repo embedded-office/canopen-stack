@@ -15,7 +15,31 @@
 #******************************************************************************
 
 #---
-# tests in different test depths:
+# define the test application executable
 #
-add_subdirectory(unit)
-add_subdirectory(integration)
+add_executable(DynamicOD)
+
+#---
+# test application with test runner and supporting functions
+#
+target_sources(DynamicOD
+  PRIVATE
+    # application
+    app/clock_dict.c
+    app/clock_app.c
+    app/clock_spec.c
+    # driver
+    driver/drv_can_sim.c
+    driver/drv_nvm_sim.c
+    driver/drv_timer_swcycle.c
+  )
+target_include_directories(DynamicOD
+  PRIVATE
+    app
+    driver
+)
+
+#---
+# specify the dependencies for this application
+#
+target_link_libraries(DynamicOD Canopen)

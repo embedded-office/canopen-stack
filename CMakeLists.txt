@@ -1,4 +1,4 @@
-#/*****************************************************************************
+#******************************************************************************
 #   Copyright 2020 Embedded Office GmbH & Co. KG
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,25 +14,35 @@
 #   limitations under the License.
 #******************************************************************************
 
-# Preamble
+#---
+# preamble
+#
 cmake_minimum_required(VERSION 3.15)
 project(CanopenStack C ASM)
 enable_testing()
 
-# Project wide setup
+#---
+# project wide setup
+#
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-# require standard C99
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
-# Main targets built by this project
-add_subdirectory(canopen)
-add_subdirectory(driver)
+#---
+# externally provided content
+#
+add_subdirectory(dependencies)
 
-# Typically needed only if we are the top level project
+#---
+# main targets built by this project
+#
+add_subdirectory(src)
+
+#---
+# typically needed only if we are the top level project
+#
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
-add_subdirectory(tests)      # unit tests (object type modules)
-add_subdirectory(testsuite)  # integration tests (module interactions)
-add_subdirectory(example)    # validation tests (demo apps)
+  add_subdirectory(examples)
+  add_subdirectory(tests)
 endif()
