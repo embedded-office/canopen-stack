@@ -74,6 +74,7 @@ static CO_ERR COTPdoMapWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     uint16_t  pcomidx;
     uint8_t   mapn;
 
+    UNUSED(size);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
 

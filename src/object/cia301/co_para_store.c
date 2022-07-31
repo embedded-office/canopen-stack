@@ -90,7 +90,6 @@ static CO_ERR COTParaStoreWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
     CO_OBJ   *pwo;
     CO_PARA  *pg;
     uint32_t  value;
-    uint16_t  idx;
     uint8_t   num;
     uint8_t   sub;
 
