@@ -35,10 +35,13 @@
  * us to improve testability by allowing stubbing functions in the test cases
  * with stub functions of the same symbol name.
  */
-#ifndef WEAK
-#define WEAK   __attribute__((weak))
+#ifndef WEAK_TEST
+#define WEAK_TEST    __attribute__((weak))
 #endif
+#else
+#define WEAK_TEST
 #endif
+#define WEAK    __attribute__((weak))
 
 #define UNUSED(var)    (void)(var)
 

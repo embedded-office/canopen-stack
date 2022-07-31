@@ -132,7 +132,7 @@ static CO_ERR COTSyncIdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 * PROTECTED HELPER FUNCTIONS
 ******************************************************************************/
 
-WEAK
+WEAK_TEST
 void COSyncProdActivate(CO_SYNC *sync)
 {
     uint32_t ticks, time;
@@ -198,7 +198,7 @@ void COSyncProdActivate(CO_SYNC *sync)
     }
 }
 
-WEAK
+WEAK_TEST
 void COSyncProdDeactivate(CO_SYNC *sync)
 {
     int16_t tid;

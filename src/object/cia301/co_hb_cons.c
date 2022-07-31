@@ -161,7 +161,7 @@ static CO_ERR COTNmtHbConsInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 * PROTECTED HELPER FUNCTIONS
 ******************************************************************************/
 
-WEAK
+WEAK_TEST
 CO_ERR CONmtHbConsActivate(CO_HBCONS *hbc, uint16_t time, uint8_t nodeid)
 {
     CO_ERR      result = CO_ERR_NONE;

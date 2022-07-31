@@ -34,7 +34,7 @@ void COSdoInit(CO_SDO *srv, CO_NODE *node)
     }
 }
 
-WEAK
+WEAK_TEST
 void COSdoReset(CO_SDO *srv, uint8_t num, CO_NODE *node)
 {
     CO_SDO   *srvnum;
@@ -59,7 +59,7 @@ void COSdoReset(CO_SDO *srv, uint8_t num, CO_NODE *node)
     srvnum->Blk.State    = BLK_IDLE;
 }
 
-WEAK
+WEAK_TEST
 void COSdoEnable(CO_SDO *srv, uint8_t num)
 {
     uint32_t rxId;

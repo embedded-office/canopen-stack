@@ -215,7 +215,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
 * PUBLIC API FUNCTIONS
 ******************************************************************************/
 
-WEAK
+WEAK_TEST
 void COEmcyHistReset(CO_EMCY *emcy)
 {
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;

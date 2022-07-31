@@ -184,7 +184,7 @@ static CO_ERR COTParaStoreReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, ui
 * PROTECTED API FUNCTIONS
 ******************************************************************************/
 
-WEAK
+WEAK_TEST
 CO_ERR CONodeParaLoad(struct CO_NODE_T *node, enum CO_NMT_RESET_T type)
 {
     CO_ERR    result = CO_ERR_NONE;
@@ -226,7 +226,7 @@ CO_ERR CONodeParaLoad(struct CO_NODE_T *node, enum CO_NMT_RESET_T type)
 * PUBLIC API FUNCTIONS
 ******************************************************************************/
 
-WEAK
+WEAK_TEST
 CO_ERR COParaStore(struct CO_PARA_T *pg, struct CO_NODE_T *node)
 {
     CO_ERR   result = CO_ERR_NONE;

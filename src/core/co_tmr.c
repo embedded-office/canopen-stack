@@ -87,7 +87,7 @@ void COTmrClear(CO_TMR *tmr)
 * PUBLIC FUNCTIONS
 ******************************************************************************/
 
-WEAK
+WEAK_TEST
 uint32_t COTmrGetTicks(CO_TMR *tmr, uint16_t time, uint32_t unit)
 {
     uint32_t ticks = 0u;
@@ -120,7 +120,7 @@ uint16_t COTmrGetMinTime(CO_TMR *tmr, uint32_t unit)
     return (time);
 }
 
-WEAK
+WEAK_TEST
 int16_t COTmrCreate(CO_TMR      *tmr,
                     uint32_t     startTicks,
                     uint32_t     cycleTicks,
@@ -183,7 +183,7 @@ int16_t COTmrCreate(CO_TMR      *tmr,
     return (result);
 }
 
-WEAK
+WEAK_TEST
 int16_t COTmrDelete(CO_TMR *tmr, int16_t actId)
 {
     CO_TMR_TIME   *tx;
