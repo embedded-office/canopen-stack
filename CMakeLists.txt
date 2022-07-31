@@ -18,7 +18,7 @@
 # preamble
 #
 cmake_minimum_required(VERSION 3.15)
-project(CanopenStack C ASM)
+project(canopen-stack C ASM)
 enable_testing()
 
 #---
