@@ -568,9 +568,12 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
 
     ASSERT_PTR_ERR(csdo, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buf, CO_ERR_BAD_ARG);
-    ASSERT_PTR_ERR(callback, CO_ERR_BAD_ARG);
     ASSERT_NOT_ERR(size, (uint32_t)0, CO_ERR_BAD_ARG);
 
+    if (callback == (CO_CSDO_CALLBACK_T)NULL) {
+        /* no callback is given */
+        return CO_ERR_BAD_ARG;
+    }
     if (csdo->State == CO_CSDO_STATE_INVALID) {
         /* Requested SDO client is disabled */
         return CO_ERR_SDO_OFF;
@@ -634,9 +637,12 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
 
     ASSERT_PTR_ERR(csdo, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
-    ASSERT_PTR_ERR(callback, CO_ERR_BAD_ARG);
     ASSERT_NOT_ERR(size, (uint32_t)0, CO_ERR_BAD_ARG);
 
+    if (callback == (CO_CSDO_CALLBACK_T)NULL) {
+        /* no callback is given */
+        return CO_ERR_BAD_ARG;
+    }
     if (csdo->State == CO_CSDO_STATE_INVALID) {
         /* Requested SDO client is disabled */
         return CO_ERR_SDO_OFF;
