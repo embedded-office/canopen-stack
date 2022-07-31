@@ -27,7 +27,6 @@
 
 void COSyncInit(CO_SYNC *sync, struct CO_NODE_T *node)
 {
-    CO_ERR  err;
     uint8_t i;
 
     ASSERT_PTR_FATAL(sync);
