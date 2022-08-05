@@ -24,13 +24,19 @@
     "ConfigurationNotChecked" // reason: we want to avoid problems with the C test framework 'acutest.h'
   ],
   "c-cpp-flylint.cppcheck.includePaths": [
-    "canopen/config",
-    "canopen/include",
-    "canopen/include/basic",
-    "canopen/include/cia301",
-    "example/quickstart/app",
-    "testsuite/app",
-    "testsuite/testfrm",
-    "testsuite/tests"
+    // CANopen Library
+    "src/config",
+    "src/core",
+    "src/hal",
+    "src/object/basic",
+    "src/object/cia301",
+    "src/service/cia301",
+    "src/service/cia305",
+    // Library Testing
+    "tests/integration/app",
+    "tests/integration/driver",
+    "tests/integration/testfrm",
+    "tests/integration/tests",
+    "tests/unit/env",
   ]
 }
