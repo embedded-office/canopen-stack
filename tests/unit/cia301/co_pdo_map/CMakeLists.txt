@@ -16,7 +16,7 @@
 
 add_executable(co_pdo_map main.c)
 target_link_libraries(co_pdo_map Canopen TestEnv)
-install(TARGETS co_pdo_map RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/unit)
+
 
 #--- type function interface tests ---
 

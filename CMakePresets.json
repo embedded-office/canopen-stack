@@ -6,7 +6,6 @@
       "displayName": "LLVM Compiler (Host)",
       "generator": "Ninja",
       "binaryDir": "build",
-      "installDir": "${sourceDir}/out",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "clang",
         "CMAKE_BUILD_TYPE": "Debug"
@@ -18,7 +17,7 @@
       "name": "debug",
       "configurePreset": "llvm-host",
       "displayName": "Debug Build (Host)",
-      "targets": [ "install" ],
+      "targets": [ "all" ],
       "jobs": 5
     }
   ],

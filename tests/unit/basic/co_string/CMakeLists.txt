@@ -16,7 +16,7 @@
 
 add_executable(co_string main.c)
 target_link_libraries(co_string Canopen TestEnv)
-install(TARGETS co_string RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/unit)
+
 
 #--- type function interface tests ---
 

@@ -16,7 +16,7 @@
 
 add_executable(co_sdo_id main.c)
 target_link_libraries(co_sdo_id Canopen TestEnv)
-install(TARGETS co_sdo_id RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/unit)
+
 
 #--- type function interface tests ---
 

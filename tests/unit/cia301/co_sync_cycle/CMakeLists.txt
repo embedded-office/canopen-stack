@@ -16,7 +16,7 @@
 
 add_executable(co_sync_cycle main.c)
 target_link_libraries(co_sync_cycle Canopen TestEnv)
-install(TARGETS co_sync_cycle RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/unit)
+
 
 #--- type function interface tests ---
 

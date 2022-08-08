@@ -16,7 +16,7 @@
 
 add_executable(co_para_restore main.c)
 target_link_libraries(co_para_restore Canopen TestEnv)
-install(TARGETS co_para_restore RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/unit)
+
 
 #--- type function interface tests ---
 

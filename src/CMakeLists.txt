@@ -89,26 +89,7 @@ target_sources(Canopen
 )
 
 #---
-# install static library to known output location
+# place static library to known output location
 #
 set_target_properties(Canopen PROPERTIES OUTPUT_NAME "canopen-stack")
-install(
-  TARGETS Canopen
-  ARCHIVE
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/lib
-)
-
-#---
-# collect and install required public include files
-#
-get_target_property(TGT_INCLUDE_DIRS Canopen INTERFACE_INCLUDE_DIRECTORIES)
-set(TGT_INCLUDE_FILES "")
-foreach(dir ${TGT_INCLUDE_DIRS})
-  FILE(GLOB INCLUDE_FILES ${dir}/*.h)
-  set(TGT_INCLUDE_FILES ${TGT_INCLUDE_FILES} ${INCLUDE_FILES})
-endforeach()
-
-install(
-  FILES ${TGT_INCLUDE_FILES}
-  DESTINATION ${CMAKE_INSTALL_PREFIX}/include
-)
+set_target_properties(Canopen PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/out")

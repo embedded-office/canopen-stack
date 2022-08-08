@@ -16,7 +16,7 @@
 
 add_executable(co_unsigned32 main.c)
 target_link_libraries(co_unsigned32 Canopen TestEnv)
-install(TARGETS co_unsigned32 RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/unit)
+
 
 #--- type function interface tests ---
 

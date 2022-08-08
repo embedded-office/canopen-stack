@@ -16,7 +16,7 @@
 
 add_executable(co_emcy_hist main.c)
 target_link_libraries(co_emcy_hist Canopen TestEnv)
-install(TARGETS co_emcy_hist RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/unit)
+
 
 #--- type function interface tests ---
 
