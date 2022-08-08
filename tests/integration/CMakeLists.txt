@@ -111,3 +111,16 @@ target_include_directories(CanopenTest
 # specify the dependencies for this application
 #
 target_link_libraries(CanopenTest Canopen)
+
+#---
+# install executable to known output location
+#
+install(
+  TARGETS CanopenTest
+  RUNTIME
+  DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/integration
+)
+
+#--- integration tests ---
+
+add_test(NAME integration/all COMMAND CanopenTest )

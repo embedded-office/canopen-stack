@@ -183,37 +183,35 @@ Feel free to write bug reports, questions or and feedback as issue within this g
 
 ## Development Environment
 
-The development environment for the CANopen stack takes place on the host machine with the free LLVM compiler. In release 4.5, we decided to switch from the Windows-only MSVC compiler and build tools to the LLVM compiler. The main reason for this decision was that this compiler is available for Windows, Linux, and Mac OS users.
+The development environment for the CANopen stack takes place on the host machine. In release 4.4.0, we have decided to switch from the Windows-only MSVC compiler to the LLVM compiler. The main reason for this decision is that the same compiler is available for Windows, Linux, and Mac OS users.
 
-### Required Tools
+### Development Tools
 
-Download and install these free tools:
-- Install the build tools [Cmake](https://cmake.org/): `choco install cmake`
-- Install the build system [Ninja](https://ninja-build.org/): `choco install ninja`
-- Install the static checker [cppcheck](http://cppcheck.net/) : `choco install cppcheck`
-- Install the compiler [LLVM](https://clang.llvm.org/) for your host machine: `choco install llvm`
-- Install the [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) to get the right Windows SDK
+Download and install these free tools for your system:
 
-Check your installed environment (listed with version in time of writing these lines):
+- Install the build tools [Cmake](https://cmake.org/)
+- Install the build system [Ninja](https://ninja-build.org/)
+- Install the static checker [cppcheck](http://cppcheck.net/)
+- Install the compiler [LLVM](https://clang.llvm.org/)
+
+*Note: on my Windows machine, I use the [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) which inlcudes the LLVM compiler and the required Windows SDK libraries.*
+
+
+## Run the Test Applications
+
+The application is build with CMake using the provided presets:
 
 ```bash
-$ cmake --version
-cmake version 3.23.2
+# configure the project build environment for your host system
+$ cmake --preset llvm-host
+# or: re-configure the whole project from scratch (delete cache)
+$ cmake --preset llvm-host --fresh
 
-CMake suite maintained and supported by Kitware (kitware.com/cmake).
-$ ninja --version
-1.11.0
+# build the library for your host and all test applications
+$ cmake --build --preset debug
+# or: clean and re-build the library and test applications
+$ cmake --build --preset debug --clean-first
 
-$ cppcheck --version
-Cppcheck 2.8
-
-$ clang --version
-clang version 14.0.6
+# execute all test applications
+$ ctest --preset all
 ```
-
-
-### Recommended Tools
-
-- Install the editor [Visual Studio Code](https://code.visualstudio.com) for your host machine
-
-When starting Visual Studio Code the first time, you should install the recommended extensions. Which extensions are recommended for working in this project, see the file `.vscode/extensions.json`.

@@ -17,8 +17,9 @@
 #---
 # preamble
 #
-cmake_minimum_required(VERSION 3.15)
-project(canopen-stack C ASM)
+cmake_minimum_required(VERSION 3.20)     # buildPresets is introduced in 3.20
+project(canopen-stack)
+enable_language(C ASM)
 enable_testing()
 
 #---

@@ -10,7 +10,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 ### Add
 
 - Add unit tests for all object type functions
-
+- Add CMake presets for simplified usage of CMake in CI/CD
+ 
 ### Changed
 
 - Separate all object type functions into separate files

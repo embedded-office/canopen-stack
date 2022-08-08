@@ -16,15 +16,16 @@
 
 add_executable(co_string main.c)
 target_link_libraries(co_string Canopen TestEnv)
+install(TARGETS co_string RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/bin/unit)
 
 #--- type function interface tests ---
 
-add_test(NAME co_string/size/unknown   COMMAND co_string size_unknown  )
-add_test(NAME co_string/size/known     COMMAND co_string size_known    )
-add_test(NAME co_string/size/bad_size  COMMAND co_string bad_size      )
-add_test(NAME co_string/read/ref       COMMAND co_string read_ref      )
-add_test(NAME co_string/read/bad_node  COMMAND co_string read_bad_node )
-add_test(NAME co_string/write/ref      COMMAND co_string write_ref     )
-add_test(NAME co_string/write/bad_node COMMAND co_string write_bad_node)
-add_test(NAME co_string/init/offset    COMMAND co_string init_offset   )
-add_test(NAME co_string/reset/offset   COMMAND co_string reset_offset  )
+add_test(NAME unit/co_string/size/unknown   COMMAND co_string size_unknown  )
+add_test(NAME unit/co_string/size/known     COMMAND co_string size_known    )
+add_test(NAME unit/co_string/size/bad_size  COMMAND co_string bad_size      )
+add_test(NAME unit/co_string/read/ref       COMMAND co_string read_ref      )
+add_test(NAME unit/co_string/read/bad_node  COMMAND co_string read_bad_node )
+add_test(NAME unit/co_string/write/ref      COMMAND co_string write_ref     )
+add_test(NAME unit/co_string/write/bad_node COMMAND co_string write_bad_node)
+add_test(NAME unit/co_string/init/offset    COMMAND co_string init_offset   )
+add_test(NAME unit/co_string/reset/offset   COMMAND co_string reset_offset  )
