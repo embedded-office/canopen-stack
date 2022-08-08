@@ -14,17 +14,15 @@
 #   limitations under the License.
 #******************************************************************************
 
-#---
-# test environment library
-#
-add_library(TestEnv INTERFACE)
-target_include_directories(TestEnv
-  INTERFACE
-    env
-)
+add_executable(timer_min_time main.c)
+target_link_libraries(timer_min_time Canopen TestEnv)
 
-#---
-# unit tests
-#
-add_subdirectory(core)
-add_subdirectory(object)
+
+#--- type function interface tests ---
+
+add_test(NAME unit/timer/min_time/1MHz_1ms    COMMAND timer_min_time 1MHz_1ms    )
+add_test(NAME unit/timer/min_time/1MHz_100us  COMMAND timer_min_time 1MHz_100us  )
+add_test(NAME unit/timer/min_time/1kHz_1ms    COMMAND timer_min_time 1kHz_1ms    )
+add_test(NAME unit/timer/min_time/1kHz_100us  COMMAND timer_min_time 1kHz_100us  )
+add_test(NAME unit/timer/min_time/100Hz_1ms   COMMAND timer_min_time 100Hz_1ms   )
+add_test(NAME unit/timer/min_time/100Hz_100us COMMAND timer_min_time 100Hz_100us )

@@ -14,17 +14,5 @@
 #   limitations under the License.
 #******************************************************************************
 
-#---
-# test environment library
-#
-add_library(TestEnv INTERFACE)
-target_include_directories(TestEnv
-  INTERFACE
-    env
-)
-
-#---
-# unit tests
-#
-add_subdirectory(core)
-add_subdirectory(object)
+add_subdirectory(basic)
+add_subdirectory(cia301)

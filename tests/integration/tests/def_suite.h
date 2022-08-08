@@ -50,7 +50,6 @@ typedef enum DEF_OD_SUITES_E {                        /*---- Object Dictionary T
 
 typedef enum DEF_CORE_SUITES_E {                      /*---- Core Component Test Suites ----------*/
     DEF_S_CORE_TMR,                                   /*!< Suite: Highspeed Timer                 */
-    DEF_S_GET_TICKS,                                  /*!< Suite: CoTmrGetTicks()                 */
     DEF_S_MIN_TIME,                                   /*!< Suite: COTmrGetMinTime()               */
 
     DEF_S_CORE_NUM                                    /*!< Number of Suites in Group              */
@@ -113,8 +112,6 @@ typedef enum DEF_CSDO_SUITES_E {                      /*---- SDO Client Test Sui
 ******************************************************************************/
 
 #define SUITE_CORE_TMR()   TS_DEF_SUITE(DEF_G_CORE, DEF_S_CORE_TMR)  /*!< \addtogroup core_tmr    Core Timer Test     */
-#define SUITE_GET_TICKS()  TS_DEF_SUITE(DEF_G_CORE, DEF_S_GET_TICKS) /*!< \addtogroup co_get_tick Timer Service Test  */
-#define SUITE_MIN_TIME()   TS_DEF_SUITE(DEF_G_CORE, DEF_S_MIN_TIME)  /*!< \addtogroup co_min_tmr  Get Timer Min Time  */
 
 #define SUITE_OD_API()     TS_DEF_SUITE(DEF_G_OD, DEF_S_OD_API)      /*!< \addtogroup od_api  Object Dictionary API Test */
 

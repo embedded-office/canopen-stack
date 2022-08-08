@@ -14,17 +14,6 @@
 #   limitations under the License.
 #******************************************************************************
 
-#---
-# test environment library
-#
-add_library(TestEnv INTERFACE)
-target_include_directories(TestEnv
-  INTERFACE
-    env
-)
-
-#---
-# unit tests
-#
-add_subdirectory(core)
-add_subdirectory(object)
+# timer functions
+add_subdirectory(get_ticks)
+add_subdirectory(min_time)
