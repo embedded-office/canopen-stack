@@ -3,6 +3,7 @@
   "configurePresets": [
     {
       "name": "llvm-host",
+      "displayName": "LLVM Compiler (Host)",
       "generator": "Ninja",
       "binaryDir": "build",
       "installDir": "${sourceDir}/out",
@@ -16,7 +17,7 @@
     {
       "name": "debug",
       "configurePreset": "llvm-host",
-      "displayName": "Build with debug information",
+      "displayName": "Debug Build (Host)",
       "targets": [ "install" ],
       "jobs": 5
     }
@@ -24,7 +25,7 @@
   "testPresets": [
     {
       "name": "all",
-      "displayName": "All Tests (Windows)",
+      "displayName": "All Tests (Host)",
       "configurePreset": "llvm-host",
       "execution": {
         "jobs": 5
