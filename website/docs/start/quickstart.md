@@ -28,17 +28,17 @@ const uint16_t ClockODLen = sizeof(ClockOD)/sizeof(CO_OBJ);
 
 The object dictionary must hold at least the following mandatory object entries:
 
-| Index:sub | Type       | Access    | Value | Description        |
-| --------- | ---------- | --------- | ----- | ------------------ |
-| 1000h:00  | UNSIGNED32 | Const     | 0     | Device Type        |
-| 1001h:00  | UNSIGNED8  | Read-only | 0     | Error Register     |
-| 1005h:00  | UNSIGNED32 | Const     | 0x80  | COB-ID SYNC        |
-| 1017h:00  | UNSIGNED16 | Const     | 0     | Heartbeat Producer |
-| 1018h:00  | UNSIGNED8  | Const     | 4     | *Identity Object*  |
-| 1018h:01  | UNSIGNED32 | Const     | 0     | - Vendor ID        |
-| 1018h:02  | UNSIGNED32 | Const     | 0     | - Product code     |
-| 1018h:03  | UNSIGNED32 | Const     | 0     | - Revision number  |
-| 1018h:04  | UNSIGNED32 | Const     | 0     | - Serial number    |
+| Index:sub | Type       | Access    | Value         | Description        |
+| --------- | ---------- | --------- | ------------- | ------------------ |
+| 1000h:00  | UNSIGNED32 | Const     | 0             | Device Type        |
+| 1001h:00  | UNSIGNED8  | Read-only | 0             | Error Register     |
+| 1005h:00  | UNSIGNED32 | Const     | 80h + node ID | COB-ID SYNC        |
+| 1017h:00  | UNSIGNED16 | Const     | 0             | Heartbeat Producer |
+| 1018h:00  | UNSIGNED8  | Const     | 4             | *Identity Object*  |
+| 1018h:01  | UNSIGNED32 | Const     | 0             | - Vendor ID        |
+| 1018h:02  | UNSIGNED32 | Const     | 0             | - Product code     |
+| 1018h:03  | UNSIGNED32 | Const     | 0             | - Revision number  |
+| 1018h:04  | UNSIGNED32 | Const     | 0             | - Serial number    |
 
 !!! info "Remember"
 
@@ -46,7 +46,7 @@ The object dictionary must hold at least the following mandatory object entries:
 
 !!! info
 
-    The values shown for `1018h` are only dummy values. Vendor IDs are managed by CiA, and each registered company is assigned to a globally unique value.
+    The values shown for `1018h` are only dummy values. Vendor IDs are managed by CiA, and each registered company is assigned to a global unique value.
 
 These mandatory entries are added with the following lines of code:
 
@@ -54,7 +54,7 @@ These mandatory entries are added with the following lines of code:
   :
 {CO_KEY(0x1000, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0)},
 {CO_KEY(0x1001, 0, CO_OBJ_____R_), CO_TUNSIGNED8,  (CO_DATA)(&Obj1001_00_08)},
-{CO_KEY(0x1005, 0, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0x80)},
+{CO_KEY(0x1005, 0, CO_OBJ_DN__R_), CO_TUNSIGNED32, (CO_DATA)(0x80)},
 {CO_KEY(0x1017, 0, CO_OBJ_D___R_), CO_TUNSIGNED16, (CO_DATA)(0)},
 {CO_KEY(0x1018, 0, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(4)},
 {CO_KEY(0x1018, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(0)},
@@ -135,16 +135,16 @@ These entries are created using the following lines of code:
 
 ```c
   :
-{CO_KEY(0x2100, 0, CO_OBJ_D___R_), CO_UNSIGNED8,  (CO_DATA)(3)},
-{CO_KEY(0x2100, 1, CO_OBJ____PR_), CO_UNSIGNED32, (CO_DATA)(&Obj2100_01_20)},
-{CO_KEY(0x2100, 2, CO_OBJ____PR_), CO_UNSIGNED8,  (CO_DATA)(&Obj2100_02_08)},
-{CO_KEY(0x2100, 3, CO_OBJ____PR_), CO_UNSIGNED8,  (CO_DATA)(&Obj2100_03_08)},
+{CO_KEY(0x2100, 0, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(3)},
+{CO_KEY(0x2100, 1, CO_OBJ____PR_), CO_TUNSIGNED32, (CO_DATA)(&Obj2100_01_20)},
+{CO_KEY(0x2100, 2, CO_OBJ____PR_), CO_TUNSIGNED8,  (CO_DATA)(&Obj2100_02_08)},
+{CO_KEY(0x2100, 3, CO_OBJ___APR_), CO_TUNSIGNED8,  (CO_DATA)(&Obj2100_03_08)},
   :
 ```
 
 !!! info
 
-    The type `CO_TASYNC` for the object entry `2100h:03` indicates the transmission of all PDOs, which includes this object. We use this mechanism to achieve the PDO transmission on each write access to the second.
+    The flag `CO_OBJ___A___` for the object entry `2100h:03` indicates the transmission of all PDOs, which includes this object when changing the value of the object entry. We use this mechanism to achieve the PDO transmission on each write access to the second.
 
 We also need to create three global variables to hold the runtime values of the clock object:
 
@@ -158,23 +158,23 @@ uint8_t  Obj2100_03_08 = 0;
 
 The communication settings for the TPDO must contain the following object entries:
 
-| Index:sub | Type       | Access | Value     | Description                       |
-| ----------| ---------- | ------ | --------- | --------------------------------- |
-| 1800h:00  | UNSIGNED8  | Const  | 2         | *Communication Object TPDO #0*    |
-| 1800h:01  | UNSIGNED32 | Const  | 40000180h | - PDO transmission COBID (no RTR) |
-| 1800h:02  | UNSIGNED8  | Const  | 254       | - PDO transmission type           |
+| Index:sub | Type       | Access | Value               | Description                       |
+| ----------| ---------- | ------ | ------------------- | --------------------------------- |
+| 1800h:00  | UNSIGNED8  | Const  | 2                   | *Communication Object TPDO #0*    |
+| 1800h:01  | UNSIGNED32 | Const  | 40000180h + node ID | - PDO transmission COBID (no RTR) |
+| 1800h:02  | UNSIGNED8  | Const  | 254                 | - PDO transmission type           |
 
 !!! info
 
-    The CANopen stack does not support remote CAN frames as they are no longer recommended for new devices. The use of RTR frames in CANopen devices has been deprecated for many years now. Bit 30 in `1800h:01` indicates that remote transfers are not allowed for this PDO. The CAN identifier `180h + node-ID` is the recommended value from the pre-defined connection set.
+    The CANopen stack does not support remote CAN frames as they are no longer recommended for new devices. The use of RTR frames in CANopen devices has been deprecated for many years now. Bit 30 in `1800h:01` indicates that a remote transfer request (RTR) is not allowed for this PDO. The CAN identifier `180h + node-ID` is the recommended value from the pre-defined connection set.
 
 See the following lines in the object dictionary:
 
 ```c
   :
-{CO_KEY(0x1800, 0, CO_OBJ_D___R_), CO_UNSIGNED8,  (CO_DATA)(2)},
-{CO_KEY(0x1800, 1, CO_OBJ_DN__R_), CO_UNSIGNED32, (CO_DATA)(CO_COBID_TPDO_DEFAULT(0))},
-{CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_UNSIGNED8,  (CO_DATA)(254)},
+{CO_KEY(0x1800, 0, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(2)},
+{CO_KEY(0x1800, 1, CO_OBJ_DN__R_), CO_TUNSIGNED32, (CO_DATA)(CO_COBID_TPDO_DEFAULT(0))},
+{CO_KEY(0x1800, 2, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(254)},
   :
 ```
 
@@ -193,10 +193,10 @@ How we get these values is explained in section [configuration of PDO mapping][3
 
 ```c
   :
-{CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_UNSIGNED8,  (CO_DATA)(3)},
-{CO_KEY(0x1A00, 1, CO_OBJ_D___R_), CO_UNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x01, 32))},
-{CO_KEY(0x1A00, 2, CO_OBJ_D___R_), CO_UNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x02,  8))},
-{CO_KEY(0x1A00, 3, CO_OBJ_D___R_), CO_UNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x03,  8))},
+{CO_KEY(0x1A00, 0, CO_OBJ_D___R_), CO_TUNSIGNED8,  (CO_DATA)(3)},
+{CO_KEY(0x1A00, 1, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x01, 32))},
+{CO_KEY(0x1A00, 2, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x02,  8))},
+{CO_KEY(0x1A00, 3, CO_OBJ_D___R_), CO_TUNSIGNED32, (CO_DATA)(CO_LINK(0x2100, 0x03,  8))},
   :
 ```
 
