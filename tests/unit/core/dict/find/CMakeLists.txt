@@ -14,5 +14,16 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_subdirectory(dict)
-add_subdirectory(tmr)
+add_executable(dict_find main.c)
+target_link_libraries(dict_find Canopen TestEnv)
+
+
+#--- type function interface tests ---
+
+add_test(NAME unit/dict/find/no_init   COMMAND dict_find no_init   )
+add_test(NAME unit/dict/find/empty     COMMAND dict_find empty     )
+add_test(NAME unit/dict/find/single    COMMAND dict_find single    )
+add_test(NAME unit/dict/find/first     COMMAND dict_find first     )
+add_test(NAME unit/dict/find/middle    COMMAND dict_find middle    )
+add_test(NAME unit/dict/find/last      COMMAND dict_find last      )
+add_test(NAME unit/dict/find/not_found COMMAND dict_find not_found )

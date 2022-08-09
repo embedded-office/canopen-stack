@@ -14,15 +14,15 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(timer_min_time main.c)
-target_link_libraries(timer_min_time Canopen TestEnv)
+add_executable(co_tmr_min_time main.c)
+target_link_libraries(co_tmr_min_time Canopen TestEnv)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/timer/min_time/1MHz_1ms    COMMAND timer_min_time 1MHz_1ms    )
-add_test(NAME unit/timer/min_time/1MHz_100us  COMMAND timer_min_time 1MHz_100us  )
-add_test(NAME unit/timer/min_time/1kHz_1ms    COMMAND timer_min_time 1kHz_1ms    )
-add_test(NAME unit/timer/min_time/1kHz_100us  COMMAND timer_min_time 1kHz_100us  )
-add_test(NAME unit/timer/min_time/100Hz_1ms   COMMAND timer_min_time 100Hz_1ms   )
-add_test(NAME unit/timer/min_time/100Hz_100us COMMAND timer_min_time 100Hz_100us )
+add_test(NAME unit/co_tmr/min_time/1MHz_1ms    COMMAND co_tmr_min_time 1MHz_1ms    )
+add_test(NAME unit/co_tmr/min_time/1MHz_100us  COMMAND co_tmr_min_time 1MHz_100us  )
+add_test(NAME unit/co_tmr/min_time/1kHz_1ms    COMMAND co_tmr_min_time 1kHz_1ms    )
+add_test(NAME unit/co_tmr/min_time/1kHz_100us  COMMAND co_tmr_min_time 1kHz_100us  )
+add_test(NAME unit/co_tmr/min_time/100Hz_1ms   COMMAND co_tmr_min_time 100Hz_1ms   )
+add_test(NAME unit/co_tmr/min_time/100Hz_100us COMMAND co_tmr_min_time 100Hz_100us )

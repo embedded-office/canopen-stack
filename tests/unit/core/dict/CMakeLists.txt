@@ -14,5 +14,5 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_subdirectory(dict)
-add_subdirectory(tmr)
+# dictionary functions
+add_subdirectory(find)

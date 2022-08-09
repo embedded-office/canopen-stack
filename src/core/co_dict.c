@@ -38,6 +38,7 @@ CO_OBJ *CODictFind(CO_DICT *cod, uint32_t key)
 
     ASSERT_PTR_ERR(cod, NULL);
     ASSERT_NOT_ERR(key, 0, NULL);
+    ASSERT_PTR_ERR(cod->Root, NULL);
 
     pattern = CO_GET_DEV(key);
     end = cod->Num;
