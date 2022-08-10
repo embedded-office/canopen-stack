@@ -14,20 +14,20 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_pdo_map main.c)
-target_link_libraries(co_pdo_map Canopen TestEnv)
+add_executable(ut-pdo-map main.c)
+target_link_libraries(ut-pdo-map canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_pdo_map/size/unknown   COMMAND co_pdo_map size_unknown   )
-add_test(NAME unit/object/co_pdo_map/size/known     COMMAND co_pdo_map size_known     )
-add_test(NAME unit/object/co_pdo_map/size/bad_size  COMMAND co_pdo_map size_bad_size  )
-add_test(NAME unit/object/co_pdo_map/read/ref       COMMAND co_pdo_map read_ref       )
-add_test(NAME unit/object/co_pdo_map/read/direct    COMMAND co_pdo_map read_direct    )
-add_test(NAME unit/object/co_pdo_map/read/bad_node  COMMAND co_pdo_map read_bad_node  )
-add_test(NAME unit/object/co_pdo_map/write/mapping  COMMAND co_pdo_map write_mapping  )
-add_test(NAME unit/object/co_pdo_map/write/bad_node COMMAND co_pdo_map write_bad_node )
-add_test(NAME unit/object/co_pdo_map/init/check     COMMAND co_pdo_map init_check     )
-add_test(NAME unit/object/co_pdo_map/init/bad_index COMMAND co_pdo_map init_bad_index )
-add_test(NAME unit/object/co_pdo_map/reset/unused   COMMAND co_pdo_map reset_unused   )
+add_test(NAME unit/object/pdo-map/size/unknown   COMMAND ut-pdo-map size_unknown   )
+add_test(NAME unit/object/pdo-map/size/known     COMMAND ut-pdo-map size_known     )
+add_test(NAME unit/object/pdo-map/size/bad_size  COMMAND ut-pdo-map size_bad_size  )
+add_test(NAME unit/object/pdo-map/read/ref       COMMAND ut-pdo-map read_ref       )
+add_test(NAME unit/object/pdo-map/read/direct    COMMAND ut-pdo-map read_direct    )
+add_test(NAME unit/object/pdo-map/read/bad_node  COMMAND ut-pdo-map read_bad_node  )
+add_test(NAME unit/object/pdo-map/write/mapping  COMMAND ut-pdo-map write_mapping  )
+add_test(NAME unit/object/pdo-map/write/bad_node COMMAND ut-pdo-map write_bad_node )
+add_test(NAME unit/object/pdo-map/init/check     COMMAND ut-pdo-map init_check     )
+add_test(NAME unit/object/pdo-map/init/bad_index COMMAND ut-pdo-map init_bad_index )
+add_test(NAME unit/object/pdo-map/reset/unused   COMMAND ut-pdo-map reset_unused   )

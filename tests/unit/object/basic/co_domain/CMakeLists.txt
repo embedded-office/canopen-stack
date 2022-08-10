@@ -14,22 +14,22 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_domain main.c)
-target_link_libraries(co_domain Canopen TestEnv)
+add_executable(ut-domain main.c)
+target_link_libraries(ut-domain canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_domain/size/unknown   COMMAND co_domain size_unknown  )
-add_test(NAME unit/object/co_domain/size/known     COMMAND co_domain size_known    )
-add_test(NAME unit/object/co_domain/size/small     COMMAND co_domain size_small    )
-add_test(NAME unit/object/co_domain/size/large     COMMAND co_domain size_large    )
-add_test(NAME unit/object/co_domain/size/bad_size  COMMAND co_domain bad_size      )
-add_test(NAME unit/object/co_domain/read/all       COMMAND co_domain read_all      )
-add_test(NAME unit/object/co_domain/read/part      COMMAND co_domain read_part     )
-add_test(NAME unit/object/co_domain/read/bad_node  COMMAND co_domain read_bad_node )
-add_test(NAME unit/object/co_domain/write/all      COMMAND co_domain write_all     )
-add_test(NAME unit/object/co_domain/write/part     COMMAND co_domain write_part    )
-add_test(NAME unit/object/co_domain/write/bad_node COMMAND co_domain write_bad_node)
-add_test(NAME unit/object/co_domain/init/offset    COMMAND co_domain init_offset   )
-add_test(NAME unit/object/co_domain/reset/offset   COMMAND co_domain reset_offset  )
+add_test(NAME unit/object/domain/size/unknown   COMMAND ut-domain size_unknown  )
+add_test(NAME unit/object/domain/size/known     COMMAND ut-domain size_known    )
+add_test(NAME unit/object/domain/size/small     COMMAND ut-domain size_small    )
+add_test(NAME unit/object/domain/size/large     COMMAND ut-domain size_large    )
+add_test(NAME unit/object/domain/size/bad_size  COMMAND ut-domain bad_size      )
+add_test(NAME unit/object/domain/read/all       COMMAND ut-domain read_all      )
+add_test(NAME unit/object/domain/read/part      COMMAND ut-domain read_part     )
+add_test(NAME unit/object/domain/read/bad_node  COMMAND ut-domain read_bad_node )
+add_test(NAME unit/object/domain/write/all      COMMAND ut-domain write_all     )
+add_test(NAME unit/object/domain/write/part     COMMAND ut-domain write_part    )
+add_test(NAME unit/object/domain/write/bad_node COMMAND ut-domain write_bad_node)
+add_test(NAME unit/object/domain/init/offset    COMMAND ut-domain init_offset   )
+add_test(NAME unit/object/domain/reset/offset   COMMAND ut-domain reset_offset  )

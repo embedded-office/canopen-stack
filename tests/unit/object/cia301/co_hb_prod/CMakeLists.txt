@@ -14,22 +14,22 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_hb_prod main.c)
-target_link_libraries(co_hb_prod Canopen TestEnv)
+add_executable(ut-hb-prod main.c)
+target_link_libraries(ut-hb-prod canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_hb_prod/size/unknown    COMMAND co_hb_prod size_unknown    )
-add_test(NAME unit/object/co_hb_prod/size/known      COMMAND co_hb_prod size_known      )
-add_test(NAME unit/object/co_hb_prod/size/bad_size   COMMAND co_hb_prod size_bad_size   )
-add_test(NAME unit/object/co_hb_prod/read/time       COMMAND co_hb_prod read_time       )
-add_test(NAME unit/object/co_hb_prod/read/bad_node   COMMAND co_hb_prod read_bad_node   )
-add_test(NAME unit/object/co_hb_prod/write/start     COMMAND co_hb_prod write_start     )
-add_test(NAME unit/object/co_hb_prod/write/restart   COMMAND co_hb_prod write_restart   )
-add_test(NAME unit/object/co_hb_prod/write/bad_index COMMAND co_hb_prod write_bad_index )
-add_test(NAME unit/object/co_hb_prod/write/bad_node  COMMAND co_hb_prod write_bad_node  )
-add_test(NAME unit/object/co_hb_prod/init/check      COMMAND co_hb_prod init_check      )
-add_test(NAME unit/object/co_hb_prod/init/start      COMMAND co_hb_prod init_start      )
-add_test(NAME unit/object/co_hb_prod/init/bad_index  COMMAND co_hb_prod init_bad_index  )
-add_test(NAME unit/object/co_hb_prod/reset/unused    COMMAND co_hb_prod reset_unused    )
+add_test(NAME unit/object/hb-prod/size/unknown    COMMAND ut-hb-prod size_unknown    )
+add_test(NAME unit/object/hb-prod/size/known      COMMAND ut-hb-prod size_known      )
+add_test(NAME unit/object/hb-prod/size/bad_size   COMMAND ut-hb-prod size_bad_size   )
+add_test(NAME unit/object/hb-prod/read/time       COMMAND ut-hb-prod read_time       )
+add_test(NAME unit/object/hb-prod/read/bad_node   COMMAND ut-hb-prod read_bad_node   )
+add_test(NAME unit/object/hb-prod/write/start     COMMAND ut-hb-prod write_start     )
+add_test(NAME unit/object/hb-prod/write/restart   COMMAND ut-hb-prod write_restart   )
+add_test(NAME unit/object/hb-prod/write/bad_index COMMAND ut-hb-prod write_bad_index )
+add_test(NAME unit/object/hb-prod/write/bad_node  COMMAND ut-hb-prod write_bad_node  )
+add_test(NAME unit/object/hb-prod/init/check      COMMAND ut-hb-prod init_check      )
+add_test(NAME unit/object/hb-prod/init/start      COMMAND ut-hb-prod init_start      )
+add_test(NAME unit/object/hb-prod/init/bad_index  COMMAND ut-hb-prod init_bad_index  )
+add_test(NAME unit/object/hb-prod/reset/unused    COMMAND ut-hb-prod reset_unused    )

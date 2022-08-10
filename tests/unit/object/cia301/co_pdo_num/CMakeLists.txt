@@ -14,21 +14,21 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_pdo_num main.c)
-target_link_libraries(co_pdo_num Canopen TestEnv)
+add_executable(ut-pdo-num main.c)
+target_link_libraries(ut-pdo-num canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_pdo_num/size/unknown   COMMAND co_pdo_num size_unknown   )
-add_test(NAME unit/object/co_pdo_num/size/known     COMMAND co_pdo_num size_known     )
-add_test(NAME unit/object/co_pdo_num/size/bad_size  COMMAND co_pdo_num size_bad_size  )
-add_test(NAME unit/object/co_pdo_num/read/ref       COMMAND co_pdo_num read_ref       )
-add_test(NAME unit/object/co_pdo_num/read/direct    COMMAND co_pdo_num read_direct    )
-add_test(NAME unit/object/co_pdo_num/read/bad_node  COMMAND co_pdo_num read_bad_node  )
-add_test(NAME unit/object/co_pdo_num/write/num      COMMAND co_pdo_num write_num      )
-add_test(NAME unit/object/co_pdo_num/write/bad_node COMMAND co_pdo_num write_bad_node )
-add_test(NAME unit/object/co_pdo_num/init/check     COMMAND co_pdo_num init_check     )
-add_test(NAME unit/object/co_pdo_num/init/bad_index COMMAND co_pdo_num init_bad_index )
-add_test(NAME unit/object/co_pdo_num/init/bad_sub   COMMAND co_pdo_num init_bad_sub   )
-add_test(NAME unit/object/co_pdo_num/reset/unused   COMMAND co_pdo_num reset_unused   )
+add_test(NAME unit/object/pdo-num/size/unknown   COMMAND ut-pdo-num size_unknown   )
+add_test(NAME unit/object/pdo-num/size/known     COMMAND ut-pdo-num size_known     )
+add_test(NAME unit/object/pdo-num/size/bad_size  COMMAND ut-pdo-num size_bad_size  )
+add_test(NAME unit/object/pdo-num/read/ref       COMMAND ut-pdo-num read_ref       )
+add_test(NAME unit/object/pdo-num/read/direct    COMMAND ut-pdo-num read_direct    )
+add_test(NAME unit/object/pdo-num/read/bad_node  COMMAND ut-pdo-num read_bad_node  )
+add_test(NAME unit/object/pdo-num/write/num      COMMAND ut-pdo-num write_num      )
+add_test(NAME unit/object/pdo-num/write/bad_node COMMAND ut-pdo-num write_bad_node )
+add_test(NAME unit/object/pdo-num/init/check     COMMAND ut-pdo-num init_check     )
+add_test(NAME unit/object/pdo-num/init/bad_index COMMAND ut-pdo-num init_bad_index )
+add_test(NAME unit/object/pdo-num/init/bad_sub   COMMAND ut-pdo-num init_bad_sub   )
+add_test(NAME unit/object/pdo-num/reset/unused   COMMAND ut-pdo-num reset_unused   )

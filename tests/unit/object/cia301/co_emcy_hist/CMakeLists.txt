@@ -14,24 +14,24 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_emcy_hist main.c)
-target_link_libraries(co_emcy_hist Canopen TestEnv)
+add_executable(ut-emcy-hist main.c)
+target_link_libraries(ut-emcy-hist canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_emcy_hist/size/sub_0       COMMAND co_emcy_hist size_sub_0      )
-add_test(NAME unit/object/co_emcy_hist/size/sub_1       COMMAND co_emcy_hist size_sub_1      )
-add_test(NAME unit/object/co_emcy_hist/size/bad_size    COMMAND co_emcy_hist bad_size        )
-add_test(NAME unit/object/co_emcy_hist/read/sub_0       COMMAND co_emcy_hist read_sub_0      )
-add_test(NAME unit/object/co_emcy_hist/read/sub_1       COMMAND co_emcy_hist read_sub_1      )
-add_test(NAME unit/object/co_emcy_hist/read/bad_node    COMMAND co_emcy_hist read_bad_node   )
-add_test(NAME unit/object/co_emcy_hist/write/reset      COMMAND co_emcy_hist write_reset     )
-add_test(NAME unit/object/co_emcy_hist/write/no_reset   COMMAND co_emcy_hist write_no_reset  )
-add_test(NAME unit/object/co_emcy_hist/write/sub_1      COMMAND co_emcy_hist write_sub_1     )
-add_test(NAME unit/object/co_emcy_hist/write/bad_node   COMMAND co_emcy_hist write_bad_node  )
-add_test(NAME unit/object/co_emcy_hist/init/hist_min    COMMAND co_emcy_hist init_hist_min   )
-add_test(NAME unit/object/co_emcy_hist/init/hist_8      COMMAND co_emcy_hist init_hist_8     )
-add_test(NAME unit/object/co_emcy_hist/init/bad_index   COMMAND co_emcy_hist init_bad_index  )
-add_test(NAME unit/object/co_emcy_hist/init/bad_hist    COMMAND co_emcy_hist init_bad_hist   )
-add_test(NAME unit/object/co_emcy_hist/reset/unused     COMMAND co_emcy_hist reset_unused    )
+add_test(NAME unit/object/emcy-hist/size/sub_0       COMMAND ut-emcy-hist size_sub_0      )
+add_test(NAME unit/object/emcy-hist/size/sub_1       COMMAND ut-emcy-hist size_sub_1      )
+add_test(NAME unit/object/emcy-hist/size/bad_size    COMMAND ut-emcy-hist bad_size        )
+add_test(NAME unit/object/emcy-hist/read/sub_0       COMMAND ut-emcy-hist read_sub_0      )
+add_test(NAME unit/object/emcy-hist/read/sub_1       COMMAND ut-emcy-hist read_sub_1      )
+add_test(NAME unit/object/emcy-hist/read/bad_node    COMMAND ut-emcy-hist read_bad_node   )
+add_test(NAME unit/object/emcy-hist/write/reset      COMMAND ut-emcy-hist write_reset     )
+add_test(NAME unit/object/emcy-hist/write/no_reset   COMMAND ut-emcy-hist write_no_reset  )
+add_test(NAME unit/object/emcy-hist/write/sub_1      COMMAND ut-emcy-hist write_sub_1     )
+add_test(NAME unit/object/emcy-hist/write/bad_node   COMMAND ut-emcy-hist write_bad_node  )
+add_test(NAME unit/object/emcy-hist/init/hist_min    COMMAND ut-emcy-hist init_hist_min   )
+add_test(NAME unit/object/emcy-hist/init/hist_8      COMMAND ut-emcy-hist init_hist_8     )
+add_test(NAME unit/object/emcy-hist/init/bad_index   COMMAND ut-emcy-hist init_bad_index  )
+add_test(NAME unit/object/emcy-hist/init/bad_hist    COMMAND ut-emcy-hist init_bad_hist   )
+add_test(NAME unit/object/emcy-hist/reset/unused     COMMAND ut-emcy-hist reset_unused    )

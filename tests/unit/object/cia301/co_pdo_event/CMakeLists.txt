@@ -14,23 +14,23 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_pdo_event main.c)
-target_link_libraries(co_pdo_event Canopen TestEnv)
+add_executable(ut-pdo-event main.c)
+target_link_libraries(ut-pdo-event canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_pdo_event/size/unknown   COMMAND co_pdo_event size_unknown   )
-add_test(NAME unit/object/co_pdo_event/size/known     COMMAND co_pdo_event size_known     )
-add_test(NAME unit/object/co_pdo_event/size/bad_size  COMMAND co_pdo_event size_bad_size  )
-add_test(NAME unit/object/co_pdo_event/read/ref       COMMAND co_pdo_event read_ref       )
-add_test(NAME unit/object/co_pdo_event/read/direct    COMMAND co_pdo_event read_direct    )
-add_test(NAME unit/object/co_pdo_event/read/bad_node  COMMAND co_pdo_event read_bad_node  )
-add_test(NAME unit/object/co_pdo_event/write/start    COMMAND co_pdo_event write_start    )
-add_test(NAME unit/object/co_pdo_event/write/change   COMMAND co_pdo_event write_change   )
-add_test(NAME unit/object/co_pdo_event/write/stop     COMMAND co_pdo_event write_stop     )
-add_test(NAME unit/object/co_pdo_event/write/bad_node COMMAND co_pdo_event write_bad_node )
-add_test(NAME unit/object/co_pdo_event/init/check     COMMAND co_pdo_event init_check     )
-add_test(NAME unit/object/co_pdo_event/init/bad_index COMMAND co_pdo_event init_bad_index )
-add_test(NAME unit/object/co_pdo_event/init/bad_sub   COMMAND co_pdo_event init_bad_sub   )
-add_test(NAME unit/object/co_pdo_event/reset/unused   COMMAND co_pdo_event reset_unused   )
+add_test(NAME unit/object/pdo-event/size/unknown   COMMAND ut-pdo-event size_unknown   )
+add_test(NAME unit/object/pdo-event/size/known     COMMAND ut-pdo-event size_known     )
+add_test(NAME unit/object/pdo-event/size/bad_size  COMMAND ut-pdo-event size_bad_size  )
+add_test(NAME unit/object/pdo-event/read/ref       COMMAND ut-pdo-event read_ref       )
+add_test(NAME unit/object/pdo-event/read/direct    COMMAND ut-pdo-event read_direct    )
+add_test(NAME unit/object/pdo-event/read/bad_node  COMMAND ut-pdo-event read_bad_node  )
+add_test(NAME unit/object/pdo-event/write/start    COMMAND ut-pdo-event write_start    )
+add_test(NAME unit/object/pdo-event/write/change   COMMAND ut-pdo-event write_change   )
+add_test(NAME unit/object/pdo-event/write/stop     COMMAND ut-pdo-event write_stop     )
+add_test(NAME unit/object/pdo-event/write/bad_node COMMAND ut-pdo-event write_bad_node )
+add_test(NAME unit/object/pdo-event/init/check     COMMAND ut-pdo-event init_check     )
+add_test(NAME unit/object/pdo-event/init/bad_index COMMAND ut-pdo-event init_bad_index )
+add_test(NAME unit/object/pdo-event/init/bad_sub   COMMAND ut-pdo-event init_bad_sub   )
+add_test(NAME unit/object/pdo-event/reset/unused   COMMAND ut-pdo-event reset_unused   )

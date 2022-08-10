@@ -14,23 +14,23 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_sdo_id main.c)
-target_link_libraries(co_sdo_id Canopen TestEnv)
+add_executable(ut-sdo-id main.c)
+target_link_libraries(ut-sdo-id canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_sdo_id/size/unknown     COMMAND co_sdo_id size_unknown     )
-add_test(NAME unit/object/co_sdo_id/size/known       COMMAND co_sdo_id size_known       )
-add_test(NAME unit/object/co_sdo_id/size/size        COMMAND co_sdo_id bad_size         )
-add_test(NAME unit/object/co_sdo_id/read/ref         COMMAND co_sdo_id read_ref         )
-add_test(NAME unit/object/co_sdo_id/read/direct      COMMAND co_sdo_id read_direct      )
-add_test(NAME unit/object/co_sdo_id/read/bad_node    COMMAND co_sdo_id read_bad_node    )
-add_test(NAME unit/object/co_sdo_id/write/activate   COMMAND co_sdo_id write_activate   )
-add_test(NAME unit/object/co_sdo_id/write/deactivate COMMAND co_sdo_id write_deactivate )
-add_test(NAME unit/object/co_sdo_id/write/active     COMMAND co_sdo_id write_active     )
-add_test(NAME unit/object/co_sdo_id/write/bad_node   COMMAND co_sdo_id write_bad_node   )
-add_test(NAME unit/object/co_sdo_id/init/check       COMMAND co_sdo_id init_check       )
-add_test(NAME unit/object/co_sdo_id/init/bad_index   COMMAND co_sdo_id init_bad_index   )
-add_test(NAME unit/object/co_sdo_id/init/bad_sub     COMMAND co_sdo_id init_bad_sub     )
-add_test(NAME unit/object/co_sdo_id/reset/unused     COMMAND co_sdo_id reset_unused     )
+add_test(NAME unit/object/sdo-id/size/unknown     COMMAND ut-sdo-id size_unknown     )
+add_test(NAME unit/object/sdo-id/size/known       COMMAND ut-sdo-id size_known       )
+add_test(NAME unit/object/sdo-id/size/size        COMMAND ut-sdo-id bad_size         )
+add_test(NAME unit/object/sdo-id/read/ref         COMMAND ut-sdo-id read_ref         )
+add_test(NAME unit/object/sdo-id/read/direct      COMMAND ut-sdo-id read_direct      )
+add_test(NAME unit/object/sdo-id/read/bad_node    COMMAND ut-sdo-id read_bad_node    )
+add_test(NAME unit/object/sdo-id/write/activate   COMMAND ut-sdo-id write_activate   )
+add_test(NAME unit/object/sdo-id/write/deactivate COMMAND ut-sdo-id write_deactivate )
+add_test(NAME unit/object/sdo-id/write/active     COMMAND ut-sdo-id write_active     )
+add_test(NAME unit/object/sdo-id/write/bad_node   COMMAND ut-sdo-id write_bad_node   )
+add_test(NAME unit/object/sdo-id/init/check       COMMAND ut-sdo-id init_check       )
+add_test(NAME unit/object/sdo-id/init/bad_index   COMMAND ut-sdo-id init_bad_index   )
+add_test(NAME unit/object/sdo-id/init/bad_sub     COMMAND ut-sdo-id init_bad_sub     )
+add_test(NAME unit/object/sdo-id/reset/unused     COMMAND ut-sdo-id reset_unused     )

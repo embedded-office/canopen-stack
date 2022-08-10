@@ -17,12 +17,12 @@
 #---
 # define the test application executable
 #
-add_executable(DynamicOD)
+add_executable(demo-dynamic-od)
 
 #---
 # test application with test runner and supporting functions
 #
-target_sources(DynamicOD
+target_sources(demo-dynamic-od
   PRIVATE
     # application
     app/clock_dict.c
@@ -33,7 +33,7 @@ target_sources(DynamicOD
     driver/drv_nvm_sim.c
     driver/drv_timer_swcycle.c
   )
-target_include_directories(DynamicOD
+target_include_directories(demo-dynamic-od
   PRIVATE
     app
     driver
@@ -42,4 +42,4 @@ target_include_directories(DynamicOD
 #---
 # specify the dependencies for this application
 #
-target_link_libraries(DynamicOD Canopen)
+target_link_libraries(demo-dynamic-od canopen-stack)

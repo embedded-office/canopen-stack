@@ -17,8 +17,8 @@
 #---
 # test environment library
 #
-add_library(TestEnv INTERFACE)
-target_include_directories(TestEnv
+add_library(ut-test-env INTERFACE)
+target_include_directories(ut-test-env
   INTERFACE
     env
 )

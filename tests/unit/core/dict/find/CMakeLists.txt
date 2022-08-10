@@ -14,16 +14,16 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(dict_find main.c)
-target_link_libraries(dict_find Canopen TestEnv)
+add_executable(ut-dict-find main.c)
+target_link_libraries(ut-dict-find canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/dict/find/no_init   COMMAND dict_find no_init   )
-add_test(NAME unit/dict/find/empty     COMMAND dict_find empty     )
-add_test(NAME unit/dict/find/single    COMMAND dict_find single    )
-add_test(NAME unit/dict/find/first     COMMAND dict_find first     )
-add_test(NAME unit/dict/find/middle    COMMAND dict_find middle    )
-add_test(NAME unit/dict/find/last      COMMAND dict_find last      )
-add_test(NAME unit/dict/find/not_found COMMAND dict_find not_found )
+add_test(NAME unit/dict/find/no_init   COMMAND ut-dict-find no_init   )
+add_test(NAME unit/dict/find/empty     COMMAND ut-dict-find empty     )
+add_test(NAME unit/dict/find/single    COMMAND ut-dict-find single    )
+add_test(NAME unit/dict/find/first     COMMAND ut-dict-find first     )
+add_test(NAME unit/dict/find/middle    COMMAND ut-dict-find middle    )
+add_test(NAME unit/dict/find/last      COMMAND ut-dict-find last      )
+add_test(NAME unit/dict/find/not_found COMMAND ut-dict-find not_found )

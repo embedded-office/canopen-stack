@@ -17,12 +17,12 @@
 #---
 # define the test application executable
 #
-add_executable(CanopenTest)
+add_executable(it-canopen-stack)
 
 #---
 # test application with test runner and supporting functions
 #
-target_sources(CanopenTest
+target_sources(it-canopen-stack
   PRIVATE
     app/app_dict.c
     app/app_dom.c
@@ -31,7 +31,7 @@ target_sources(CanopenTest
     app/app_hooks.c
     app/app.c
 )
-target_include_directories(CanopenTest
+target_include_directories(it-canopen-stack
   PRIVATE
     app
 )
@@ -39,13 +39,13 @@ target_include_directories(CanopenTest
 #---
 # add the host drivers
 #
-target_sources(CanopenTest
+target_sources(it-canopen-stack
   PRIVATE
     driver/drv_can_sim.c
     driver/drv_nvm_sim.c
     driver/drv_timer_swcycle.c
 )
-target_include_directories(CanopenTest
+target_include_directories(it-canopen-stack
   PRIVATE
     driver
 )
@@ -53,7 +53,7 @@ target_include_directories(CanopenTest
 #---
 # add the test framework
 #
-target_sources(CanopenTest
+target_sources(it-canopen-stack
   PRIVATE
     testfrm/ts_context.c
     testfrm/ts_env.c
@@ -65,7 +65,7 @@ target_sources(CanopenTest
     testfrm/ts_printf.c
     testfrm/ts_version.c
 )
-target_include_directories(CanopenTest
+target_include_directories(it-canopen-stack
   PRIVATE
     testfrm
 )
@@ -73,7 +73,7 @@ target_include_directories(CanopenTest
 #---
 # select the test-suite files
 #
-target_sources(CanopenTest
+target_sources(it-canopen-stack
   PRIVATE
     tests/core_tmr.c
     tests/emcy_api.c
@@ -100,7 +100,7 @@ target_sources(CanopenTest
     tests/sdos_seg_up.c
     tests/sync_prod.c
 )
-target_include_directories(CanopenTest
+target_include_directories(it-canopen-stack
   PRIVATE
     tests
 )
@@ -108,8 +108,8 @@ target_include_directories(CanopenTest
 #---
 # specify the dependencies for this application
 #
-target_link_libraries(CanopenTest Canopen)
+target_link_libraries(it-canopen-stack canopen-stack)
 
 #--- integration tests ---
 
-add_test(NAME integration/all COMMAND CanopenTest )
+add_test(NAME integration/all COMMAND it-canopen-stack)

@@ -14,24 +14,24 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_para_store main.c)
-target_link_libraries(co_para_store Canopen TestEnv)
+add_executable(ut-para-store main.c)
+target_link_libraries(ut-para-store canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_para_store/size/sub_0           COMMAND co_para_store size_sub_0          )
-add_test(NAME unit/object/co_para_store/size/sub_1           COMMAND co_para_store size_sub_1          )
-add_test(NAME unit/object/co_para_store/size/bad_size        COMMAND co_para_store size_bad_size       )
-add_test(NAME unit/object/co_para_store/read/enabled         COMMAND co_para_store read_enabled        )
-add_test(NAME unit/object/co_para_store/read/autonomous      COMMAND co_para_store read_autonomous     )
-add_test(NAME unit/object/co_para_store/read/bad_node        COMMAND co_para_store read_bad_node       )
-add_test(NAME unit/object/co_para_store/write/single         COMMAND co_para_store write_single        )
-add_test(NAME unit/object/co_para_store/write/all            COMMAND co_para_store write_all           )
-add_test(NAME unit/object/co_para_store/write/bad_signature  COMMAND co_para_store write_bad_signature )
-add_test(NAME unit/object/co_para_store/write/bad_index      COMMAND co_para_store write_bad_index     )
-add_test(NAME unit/object/co_para_store/write/bad_node       COMMAND co_para_store write_bad_node      )
-add_test(NAME unit/object/co_para_store/init/check           COMMAND co_para_store init_check          )
-add_test(NAME unit/object/co_para_store/init/bad_index       COMMAND co_para_store init_bad_index      )
-add_test(NAME unit/object/co_para_store/reset/com            COMMAND co_para_store reset_com           )
-add_test(NAME unit/object/co_para_store/reset/node           COMMAND co_para_store reset_node          )
+add_test(NAME unit/object/para-store/size/sub_0           COMMAND ut-para-store size_sub_0          )
+add_test(NAME unit/object/para-store/size/sub_1           COMMAND ut-para-store size_sub_1          )
+add_test(NAME unit/object/para-store/size/bad_size        COMMAND ut-para-store size_bad_size       )
+add_test(NAME unit/object/para-store/read/enabled         COMMAND ut-para-store read_enabled        )
+add_test(NAME unit/object/para-store/read/autonomous      COMMAND ut-para-store read_autonomous     )
+add_test(NAME unit/object/para-store/read/bad_node        COMMAND ut-para-store read_bad_node       )
+add_test(NAME unit/object/para-store/write/single         COMMAND ut-para-store write_single        )
+add_test(NAME unit/object/para-store/write/all            COMMAND ut-para-store write_all           )
+add_test(NAME unit/object/para-store/write/bad_signature  COMMAND ut-para-store write_bad_signature )
+add_test(NAME unit/object/para-store/write/bad_index      COMMAND ut-para-store write_bad_index     )
+add_test(NAME unit/object/para-store/write/bad_node       COMMAND ut-para-store write_bad_node      )
+add_test(NAME unit/object/para-store/init/check           COMMAND ut-para-store init_check          )
+add_test(NAME unit/object/para-store/init/bad_index       COMMAND ut-para-store init_bad_index      )
+add_test(NAME unit/object/para-store/reset/com            COMMAND ut-para-store reset_com           )
+add_test(NAME unit/object/para-store/reset/node           COMMAND ut-para-store reset_node          )

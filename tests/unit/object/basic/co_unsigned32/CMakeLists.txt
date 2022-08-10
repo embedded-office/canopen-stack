@@ -14,22 +14,22 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_unsigned32 main.c)
-target_link_libraries(co_unsigned32 Canopen TestEnv)
+add_executable(ut-unsigned32 main.c)
+target_link_libraries(ut-unsigned32 canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_unsigned32/size/unknown   COMMAND co_unsigned32 size_unknown  )
-add_test(NAME unit/object/co_unsigned32/size/known     COMMAND co_unsigned32 size_known    )
-add_test(NAME unit/object/co_unsigned32/size/bad_size  COMMAND co_unsigned32 bad_size      )
-add_test(NAME unit/object/co_unsigned32/read/ref       COMMAND co_unsigned32 read_ref      )
-add_test(NAME unit/object/co_unsigned32/read/direct    COMMAND co_unsigned32 read_direct   )
-add_test(NAME unit/object/co_unsigned32/read/nodeid    COMMAND co_unsigned32 read_nodeid   )
-add_test(NAME unit/object/co_unsigned32/read/bad_node  COMMAND co_unsigned32 read_bad_node )
-add_test(NAME unit/object/co_unsigned32/write/ref      COMMAND co_unsigned32 write_ref     )
-add_test(NAME unit/object/co_unsigned32/write/direct   COMMAND co_unsigned32 write_direct  )
-add_test(NAME unit/object/co_unsigned32/write/nodeid   COMMAND co_unsigned32 write_nodeid  )
-add_test(NAME unit/object/co_unsigned32/write/bad_node COMMAND co_unsigned32 write_bad_node)
-add_test(NAME unit/object/co_unsigned32/init/unused    COMMAND co_unsigned32 init_unused   )
-add_test(NAME unit/object/co_unsigned32/reset/unused   COMMAND co_unsigned32 reset_unused  )
+add_test(NAME unit/object/unsigned32/size/unknown   COMMAND ut-unsigned32 size_unknown  )
+add_test(NAME unit/object/unsigned32/size/known     COMMAND ut-unsigned32 size_known    )
+add_test(NAME unit/object/unsigned32/size/bad_size  COMMAND ut-unsigned32 bad_size      )
+add_test(NAME unit/object/unsigned32/read/ref       COMMAND ut-unsigned32 read_ref      )
+add_test(NAME unit/object/unsigned32/read/direct    COMMAND ut-unsigned32 read_direct   )
+add_test(NAME unit/object/unsigned32/read/nodeid    COMMAND ut-unsigned32 read_nodeid   )
+add_test(NAME unit/object/unsigned32/read/bad_node  COMMAND ut-unsigned32 read_bad_node )
+add_test(NAME unit/object/unsigned32/write/ref      COMMAND ut-unsigned32 write_ref     )
+add_test(NAME unit/object/unsigned32/write/direct   COMMAND ut-unsigned32 write_direct  )
+add_test(NAME unit/object/unsigned32/write/nodeid   COMMAND ut-unsigned32 write_nodeid  )
+add_test(NAME unit/object/unsigned32/write/bad_node COMMAND ut-unsigned32 write_bad_node)
+add_test(NAME unit/object/unsigned32/init/unused    COMMAND ut-unsigned32 init_unused   )
+add_test(NAME unit/object/unsigned32/reset/unused   COMMAND ut-unsigned32 reset_unused  )

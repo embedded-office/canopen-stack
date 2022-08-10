@@ -14,21 +14,21 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_pdo_type main.c)
-target_link_libraries(co_pdo_type Canopen TestEnv)
+add_executable(ut-pdo-type main.c)
+target_link_libraries(ut-pdo-type canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_pdo_type/size/unknown   COMMAND co_pdo_type size_unknown   )
-add_test(NAME unit/object/co_pdo_type/size/known     COMMAND co_pdo_type size_known     )
-add_test(NAME unit/object/co_pdo_type/size/bad_size  COMMAND co_pdo_type size_bad_size  )
-add_test(NAME unit/object/co_pdo_type/read/ref       COMMAND co_pdo_type read_ref       )
-add_test(NAME unit/object/co_pdo_type/read/direct    COMMAND co_pdo_type read_direct    )
-add_test(NAME unit/object/co_pdo_type/read/bad_node  COMMAND co_pdo_type read_bad_node  )
-add_test(NAME unit/object/co_pdo_type/write/num      COMMAND co_pdo_type write_num      )
-add_test(NAME unit/object/co_pdo_type/write/bad_node COMMAND co_pdo_type write_bad_node )
-add_test(NAME unit/object/co_pdo_type/init/check     COMMAND co_pdo_type init_check     )
-add_test(NAME unit/object/co_pdo_type/init/bad_index COMMAND co_pdo_type init_bad_index )
-add_test(NAME unit/object/co_pdo_type/init/bad_sub   COMMAND co_pdo_type init_bad_sub   )
-add_test(NAME unit/object/co_pdo_type/reset/unused   COMMAND co_pdo_type reset_unused   )
+add_test(NAME unit/object/pdo-type/size/unknown   COMMAND ut-pdo-type size_unknown   )
+add_test(NAME unit/object/pdo-type/size/known     COMMAND ut-pdo-type size_known     )
+add_test(NAME unit/object/pdo-type/size/bad_size  COMMAND ut-pdo-type size_bad_size  )
+add_test(NAME unit/object/pdo-type/read/ref       COMMAND ut-pdo-type read_ref       )
+add_test(NAME unit/object/pdo-type/read/direct    COMMAND ut-pdo-type read_direct    )
+add_test(NAME unit/object/pdo-type/read/bad_node  COMMAND ut-pdo-type read_bad_node  )
+add_test(NAME unit/object/pdo-type/write/num      COMMAND ut-pdo-type write_num      )
+add_test(NAME unit/object/pdo-type/write/bad_node COMMAND ut-pdo-type write_bad_node )
+add_test(NAME unit/object/pdo-type/init/check     COMMAND ut-pdo-type init_check     )
+add_test(NAME unit/object/pdo-type/init/bad_index COMMAND ut-pdo-type init_bad_index )
+add_test(NAME unit/object/pdo-type/init/bad_sub   COMMAND ut-pdo-type init_bad_sub   )
+add_test(NAME unit/object/pdo-type/reset/unused   COMMAND ut-pdo-type reset_unused   )

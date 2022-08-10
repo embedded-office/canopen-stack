@@ -17,12 +17,12 @@
 #---
 # define the test application executable
 #
-add_executable(Quickstart)
+add_executable(demo-quickstart)
 
 #---
 # test application with test runner and supporting functions
 #
-target_sources(Quickstart
+target_sources(demo-quickstart
   PRIVATE
     # application
     app/clock_app.c
@@ -32,7 +32,7 @@ target_sources(Quickstart
     driver/drv_nvm_sim.c
     driver/drv_timer_swcycle.c
   )
-target_include_directories(Quickstart
+target_include_directories(demo-quickstart
   PRIVATE
     app
     driver
@@ -41,4 +41,4 @@ target_include_directories(Quickstart
 #---
 # specify the dependencies for this application
 #
-target_link_libraries(Quickstart Canopen)
+target_link_libraries(demo-quickstart canopen-stack)

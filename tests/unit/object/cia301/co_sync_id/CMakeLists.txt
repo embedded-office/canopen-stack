@@ -14,23 +14,23 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_sync_id main.c)
-target_link_libraries(co_sync_id Canopen TestEnv)
+add_executable(ut-sync-id main.c)
+target_link_libraries(ut-sync-id canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_sync_id/size/unknown     COMMAND co_sync_id size_unknown     )
-add_test(NAME unit/object/co_sync_id/size/known       COMMAND co_sync_id size_known       )
-add_test(NAME unit/object/co_sync_id/size/size        COMMAND co_sync_id bad_size         )
-add_test(NAME unit/object/co_sync_id/read/ref         COMMAND co_sync_id read_ref         )
-add_test(NAME unit/object/co_sync_id/read/direct      COMMAND co_sync_id read_direct      )
-add_test(NAME unit/object/co_sync_id/read/bad_node    COMMAND co_sync_id read_bad_node    )
-add_test(NAME unit/object/co_sync_id/write/activate   COMMAND co_sync_id write_activate   )
-add_test(NAME unit/object/co_sync_id/write/deactivate COMMAND co_sync_id write_deactivate )
-add_test(NAME unit/object/co_sync_id/write/active     COMMAND co_sync_id write_active     )
-add_test(NAME unit/object/co_sync_id/write/bad_node   COMMAND co_sync_id write_bad_node   )
-add_test(NAME unit/object/co_sync_id/init/check       COMMAND co_sync_id init_check       )
-add_test(NAME unit/object/co_sync_id/init/bad_index   COMMAND co_sync_id init_bad_index   )
-add_test(NAME unit/object/co_sync_id/init/bad_sub     COMMAND co_sync_id init_bad_sub     )
-add_test(NAME unit/object/co_sync_id/reset/unused     COMMAND co_sync_id reset_unused     )
+add_test(NAME unit/object/sync-id/size/unknown     COMMAND ut-sync-id size_unknown     )
+add_test(NAME unit/object/sync-id/size/known       COMMAND ut-sync-id size_known       )
+add_test(NAME unit/object/sync-id/size/size        COMMAND ut-sync-id bad_size         )
+add_test(NAME unit/object/sync-id/read/ref         COMMAND ut-sync-id read_ref         )
+add_test(NAME unit/object/sync-id/read/direct      COMMAND ut-sync-id read_direct      )
+add_test(NAME unit/object/sync-id/read/bad_node    COMMAND ut-sync-id read_bad_node    )
+add_test(NAME unit/object/sync-id/write/activate   COMMAND ut-sync-id write_activate   )
+add_test(NAME unit/object/sync-id/write/deactivate COMMAND ut-sync-id write_deactivate )
+add_test(NAME unit/object/sync-id/write/active     COMMAND ut-sync-id write_active     )
+add_test(NAME unit/object/sync-id/write/bad_node   COMMAND ut-sync-id write_bad_node   )
+add_test(NAME unit/object/sync-id/init/check       COMMAND ut-sync-id init_check       )
+add_test(NAME unit/object/sync-id/init/bad_index   COMMAND ut-sync-id init_bad_index   )
+add_test(NAME unit/object/sync-id/init/bad_sub     COMMAND ut-sync-id init_bad_sub     )
+add_test(NAME unit/object/sync-id/reset/unused     COMMAND ut-sync-id reset_unused     )

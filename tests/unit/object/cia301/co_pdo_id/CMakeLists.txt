@@ -14,23 +14,23 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_pdo_id main.c)
-target_link_libraries(co_pdo_id Canopen TestEnv)
+add_executable(ut-pdo-id main.c)
+target_link_libraries(ut-pdo-id canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_pdo_id/size/unknown     COMMAND co_pdo_id size_unknown     )
-add_test(NAME unit/object/co_pdo_id/size/known       COMMAND co_pdo_id size_known       )
-add_test(NAME unit/object/co_pdo_id/size/size        COMMAND co_pdo_id bad_size         )
-add_test(NAME unit/object/co_pdo_id/read/ref         COMMAND co_pdo_id read_ref         )
-add_test(NAME unit/object/co_pdo_id/read/direct      COMMAND co_pdo_id read_direct      )
-add_test(NAME unit/object/co_pdo_id/read/bad_node    COMMAND co_pdo_id read_bad_node    )
-add_test(NAME unit/object/co_pdo_id/write/activate   COMMAND co_pdo_id write_activate   )
-add_test(NAME unit/object/co_pdo_id/write/deactivate COMMAND co_pdo_id write_deactivate )
-add_test(NAME unit/object/co_pdo_id/write/active     COMMAND co_pdo_id write_active     )
-add_test(NAME unit/object/co_pdo_id/write/bad_node   COMMAND co_pdo_id write_bad_node   )
-add_test(NAME unit/object/co_pdo_id/init/check       COMMAND co_pdo_id init_check       )
-add_test(NAME unit/object/co_pdo_id/init/bad_index   COMMAND co_pdo_id init_bad_index   )
-add_test(NAME unit/object/co_pdo_id/init/bad_sub     COMMAND co_pdo_id init_bad_sub     )
-add_test(NAME unit/object/co_pdo_id/reset/unused     COMMAND co_pdo_id reset_unused     )
+add_test(NAME unit/object/pdo-id/size/unknown     COMMAND ut-pdo-id size_unknown     )
+add_test(NAME unit/object/pdo-id/size/known       COMMAND ut-pdo-id size_known       )
+add_test(NAME unit/object/pdo-id/size/size        COMMAND ut-pdo-id bad_size         )
+add_test(NAME unit/object/pdo-id/read/ref         COMMAND ut-pdo-id read_ref         )
+add_test(NAME unit/object/pdo-id/read/direct      COMMAND ut-pdo-id read_direct      )
+add_test(NAME unit/object/pdo-id/read/bad_node    COMMAND ut-pdo-id read_bad_node    )
+add_test(NAME unit/object/pdo-id/write/activate   COMMAND ut-pdo-id write_activate   )
+add_test(NAME unit/object/pdo-id/write/deactivate COMMAND ut-pdo-id write_deactivate )
+add_test(NAME unit/object/pdo-id/write/active     COMMAND ut-pdo-id write_active     )
+add_test(NAME unit/object/pdo-id/write/bad_node   COMMAND ut-pdo-id write_bad_node   )
+add_test(NAME unit/object/pdo-id/init/check       COMMAND ut-pdo-id init_check       )
+add_test(NAME unit/object/pdo-id/init/bad_index   COMMAND ut-pdo-id init_bad_index   )
+add_test(NAME unit/object/pdo-id/init/bad_sub     COMMAND ut-pdo-id init_bad_sub     )
+add_test(NAME unit/object/pdo-id/reset/unused     COMMAND ut-pdo-id reset_unused     )

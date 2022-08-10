@@ -17,12 +17,12 @@
 #---
 # define the canopen stack library
 #
-add_library(Canopen)
+add_library(canopen-stack)
 
 #---
 # define interface
 #
-target_include_directories(Canopen
+target_include_directories(canopen-stack
   PUBLIC
     config
     core
@@ -36,7 +36,7 @@ target_include_directories(Canopen
 #---
 # specify the implementation files
 #
-target_sources(Canopen
+target_sources(canopen-stack
   PRIVATE
     # config interface
     config/callbacks.c
@@ -91,5 +91,5 @@ target_sources(Canopen
 #---
 # place static library to known output location
 #
-set_target_properties(Canopen PROPERTIES OUTPUT_NAME "canopen-stack")
-set_target_properties(Canopen PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/out")
+set_target_properties(canopen-stack PROPERTIES OUTPUT_NAME "canopen-stack")
+set_target_properties(canopen-stack PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/out")

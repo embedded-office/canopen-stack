@@ -14,22 +14,22 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_hb_cons main.c)
-target_link_libraries(co_hb_cons Canopen TestEnv)
+add_executable(ut-hb-cons main.c)
+target_link_libraries(ut-hb-cons canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_hb_cons/size/sub_0       COMMAND co_hb_cons size_sub_0      )
-add_test(NAME unit/object/co_hb_cons/size/consumer    COMMAND co_hb_cons size_consumer   )
-add_test(NAME unit/object/co_hb_cons/size/bad_size    COMMAND co_hb_cons size_bad_size   )
-add_test(NAME unit/object/co_hb_cons/read/sub_0       COMMAND co_hb_cons read_sub_0      )
-add_test(NAME unit/object/co_hb_cons/read/consumer    COMMAND co_hb_cons read_consumer   )
-add_test(NAME unit/object/co_hb_cons/read/bad_node    COMMAND co_hb_cons read_bad_node   )
-add_test(NAME unit/object/co_hb_cons/write/sub_0      COMMAND co_hb_cons write_sub_0     )
-add_test(NAME unit/object/co_hb_cons/write/consumer   COMMAND co_hb_cons write_consumer  )
-add_test(NAME unit/object/co_hb_cons/write/bad_node   COMMAND co_hb_cons write_bad_node  )
-add_test(NAME unit/object/co_hb_cons/init/single      COMMAND co_hb_cons init_single     )
-add_test(NAME unit/object/co_hb_cons/init/multiple    COMMAND co_hb_cons init_multiple   )
-add_test(NAME unit/object/co_hb_cons/init/bad_index   COMMAND co_hb_cons init_bad_index  )
-add_test(NAME unit/object/co_hb_cons/reset/unused     COMMAND co_hb_cons reset_unused    )
+add_test(NAME unit/object/hb-cons/size/sub_0       COMMAND ut-hb-cons size_sub_0      )
+add_test(NAME unit/object/hb-cons/size/consumer    COMMAND ut-hb-cons size_consumer   )
+add_test(NAME unit/object/hb-cons/size/bad_size    COMMAND ut-hb-cons size_bad_size   )
+add_test(NAME unit/object/hb-cons/read/sub_0       COMMAND ut-hb-cons read_sub_0      )
+add_test(NAME unit/object/hb-cons/read/consumer    COMMAND ut-hb-cons read_consumer   )
+add_test(NAME unit/object/hb-cons/read/bad_node    COMMAND ut-hb-cons read_bad_node   )
+add_test(NAME unit/object/hb-cons/write/sub_0      COMMAND ut-hb-cons write_sub_0     )
+add_test(NAME unit/object/hb-cons/write/consumer   COMMAND ut-hb-cons write_consumer  )
+add_test(NAME unit/object/hb-cons/write/bad_node   COMMAND ut-hb-cons write_bad_node  )
+add_test(NAME unit/object/hb-cons/init/single      COMMAND ut-hb-cons init_single     )
+add_test(NAME unit/object/hb-cons/init/multiple    COMMAND ut-hb-cons init_multiple   )
+add_test(NAME unit/object/hb-cons/init/bad_index   COMMAND ut-hb-cons init_bad_index  )
+add_test(NAME unit/object/hb-cons/reset/unused     COMMAND ut-hb-cons reset_unused    )

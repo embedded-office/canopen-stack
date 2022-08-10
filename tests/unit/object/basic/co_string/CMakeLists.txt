@@ -14,18 +14,18 @@
 #   limitations under the License.
 #******************************************************************************
 
-add_executable(co_string main.c)
-target_link_libraries(co_string Canopen TestEnv)
+add_executable(ut-string main.c)
+target_link_libraries(ut-string canopen-stack ut-test-env)
 
 
 #--- type function interface tests ---
 
-add_test(NAME unit/object/co_string/size/unknown   COMMAND co_string size_unknown  )
-add_test(NAME unit/object/co_string/size/known     COMMAND co_string size_known    )
-add_test(NAME unit/object/co_string/size/bad_size  COMMAND co_string bad_size      )
-add_test(NAME unit/object/co_string/read/ref       COMMAND co_string read_ref      )
-add_test(NAME unit/object/co_string/read/bad_node  COMMAND co_string read_bad_node )
-add_test(NAME unit/object/co_string/write/ref      COMMAND co_string write_ref     )
-add_test(NAME unit/object/co_string/write/bad_node COMMAND co_string write_bad_node)
-add_test(NAME unit/object/co_string/init/offset    COMMAND co_string init_offset   )
-add_test(NAME unit/object/co_string/reset/offset   COMMAND co_string reset_offset  )
+add_test(NAME unit/object/string/size/unknown   COMMAND ut-string size_unknown  )
+add_test(NAME unit/object/string/size/known     COMMAND ut-string size_known    )
+add_test(NAME unit/object/string/size/bad_size  COMMAND ut-string bad_size      )
+add_test(NAME unit/object/string/read/ref       COMMAND ut-string read_ref      )
+add_test(NAME unit/object/string/read/bad_node  COMMAND ut-string read_bad_node )
+add_test(NAME unit/object/string/write/ref      COMMAND ut-string write_ref     )
+add_test(NAME unit/object/string/write/bad_node COMMAND ut-string write_bad_node)
+add_test(NAME unit/object/string/init/offset    COMMAND ut-string init_offset   )
+add_test(NAME unit/object/string/reset/offset   COMMAND ut-string reset_offset  )
