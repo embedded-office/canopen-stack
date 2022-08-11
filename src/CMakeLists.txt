@@ -87,9 +87,3 @@ target_sources(canopen-stack
     # - CiA305
     service/cia305/co_lss.c
 )
-
-#---
-# place static library to known output location
-#
-set_target_properties(canopen-stack PROPERTIES OUTPUT_NAME "canopen-stack")
-set_target_properties(canopen-stack PROPERTIES ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/out")
