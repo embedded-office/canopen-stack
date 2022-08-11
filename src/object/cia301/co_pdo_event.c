@@ -123,7 +123,7 @@ static CO_ERR COTPdoEventInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_ERR result = CO_ERR_TYPE_INIT;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
 
     if (CO_GET_DEV(obj->Key) == CO_DEV(COT_OBJECT, COT_OBJECT_SUB)) {

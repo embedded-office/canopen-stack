@@ -77,17 +77,17 @@
 #define MY_TYPE  ((CO_OBJ_TYPE *)&MyType)
 static uint32_t MyTypeSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
 {
-    UNUSED(obj);
-    UNUSED(node);
-    UNUSED(width);
+    CO_UNUSED(obj);
+    CO_UNUSED(node);
+    CO_UNUSED(width);
 
     return (1u);
 }
 static CO_ERR MyTypeReadErr(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buf, uint32_t size)
 {
     CO_ERR err = CO_ERR_TYPE_RD;
-    UNUSED(buf);
-    UNUSED(size);
+    CO_UNUSED(buf);
+    CO_UNUSED(size);
     COObjTypeUserSDOAbort(obj, node, 0x11223344);
 
     return (err);

@@ -104,7 +104,7 @@ static CO_ERR COTEmcyHistWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
     CO_EMCY *emcy;
     uint8_t  value;
 
-    UNUSED(size);
+    CO_UNUSED(size);
 
     /* writing is allowed to subindex 0 only */
     if (CO_GET_SUB(obj->Key) == 0) {

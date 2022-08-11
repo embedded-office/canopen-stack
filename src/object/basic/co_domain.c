@@ -45,7 +45,7 @@ static uint32_t COTDomainSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     uint32_t result = 0;
     CO_OBJ_DOM *dom;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, 0);
 
     dom = (CO_OBJ_DOM *)(obj->Data);
@@ -73,7 +73,7 @@ static CO_ERR COTDomainRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     uint32_t    num;
     uint32_t    len;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
     dom = (CO_OBJ_DOM *)(obj->Data);
@@ -107,7 +107,7 @@ static CO_ERR COTDomainWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     uint32_t    num;
     uint32_t    len;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
     dom = (CO_OBJ_DOM *)(obj->Data);
@@ -137,7 +137,7 @@ static CO_ERR COTDomainInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_OBJ_DOM *dom;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
     dom = (CO_OBJ_DOM *)(obj->Data);
@@ -149,7 +149,7 @@ static CO_ERR COTDomainReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint3
 {
     CO_OBJ_DOM *dom;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
     dom = (CO_OBJ_DOM *)(obj->Data);

@@ -45,8 +45,8 @@ static uint32_t COTStringSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     CO_OBJ_STR *str;
     uint8_t    *ptr;
 
-    UNUSED(node);
-    UNUSED(width);
+    CO_UNUSED(node);
+    CO_UNUSED(width);
     ASSERT_PTR_ERR(obj->Data, 0);
 
     str = (CO_OBJ_STR *)(obj->Data);
@@ -66,7 +66,7 @@ static CO_ERR COTStringRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     uint8_t    *ptr;
     uint8_t    *dst;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
     str    = (CO_OBJ_STR *)(obj->Data);
@@ -89,7 +89,7 @@ static CO_ERR COTStringInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_OBJ_STR *str;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
     str = (CO_OBJ_STR *)(obj->Data);
@@ -101,7 +101,7 @@ static CO_ERR COTStringReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint3
 {
     CO_OBJ_STR *str;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
     str = (CO_OBJ_STR *)(obj->Data);

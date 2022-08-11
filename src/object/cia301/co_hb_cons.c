@@ -56,8 +56,8 @@ static uint32_t COTNmtHbConsSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, u
 {
     uint32_t result = (uint32_t)0;
 
-    UNUSED(node);
-    UNUSED(width);
+    CO_UNUSED(node);
+    CO_UNUSED(width);
 
     /* check for valid reference */
     if ((obj->Data) != (CO_DATA)0) {
@@ -77,7 +77,7 @@ static CO_ERR COTNmtHbConsRead(struct CO_OBJ_T *obj, struct CO_NODE_T *node, voi
     CO_HBCONS *hbc;
     uint32_t   value;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj->Data, CO_ERR_BAD_ARG);
 
     if (CO_GET_SUB(obj->Key) == (uint8_t)0u) {

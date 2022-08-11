@@ -67,7 +67,7 @@ static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     uint32_t nid;
     uint32_t oid;
 
-    UNUSED(size);
+    CO_UNUSED(size);
 
     sync = &node->Sync;
     nid = *(uint32_t*)buffer;
@@ -117,7 +117,7 @@ static CO_ERR COTSyncIdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
     CO_ERR result = CO_ERR_TYPE_INIT;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
 
     /* check for emergency cob-id object */

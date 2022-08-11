@@ -74,7 +74,7 @@ static CO_ERR COTPdoMapWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     uint16_t  pcomidx;
     uint8_t   mapn;
 
-    UNUSED(size);
+    CO_UNUSED(size);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
 
@@ -129,7 +129,7 @@ static CO_ERR COTPdoMapInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_ERR result = CO_ERR_TYPE_INIT;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
 
     if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_RPDO) &&

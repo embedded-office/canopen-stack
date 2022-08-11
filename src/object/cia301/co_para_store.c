@@ -169,7 +169,7 @@ static CO_ERR COTParaStoreReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, ui
 {
     CO_ERR result = CO_ERR_TYPE_RESET;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
 
     /* we use reset on subindex 0 to load all parameter groups of a given type */

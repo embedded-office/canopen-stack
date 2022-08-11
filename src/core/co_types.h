@@ -43,7 +43,7 @@
 #endif
 #define WEAK    __attribute__((weak))
 
-#define UNUSED(var)    (void)(var)
+#define CO_UNUSED(var)    (void)(var)
 
 #define ASSERT_PTR_ERR(ptr,err)    \
     if ((void*)(ptr) == NULL) { return (err); }

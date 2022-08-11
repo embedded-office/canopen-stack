@@ -48,8 +48,8 @@ static uint32_t COTUInt32Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
 {
     uint32_t result = (uint32_t)0;
 
-    UNUSED(node);
-    UNUSED(width);
+    CO_UNUSED(node);
+    CO_UNUSED(width);
 
     if (CO_IS_DIRECT(obj->Key) != 0) {
         result = (uint32_t)COT_ENTRY_SIZE;
@@ -67,7 +67,7 @@ static CO_ERR COTUInt32Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     CO_ERR   result = CO_ERR_NONE;
     uint32_t value;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
 
@@ -93,7 +93,7 @@ static CO_ERR COTUInt32Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     uint32_t value;
     uint32_t oldValue;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
 

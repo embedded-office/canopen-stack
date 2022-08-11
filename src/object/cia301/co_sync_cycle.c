@@ -66,7 +66,7 @@ static CO_ERR COTSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
     CO_SYNC *sync;
     uint32_t nus, ous;
 
-    UNUSED(size);
+    CO_UNUSED(size);
 
     result  = CO_ERR_NONE;
     sync    = &node->Sync;
@@ -108,7 +108,7 @@ static CO_ERR COTSyncCycleInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_ERR result = CO_ERR_TYPE_INIT;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
 
     /* check for sync producer object */

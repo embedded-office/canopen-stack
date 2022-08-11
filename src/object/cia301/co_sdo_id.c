@@ -68,7 +68,7 @@ static CO_ERR COTSdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
     uint32_t  curval;
     uint8_t   num;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
     ASSERT_EQU_ERR(size, 4u, CO_ERR_BAD_ARG);
@@ -100,7 +100,7 @@ static CO_ERR COTSdoIdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 {
     CO_ERR result = CO_ERR_TYPE_INIT;
 
-    UNUSED(node);
+    CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
 
     if ((CO_GET_IDX(obj->Key) >= COT_OBJECT) &&

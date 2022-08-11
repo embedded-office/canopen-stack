@@ -55,8 +55,8 @@ static uint32_t COTNmtHbProdSize(struct CO_OBJ_T *obj, struct CO_NODE_T *node, u
 {
     uint32_t result = (uint32_t)0;
 
-    UNUSED(node);
-    UNUSED(width);
+    CO_UNUSED(node);
+    CO_UNUSED(width);
 
     /* check for valid reference */
     if ((obj->Data) != (CO_DATA)0) {
