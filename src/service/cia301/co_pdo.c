@@ -347,6 +347,7 @@ void COTPdoTx(CO_TPDO *pdo)
 * PUBLIC API FUNCTIONS
 ******************************************************************************/
 
+WEAK_TEST
 void COTPdoTrigObj(CO_TPDO *pdo, CO_OBJ *obj)
 {
     uint32_t n;

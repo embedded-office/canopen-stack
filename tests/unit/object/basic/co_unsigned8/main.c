@@ -19,7 +19,26 @@
 ******************************************************************************/
 
 #include "co_core.h"
+
+void StubReset(void);
+#define TEST_INIT StubReset()
+
 #include "acutest.h"
+
+/******************************************************************************
+* TEST CASE - STUB FUNCTIONS
+******************************************************************************/
+
+uint32_t StubPdoTrigObj = 0;
+void COTPdoTrigObj(CO_TPDO *tpdo, CO_OBJ *obj)
+{
+    StubPdoTrigObj++;
+}
+
+void StubReset(void)
+{
+    StubPdoTrigObj = 0;
+}
 
 /******************************************************************************
 * TEST CASES - SIZE
@@ -165,6 +184,36 @@ void test_write_nodeid(void)
     TEST_CHECK(data == 0x44);
 }
 
+void test_write_pdo_async(void)
+{
+    CO_NODE AppNode = { 0 };
+    uint8_t data = 0x33;
+    CO_OBJ  Obj = { CO_KEY(0, 0, CO_OBJ___APRW), CO_TUNSIGNED8, (CO_DATA)(&data)};
+    uint8_t var = 0x44;
+    CO_ERR  err;
+
+    err = COObjWrValue(&Obj, &AppNode, &var, sizeof(var));
+
+    TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(data == 0x44);
+    TEST_CHECK(StubPdoTrigObj == 1);
+}
+
+void test_write_pdo(void)
+{
+    CO_NODE AppNode = { 0 };
+    uint8_t data = 0x33;
+    CO_OBJ  Obj = { CO_KEY(0, 0, CO_OBJ____PRW), CO_TUNSIGNED8, (CO_DATA)(&data)};
+    uint8_t var = 0x44;
+    CO_ERR  err;
+
+    err = COObjWrValue(&Obj, &AppNode, &var, sizeof(var));
+
+    TEST_CHECK(err == CO_ERR_NONE);
+    TEST_CHECK(data == 0x44);
+    TEST_CHECK(StubPdoTrigObj == 0);
+}
+
 void test_write_bad_node(void)
 {
     uint8_t var = 0x44;
@@ -213,18 +262,20 @@ void test_reset_unused(void)
 
 
 TEST_LIST = {
-    { "size_unknown",   test_size_unknown   },
-    { "size_known",     test_size_known     },
-    { "bad_size",       test_bad_size       },
-    { "read_ref",       test_read_ref       },
-    { "read_direct",    test_read_direct    },
-    { "read_nodeid",    test_read_nodeid    },
-    { "read_bad_node",  test_read_bad_node  },
-    { "write_ref",      test_write_ref      },
-    { "write_direct",   test_write_direct   },
-    { "write_nodeid",   test_write_nodeid   },
-    { "write_bad_node", test_write_bad_node },
-    { "init_unused",    test_init_unused    },
-    { "reset_unused",   test_reset_unused   },
+    { "size_unknown",    test_size_unknown    },
+    { "size_known",      test_size_known      },
+    { "bad_size",        test_bad_size        },
+    { "read_ref",        test_read_ref        },
+    { "read_direct",     test_read_direct     },
+    { "read_nodeid",     test_read_nodeid     },
+    { "read_bad_node",   test_read_bad_node   },
+    { "write_ref",       test_write_ref       },
+    { "write_direct",    test_write_direct    },
+    { "write_nodeid",    test_write_nodeid    },
+    { "write_pdo_async", test_write_pdo_async },
+    { "write_pdo",       test_write_pdo       },
+    { "write_bad_node",  test_write_bad_node  },
+    { "init_unused",     test_init_unused     },
+    { "reset_unused",    test_reset_unused    },
     { NULL, NULL }
 };

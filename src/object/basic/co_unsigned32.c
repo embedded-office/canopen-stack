@@ -109,10 +109,10 @@ static CO_ERR COTUInt32Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
             oldValue = *((uint32_t *)(obj->Data));
             *((uint32_t *)(obj->Data)) = value;
         }
-        if (CO_IS_PDO_ASYNC(obj->Key) != 0) {
-            if (value != oldValue) {
-                COTPdoTrigObj(node->TPdo, obj);
-            }
+        if ((CO_IS_ASYNC(obj->Key)  != 0    ) &&
+            (CO_IS_PDOMAP(obj->Key) != 0    ) &&
+            (oldValue               != value)) {
+            COTPdoTrigObj(node->TPdo, obj);
         }
     } else {
         result = CO_ERR_BAD_ARG;

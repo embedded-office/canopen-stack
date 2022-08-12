@@ -173,8 +173,8 @@ extern "C" {
 * \param key
 *    CANopen object member variable 'key'.
 */
-#define CO_IS_PDO_ASYNC(key)    \
-    (uint32_t)((uint32_t)(key) & (CO_OBJ___A___|CO_OBJ____P__))
+#define CO_IS_ASYNC(key)    \
+    (uint32_t)((uint32_t)(key) & CO_OBJ___A___)
 
 /*! \brief CHECK IF OBJECT DEPENDS ON NODE-ID
 *
