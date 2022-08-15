@@ -24,27 +24,27 @@
 * PRIVATE DEFINES
 ******************************************************************************/
 
-#define COT_ENTRY_SIZE    (uint32_t)2
+#define COT_ENTRY_SIZE    (uint32_t)4
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static uint32_t COTUInt16Size (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
-static CO_ERR   COTUInt16Read (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
-static CO_ERR   COTUInt16Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static uint32_t COTInt32Size (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTInt32Read (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTInt32Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTUInt16 = { COTUInt16Size, 0, COTUInt16Read, COTUInt16Write, 0 };
+const CO_OBJ_TYPE COTInt32 = { COTInt32Size, 0, COTInt32Read, COTInt32Write, 0 };
 
 /******************************************************************************
 * FUNCTIONS
 ******************************************************************************/
 
-static uint32_t COTUInt16Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
+static uint32_t COTInt32Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
 {
     uint32_t result = (uint32_t)0;
 
@@ -62,52 +62,52 @@ static uint32_t COTUInt16Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint
     return (result);
 }
 
-static CO_ERR COTUInt16Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
+static CO_ERR COTInt32Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_ERR   result = CO_ERR_NONE;
-    uint16_t value;
+    uint32_t value;
 
     CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
 
     if (CO_IS_DIRECT(obj->Key) != 0) {
-        value = (uint16_t)(obj->Data);
+        value = (uint32_t)(obj->Data);
     } else {
-        value = *((uint16_t *)(obj->Data));
+        value = *((uint32_t *)(obj->Data));
     }
     if (CO_IS_NODEID(obj->Key) != 0) {
         value += node->NodeId;
     }
     if (size == COT_ENTRY_SIZE) {
-        *((uint16_t *)buffer) = value;
+        *((uint32_t *)buffer) = value;
     } else {
         result = CO_ERR_BAD_ARG;
     }
     return (result);
 }
 
-static CO_ERR COTUInt16Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
+static CO_ERR COTInt32Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_ERR   result = CO_ERR_NONE;
-    uint16_t value;
-    uint16_t oldValue;
+    uint32_t value;
+    uint32_t oldValue;
 
     CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
     ASSERT_PTR_ERR(buffer, CO_ERR_BAD_ARG);
 
-    value = *((uint16_t *)buffer);
+    value = *((uint32_t *)buffer);
     if (size == COT_ENTRY_SIZE) {
         if (CO_IS_NODEID(obj->Key) != 0) {
             value -= node->NodeId;
         }
         if (CO_IS_DIRECT(obj->Key) != 0) {
-            oldValue = (uint16_t)obj->Data;
+            oldValue = (uint32_t)obj->Data;
             obj->Data = (CO_DATA)(value);
         } else {
-            oldValue = *((uint16_t *)(obj->Data));
-            *((uint16_t *)(obj->Data)) = value;
+            oldValue = *((uint32_t *)(obj->Data));
+            *((uint32_t *)(obj->Data)) = value;
         }
         if ((CO_IS_ASYNC(obj->Key)  != 0    ) &&
             (CO_IS_PDOMAP(obj->Key) != 0    ) &&

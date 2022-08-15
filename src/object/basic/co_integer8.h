@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CO_UNSIGNED8_H_
-#define CO_UNSIGNED8_H_
+#ifndef CO_INTEGER8_H_
+#define CO_INTEGER8_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -33,20 +33,22 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_TUNSIGNED8  ((const CO_OBJ_TYPE *)&COTUInt8)
+#define CO_TUNSIGNED8  ((const CO_OBJ_TYPE *)&COTInt8)
+#define CO_TSIGNED8    ((const CO_OBJ_TYPE *)&COTInt8)
 
 /******************************************************************************
 * PUBLIC CONSTANTS
 ******************************************************************************/
 
-/*! \brief OBJECT TYPE UNSIGNED8
+/*! \brief OBJECT TYPE SIGNED8 / UNSIGNED8
 *
-*    This type is a basic type for unsigned 8bit values.
+*    This type is a basic type for 8bit values, regardless of signed or
+*    unsigned usage.
 */
-extern const CO_OBJ_TYPE COTUInt8;
+extern const CO_OBJ_TYPE COTInt8;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 
-#endif  /* #ifndef CO_UNSIGNED8_H_ */
+#endif  /* #ifndef CO_INTEGER8_H_ */

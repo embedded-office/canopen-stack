@@ -31,9 +31,9 @@ extern "C" {
 /* basic types */
 #include "co_domain.h"
 #include "co_string.h"
-#include "co_unsigned8.h"
-#include "co_unsigned16.h"
-#include "co_unsigned32.h"
+#include "co_integer8.h"
+#include "co_integer16.h"
+#include "co_integer32.h"
 
 /* cia301 types */
 #include "co_emcy_hist.h"

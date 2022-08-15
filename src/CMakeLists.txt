@@ -44,6 +44,7 @@ target_sources(canopen-stack
     # core API
     core/co_core.c
     core/co_dict.c
+    core/co_nmt.c
     core/co_obj.c
     core/co_tmr.c
     core/co_ver.c
@@ -57,9 +58,9 @@ target_sources(canopen-stack
     # - basic types
     object/basic/co_domain.c
     object/basic/co_string.c
-    object/basic/co_unsigned8.c
-    object/basic/co_unsigned16.c
-    object/basic/co_unsigned32.c
+    object/basic/co_integer8.c
+    object/basic/co_integer16.c
+    object/basic/co_integer32.c
     # - CiA301 types
     object/cia301/co_emcy_hist.c
     object/cia301/co_emcy_id.c
@@ -80,7 +81,6 @@ target_sources(canopen-stack
     # - CiA301
     service/cia301/co_csdo.c
     service/cia301/co_emcy.c
-    service/cia301/co_nmt.c
     service/cia301/co_pdo.c
     service/cia301/co_ssdo.c
     service/cia301/co_sync.c

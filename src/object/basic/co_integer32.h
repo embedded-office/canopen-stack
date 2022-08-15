@@ -14,8 +14,8 @@
    limitations under the License.
 ******************************************************************************/
 
-#ifndef CO_UNSIGNED16_H_
-#define CO_UNSIGNED16_H_
+#ifndef CO_INTEGER32_H_
+#define CO_INTEGER32_H_
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 extern "C" {
@@ -33,20 +33,22 @@ extern "C" {
 * DEFINES
 ******************************************************************************/
 
-#define CO_TUNSIGNED16  ((const CO_OBJ_TYPE *)&COTUInt16)
+#define CO_TUNSIGNED32  ((const CO_OBJ_TYPE *)&COTInt32)
+#define CO_TSIGNED32    ((const CO_OBJ_TYPE *)&COTInt32)
 
 /******************************************************************************
 * PUBLIC CONSTANTS
 ******************************************************************************/
 
-/*! \brief OBJECT TYPE UNSIGNED16
+/*! \brief OBJECT TYPE SIGNED32 / UNSIGNED32
 *
-*    This type is a basic type for unsigned 16bit values.
+*    This type is a basic type for 32bit values, regardless of signed or
+*    unsigned usage.
 */
-extern const CO_OBJ_TYPE COTUInt16;
+extern const CO_OBJ_TYPE COTInt32;
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
 #endif
 
-#endif  /* #ifndef CO_UNSIGNED16_H_ */
+#endif  /* #ifndef CO_INTEGER32_H_ */

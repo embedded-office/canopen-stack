@@ -30,21 +30,21 @@
 * PRIVATE FUNCTIONS
 ******************************************************************************/
 
-static uint32_t COTUInt8Size (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
-static CO_ERR   COTUInt8Read (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
-static CO_ERR   COTUInt8Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static uint32_t COTInt8Size (struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width);
+static CO_ERR   COTInt8Read (struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
+static CO_ERR   COTInt8Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size);
 
 /******************************************************************************
 * PUBLIC GLOBALS
 ******************************************************************************/
 
-const CO_OBJ_TYPE COTUInt8 = { COTUInt8Size, 0, COTUInt8Read, COTUInt8Write, 0 };
+const CO_OBJ_TYPE COTInt8 = { COTInt8Size, 0, COTInt8Read, COTInt8Write, 0 };
 
 /******************************************************************************
 * FUNCTIONS
 ******************************************************************************/
 
-static uint32_t COTUInt8Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
+static uint32_t COTInt8Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint32_t width)
 {
     uint32_t result = (uint32_t)0;
 
@@ -62,7 +62,7 @@ static uint32_t COTUInt8Size(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint3
     return (result);
 }
 
-static CO_ERR COTUInt8Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
+static CO_ERR COTInt8Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_ERR  result = CO_ERR_NONE;
     uint8_t value;
@@ -87,7 +87,7 @@ static CO_ERR COTUInt8Read(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *b
     return (result);
 }
 
-static CO_ERR COTUInt8Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
+static CO_ERR COTInt8Write(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *buffer, uint32_t size)
 {
     CO_ERR  result = CO_ERR_NONE;
     uint8_t value;

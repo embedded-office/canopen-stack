@@ -16,6 +16,9 @@
 
 # basic types
 add_subdirectory(co_domain)
+add_subdirectory(co_signed8)
+add_subdirectory(co_signed16)
+add_subdirectory(co_signed32)
 add_subdirectory(co_string)
 add_subdirectory(co_unsigned8)
 add_subdirectory(co_unsigned16)
