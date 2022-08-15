@@ -71,7 +71,7 @@ static const uint8_t CONmtModeCode[CO_MODE_NUM] = {
 
 void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
 {
-    CO_OBJ *obj;
+    CO_OBJ *store;
     uint8_t nobootup = 1;
     CO_ERR  err;
 
@@ -82,12 +82,12 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
         nobootup = 0;
     }
 
+    /* check for parameter storage */
+    store = CODictFind(&(nmt->Node->Dict), CO_DEV(0x1010, 0));
+
     if (type == CO_RESET_NODE) {
-        /* check for parameter storage */
-        obj = CODictFind(&(nmt->Node->Dict), CO_DEV(0x1010, 0));
-        if (obj != NULL) {
-            /* reload application related parameters */
-            err = obj->Type->Reset(obj, nmt->Node, CO_RESET_NODE);
+        if (store != NULL) {
+            err = COObjReset(store, nmt->Node, CO_RESET_NODE);
             if (err != CO_ERR_NONE) {
                 nmt->Node->Error = err;
             }
@@ -95,11 +95,8 @@ void CONmtReset(CO_NMT *nmt, CO_NMT_RESET type)
     }
 
     if (type <= CO_RESET_COM) {
-        /* check for parameter storage */
-        obj = CODictFind(&nmt->Node->Dict, CO_DEV(0x1010, 0));
-        if (obj != NULL) {
-            /* reload communication related parameters */
-            err = obj->Type->Reset(obj, nmt->Node, CO_RESET_COM);
+        if (store != NULL) {
+            err = COObjReset(store, nmt->Node, CO_RESET_COM);
             if (err != CO_ERR_NONE) {
                 nmt->Node->Error = err;
             }
@@ -193,6 +190,7 @@ void CONmtSetMode(CO_NMT *nmt, CO_MODE mode)
 
     if (nmt->Mode != mode) {
         if (mode == CO_OPERATIONAL) {
+            
             COTPdoInit(nmt->Node->TPdo, nmt->Node);
             CORPdoInit(nmt->Node->RPdo, nmt->Node);
         }
