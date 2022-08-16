@@ -943,6 +943,191 @@ TS_DEF_MAIN(TS_TPdo_SwitchToOpWhileInOp)
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
+/*------------------------------------------------------------------------------------------------*/
+/*
+*          This testcase will check issue #118 (case 1)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_TPdo_ChangeEventTime)
+{
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 254;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
+
+    TS_CreateMandatoryDir();
+    TS_CreateTPdoCom(1, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
+    TS_CreateTPdoMap(1, &tpdo_map, &tpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_OBJ___APRW), CO_TUNSIGNED8, (CO_DATA)(&data8));
+    TS_CreateNode(&node,0);
+    
+    TS_NMT_SEND(1, 1);                                       /* set node-id 1 to operational      */
+
+    CODictWrByte(&node.Dict, CO_DEV(0x2500, 0x0B), 0x11);    /* change object value               */
+    CHK_CAN  (&frm);                                         /* check for a CAN frame             */
+
+    TS_SDO_SEND(0x2B, 0x1801, 5, 1000);                      /* write to 1801:05, value 1000      */
+    CHK_SDO0_OK(0x1801, 5);                                  /* check for success                 */
+
+    TS_Wait(&node, 1100);                                    /* wait for 1000ms +10%              */
+    CHK_CAN(&frm);                                           /* check for a CAN frame             */
+
+    TS_NMT_SEND(128, 1);                                     /* set node-id 1 to pre-operational  */
+
+    CODictWrByte(&node.Dict, CO_DEV(0x2500, 0x0B), 0x22);    /* change object value               */
+    CHK_NOCAN(&frm)                                          /* check for no CAN frame            */
+
+    TS_NMT_SEND(130, 1);                                     /* communication reset on Node 1     */
+    CHK_CAN(&frm);                                           /* check for a CAN frame (bootup)    */
+    CHK_BOOTUP(frm, 1);                                      /* BootUp message of Node-ID #1      */
+
+    CODictWrByte(&node.Dict, CO_DEV(0x2500, 0x0B), 0x33);    /* change object value               */
+    CHK_NOCAN(&frm)                                          /* check for no CAN frame            */
+
+    TS_Wait(&node, 1100);                                    /* wait for 1000ms +10%              */
+    CHK_NOCAN(&frm);                                         /* check for no CAN frame            */
+
+    CHK_NO_ERR(&node);                                       /* check error free stack execution  */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*
+*          This testcase will check issue #118 (case 2)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_TPdo_SetEventTime)
+{
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 254;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
+
+    TS_CreateMandatoryDir();
+    TS_CreateTPdoCom(1, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
+    TS_CreateTPdoMap(1, &tpdo_map, &tpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_OBJ___APRW), CO_TUNSIGNED8, (CO_DATA)(&data8));
+    TS_CreateNode(&node,0);
+    
+    TS_NMT_SEND(128, 1);                                     /* set node-id 1 to pre-operational  */
+
+    TS_SDO_SEND(0x2B, 0x1801, 5, 1000);                      /* write to 1801:05, value 1000      */
+    CHK_SDO0_OK(0x1801, 5);                                  /* check for success                 */
+
+    TS_NMT_SEND(1, 1);                                       /* set node-id 1 to operational      */
+
+    TS_Wait(&node, 1100);                                    /* wait for 1000ms +10%              */
+    CHK_CAN(&frm);                                           /* check for a CAN frame             */
+
+    CODictWrByte(&node.Dict, CO_DEV(0x2500, 0x0B), 0x22);    /* change object value               */
+    CHK_CAN(&frm)                                            /* check for a CAN frame             */
+
+    CHK_NO_ERR(&node);                                       /* check error free stack execution  */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*
+*          This testcase will check issue #118 (case 3)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_TPdo_SetEventTimeAndReset)
+{
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 254;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
+
+    TS_CreateMandatoryDir();
+    TS_CreateTPdoCom(1, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
+    TS_CreateTPdoMap(1, &tpdo_map, &tpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_OBJ___APRW), CO_TUNSIGNED8, (CO_DATA)(&data8));
+    TS_CreateNode(&node,0);
+    
+    TS_NMT_SEND(128, 1);                                     /* set node-id 1 to pre-operational  */
+
+    TS_SDO_SEND(0x2B, 0x1801, 5, 1000);                      /* write to 1801:05, value 1000      */
+    CHK_SDO0_OK(0x1801, 5);                                  /* check for success                 */
+
+    TS_NMT_SEND(130, 1);                                     /* reset communication node-id 1     */
+    CHK_CAN(&frm);                                           /* check for a CAN frame (bootup)    */
+
+    TS_NMT_SEND(1, 1);                                       /* set node-id 1 to operational      */
+
+    TS_Wait(&node, 1100);                                    /* wait for 1000ms +10%              */
+    CHK_CAN(&frm);                                           /* check for a CAN frame             */
+
+    CODictWrByte(&node.Dict, CO_DEV(0x2500, 0x0B), 0x22);    /* change object value               */
+    CHK_CAN(&frm)                                            /* check for a CAN frame             */
+
+    CHK_NO_ERR(&node);                                       /* check error free stack execution  */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*
+*          This testcase will check issue #118 (change object entry property)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_TPdo_ChangeAsyncProperty)
+{
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    uint32_t  tpdo_id      = 0x40000180;
+    uint32_t  tpdo_map     = 0x25000B08;
+    uint8_t   tpdo_type    = 254;
+    uint16_t  tpdo_inhibit = 0;
+    uint16_t  tpdo_evtime  = 0;
+    uint8_t   tpdo_len     = 1;
+    uint8_t   data8        = 0x91;
+
+    TS_CreateMandatoryDir();
+    TS_CreateTPdoCom(1, &tpdo_id, &tpdo_type, &tpdo_inhibit, &tpdo_evtime);
+    TS_CreateTPdoMap(1, &tpdo_map, &tpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_OBJ___APRW), CO_TUNSIGNED8, (CO_DATA)(&data8));
+    TS_CreateNode(&node,0);
+    
+    TS_NMT_SEND(1, 1);                                       /* set node-id 1 to operational      */
+
+    TS_SDO_SEND(0x2B, 0x1801, 5, 1000);                      /* write to 1801:05, value 1000      */
+    CHK_SDO0_OK(0x1801, 5);                                  /* check for success                 */
+
+                                                             /* change object entry property -A   */
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_OBJ____PRW), CO_TUNSIGNED8, (CO_DATA)(&data8));
+
+    TS_Wait(&node, 1100);                                    /* wait for 1000ms +10%              */
+    CHK_CAN(&frm);                                           /* check for a CAN frame             */
+
+    CODictWrByte(&node.Dict, CO_DEV(0x2500, 0x0B), 0x22);    /* change object value               */
+    CHK_NOCAN(&frm);                                         /* check for no CAN frame            */
+
+    TS_SDO_SEND(0x2B, 0x1801, 5, 0);                         /* write to 1801:05, value 0         */
+    CHK_SDO0_OK(0x1801, 5);                                  /* check for success                 */
+
+                                                             /* change object entry property +A   */
+    TS_ODAdd(CO_KEY(0x2500, 0x0B, CO_OBJ___APRW), CO_TUNSIGNED8, (CO_DATA)(&data8));
+
+    TS_Wait(&node, 1100);                                    /* wait for 1000ms +10%              */
+    CHK_NOCAN(&frm);                                         /* check for no timer CAN frame      */
+
+    CODictWrByte(&node.Dict, CO_DEV(0x2500, 0x0B), 0x33);    /* change object value               */
+    CHK_CAN(&frm);                                           /* check for a CAN frame             */
+
+    CHK_NO_ERR(&node);                                       /* check error free stack execution  */
+}
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -971,6 +1156,10 @@ SUITE_PDO_TX()
     TS_RUNNER(TS_TPdo_TmrFastest);
     TS_RUNNER(TS_TPdo_Async);
     TS_RUNNER(TS_TPdo_SwitchToOpWhileInOp);
+    TS_RUNNER(TS_TPdo_ChangeEventTime);
+    TS_RUNNER(TS_TPdo_SetEventTime);
+    TS_RUNNER(TS_TPdo_SetEventTimeAndReset);
+    TS_RUNNER(TS_TPdo_ChangeAsyncProperty);
 
     TS_End();
 }
