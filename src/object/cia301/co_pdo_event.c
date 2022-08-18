@@ -26,6 +26,7 @@
 
 #define COT_ENTRY_SIZE    (uint32_t)2
 #define COT_OBJECT        (uint16_t)0x1800
+#define COT_OBJECT_NUM    (uint16_t)0x01ff
 #define COT_OBJECT_SUB    (uint8_t)5
 
 /******************************************************************************
@@ -125,9 +126,12 @@ static CO_ERR COTPdoEventInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 
     CO_UNUSED(node);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
-
-    if (CO_GET_DEV(obj->Key) == CO_DEV(COT_OBJECT, COT_OBJECT_SUB)) {
-        result = CO_ERR_NONE;
+    
+    if ((CO_GET_IDX(obj->Key) >= COT_OBJECT) &&
+        (CO_GET_IDX(obj->Key) <= COT_OBJECT + COT_OBJECT_NUM)) {
+        if (CO_GET_SUB(obj->Key) == COT_OBJECT_SUB) {
+            result = CO_ERR_NONE;
+        }
     }
     return (result);
 }

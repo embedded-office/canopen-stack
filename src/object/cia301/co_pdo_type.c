@@ -28,6 +28,7 @@
 #define COT_OBJECT_RPDO   (uint32_t)0x1400
 #define COT_OBJECT_TPDO   (uint32_t)0x1800
 #define COT_OBJECT_NUM    (uint32_t)0x1FF
+#define COT_OBJECT_SUB    (uint8_t)2
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
@@ -97,12 +98,12 @@ static CO_ERR COTPdoTypeInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 
     if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_RPDO) &&
         (CO_GET_IDX(obj->Key) <= COT_OBJECT_RPDO + COT_OBJECT_NUM)) {
-        if (CO_GET_SUB(obj->Key) == 2) {
+        if (CO_GET_SUB(obj->Key) == COT_OBJECT_SUB) {
             result = CO_ERR_NONE;
         }
     } else if ((CO_GET_IDX(obj->Key) >= COT_OBJECT_TPDO) &&
                (CO_GET_IDX(obj->Key) <= COT_OBJECT_TPDO + COT_OBJECT_NUM)) {
-        if (CO_GET_SUB(obj->Key) == 2) {
+        if (CO_GET_SUB(obj->Key) == COT_OBJECT_SUB) {
             result = CO_ERR_NONE;
         }
     }
