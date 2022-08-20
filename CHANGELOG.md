@@ -7,6 +7,10 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
+nothing
+
+## [4.4.0] - 2022-08-21
+
 ### Add
 
 - Add unit tests for all object type functions
@@ -16,6 +20,7 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 - Separate all object type functions into separate files
 - Adjust repository structure to recommendations in "Professional CMake - A Practical Guide"
+- Move website to separate repository
 
 ### Attention: This release introduces a breaking change:
 
@@ -224,7 +229,8 @@ new:
 - First Open Source Release.
 
 
-[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.3.1...HEAD
+[unreleased]: https://github.com/embedded-office/canopen-stack/compare/v4.4.0...HEAD
+[4.4.0]: https://github.com/embedded-office/canopen-stack/compare/v4.3.1...v4.4.0
 [4.3.1]: https://github.com/embedded-office/canopen-stack/compare/v4.3.0...v4.3.1
 [4.3.0]: https://github.com/embedded-office/canopen-stack/compare/v4.2.0...v4.3.0
 [4.2.0]: https://github.com/embedded-office/canopen-stack/compare/v4.1.8...v4.2.0
