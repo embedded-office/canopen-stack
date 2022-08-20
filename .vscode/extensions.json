@@ -1,0 +1,24 @@
+{
+	// List of extensions which should be recommended for users of this workspace.
+	"recommendations": [
+		// programming in C
+		"editorconfig.editorconfig",
+		"ms-vscode.cpptools",
+		"jbenden.c-cpp-flylint",
+		// build environment
+		"twxs.cmake",
+		"ms-vscode.cmake-tools",
+		"fredericbonnet.cmake-test-adapter",
+		// version control
+		"mhutchie.git-graph",
+		"eamodio.gitlens",
+		// documentation
+		"yzhang.markdown-all-in-one",
+		// target debugging Cortex-M
+		"marus25.cortex-debug"
+	],
+	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
+	"unwantedRecommendations": [
+		
+	]
+}

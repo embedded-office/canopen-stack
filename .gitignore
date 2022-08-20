@@ -1,51 +1,9 @@
-# Object files
-*.o
-*.ko
-*.obj
-*.elf
+#ignore
+build/*
+out/*
+Testing/*
+.vscode/*
 
-# Precompiled Headers
-*.gch
-*.pch
-
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
-
-# Debug files
-*.dSYM/
-*.su
-
-# Cache folders
-/VisualGDBCache/
-/Debug/
-/CodeDB/
-*.old
-prj_canopenstack*
-*.mak
-/Makefile
-/gcc_Debug.h
-/gcc_Release.h
-/nxp_lpc.xml
-/.vs/
-*.old00
-/.history
-/build
-/.vscode
-/website/site/
+#allow
+!.vscode/settings.json
+!.vscode/extensions.json

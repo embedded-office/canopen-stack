@@ -1,0 +1,42 @@
+{
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "cmake.configureOnOpen": true,
+
+  "cmakeExplorer.suiteDelimiter": "/",
+
+  "c-cpp-flylint.debug": true,
+  "c-cpp-flylint.run": "onBuild",
+
+  "c-cpp-flylint.clang.enable": false,
+  "c-cpp-flylint.flawfinder.enable": false,
+  "c-cpp-flylint.flexelint.enable": false,
+  "c-cpp-flylint.lizard.enable": false,
+
+  "c-cpp-flylint.cppcheck.enable": true,
+  "c-cpp-flylint.cppcheck.language": "c",
+  "c-cpp-flylint.cppcheck.standard": [ "c99" ],
+  "c-cpp-flylint.cppcheck.force": true,
+  "c-cpp-flylint.cppcheck.suppressions": [
+    "variableScope",          // reason: we want to declare all used variables in a function at the top
+    "unusedStructMember",     // reason: we provide structures for use in the application
+    "comparePointers",        // reason: we need to loop through the testcase structures in the test section
+    "constParameter",         // reason: we want to avoid const parameters for easier function usage
+    "ConfigurationNotChecked" // reason: we want to avoid problems with the C test framework 'acutest.h'
+  ],
+  "c-cpp-flylint.cppcheck.includePaths": [
+    // CANopen Library
+    "src/config",
+    "src/core",
+    "src/hal",
+    "src/object/basic",
+    "src/object/cia301",
+    "src/service/cia301",
+    "src/service/cia305",
+    // Library Testing
+    "tests/integration/app",
+    "tests/integration/driver",
+    "tests/integration/testfrm",
+    "tests/integration/tests",
+    "tests/unit/env",
+  ]
+}
