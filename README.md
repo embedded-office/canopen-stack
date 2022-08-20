@@ -50,113 +50,26 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 
 ## Usage
 
-### Integrate sourcecode to your project
+With version 4.4, the CANopen Stack project introduces an ecosystem that tries to support you in your project management. This support uses multiple repositories for essential aspects of an embedded software project setup:
 
-Get the project repository and add to your include search path:
-- `canopen/config`
-- `canopen/include`
+- **[cmake-scripts](https://github.com/embedded-office/cmake-scripts)** - this repository is responsible for the embedded toolchains and the component package management.
+- **[canopen-stack](https://github.com/embedded-office/canopen-stack)** - this repository represents the platform independent CANopen stack component.
+- **[canopen-stm32f7xx](https://github.com/embedded-office/canopen-stm32f7xx)** - this repository contains a complete Quickstart example setup for the device STM32F769. The adaption to other devices out of the STM32F7 series are small.
+- **[STM32CubeF7](https://github.com/embedded-office/STM32CubeF7)** - this fork of the ST Microelectronics HAL package is integrated into the CMake build system and packaged with minimal required source files to get the ST HAL/LL drivers working (No middleware and documentation).
 
-and to your source path:
-- `canopen/source`
+## Add Component in CMake (recommended)
 
-Select the driver templates for CAN, NVM and Timer you want as starting point for your hardware interface and add them to your project:
-- `driver/include`
-- `driver/source`
+The build system is realized with CMake and the CPM.cmake package management. See [cmake-scripts](https://github.com/embedded-office/cmake-scripts) for details. Adding the CANopen Stack into your project is done during the configuration phase of the build environment. During this phase, the CANopen Stack is fetched in the defined version and is available for usage.
 
-*Note: in future versions, we want to remove the pre-compiler configuration file in `canopen/config`. The corresponding configuration will be possible in a more flexible way. The main goal is to get a CANopen library for a specific microcontroller, with no application specific configuration included and therefore usable in all applications.*
-
-### Hardware interfaces
-
-The project contains a driver layer for required hardware interfaces. In this repository no real hardware specific drivers are included. The repository contains a template device (`dummy`) as a starting point for your own drivers and a driver for simulated device (`sim`) for CAN and NVM (used by the test suite) and a device for software based cyclic timer (`swcycle`) for the test suite.
-
-| Interface | Component                                   |
-| --------- | ------------------------------------------- |
-| can       | CAN contoller communication channel         |
-| timer     | Hardware timer or cyclic interrupt source   |
-| nvm       | Non-volatile memory storage media           |
-
-#### Connect hardware drivers
-
-For selecting the hardware interfaces you need to include the header file of one specific driver module and use the matching global interface variable. The naming convention for the include file is `co_<interface>_<device>.c/h` and for the matching interface variable `<Device><Interface>Driver`. Therefore, as an example for connecting the STM32F429 microcontroller (`stm32f429`) for all interfaces leads us to:
-
-```c
-#include "co_can_stm32f429.h"
-#include "co_timer_stm32f429.h"
-#include "co_nvm_stm32f429.h"
-
-const CO_IF_DRV MyDriver = {
-  Stm32f429CanDriver,
-  Stm32f429TimerDriver,
-  Stm32f429NvmDriver
-};
-```
-
-#### Integrate timer service
-
-How to integrate the timer management depends on the timer driver and is explained in the corresponding documentation. For the software cycle timer, we need to call the timer service function periodically. The service function of the timer management checks if a timer event is elapsed and coordinates the CANopen software timers.
-- call the function `COTmrService()` periodically
-- ensure the calling frequency you define in member `TmrFreq` of the node specification
-
-The processing of all actions related to a timer event is performed with the process function of the timer management. This execution can take place within the timer interrupt service handler, or within a task of your RTOS.
-- call the function `COTmrProcess()` where you want to process the timed actions
-
-#### Integrate storage media
-
-Most likely some parameter should be stored in non-volatile memory. For the factory default values the CANopen stack needs a callback function.
-- provide `COParaDefault()` to set the factory default values for the object dictionary parameters
-
-### Setup your CANopen node
-
-The CANopen node is configured with global data structures:
-
-#### Define CANopen Dictionary
-
-The CANopen dictionary is an array of object entries, which we can allocate statically:
-
-```c
-const CO_OBJ MyDict[MY_DICT_LEN] = {
-    /* setup application specific dictionary, example entry: */
-    { CO_KEY(0x1000, 0, CO_UNSIGNED32|CO_OBJ_D__R_), 0, (CO_DATA)(0u) },
-    /* : */
-};
-```
-
-#### Define Emergency Table
-
-The emergency code table maps the application emergency codes to the corresponding bits in the mandatory error register.
-
-```c
-const CO_EMCY MyEmcyTbl[MY_EMCY_TBL_LEN] = {
-    /* setup application specific error codes, example entry: */
-    { MY_OVER_VOLTAGE_ERROR_CODE, CO_EMCY_REG_VOLTAGE },
-    /* : */
-}
-```
-
-#### Initialize CANopen Node
-
-Fill the specification structure with your configuration constants, memory areas and default values and call the CANopen initialization function for setting up all the internal references and structures.
-
-```c
-CO_NODE myNode;
-
-void foo(void)
-{
-    CO_NODE_SPEC spec;
-
-    spec.NodeId   = 1u;
-    spec.Baudrate = 250000u;
-    spec.Dict     = &MyDict;
-    spec.DictLen  = MY_DICT_LEN;
-    spec.EmcyCode = &MyEmcyTbl;
-    spec.TmrMem   = &MyTmrMem[0];
-    spec.TmrNum   = 16u;
-    spec.TmrFreq  = 1000u;
-    spec.Drv      = &MyDriver;
-    spec.SdoBuf   = &MySdoMem[0][0];
-
-    CONodeInit (&myNode, &spec);
-}
+```cmake
+set(CO_TARGET   "canopen-stack")
+set(CO_PROJECT  "embedded-office/canopen-stack")
+set(CO_VERSION  "4.4.0")
+CPMAddPackage(
+  NAME    ${CO_TARGET}
+  URL     https://github.com/${CO_PROJECT}/releases/download/v${CO_VERSION}/${CO_TARGET}-src.zip
+  VERSION ${CO_VERSION}
+)
 ```
 
 # History
@@ -183,16 +96,30 @@ Feel free to write bug reports, questions or and feedback as issue within this g
 
 ## Development Environment
 
-The development environment for the CANopen stack takes place on our local windows machine with the free MSVC compiler and the hardware independent test framework.
+The development environment for the CANopen stack takes place on the host machine. In release 4.4.0, we have decided to switch from the Windows-only MSVC compiler to the LLVM compiler. The main reason for this decision is that the same compiler is available for Windows, Linux, and Mac OS users.
 
-*Remember: For usage in embedded systems, the source code needs to get recompiled with the cross-compiler of your choice. Good practise is the generation, testing and release of a static library with your cross-compiler for usage in your project.*
+### Development Tools
 
-### Required Tools
+Download and install these free tools for your system:
 
-Download and install these free tools:
+- Install the build tools [Cmake](https://cmake.org/)
+- Install the build system [Ninja](https://ninja-build.org/)
+- Install the static checker [cppcheck](http://cppcheck.net/)
+- Install the compiler [LLVM](https://clang.llvm.org/)
 
-- [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) - the free C compiler for Windows, which includes the used build tools `CMake`, `Ninja` and `Make`
+*Note: on my Windows machine, I use the [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) which inlcudes the LLVM compiler and the required Windows SDK libraries.*
 
-- [Visual Studio Code](https://code.visualstudio.com/download) - this is my editor for coding. You can use your prefered coding editor without trouble.
 
-Perform the configuration and setup for the environment by following the nice [Tutorial](https://code.visualstudio.com/docs/cpp/config-msvc).
+## Run the Test Applications
+
+The application is build with CMake using the provided presets:
+
+```bash
+# configure the project build environment for your host system
+$ cmake --preset llvm-host
+# build the library for your host and all test applications
+$ cmake --build --preset debug
+
+# execute all test applications
+$ ctest --preset all
+```

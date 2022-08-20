@@ -1,0 +1,34 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "llvm-host",
+      "displayName": "LLVM Compiler (Host)",
+      "generator": "Ninja",
+      "binaryDir": "build",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug",
+      "configurePreset": "llvm-host",
+      "displayName": "Debug Build (Host)",
+      "targets": [ "all" ],
+      "jobs": 5
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "all",
+      "displayName": "All Tests (Host)",
+      "configurePreset": "llvm-host",
+      "execution": {
+        "jobs": 5
+      }
+    }
+  ]
+}
