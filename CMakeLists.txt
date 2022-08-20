@@ -31,11 +31,6 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS OFF)
 
 #---
-# externally provided content
-#
-add_subdirectory(dependencies)
-
-#---
 # main targets built by this project
 #
 add_subdirectory(src)
@@ -46,4 +41,18 @@ add_subdirectory(src)
 if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
   add_subdirectory(examples)
   add_subdirectory(tests)
+
+  # Setup target which creates a source package for efficient usage with Cmake CPM/FetchContent
+  set(package_files
+    src
+    CMakeLists.txt
+    LICENSE
+  )
+  add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-src.zip
+    COMMAND ${CMAKE_COMMAND} -E tar c ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-src.zip --format=zip -- ${package_files}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    DEPENDS ${package_files}
+  )
+  add_custom_target(${PROJECT_NAME}_package DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-src.zip)
+
 endif()

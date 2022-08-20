@@ -1,0 +1,29 @@
+name: Release
+permissions:
+  contents: write
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create build environment
+        run: cmake -E make_directory build
+      - name: Configure
+        working-directory: build/
+        run: cmake $GITHUB_WORKSPACE
+      - name: Package source code
+        working-directory: build/
+        run: cmake --build . --target canopen-stack_package
+
+      - name: Add packaged source code to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: build/canopen-stack-src.zip
+          tag: ${{ github.ref }}
