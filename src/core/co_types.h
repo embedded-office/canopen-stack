@@ -25,6 +25,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+// For microcontrollers that do not have uint8_t/int8_t
+#ifdef __TMS320C28XX__
+typedef uint16_t uint8_t;
+typedef int16_t int8_t;
+#endif
+
 /******************************************************************************
 * PUBLIC MACROS
 ******************************************************************************/
