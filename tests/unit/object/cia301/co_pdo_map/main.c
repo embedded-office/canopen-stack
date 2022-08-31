@@ -116,14 +116,15 @@ void test_write_mapping(void)
     uint8_t  data8 = 0x22;
     uint32_t val   = CO_LINK(0x2345,67,8);
     CO_ERR   err;
-    CO_OBJ   Obj[3] = {
+    CO_OBJ   Obj[4] = {
         { CO_KEY(0x1800, 1, CO_OBJ_D___RW), CO_TPDO_ID, (CO_DATA)((1ul<<31)|200uL)}, /* inactive 200h */
+        { CO_KEY(0x1A00, 0, CO_OBJ_D___RW), CO_TUNSIGNED8, (CO_DATA)(0)}, /* number of entries */
         { CO_KEY(0x1A00, 1, CO_OBJ_____RW), CO_TPDO_MAP, (CO_DATA)(&data)},
         { CO_KEY(0x2345,67, CO_OBJ____PRW), CO_TUNSIGNED8, (CO_DATA)(&data8)}
     };
-    (void)CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 3);
+    (void)CODictInit(&AppNode.Dict, &AppNode, &Obj[0], 4);
 
-    err = COObjWrValue(&Obj[1], &AppNode, &val, sizeof(val));
+    err = COObjWrValue(&Obj[2], &AppNode, &val, sizeof(val));
 
     TEST_CHECK(err == CO_ERR_NONE);
 }
