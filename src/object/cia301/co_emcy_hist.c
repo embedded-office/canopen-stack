@@ -199,7 +199,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
         val |= (((uint32_t)usr->Hist) << 16);
     }
     obj = CODictFind(cod, CO_DEV(COT_OBJECT, sub));
-    (void)uint32->Write(obj, node, &val, sizeof(val));
+    (void)uint32->Write(obj, node, &val, COT_ENTRY_SIZE);
 
     /* update number of stored entries in history */
     emcy->Hist.Num++;
@@ -207,7 +207,7 @@ void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
         emcy->Hist.Num = emcy->Hist.Max;
     } else {
         obj = CODictFind(cod, CO_DEV(COT_OBJECT, 0));
-        (void)uint8->Write(obj, node, &(emcy->Hist.Num), sizeof(emcy->Hist.Num));
+        (void)uint8->Write(obj, node, &(emcy->Hist.Num), (uint32_t)1u);
     }
 }
 
@@ -239,12 +239,12 @@ void COEmcyHistReset(CO_EMCY *emcy)
         node->Error = CO_ERR_NONE;
         return;
     }
-    (void)uint8->Write(obj, node, &val08, sizeof(val08));
+    (void)uint8->Write(obj, node, &val08, (uint32_t)1u);
 
     /* clear all emergency entries in history */
     for (sub = 1; sub <= emcy->Hist.Max; sub++) {
         obj = CODictFind(cod, CO_DEV(COT_OBJECT, sub));
-        (void)uint32->Write(obj, node, &val32, sizeof(val32));
+        (void)uint32->Write(obj, node, &val32, COT_ENTRY_SIZE);
     }
 
     /* update history state */
