@@ -85,7 +85,7 @@ static CO_ERR COTPdoTypeWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void
 
     /* write new PDO type */
     type    = *(uint8_t*)buffer;
-    result = uint8->Write(obj, node, &type, sizeof(type));
+    result = uint8->Write(obj, node, &type, 1);
     return (result);
 }
 

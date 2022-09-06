@@ -71,7 +71,7 @@ static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
 
     sync = &node->Sync;
     nid = *(uint32_t*)buffer;
-    (void)uint32->Read(obj, node, &oid, sizeof(oid));
+    (void)uint32->Read(obj, node, &oid, 4);
 
     /* when current entry is generating SYNCs, bits 0 to 29 shall not be changed */
     if ((oid & CO_SYNC_COBID_ON) != (uint32_t)0) {
@@ -83,7 +83,7 @@ static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
                 COSyncProdDeactivate(sync);
             }
             sync->CobId = nid;
-            result = uint32->Write(obj, node, &nid, sizeof(nid));
+            result = uint32->Write(obj, node, &nid, 4);
             if (result != CO_ERR_NONE) {
                 result = CO_ERR_OBJ_RANGE;
             }
@@ -104,7 +104,7 @@ static CO_ERR COTSyncIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
             }
         }
         sync->CobId = nid;
-        result = uint32->Write(obj, node, &nid, sizeof(nid));
+        result = uint32->Write(obj, node, &nid, 4);
         if (result != CO_ERR_NONE) {
             result = CO_ERR_OBJ_RANGE;
         }

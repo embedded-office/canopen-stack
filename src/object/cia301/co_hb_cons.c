@@ -133,7 +133,7 @@ static CO_ERR COTNmtHbConsInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
     if (CO_GET_IDX(obj->Key) == COT_OBJECT) {
         if (CO_GET_SUB(obj->Key) == 0) {
             /* loop through configured number of consumers */
-            (void)uint8->Read(obj, node, &num, sizeof(num));
+            (void)uint8->Read(obj, node, &num, 1);
             while (num > 0) {
                 /* check if consumer subindex exists */
                 obj = CODictFind(&node->Dict, CO_DEV(COT_OBJECT, num));

@@ -121,7 +121,7 @@ static CO_ERR COTPdoMapWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     }
 
     /* ok, write new PDO mapping */
-    result = uint32->Write(obj, node, &map, sizeof(map));
+    result = uint32->Write(obj, node, &map, 4);
     return (result);
 }
 

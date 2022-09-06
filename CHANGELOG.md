@@ -7,7 +7,9 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ## [unreleased]
 
-nothing
+### Change
+
+- Replace sizeof() operators with the constant value
 
 ## [4.4.0] - 2022-08-21
 
