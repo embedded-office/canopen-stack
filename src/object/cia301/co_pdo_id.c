@@ -98,10 +98,10 @@ static CO_ERR COTPdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
         num  = pcomidx & COT_OBJECT_NUM;
     }
 
-    (void)uint32->Read(obj, node, &oid, sizeof(oid));
+    (void)uint32->Read(obj, node, &oid, 4);
     if ((oid & CO_TPDO_COBID_OFF) == 0) {
         if ((nid & CO_TPDO_COBID_OFF) != 0) {
-            result = uint32->Write(obj, node, &nid, sizeof(nid));
+            result = uint32->Write(obj, node, &nid, 4);
             if (nmt->Mode == CO_OPERATIONAL) {
                 if (tpdo != 0) {
                     COTPdoReset(tpdo, num);
@@ -115,9 +115,9 @@ static CO_ERR COTPdoIdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void *
         }
     } else {
         if ((nid & CO_TPDO_COBID_OFF) != 0) {
-            result = uint32->Write(obj, node, &nid, sizeof(nid));
+            result = uint32->Write(obj, node, &nid, 4);
         } else {
-            result = uint32->Write(obj, node, &nid, sizeof(nid));
+            result = uint32->Write(obj, node, &nid, 4);
             if (nmt->Mode == CO_OPERATIONAL) {
                 if (tpdo != 0) {
                     COTPdoReset(tpdo, num);

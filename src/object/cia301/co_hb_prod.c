@@ -113,7 +113,7 @@ static CO_ERR COTNmtHbProdWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
         }
 
         /* use basic type to update the object entry */
-        result = uint16->Write(obj, node, &cycTime, sizeof(cycTime));
+        result = uint16->Write(obj, node, &cycTime, 2);
     }
     return (result);
 }
@@ -145,7 +145,7 @@ static CO_ERR COTNmtHbProdInit(struct CO_OBJ_T *obj, struct CO_NODE_T *node)
         }
 
         /* start heartbeat producer timer with given cycletime */
-        (void)uint16->Read(obj, node, &cycTime, sizeof(cycTime));
+        (void)uint16->Read(obj, node, &cycTime, 2);
         if (cycTime > 0) {
             ticks = COTmrGetTicks(tmr, cycTime, CO_TMR_UNIT_1MS);
             nmt->Tmr = COTmrCreate(tmr,

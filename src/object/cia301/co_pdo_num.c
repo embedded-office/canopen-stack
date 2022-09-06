@@ -107,7 +107,7 @@ static CO_ERR COTPdoNumWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     }
 
     /* finaly: store new number of PDO mappings */
-    result = uint8->Write(obj, node, &mapnum, sizeof(mapnum));
+    result = uint8->Write(obj, node, &mapnum, 1);
     return (result);
 }
 

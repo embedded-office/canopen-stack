@@ -77,9 +77,9 @@ static CO_ERR COTSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
      * Fetch old settings (will be restored in
      * case producer reactivation went wrong
      */
-    (void)uint32->Read(obj, node, &ous, sizeof(ous));
+    (void)uint32->Read(obj, node, &ous, 4);
 
-    result = uint32->Write(obj, node, &nus, sizeof(nus));
+    result = uint32->Write(obj, node, &nus, 4);
     if (result != CO_ERR_NONE) {
         return CO_ERR_OBJ_RANGE;
     }
@@ -96,7 +96,7 @@ static CO_ERR COTSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
              * Object write access was successful once already,
              * no result check is needed.
              */
-            (void)uint32->Write(obj, node, &ous, sizeof(ous));
+            (void)uint32->Write(obj, node, &ous, 4);
             sync->Cycle = ous;
             result      = CO_ERR_OBJ_RANGE;
         }
