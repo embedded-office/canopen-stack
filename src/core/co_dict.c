@@ -239,8 +239,8 @@ CO_ERR CODictObjInit(CO_DICT *cod, CO_NODE *node)
     CO_ERR    err;
     CO_OBJ   *obj;
 
-    ASSERT_PTR_ERR(cod,  -1);
-    ASSERT_PTR_ERR(node, -1);
+    ASSERT_PTR_ERR(cod,  CO_ERR_BAD_ARG);
+    ASSERT_PTR_ERR(node, CO_ERR_BAD_ARG);
 
     obj = cod->Root;
     while (obj->Key != 0) {
