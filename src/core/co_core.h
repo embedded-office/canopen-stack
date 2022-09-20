@@ -34,6 +34,7 @@ extern "C" {
 #include "co_integer8.h"
 #include "co_integer16.h"
 #include "co_integer32.h"
+#include "co_integer48.h"
 
 /* cia301 types */
 #include "co_emcy_hist.h"
