@@ -203,6 +203,7 @@ typedef struct CO_TPDO_T {
     uint32_t          Inhibit;     /*!< inhibit time in timer ticks          */
     uint8_t           Flags;       /*!< info flags                           */
     uint8_t           ObjNum;      /*!< Number of linked objects             */
+    int16_t           NumTransl;   /*!< TPDO number translated to            */
 
 } CO_TPDO;
 
@@ -218,6 +219,7 @@ typedef struct CO_RPDO_T {
     uint8_t           Size[8];     /*!< size of mapped object value in bytes */
     uint8_t           ObjNum;      /*!< Number of linked objects             */
     uint8_t           Flag;        /*!< Flags attributed of PDO              */
+    int16_t           NumTransl;   /*!< RPDO number translated to            */
 
 } CO_RPDO;
 
@@ -251,6 +253,38 @@ void COTPdoTrigObj(CO_TPDO *tpdo, struct CO_OBJ_T *obj);
 *    Number of TPDO (0..511)
 */
 void COTPdoTrigPdo(CO_TPDO *tpdo, uint16_t num);
+
+/*! \brief TPDO TRANSLATE TPDO-NUM
+*
+*    This function allows the application to translate a TPDO number to a
+*    different given TPDO number.
+*
+* \param tpdo
+*    Pointer to start of TPDO array
+*
+* \param num
+*    Number of TPDO (0..511)
+*
+* \param num_translate
+*    Number of TPDO to translate into (0..511)
+*/
+void COTPdoTranslatePdo(CO_TPDO *pdo, uint16_t num, uint16_t num_translate);
+
+/*! \brief RPDO TRANSLATE RPDO-NUM
+*
+*    This function allows the application to translate a RPDO number to a
+*    different given RPDO number.
+*
+* \param tpdo
+*    Pointer to start of RPDO array
+*
+* \param num
+*    Number of RPDO (0..511)
+*
+* \param num_translate
+*    Number of RPDO to translate into (0..511)
+*/
+void CORPdoTranslatePdo(CO_RPDO *pdo, uint16_t num, uint16_t num_translate);
 
 /******************************************************************************
 * PRIVATE FUNCTIONS

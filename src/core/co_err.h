@@ -91,6 +91,7 @@ typedef enum CO_ERR_T {
 
     CO_ERR_TPDO_COM_OBJ,         /*!< config error in TPDO communication     */
     CO_ERR_TPDO_MAP_OBJ,         /*!< config error in TPDO mapping           */
+    CO_ERR_TPDO_TRANSLATE,       /*!< config error in TPDO number translation*/
     CO_ERR_TPDO_OBJ_TRIGGER,     /*!< error during trigger via an object     */
     CO_ERR_TPDO_NUM_TRIGGER,     /*!< error during trigger via an PDO number */
     CO_ERR_TPDO_INHIBIT,         /*!< error during inhibit timer creation    */
@@ -98,6 +99,7 @@ typedef enum CO_ERR_T {
 
     CO_ERR_RPDO_COM_OBJ,         /*!< config error in RPDO communication     */
     CO_ERR_RPDO_MAP_OBJ,         /*!< config error in RPDO mapping           */
+    CO_ERR_RPDO_TRANSLATE,       /*!< config error in RPDO number translation*/
 
     CO_ERR_SDO_SILENT,           /*!< no SDO response (e.g. block transfer)  */
     CO_ERR_SDO_OFF,              /*!< SDO client is disabled                 */
