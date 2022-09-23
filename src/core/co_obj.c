@@ -68,8 +68,15 @@ CO_ERR COObjRdBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *bu
 
     type = obj->Type;
     if (type->Read != NULL) {
+        /* mandatory: reset object */
         (void)COObjReset(obj, node, 0);
-        result = type->Read(obj, node, (void *)buffer, size);
+
+        /* optional: read from object */
+        if (size > 0) {
+            result = type->Read(obj, node, (void *)buffer, size);
+        } else {
+            result = CO_ERR_NONE;
+        }
     }
     return (result);
 }
@@ -91,6 +98,7 @@ CO_ERR COObjRdBufCont(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buf
     return (result);
 }
 
+
 CO_ERR COObjWrBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *buffer, uint32_t size)
 {
     const CO_OBJ_TYPE *type;
@@ -103,8 +111,15 @@ CO_ERR COObjWrBufStart(struct CO_OBJ_T *obj, struct CO_NODE_T *node, uint8_t *bu
 
     type = obj->Type;
     if (type->Write != NULL) {
+        /* mandatory: reset object */
         (void)COObjReset(obj, node, 0);
-        result = type->Write(obj, node, (void *)buffer, size);
+
+        /* optional: write to object */
+        if (size > 0) {
+            result = type->Write(obj, node, (void *)buffer, size);
+        } else {
+            result = CO_ERR_NONE;
+        }
     }
     return (result);
 }
