@@ -50,12 +50,20 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 
 ## Usage
 
-With version 4.4, the CANopen Stack project introduces an ecosystem that tries to support you in your project management. This support uses multiple repositories for essential aspects of an embedded software project setup:
+With version 4.4, the CANopen Stack project introduces an ecosystem which supports you in managing target specific applications. This support uses multiple repositories for different aspects of the embedded software project setup:
 
 - **[cmake-scripts](https://github.com/embedded-office/cmake-scripts)** - this repository is responsible for the embedded toolchains and the component package management.
 - **[canopen-stack](https://github.com/embedded-office/canopen-stack)** - this repository represents the platform independent CANopen stack component.
-- **[canopen-stm32f7xx](https://github.com/embedded-office/canopen-stm32f7xx)** - this repository contains a complete Quickstart example setup for the device STM32F769. The adaption to other devices out of the STM32F7 series are small.
+
+### Embedded Target: STM32F7 series
+
+- **[canopen-stm32f7xx](https://github.com/embedded-office/canopen-stm32f7xx)** - this repository contains a complete Quickstart example setup for the device `STM32F769`.
 - **[STM32CubeF7](https://github.com/embedded-office/STM32CubeF7)** - this fork of the ST Microelectronics HAL package is integrated into the CMake build system and packaged with minimal required source files to get the ST HAL/LL drivers working (No middleware and documentation).
+
+### Embedded Target: STM32F4 series
+
+- **[canopen-stm32f4xx](https://github.com/embedded-office/canopen-stm32f4xx)** - this repository contains a complete Quickstart example setup for the device `STM32F446`.
+- **[STM32CubeF4](https://github.com/embedded-office/STM32CubeF4)** - this fork of the ST Microelectronics HAL package is integrated into the CMake build system and packaged with minimal required source files to get the ST HAL/LL drivers working (No middleware and documentation).
 
 ## Add Component in CMake (recommended)
 
