@@ -174,7 +174,7 @@ static CO_ERR COTParaStoreReset(struct CO_OBJ_T *obj, struct CO_NODE_T *node, ui
 
     /* we use reset on subindex 0 to load all parameter groups of a given type */
     if (CO_DEV(COT_OBJECT, 0) == CO_GET_DEV(obj->Key)) {
-        result = CONodeParaLoad(node, para);
+        result = CONodeParaLoad(node, (enum CO_NMT_RESET_T)para);
     }
     return (result);
 }
