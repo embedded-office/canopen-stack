@@ -29,7 +29,7 @@ The source code is compliant to the C99 standard and you must cross-compile the 
   - Manufacturer specific operation
 - Unlimited number of entries in object dictionary
   - Static or dynamic object dictionary
-  - Data types: signed/unsigned 8/16/32-Bit integer, string, domain and user-types
+  - Data types: signed/unsigned 8/16/32/64-Bit integer, string, domain and user-types
 - Unlimited number of parameter groups for parameter storage
 - Emergency producer which supports:
   - Manufacturer specific extensions
@@ -107,7 +107,7 @@ Download and install these free tools for your system:
 - Install the static checker [cppcheck](http://cppcheck.net/)
 - Install the compiler [LLVM](https://clang.llvm.org/)
 
-*Note: on my Windows machine, I use the [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) which inlcudes the LLVM compiler and the required Windows SDK libraries.*
+*Note: on my Windows machine, I use the [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) which includes the LLVM compiler and the required Windows SDK libraries.*
 
 
 ## Run the Test Applications
