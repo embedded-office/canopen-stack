@@ -61,6 +61,7 @@ target_sources(canopen-stack
     object/basic/co_integer8.c
     object/basic/co_integer16.c
     object/basic/co_integer32.c
+    object/basic/co_integer64.c
     # - CiA301 types
     object/cia301/co_emcy_hist.c
     object/cia301/co_emcy_id.c

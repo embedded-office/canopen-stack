@@ -175,6 +175,44 @@ extern "C" {
         (f)->Data[((p)+3)&0x7] = (uint8_t)(((uint32_t)(n)) >> 24); \
     } while(0)
 
+/*! \brief GET DATA LONG LONG
+*
+*    This macro extracts a data long long (64 bit) out of the CAN frame.
+*
+* \param f
+*    The CAN frame
+*/
+#define CO_GET_LONGLONG(f)  \
+    (uint64_t)( ( ( (uint64_t)((f)->Data[7]) ) << 56 ) | \
+                ( ( (uint64_t)((f)->Data[6]) ) << 48 ) | \
+                ( ( (uint64_t)((f)->Data[5]) ) << 40 ) | \
+                ( ( (uint64_t)((f)->Data[4]) ) << 32 ) | \
+                ( ( (uint64_t)((f)->Data[3]) ) << 24 ) | \
+                ( ( (uint64_t)((f)->Data[2]) ) << 16 ) | \
+                ( ( (uint64_t)((f)->Data[1]) ) <<  8 ) | \
+                ( ( (uint64_t)((f)->Data[0]) )       )   )
+
+/*! \brief SET DATA LONG LONG
+*
+*    This macro sets a data long long (64 bit) within the CAN frame.
+*
+* \param f
+*    The CAN frame
+*
+* \param n
+*    The data value
+*/
+#define CO_SET_LONGLONG(f,n)    do { \
+        (f)->Data[0] = (uint8_t)(((uint64_t)(n))      ); \
+        (f)->Data[1] = (uint8_t)(((uint64_t)(n)) >>  8); \
+        (f)->Data[2] = (uint8_t)(((uint64_t)(n)) >> 16); \
+        (f)->Data[3] = (uint8_t)(((uint64_t)(n)) >> 24); \
+        (f)->Data[4] = (uint8_t)(((uint64_t)(n)) >> 32); \
+        (f)->Data[5] = (uint8_t)(((uint64_t)(n)) >> 40); \
+        (f)->Data[6] = (uint8_t)(((uint64_t)(n)) >> 48); \
+        (f)->Data[7] = (uint8_t)(((uint64_t)(n)) >> 56); \
+    } while(0)
+
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
