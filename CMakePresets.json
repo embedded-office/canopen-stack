@@ -8,7 +8,8 @@
       "binaryDir": "build",
       "cacheVariables": {
         "CMAKE_C_COMPILER": "clang",
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_C_FLAGS": "-D_DEBUG"
       }
     }
   ],
