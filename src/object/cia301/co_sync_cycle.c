@@ -68,7 +68,6 @@ static CO_ERR COTSyncCycleWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, vo
 
     CO_UNUSED(size);
 
-    result  = CO_ERR_NONE;
     sync    = &node->Sync;
     nus     = *(uint32_t *)buffer;
     ous     = 0;
