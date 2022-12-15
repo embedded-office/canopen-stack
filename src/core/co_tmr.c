@@ -538,22 +538,24 @@ static void COTmrRemove(CO_TMR *tmr, CO_TMR_TIME *tx)
 
             /* loop through used timers in list until timer is removed */
             tn = tmr->Use;
-            do {
-                /* remove next timer in list */
-                if (tn->Next == tx) {
-                    tn->Next = tx->Next;
+            if (tn != 0) {
+                do {
+                    /* remove next timer in list */
+                    if (tn->Next == tx) {
+                        tn->Next = tx->Next;
 
-                    /* timer was within list */
-                    if (tx->Next != 0) {
-                        tn->Next->Delta += tx->Delta;
+                        /* timer was within list */
+                        if (tx->Next != 0) {
+                            tn->Next->Delta += tx->Delta;
+                        }
+                        /* put timer in free list */
+                        tx->Next   = tmr->Free;
+                        tmr->Free  = tx;
+                        tx         = 0;
                     }
-                    /* put timer in free list */
-                    tx->Next   = tmr->Free;
-                    tmr->Free  = tx;
-                    tx         = 0;
-                }
-                tn = tn->Next;
-            } while((tn != 0) && (tx != 0));
+                    tn = tn->Next;
+                } while((tn != 0) && (tx != 0));
+            }
         }
     }
 }
