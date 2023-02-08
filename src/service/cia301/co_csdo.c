@@ -319,7 +319,7 @@ static CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo)
     uint16_t  Idx;
     uint8_t   Sub;
     uint8_t   n;
-    uint8_t   width;
+    uint32_t  width;
     uint8_t   c_bit = 1;
     uint8_t   cmd;
     CO_IF_FRM frm;
@@ -370,7 +370,7 @@ static CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo)
     uint32_t  ticks;
     uint8_t   cmd;
     uint8_t   n;
-    uint8_t   width;
+    uint32_t  width;
     uint8_t   c_bit = 1;
     CO_IF_FRM frm;
 
