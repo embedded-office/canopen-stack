@@ -235,10 +235,11 @@ static CO_ERR COCSdoInitUploadSegmented(CO_CSDO *csdo)
     Sub = CO_GET_BYTE(csdo->Frm, 3u);
 
     /* verify size, Idx, Sub */
-    if ((obj_size == csdo->Tfer.Size) &&
+    if ((obj_size <= csdo->Tfer.Size) &&
         (Idx == csdo->Tfer.Idx) &&
         (Sub == csdo->Tfer.Sub)) {
 
+        csdo->Tfer.Size = obj_size;
         result = CO_ERR_NONE;
 
         /* setup CAN request */
