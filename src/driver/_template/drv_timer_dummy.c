@@ -21,7 +21,7 @@
 /* TODO: rename the include file name to match the naming convention:
  *   co_timer_<device>.h
  */
-#include "co_timer_dummy.h"
+#include "drv_timer_dummy.h"
 
 /******************************************************************************
 * PRIVATE DEFINES

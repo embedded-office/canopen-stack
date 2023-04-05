@@ -21,7 +21,7 @@
 /* TODO: rename the include file name to match the naming convention:
  *   co_can_<device>.h
  */
-#include "co_can_dummy.h"
+#include "drv_can_dummy.h"
 
 /******************************************************************************
 * PRIVATE DEFINES
