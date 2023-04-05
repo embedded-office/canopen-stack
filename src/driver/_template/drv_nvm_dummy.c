@@ -21,7 +21,7 @@
 /* TODO: rename the include file name to match the naming convention:
  *   co_nvm_<device>.h
  */
-#include "co_nvm_dummy.h"
+#include "drv_nvm_dummy.h"
 
 /******************************************************************************
 * PRIVATE DEFINES
