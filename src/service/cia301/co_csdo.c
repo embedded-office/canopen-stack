@@ -150,6 +150,10 @@ static void COCSdoTransferFinalize(CO_CSDO *csdo)
     uint8_t            sub;
     uint32_t           code;
 
+    // Delete the timeout action timer so it does not persist
+    // AMF: Okay even if csdo->Tfer.Tmr is NULL
+    (void)COTmrDelete(&(csdo->Node->Tmr), csdo->Tfer.Tmr);
+
     if (csdo->State == CO_CSDO_STATE_BUSY) {
         /* Fetch transfer information */
         idx  = csdo->Tfer.Idx;
