@@ -301,7 +301,11 @@ CO_ERR COSdoUploadExpedited(CO_SDO *srv)
     }
 
     if (result != CO_ERR_NONE) {
-        COSdoAbort(srv, CO_SDO_ERR_CMD);
+        if (srv->Abort > 0) {
+            COSdoAbort(srv, srv->Abort);
+        } else {
+            COSdoAbort(srv, CO_SDO_ERR_CMD);
+        }
     }
     return (result);
 }
@@ -375,7 +379,11 @@ CO_ERR COSdoInitUploadSegmented(CO_SDO *srv, uint32_t size)
     result = COObjRdBufStart(srv->Obj, srv->Node, srv->Buf.Cur, 0);
     if (result != CO_ERR_NONE) {
         srv->Node->Error = CO_ERR_SDO_READ;
-        COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+        if (srv->Abort > 0) {
+            COSdoAbort(srv, srv->Abort);
+        } else {
+            COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+        }
         result = CO_ERR_SDO_ABORT;
     }
 
@@ -415,7 +423,11 @@ CO_ERR COSdoUploadSegmented(CO_SDO *srv)
 
     result = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Start, width);
     if (result != CO_ERR_NONE) {
-        COSdoAbort(srv, CO_SDO_ERR_TOS);
+        if (srv->Abort > 0) {
+            COSdoAbort(srv, srv->Abort);
+        } else {
+            COSdoAbort(srv, CO_SDO_ERR_TOS);
+        }
         return (CO_ERR_SDO_ABORT);
     }
 
@@ -476,7 +488,11 @@ CO_ERR COSdoInitDownloadSegmented(CO_SDO *srv)
         }
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
-            COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+            if (srv->Abort > 0) {
+                COSdoAbort(srv, srv->Abort);
+            } else {
+                COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+            }
             result = CO_ERR_SDO_ABORT;
         }
 
@@ -528,7 +544,11 @@ CO_ERR COSdoDownloadSegmented(CO_SDO *srv)
     if ((cmd & 0x01) == 0x01) {
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
-            COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+            if (srv->Abort > 0) {
+                COSdoAbort(srv, srv->Abort);
+            } else {
+                COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+            }
             result = CO_ERR_SDO_ABORT;
         }
         srv->Seg.Size = 0;
@@ -596,7 +616,11 @@ CO_ERR COSdoInitDownloadBlock(CO_SDO *srv)
         }
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
-            COSdoAbort(srv, CO_SDO_ERR_TOS);
+            if (srv->Abort > 0) {
+                COSdoAbort(srv, srv->Abort);
+            } else {
+                COSdoAbort(srv, CO_SDO_ERR_TOS);
+            }
             return (result);
         }
         result = CO_ERR_NONE;
@@ -618,7 +642,12 @@ CO_ERR COSdoEndDownloadBlock(CO_SDO *srv)
         result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
-            COSdoAbort(srv, CO_SDO_ERR_TOS);
+            if (srv->Abort > 0) {
+                COSdoAbort(srv, srv->Abort);
+            } else {
+                COSdoAbort(srv, CO_SDO_ERR_TOS);
+            }
+            result = CO_ERR_SDO_ABORT;
         }
         CO_SET_BYTE(srv->Frm, 0xA1, 0);
         CO_SET_WORD(srv->Frm, 0, 1);
@@ -629,7 +658,6 @@ CO_ERR COSdoEndDownloadBlock(CO_SDO *srv)
         srv->Buf.Cur   = srv->Buf.Start;
         srv->Buf.Num   = 0;
         srv->Obj       = 0;
-        result         = CO_ERR_NONE;
     }
     return (result);
 }
@@ -684,6 +712,12 @@ CO_ERR COSdoDownloadBlock(CO_SDO *srv)
                 err = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
                 if (err != CO_ERR_NONE) {
                     srv->Node->Error = CO_ERR_SDO_WRITE;
+                    if (srv->Abort > 0) {
+                        COSdoAbort(srv, srv->Abort);
+                    } else {
+                        COSdoAbort(srv, CO_SDO_ERR_TOS);
+                    }
+                    result = CO_ERR_SDO_ABORT;
                 }
                 srv->Buf.Cur = srv->Buf.Start;
                 srv->Buf.Num = 0;
@@ -754,6 +788,12 @@ CO_ERR COSdoInitUploadBlock(CO_SDO *srv)
     }
     if (err != CO_ERR_NONE) {
         srv->Node->Error = CO_ERR_SDO_READ;
+        if (srv->Abort > 0) {
+            COSdoAbort(srv, srv->Abort);
+        } else {
+            COSdoAbort(srv, CO_SDO_ERR_HW_ACCESS);
+        }
+        result = CO_ERR_SDO_ABORT;
     }
     CO_SET_BYTE(srv->Frm, cmd, 0);
     CO_SET_LONG(srv->Frm, size, 4);
@@ -809,9 +849,6 @@ CO_ERR COSdoUploadBlock(CO_SDO *srv)
         if (srv->Blk.Size > num) {
             /* fill remaining buffer with data from object entry */
             err = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Cur, num);
-            if (err != CO_ERR_NONE) {
-                srv->Node->Error = CO_ERR_SDO_READ;
-            }
             srv->Blk.Size -= num;
         } else {
             /* read remaining data from object entry in buffer */
@@ -820,11 +857,18 @@ CO_ERR COSdoUploadBlock(CO_SDO *srv)
             } else {
                 err = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Cur, num);
             } 
-            if (err != CO_ERR_NONE) {
-                srv->Node->Error = CO_ERR_SDO_READ;
-            }
             srv->Blk.Size = 0;
         }
+    }
+    
+    if (err != CO_ERR_NONE) {
+        srv->Node->Error = CO_ERR_SDO_READ;
+        if (srv->Abort > 0) {
+            COSdoAbort(srv, srv->Abort);
+        } else {
+            COSdoAbort(srv, CO_SDO_ERR_TOS);
+        }
+        return (CO_ERR_SDO_ABORT);
     }
 
     /* set DLC for block transfers */
