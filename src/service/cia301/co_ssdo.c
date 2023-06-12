@@ -859,17 +859,18 @@ CO_ERR COSdoUploadBlock(CO_SDO *srv)
             } 
             srv->Blk.Size = 0;
         }
+        
+        if (err != CO_ERR_NONE) {
+            srv->Node->Error = CO_ERR_SDO_READ;
+            if (srv->Abort > 0) {
+                COSdoAbort(srv, srv->Abort);
+            } else {
+                COSdoAbort(srv, CO_SDO_ERR_TOS);
+            }
+            return (CO_ERR_SDO_ABORT);
+        }
     }
     
-    if (err != CO_ERR_NONE) {
-        srv->Node->Error = CO_ERR_SDO_READ;
-        if (srv->Abort > 0) {
-            COSdoAbort(srv, srv->Abort);
-        } else {
-            COSdoAbort(srv, CO_SDO_ERR_TOS);
-        }
-        return (CO_ERR_SDO_ABORT);
-    }
 
     /* set DLC for block transfers */
     CO_SET_DLC(srv->Frm, 8u);
