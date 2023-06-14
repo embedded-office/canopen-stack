@@ -545,6 +545,7 @@ void CORPdoRx(CO_RPDO *pdo, CO_IF_FRM *frm)
     if (err == 0) {
         if ((pdo->Flag & CO_RPDO_FLG_S_) == 0) {
             CORPdoWrite(pdo, frm);
+            COPdoAsyncUpdate(pdo);
         } else {
             COSyncRx(&pdo->Node->Sync, frm);
         }
