@@ -547,6 +547,16 @@ extern void COPdoTransmit(CO_IF_FRM *frm);
 */
 extern int16_t COPdoReceive(CO_IF_FRM *frm);
 
+/*! \brief  ASYNC UPDATE
+*
+*    This function is called just after the asynchronous RPDO is written to
+*    the object dictionary.
+*
+* \param pdo
+*    Pointer to received RPDO
+*/
+extern void COPdoAsyncUpdate(CO_RPDO *pdo);
+
 /*! \brief  PDO WRITE DATA CALLBACK
 *
 *    This function is called during PDO distribution of the PDO message

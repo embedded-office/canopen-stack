@@ -190,6 +190,17 @@ void COPdoSyncUpdate(CO_RPDO *pdo)
 }
 
 WEAK
+void COPdoAsyncUpdate(CO_RPDO *pdo)
+{
+    (void)pdo;
+
+    /* Optional: place here some code, which is called
+     * right after the object dictionary update due to
+     * a asynchronous PDO.
+     */
+}
+
+WEAK
 int16_t COParaDefault(struct CO_PARA_T *pg)
 {
     (void)pg;
