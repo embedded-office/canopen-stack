@@ -29,6 +29,120 @@ extern "C" {
 #include "co_sdo.h"
 #include "co_if.h"
 
+/*****************************************************************************
+ * Constants
+ * **************************************************************************/
+union BlockDownloadInitRequestCmd_t {
+    struct{
+        uint8_t ccs         : 3;
+        uint8_t reserved    : 2;
+        uint8_t cc          : 1;
+        uint8_t s           : 1;
+        uint8_t cs          : 1;
+    }
+    uint8_t cmd;
+};
+
+//union BlockDownloadInitResponseCmd_t {
+//    struct{
+//        uint8_t scs         : 3;
+//        uint8_t reserved    : 2;
+//        uint8_t sc          : 1;
+//        uint8_t ss          : 2;
+//    }
+//    uint8_t cmd;
+//};
+
+union BlockDownloadSubBlockRequestCmd_t {
+    struct{
+        uint8_t c           : 1;
+        uint8_t seqno       : 7;
+    }
+    uint8_t cmd;
+};
+
+//union BlockDownloadSubBlockResponseCmd_t {
+//    struct {
+//        uint8_t scs         : 3;
+//        uint8_t reserved    : 3;
+//        uint8_t ss          : 2;
+//    }
+//    uint8_t cmd;
+//};
+
+union BlockDownloadFinalizeRequestCmd_t {
+    struct {
+        uint8_t ccs         : 3;
+        uint8_t n           : 2;
+        uint8_t reserved    : 1;
+        uint8_t sc          : 1;
+    }
+    uint8_t cmd;
+};
+
+//union BlockDownloadFinalizeResponseCmd_t {
+//    struct {
+//        uint8_t scs         : 3;
+//        uint8_t reserved    : 3;
+//        uint8_t ss          : 2;
+//    }
+//    uint8_t cmd;
+//};
+
+union BlockDownloadResponseCmd_t {
+    struct {
+        uint8_t scs         : 3;
+        union {
+            struct {
+                uint8_t reservedInit    : 2;
+                // this field only used in Init response
+                uint8_t sc              : 1;
+            }
+            uint8_t reserved            : 3;
+        }
+        uint8_t ss          : 2;
+    }
+    uint8_t cmd;
+};
+
+// server/client command specifier
+#define BLOCK_DOWNLOAD_CMD_SCS  5
+#define BLOCK_DOWNLOAD_CMD_CCS  6
+
+// server client CRC support
+#define BlOCK_DOWNLOAD_CMD_SC_CC_CRC_SUPPORTED      0
+#define BLOCK_DOWNLOAD_CMD_SC_CC_CRC_NOT_SUPPORTED  1
+
+// download init size indicator
+#define BLOCK_DOWNLOAD_S_SIZE_NOT_INDICATED 0
+#define BLOCK_DOWNLOAD_S_SIZE_INDICATED     1
+
+// server/client subcommand
+#define BLOCK_DOWNLOAD_CMD_SS_CS_INITIATE  0
+#define BLOCK_DOWNLOAD_CMD_SS_CS_END       1
+
+// client continue bit
+#define BLOCK_DOWNLOAD_CMD_C_CONTINUE_SEGMENTS  0
+#define BLOCK_DOWNLOAD_CMD_C_NO_MORE_SEGMENTS   1
+
+
+#define CMD_OFFSET_BITS 5
+#define CMD_OFFSET_MASK    0x7 
+#define GET_CMD(cmd) (((cmd)>>CMD_OFFSET_BITS)&CMD_OFFSET_MASK)
+
+/* command to send to server to initiate a block transfer */
+#define CLIENT_BLOCK_DOWNLOAD_INIT_CMD              (0x6u)
+/* command received from sub-block response */
+#define CLIENT_BLOCK_DOWNLOAD_SUBBLOCK_RESPOSE      (0x05)
+    
+/* response back from server after initiating a block download request */
+#define CLIENT_BLOCK_DONWLOAD_RESP_CMD  (0x5u)  
+/* size indicator bit for block download request. Should always be set */
+#define CLIENT_BLOCK_SIZE_INDICATOR_BIT           0
+/* CC bit CRC client generation bit */
+#define CLIENT_BLOCK_DOWNLOAD_REQUEST_CRC_BIT       2
+
+
 /******************************************************************************
 * PUBLIC TYPES
 ******************************************************************************/
@@ -59,6 +173,9 @@ typedef enum {
     CO_CSDO_TRANSFER_DOWNLOAD = 2,   /*!< SDO download is being executed     */
     CO_CSDO_TRANSFER_UPLOAD_SEGMENT = 3,  /*!< SDO segment upload is being executed     */
     CO_CSDO_TRANSFER_DOWNLOAD_SEGMENT = 4, /*!< SDO segment download is being executed     */
+    // cbt TODO: verify that enum values are correct
+    CO_CSDO_TRANSFER_UPLOAD_BLOCK = 5, 
+    CO_CSDO_TRANSFER_DOWNLOAD_BLOCK = 6, 
 
 } CO_CSDO_TRANSFER_TYPE;
 

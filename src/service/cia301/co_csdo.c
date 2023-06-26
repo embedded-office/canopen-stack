@@ -35,6 +35,13 @@ static CO_ERR COCSdoUploadSegmented        (CO_CSDO *csdo);
 static CO_ERR COCSdoInitDownloadSegmented  (CO_CSDO *csdo);
 static CO_ERR COCSdoDownloadSegmented      (CO_CSDO *csdo);
 static CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo);
+//cbt TODO: Added Block transfer upload/download and supporting functions
+static CO_ERR COCSdoInitUpdloadBlock       (CO_CSDO *csdo);
+static CO_ERR COCSdoUploadSubBlock            (CO_CSDO *csdo);
+static CO_ERR COCSdoInitDownloadBlock      (CO_CSDO *csdo);
+static CO_ERR COCSdoDownloadSubBlock          (CO_CDSO *csdo);
+static CO_ERR COCSdoFinishDownloadBlock    (CO_CDSO *csdo);
+
 static void   COCSdoAbort                  (CO_CSDO *csdo, uint32_t err);
 static void   COCSdoTransferFinalize       (CO_CSDO *csdo);
 static void   COCSdoTimeout                (void *parg);
@@ -427,6 +434,74 @@ static CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo)
     COCSdoTransferFinalize(csdo);
     return CO_ERR_SDO_SILENT;
 }
+/******************************************************************************
+* Block Upload Transfer Functions 
+* ****************************************************************************/
+// cbt TODO: Implement this function
+static CO_ERR COCSdoInitUpdloadBlock       (CO_CSDO *csdo);
+// cbt TODO: Implement this function
+static CO_ERR COCSdoUploadSubBlock         (CO_CSDO *csdo);
+
+/******************************************************************************
+* Block Upload Transfer Functions 
+* ****************************************************************************/
+// Set up client side after getting confirmation from the server
+static CO_ERR COCSdoInitDownloadBlock      (CO_CSDO *csdo)
+{
+    CO_ERR    result = CO_ERR_SDO_SILENT;
+    uint32_t  ticks;
+    uint16_t  Idx;
+    uint8_t   Sub;
+    uint8_t   n;
+    uint32_t  width;
+    uint8_t   c_bit = 1;
+    BlockDownloadInitRequestCmd_t cmd;
+    CO_IF_FRM frm;
+
+    Idx = CO_GET_WORD(csdo->Frm, 1u);
+    Sub = CO_GET_BYTE(csdo->Frm, 3u);
+    if ((Idx == csdo->Tfer.Idx) &&
+        (Sub == csdo->Tfer.Sub)) {
+
+        CO_SET_ID  (&frm, csdo->TxId);
+        CO_SET_DLC (&frm, 8u);
+        CO_SET_LONG(&frm, 0, 0u);
+        CO_SET_LONG(&frm, 0, 4u);
+
+    } else {
+        COCSdoAbort(csdo, CO_SDO_ERR_TBIT); 
+        COCSdoTransferFinalize(csdo);
+    }
+    return result; 
+}
+// cbt TODO: Implement this function
+static CO_ERR COCSdoDownloadSubBlock       (CO_CDSO *csdo)
+{
+    CO_ERR    result = CO_ERR_SDO_SILENT;
+    uint32_t  ticks;
+    uint8_t   cmd;
+    uint8_t   n;
+    uint32_t  width;
+    uint8_t   c_bit = 1;
+    CO_IF_FRM frm;
+
+    cmd = CO_GET_BYTE(csdo->Frm, 0u);
+    uint8_t askseq = CO_GET_BYTE(csdo->Frm, 1u);
+    uint8_t blksize = CO_GET_BYTE(csdo->Frm, 2u); 
+    
+    // verfy that we are looking at a sub-block response from server
+    // scs = 5, ss = 2
+    if( cmd = ((0x5 << 5)|(0x2)) ){
+        // TODO: resend any lost data
+        if 
+
+    }
+    else {
+        // TODO: Abort and send finalize 
+    }
+}
+// cbt TODO: Implement this function
+static CO_ERR COCSdoFinishDownloadBlock    (CO_CDSO *csdo);
 
 /******************************************************************************
 * PROTECTED API FUNCTIONS
@@ -504,8 +579,22 @@ CO_ERR COCSdoResponse(CO_CSDO *csdo)
             return (result);
         }
     }
-
-    if (csdo->Tfer.Type == CO_CSDO_TRANSFER_UPLOAD_SEGMENT) {
+    
+    if (csdo->Tfer.Type == CO_CSDO_TRANSFER_DOWNLOAD_BLOCK) {
+        // cbt TODO: Need to check CRC bit from server and need some way to 
+        // detect that response if from init request?
+        if (BlockDownloadResponseCmd_t)cmd.ss == BLOCK_DOWNLOAD_CMD_SS_CS_INITIATE) {
+            // response back from init or sub-block command
+            return COCSdoDownloadSubBlock(csdo);
+        }
+        else{
+            // finalize download
+            return COCSdoFinishDownloadBlock(csdo);
+        }
+    }
+    else if (csdo->Tfer.Type == CO_CSDO_TRANSFER_UPLOAD_BLOCK) {
+    }
+    else if (csdo->Tfer.Type == CO_CSDO_TRANSFER_UPLOAD_SEGMENT) {
         if (cmd == 0x41u) {
             (void)COCSdoInitUploadSegmented(csdo);
         } else if ((cmd & 0xE0u) == 0x00u) {
@@ -568,6 +657,29 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
                            CO_CSDO_CALLBACK_T callback,
                            uint32_t timeout)
 {
+    return COCSdoRequestUploadFull(csdo, key, buf, size, callback, timeout, false);
+}
+
+CO_ERR COCSdoRequestUploadBlock(CO_CSDO *csdo,
+                           uint32_t key,
+                           uint8_t *buf,
+                           uint32_t size,
+                           CO_CSDO_CALLBACK_T callback,
+                           uint32_t timeout)
+{
+    return COCSdoRequestUploadFull(csdo, key, buf, size, callback, timeout, true);
+}
+
+// cbt TODO: Add something to select block transfer. Right now it just
+// looks at "size" to determine if expedited or segmented. 
+CO_ERR COCSdoRequestUploadFull(CO_CSDO *csdo,
+                           uint32_t key,
+                           uint8_t *buf,
+                           uint32_t size,
+                           CO_CSDO_CALLBACK_T callback,
+                           uint32_t timeout,
+                           bool block)
+{
     CO_IF_FRM frm;
     uint32_t  ticks;
 
@@ -594,7 +706,11 @@ CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
     csdo->State = CO_CSDO_STATE_BUSY;
 
     /* Update transfer info */
-    if (size <= (uint32_t)4) {
+    // cbt TODO: Add logic for block transfer
+    if (block === true ){
+        csdo->Tfer.Type = CO_CSDO_TRANSFER_UPLOAD_BLOCK;
+    }
+    else if (size <= (uint32_t)4) {
         /* expedited transfer */
         csdo->Tfer.Type = CO_CSDO_TRANSFER_UPLOAD;
     } else {
@@ -633,6 +749,27 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
                              uint32_t timeout)
+{
+    return COCSdoRequestDownloadFull(csdo, key, buffer, size, callback, timeout, false);
+}
+
+CO_ERR COCSdoRequestDownloadBlock(CO_CSDO *csdo,
+                             uint32_t key,
+                             uint8_t *buffer,
+                             uint32_t size,
+                             CO_CSDO_CALLBACK_T callback,
+                             uint32_t timeout)
+{
+    return COCSdoRequestDownloadFull(csdo, key, buffer, size, callback, timeout, true);
+}
+
+CO_ERR COCSdoRequestDownloadFull(CO_CSDO *csdo,
+                             uint32_t key,
+                             uint8_t *buffer,
+                             uint32_t size,
+                             CO_CSDO_CALLBACK_T callback,
+                             uint32_t timeout,
+                             bool block)
 {
     CO_IF_FRM frm;
     uint8_t   cmd;
@@ -673,7 +810,23 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
     csdo->Tfer.Buf_Idx = 0;
     csdo->Tfer.TBit    = 0;
 
-    if (size <= (uint32_t)4u) {
+    if (block == true )
+    {
+
+        csdo->Tfer.Type = CO_CSDO_TRANSFER_DOWNLOAD_BLOCK;
+        cmd = (CLIENT_BLOCK_DOWNLOAD_INIT_CMD << CMD_OFFSET_BITS ) | \
+              (1 << CLIENT_BLOCK_SIZE_INDICATOR_BIT);    
+        // TODO: cc bit. Support CRC?
+        // cmd |= (1 << CLIENT_BLOCK_DOWNLOAD_REQUEST_CRC_BIT);
+
+        CO_SET_BYTE(&frm, cmd, 0u);
+
+        // Set size (in num bytes) value
+        CO_SET_LONG(&frm, size, 4u);
+
+        // multiplexer value set later (Tfer.Idx and Tfer.Sub) 
+    }
+    else if (size <= (uint32_t)4u) {
         csdo->Tfer.Type = CO_CSDO_TRANSFER_DOWNLOAD;
 
         cmd = ((0x23u) | ((4u - (uint8_t)size) << 2u));
