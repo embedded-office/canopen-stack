@@ -32,50 +32,50 @@ extern "C" {
 /*****************************************************************************
  * Constants
  * **************************************************************************/
-typedef union BlockDownloadInitRequestCmd_t {
+typedef union {
     struct{
-        uint8_t ccs         : 3;
+        uint8_t ccs         : 3;    /*<! Client Command Specifier */
         uint8_t reserved    : 2;
-        uint8_t cc          : 1;
-        uint8_t s           : 1;
-        uint8_t cs          : 1;
-    }
-    uint8_t cmd;
-};
-
-typedef union BlockDownloadSubBlockRequestCmd_t {
-    struct{
-        uint8_t c           : 1;
-        uint8_t seqno       : 7;
-    }
-    uint8_t cmd;
-};
-
-typedef union BlockDownloadFinalizeRequestCmd_t {
-    struct {
-        uint8_t ccs         : 3;
-        uint8_t n           : 2;
-        uint8_t reserved    : 1;
-        uint8_t sc          : 1;
-    }
+        uint8_t cc          : 1;    /*<! Client CRC Support */
+        uint8_t s           : 1;    /*<! Size Indicator */
+        uint8_t cs          : 1;    /*<! Client Subcommand */
+    };
     uint8_t byte;
-};
+} BlockDownloadInitRequestCmd_t;
 
-typedef union BlockDownloadResponseCmd_t {
+typedef union {
+    struct{
+        uint8_t c           : 1;    /*<! Continue. Indicated whether there are still more segments to download */
+        uint8_t seqno       : 7;    /*<! Sequence number of segments */
+    };
+    uint8_t byte;
+} BlockDownloadSubBlockRequestCmd_t;
+
+typedef union {
     struct {
-        uint8_t scs         : 3;
+        uint8_t ccs         : 3;    /*<! Client Command Specifier */
+        uint8_t n           : 2;    /*<! Number of segments in last segement of last block that do not contain data */
+        uint8_t reserved    : 1;
+        uint8_t cs          : 1;    /*<! Client Subcommand */
+    };
+    uint8_t byte;
+} BlockDownloadFinalizeRequestCmd_t;
+
+typedef union {
+    struct {
+        uint8_t scs         : 3;    /*<! Server Command Specifier */
         union {
             struct {
                 uint8_t reservedInit    : 2;
                 // this field only used in Init response
-                uint8_t sc              : 1;
-            }
+                uint8_t sc              : 1;    /*<! Server CRC Support */
+            };
             uint8_t reserved            : 3;
-        }
-        uint8_t ss          : 2;
-    }
+        };
+        uint8_t ss          : 2;    /*<! Server Subcommand */
+    };
     uint8_t byte;
-};
+} BlockDownloadResponseCmd_t;
 
 /***** Block Download CMD bit offsets ****************************************/
 // server/client command specifier
@@ -112,8 +112,8 @@ typedef union BlockDownloadResponseCmd_t {
 #define BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_MULITPLEXER_BYTE_SIZE      3
 #define BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_BLKSIZE_BYTE_OFFSET        4
 #define BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_BLKSIZE_BYTE_SIZE          1
-#define BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_IDX_BYTE_OFFSET             (BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_MULITPLEXER_BYTE_OFFSET + CANOPEN_SDO_MULTIPLEXER_IDX_OFFSET)
-#define BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_SUB_BYTE_OFFSET             (BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_MULITPLEXER_BYTE_OFFSET + CANOPEN_SDO_MULITPLEXER_SUB_OFFSET)
+#define BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_IDX_BYTE_OFFSET             (BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_MULTIPLEXER_BYTE_OFFSET + CANOPEN_SDO_MULTIPLEXER_IDX_OFFSET)
+#define BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_SUB_BYTE_OFFSET             (BLOCK_DOWNLOAD_FRM_INIT_RESPONSE_MULTIPLEXER_BYTE_OFFSET + CANOPEN_SDO_MULITPLEXER_SUB_OFFSET)
 
 #define BLOCK_DOWNLOAD_FRM_SUBBLOCK_REQUEST_SEGDATA_BYTE_OFFSET     1
 #define BLOCK_DOWNLOAD_FRM_SUBBLOCK_REQUEST_SEGDATA_BYTE_SIZE       7
@@ -222,26 +222,26 @@ typedef struct CO_CSDO_SEG_T {
  *
  *  This structure holds the data needed for Block SDO transfer
  */
-typedef struct CO_CSDO_BLOCK_T {
+typedef struct {
     uint32_t    Size;               /*!< Number of bytes to transfer                    */
-    uint32_t    *Buf;               /*!< Pointer to data to transfer                    */
+    uint8_t     *Buf;               /*!< Pointer to data to transfer                    */
     uint32_t    Block_Start_Index;  /*!< Starting buffer index of the last block sent   */
     uint32_t    Index;              /*!< Index of last byte sent                        */
     uint8_t     NumSegs;            /*!< Number of segements to send in this block      */ 
     uint8_t     SeqNum;             /*!< Sequence number of current sub block           */
     uint8_t     Continue;           /*!< Set if last sub-block is being sent            */
-    uint8_t     BytesInLastSeg      /*!< Number of bytes sent in the last segment       */
-} CO_CSDO_BLOCK;
+    uint8_t     BytesInLastSeg;     /*!< Number of bytes sent in the last segment       */
+} CO_CSDO_BLOCK_T;
 
 #define CO_CSDO_BLOCK_INIT(block) do {      \
     block.Size              = 0;      \
-    block.Buff              = NULL;   \
+    block.Buf               = NULL;   \
     block.Block_Start_Index = 0;      \
     block.Index             = 0;      \
     block.NumSegs           = 0;      \
-    block.SegNum            = 0;      \
+    block.SeqNum            = 0;      \
     block.Continue          = BLOCK_DOWNLOAD_CMD_C_CONTINUE_SEGMENTS;\
-    block.BytesInLastSeg    = 0;      \ 
+    block.BytesInLastSeg    = 0;      \
 } while(0);
 
 /*! \brief SDO CLIENT TRANSFER
@@ -330,6 +330,14 @@ CO_CSDO *COCSdoFind(struct CO_NODE_T *node, uint8_t num);
  *
  */
 CO_ERR COCSdoRequestUpload(CO_CSDO *csdo,
+                           uint32_t key,
+                           uint8_t *buf,
+                           uint32_t size,
+                           CO_CSDO_CALLBACK_T callback,
+                           uint32_t timeout);
+
+
+CO_ERR COCSdoRequestUploadBlock(CO_CSDO *csdo,
                            uint32_t key,
                            uint8_t *buf,
                            uint32_t size,
