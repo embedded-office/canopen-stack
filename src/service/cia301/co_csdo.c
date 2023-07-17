@@ -22,6 +22,12 @@
 
 #if USE_CSDO
 
+typedef struct {
+    bool blockMode;
+    bool crc;
+    uint16_t crc_value;
+} blockTransfer_t;
+
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
@@ -53,8 +59,9 @@ CO_ERR COCSdoRequestDownloadFull(CO_CSDO *csdo,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
                              uint32_t timeout,
-                             bool block);
+                             blockTransfer_t* block);
 
+// cbt TODO: change bool block to structure like for downloa
 CO_ERR COCSdoRequestUploadFull(CO_CSDO *csdo,
                             uint32_t key,
                             uint8_t *buf,
@@ -765,7 +772,7 @@ CO_ERR COCSdoRequestDownloadFull(CO_CSDO *csdo,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
                              uint32_t timeout,
-                             bool block)
+                             blockTransfer_t* block)
 {
     CO_IF_FRM frm;
     uint8_t   cmd;
@@ -806,7 +813,7 @@ CO_ERR COCSdoRequestDownloadFull(CO_CSDO *csdo,
     csdo->Tfer.Buf_Idx = 0;
     csdo->Tfer.TBit    = 0;
 
-    if (block == true )
+    if ((block != NULL )&&(block->blockMode == true))
     {
         CO_CSDO_BLOCK_INIT(csdo->Tfer.Block);
         csdo->Tfer.Block.Buf = buffer;
@@ -815,8 +822,9 @@ CO_ERR COCSdoRequestDownloadFull(CO_CSDO *csdo,
         csdo->Tfer.Type = CO_CSDO_TRANSFER_DOWNLOAD_BLOCK;
         cmd = (CLIENT_BLOCK_DOWNLOAD_INIT_CMD << CMD_OFFSET_BITS ) | \
               (1 << CLIENT_BLOCK_SIZE_INDICATOR_BIT);    
-        // TODO: cc bit. Support CRC?
-        // cmd |= (1 << CLIENT_BLOCK_DOWNLOAD_REQUEST_CRC_BIT);
+        if (block->crc == true){
+            cmd |= (1 << CLIENT_BLOCK_DOWNLOAD_REQUEST_CRC_BIT);
+        }
 
         CO_SET_BYTE(&frm, cmd, 0u);
 
@@ -980,7 +988,7 @@ CO_ERR COCSdoRequestDownload(CO_CSDO *csdo,
                              CO_CSDO_CALLBACK_T callback,
                              uint32_t timeout)
 {
-    return COCSdoRequestDownloadFull(csdo, key, buffer, size, callback, timeout, false);
+    return COCSdoRequestDownloadFull(csdo, key, buffer, size, callback, timeout, NULL);
 }
 
 CO_ERR COCSdoRequestDownloadBlock(CO_CSDO *csdo,
@@ -988,9 +996,13 @@ CO_ERR COCSdoRequestDownloadBlock(CO_CSDO *csdo,
                              uint8_t *buffer,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
-                             uint32_t timeout)
+                             uint32_t timeout,
+                             bool crc)
 {
-    return COCSdoRequestDownloadFull(csdo, key, buffer, size, callback, timeout, true);
+    blockTransfer_t block;
+    block.blockMode = true;
+    block.crc = crc;
+    return COCSdoRequestDownloadFull(csdo, key, buffer, size, callback, timeout, &block);
 }
 
 

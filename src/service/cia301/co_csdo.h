@@ -383,7 +383,8 @@ CO_ERR COCSdoRequestDownloadBlock(CO_CSDO *csdo,
                              uint8_t *buffer,
                              uint32_t size,
                              CO_CSDO_CALLBACK_T callback,
-                             uint32_t timeout);
+                             uint32_t timeout,
+                             bool crc);
 
 /******************************************************************************
 * PROTECTED API FUNCTIONS
