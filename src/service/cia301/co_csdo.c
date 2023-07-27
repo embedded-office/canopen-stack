@@ -351,7 +351,7 @@ static CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo)
         }
 
         cmd = (uint8_t)(csdo->Tfer.TBit << 4u) |
-              (uint8_t)(((7u - width) << 1u)) | 
+              (uint8_t)(((7u - width) << 1u)) |
               (uint8_t)(c_bit);
         CO_SET_BYTE(&frm, cmd, 0u);
 
@@ -362,7 +362,7 @@ static CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo)
 
         (void)COIfCanSend(&csdo->Node->If, &frm);
     } else {
-        COCSdoAbort(csdo, CO_SDO_ERR_TBIT); 
+        COCSdoAbort(csdo, CO_SDO_ERR_TBIT);
         COCSdoTransferFinalize(csdo);
     }
 
@@ -396,14 +396,14 @@ static CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo)
             width = 7u;
             c_bit = 0u;
         }
-        
+
         for (n = 1; n <= width; n++) {
             CO_SET_BYTE(&frm, csdo->Tfer.Buf[csdo->Tfer.Buf_Idx], n);
             csdo->Tfer.Buf_Idx++;
         }
 
         cmd = (uint8_t)(csdo->Tfer.TBit << 4u) |
-              (uint8_t)(((7u - width) << 1u)) | 
+              (uint8_t)(((7u - width) << 1u)) |
               (uint8_t)(c_bit);
 
         CO_SET_BYTE(&frm, cmd, 0u);
@@ -510,7 +510,10 @@ CO_ERR COCSdoResponse(CO_CSDO *csdo)
             (void)COCSdoInitUploadSegmented(csdo);
         } else if ((cmd & 0xE0u) == 0x00u) {
             (void)COCSdoUploadSegmented(csdo);
-        } else {
+        } else if ((cmd == 0x43u) || (cmd == 0x47u)|| (cmd == 0x4Bu)|| (cmd == 0x4Fu)) {
+            // 4F = 1 byte, 4B = 2 bytes, 47 = 3 bytes, 43 = 4 bytes
+            (void)COCSdoUploadExpedited(csdo);
+        }else {
             COCSdoAbort(csdo, CO_SDO_ERR_CMD);
             COCSdoTransferFinalize(csdo);
         }
@@ -537,7 +540,7 @@ CO_ERR COCSdoResponse(CO_CSDO *csdo)
     } else {
         COCSdoAbort(csdo, CO_SDO_ERR_PARA_INCOMP);
     }
-    
+
     return (result);
 }
 
