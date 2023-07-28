@@ -210,6 +210,7 @@ static CO_ERR COCSdoUploadExpedited(CO_CSDO *csdo)
         if (width > (uint8_t)csdo->Tfer.Size) {
             COCSdoAbort(csdo, CO_SDO_ERR_MEM);
         } else {
+            csdo->Tfer.Size = width;
             for (n = 0u; n < width; n++) {
                 csdo->Tfer.Buf[n] = CO_GET_BYTE(csdo->Frm, n + 4u);
             }
