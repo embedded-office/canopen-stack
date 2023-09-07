@@ -113,10 +113,22 @@ Download and install these free tools for your system:
 - Install the build tools [Cmake](https://cmake.org/)
 - Install the build system [Ninja](https://ninja-build.org/)
 - Install the static checker [cppcheck](http://cppcheck.net/)
+
+#### Linux and Mac
+
 - Install the compiler [LLVM](https://clang.llvm.org/)
 
-*Note: on my Windows machine, I use the [Visual Studio 2019 Build Tools](https://visualstudio.microsoft.com/de/downloads) which inlcudes the LLVM compiler and the required Windows SDK libraries.*
+#### Windows
 
+- Install the [Build Tools for Visual Studio 2019](https://my.visualstudio.com/Downloads?q=Build%20Tools%20for%20Visual%20Studio%202019) with the folowing components selected:
+
+  - MSVC v142 - VS 2019 C++
+
+  - Windows 10 SDK
+
+  - C++-CLang-Tools for Windows
+
+  *Note: Add the clang.exe binary path to the path environment variable so cmake can find it (On my machine: `%ProgramFiles(x86)%\Microsoft Visual Studio\2019\BuildTools\VC\Tools\Llvm\bin`)*
 
 ## Run the Test Applications
 
