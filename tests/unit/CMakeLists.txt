@@ -23,6 +23,14 @@ target_include_directories(ut-test-env
     env
 )
 
+# disable the compiler warnings (on windows only) around security of
+# some C99 standard functions like fopen() or strncpy() in the unit tests
+#
+target_compile_definitions(ut-test-env
+  INTERFACE
+    _CRT_SECURE_NO_WARNINGS
+)
+
 #---
 # unit tests
 #
