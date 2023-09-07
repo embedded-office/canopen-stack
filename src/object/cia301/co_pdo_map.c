@@ -73,6 +73,7 @@ static CO_ERR COTPdoMapWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     uint16_t  pmapidx;
     uint16_t  pcomidx;
     uint8_t   mapn;
+    CO_ERR    err;
 
     CO_UNUSED(size);
     ASSERT_PTR_ERR(obj, CO_ERR_BAD_ARG);
@@ -84,13 +85,19 @@ static CO_ERR COTPdoMapWrite(struct CO_OBJ_T *obj, struct CO_NODE_T *node, void 
     map     = *(uint32_t*)buffer;
 
     /* check that PDO is inactive */
-    (void)CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
+    err = CODictRdLong(cod, CO_DEV(pcomidx, 1), &id);
+    if (err != CO_ERR_NONE) {
+        return err;
+    }
     if ((id & CO_TPDO_COBID_OFF) == 0) {
         return (CO_ERR_OBJ_ACC);
     }
 
     /* check number of PDO mapping entries */
-    (void)CODictRdByte(cod, CO_DEV(pmapidx, 0), &mapn);
+    err = CODictRdByte(cod, CO_DEV(pmapidx, 0), &mapn);
+    if (err != CO_ERR_NONE) {
+        return err;
+    }
     if (mapn != 0) {
         return (CO_ERR_OBJ_ACC);
     }
