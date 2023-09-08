@@ -474,7 +474,7 @@ CO_ERR CORPdoReset(CO_RPDO *pdo, uint16_t num)
 
 CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
 {
-    CO_DICT   *cod;
+    CO_DICT  *cod;
     CO_OBJ   *obj;
     uint32_t  mapping;
     uint16_t  idx;
@@ -484,7 +484,6 @@ CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
     uint8_t   mapnum;
     uint8_t   dlc;
     uint8_t   size;
-    uint8_t   dummy = 0;
 
     cod = &pdo[num].Node->Dict;
     idx = 0x1600 + num;
@@ -506,34 +505,21 @@ CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
             return (CO_ERR_RPDO_MAP_OBJ);
         }
         link = mapping >> 16;
-        if ((link == 2) || (link == 5)) {
-            pdo[num].Map[on + dummy] = 0;
-            dummy++;
-        } else if ((link == 3) || (link == 6)) {
-            pdo[num].Map[on + dummy] = 0;
-            dummy++;
-            pdo[num].Map[on + dummy] = 0;
-            dummy++;
-        } else if ((link == 4) || (link == 7)) {
-            pdo[num].Map[on + dummy] = 0;
-            dummy++;
-            pdo[num].Map[on + dummy] = 0;
-            dummy++;
-            pdo[num].Map[on + dummy] = 0;
-            dummy++;
-            pdo[num].Map[on + dummy] = 0;
-            dummy++;
+        if ( ((link >=  0x2) && (link <=  0x7)) ||    /* dummy INTEGER8/16/32, UNSIGNED8/16/32 */
+             ((link == 0x10) || (link == 0x16)) ) {   /* dummy INTEGER24, UNSIGNED24 */
+            pdo[num].Map[on]  = 0;
+            pdo[num].Size[on] = size;
         } else {
             obj = CODictFind(&pdo->Node->Dict, mapping);
             if (obj == 0) {
                 return (CO_ERR_RPDO_MAP_OBJ);
             } else {
-                pdo[num].Map[on + dummy] = obj;
-                pdo[num].Size[on + dummy] = size;
+                pdo[num].Map[on]  = obj;
+                pdo[num].Size[on] = size;
             }
         }
     }
-    pdo[num].ObjNum = mapnum + dummy;
+    pdo[num].ObjNum = mapnum;
     return (CO_ERR_NONE);
 }
 
@@ -607,6 +593,8 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
             } else {
                 CORpdoWriteData(frm, dlc, pdosz, obj);
             }
+        } else {  /* dummy byte */
+            dlc += pdosz;
         }
     }
 }

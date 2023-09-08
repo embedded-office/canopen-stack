@@ -51,6 +51,14 @@ extern "C" {
 #define CO_RPDO_FLG__E      0x01                    /*!< enabled RPDO        */
 #define CO_RPDO_FLG_S_      0x02                    /*!< synchronized RPDO   */
 
+#define CO_RPDO_MAP_DUMMY_I8    0x00020008      /* RPDO Map Dummy INTEGER8   */
+#define CO_RPDO_MAP_DUMMY_I16   0x00030010      /* RPDO Map Dummy INTEGER16  */
+#define CO_RPDO_MAP_DUMMY_I24   0x00100018      /* RPDO Map Dummy INTEGER24  */
+#define CO_RPDO_MAP_DUMMY_I32   0x00040020      /* RPDO Map Dummy INTEGER32  */
+#define CO_RPDO_MAP_DUMMY_U8    0x00050008      /* RPDO Map Dummy UNSIGNED8  */
+#define CO_RPDO_MAP_DUMMY_U16   0x00060010      /* RPDO Map Dummy UNSIGNED16 */
+#define CO_RPDO_MAP_DUMMY_U24   0x00160018      /* RPDO Map Dummy UNSIGNED24 */
+#define CO_RPDO_MAP_DUMMY_U32   0x00070020      /* RPDO Map Dummy UNSIGNED32 */
 
 /*! \brief RPDO COB-ID parameter
 *

@@ -374,6 +374,105 @@ TS_DEF_MAIN(TS_RPdo_UpdateType255)
     CHK_NO_ERR(&node);
 }
 
+/*------------------------------------------------------------------------------------------------*/
+/*!
+*          This testcase will check the principle reception of:
+*          - PDO #0 (7 dummy bytes and byte in content)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_RPdo_Dummy_8_16_32_Data_Byte)
+{
+    CO_NODE  node;
+    uint32_t rpdo_id     = 0x40000200;
+    uint32_t rpdo_map[4] = { CO_RPDO_MAP_DUMMY_I8,
+                             CO_RPDO_MAP_DUMMY_I16,
+                             CO_RPDO_MAP_DUMMY_I32,
+                             0x25001208 }; /* data byte */
+    uint8_t  rpdo_type   = 254;
+    uint8_t  rpdo_len    = 4;
+    uint8_t  data        = { 0x91 };
+
+    TS_CreateMandatoryDir();
+    TS_CreateRPdoCom(0, &rpdo_id,     &rpdo_type);
+    TS_CreateRPdoMap(0, &rpdo_map[0], &rpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x12, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&data));
+    TS_CreateNodeAutoStart(&node);
+
+    TS_PDO_SEND(0x201, 0x51);  /* send payload: 0x51 .. 0x58 */
+
+    /* check signals to be changed */
+    TS_ASSERT(0x58 == data);
+
+    /* check error free stack execution         */
+    CHK_NO_ERR(&node);                                
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*!
+*          This testcase will check the principle reception of:
+*          - PDO #0 (data byte and 7 dummy bytes in content)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_RPdo_Data_Byte_Dummy_8_16_32)
+{
+    CO_NODE  node;
+    uint32_t rpdo_id     = 0x40000200;
+    uint32_t rpdo_map[4] = { 0x25001208, /* data byte */
+                             CO_RPDO_MAP_DUMMY_U8,
+                             CO_RPDO_MAP_DUMMY_U16,
+                             CO_RPDO_MAP_DUMMY_U32 };
+    uint8_t  rpdo_type   = 254;
+    uint8_t  rpdo_len    = 4;
+    uint8_t  data        = { 0x91 };
+
+    TS_CreateMandatoryDir();
+    TS_CreateRPdoCom(0, &rpdo_id,     &rpdo_type);
+    TS_CreateRPdoMap(0, &rpdo_map[0], &rpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x12, CO_OBJ_____RW), CO_TUNSIGNED8, (CO_DATA)(&data));
+    TS_CreateNodeAutoStart(&node);
+
+    TS_PDO_SEND(0x201, 0x51);  /* send payload: 0x51 .. 0x58 */
+
+    /* check signals to be changed */
+    TS_ASSERT(0x51 == data);
+
+    /* check error free stack execution         */
+    CHK_NO_ERR(&node);                                
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*!
+*          This testcase will check the principle reception of:
+*          - PDO #0 (3 dummy bytes, 2 data bytes, 3 dummy bytes in content)
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_RPdo_Dummy_24_Data_Word_Dummy_24)
+{
+    CO_NODE  node;
+    uint32_t rpdo_id     = 0x40000200;
+    uint32_t rpdo_map[3] = { CO_RPDO_MAP_DUMMY_I24,
+                             0x25001210,   /* data word */
+                             CO_RPDO_MAP_DUMMY_U24,
+                            };
+    uint8_t  rpdo_type   = 254;
+    uint8_t  rpdo_len    = 3;
+    uint16_t data        = { 0x9192 };
+
+    TS_CreateMandatoryDir();
+    TS_CreateRPdoCom(0, &rpdo_id,     &rpdo_type);
+    TS_CreateRPdoMap(0, &rpdo_map[0], &rpdo_len);
+    TS_ODAdd(CO_KEY(0x2500, 0x12, CO_OBJ_____RW), CO_TUNSIGNED16, (CO_DATA)(&data));
+    TS_CreateNodeAutoStart(&node);
+
+    TS_PDO_SEND(0x201, 0x51);  /* send payload: 0x51 .. 0x58 */
+
+    /* check signals to be changed */
+    TS_ASSERT(0x5554 == data);
+
+    /* check error free stack execution         */
+    CHK_NO_ERR(&node);                                
+}   
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -403,6 +502,10 @@ SUITE_PDO_RX()
     TS_RUNNER(TS_RPdo_UpdateAfterSync);
     TS_RUNNER(TS_RPdo_UpdateType254);
     TS_RUNNER(TS_RPdo_UpdateType255);
+
+    TS_RUNNER(TS_RPdo_Dummy_8_16_32_Data_Byte);
+    TS_RUNNER(TS_RPdo_Data_Byte_Dummy_8_16_32);
+    TS_RUNNER(TS_RPdo_Dummy_24_Data_Word_Dummy_24);
 
     TS_End();
 }
