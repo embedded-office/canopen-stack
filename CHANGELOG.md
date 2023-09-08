@@ -9,8 +9,8 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 
 ### Change
 
-- Replace sizeof() operators with the constant value
 - Add error checking in COTPdoMapWrite [ezrec](https://github.com/ezrec)
+- Fix RPDO dummy mapping [mrk-its](https://github.com/mrk-its)
 
 ## [4.4.0] - 2022-08-21
 
