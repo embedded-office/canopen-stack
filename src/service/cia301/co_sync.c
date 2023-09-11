@@ -144,6 +144,7 @@ void COSyncHandler (CO_SYNC *sync)
     for (i = 0; i < CO_RPDO_N; i++) {
         if (sync->RPdo[i] != 0) {
             CORPdoWrite(sync->RPdo[i], &sync->RFrm[i]);
+            COPdoUpdate(sync->RPdo[i]);
             COPdoSyncUpdate(sync->RPdo[i]);
         }
     }

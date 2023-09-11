@@ -169,8 +169,19 @@ void COSyncProdSend(void *parg);
 * CALLBACK FUNCTIONS
 ******************************************************************************/
 
+/*! \brief  RPDO UPDATE
+*
+*    This function is called just after the RPDO is written to the object
+*    dictionary.
+*
+* \param pdo
+*    Pointer to received RPDO
+*/
+extern void COPdoUpdate(CO_RPDO *pdo);
+
 /*! \brief  SYNC UPDATE
 *
+*    This function is deprecated, use COPdoUpdate instead.
 *    This function is called just after the synchronized RPDO is written to
 *    the object dictionary.
 *

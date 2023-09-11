@@ -179,6 +179,18 @@ int16_t COPdoReceive(CO_IF_FRM *frm)
 }
 
 WEAK
+void COPdoUpdate(CO_RPDO *pdo)
+{
+    (void)pdo;
+
+    /* Optional: place here some code, which is called
+     * right after the object dictionary update due to
+     * a asynchronous PDO.
+     */
+}
+
+/* This function is deprecated, use COPdoUpdate instead. */
+WEAK
 void COPdoSyncUpdate(CO_RPDO *pdo)
 {
     (void)pdo;
@@ -186,17 +198,6 @@ void COPdoSyncUpdate(CO_RPDO *pdo)
     /* Optional: place here some code, which is called
      * right after the object dictionary update due to
      * a synchronized PDO.
-     */
-}
-
-WEAK
-void COPdoAsyncUpdate(CO_RPDO *pdo)
-{
-    (void)pdo;
-
-    /* Optional: place here some code, which is called
-     * right after the object dictionary update due to
-     * a asynchronous PDO.
      */
 }
 

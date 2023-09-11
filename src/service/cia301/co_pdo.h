@@ -547,15 +547,15 @@ extern void COPdoTransmit(CO_IF_FRM *frm);
 */
 extern int16_t COPdoReceive(CO_IF_FRM *frm);
 
-/*! \brief  ASYNC UPDATE
+/*! \brief  RPDO UPDATE
 *
-*    This function is called just after the asynchronous RPDO is written to
-*    the object dictionary.
+*    This function is called just after the RPDO is written to the object
+*    dictionary.
 *
 * \param pdo
 *    Pointer to received RPDO
 */
-extern void COPdoAsyncUpdate(CO_RPDO *pdo);
+extern void COPdoUpdate(CO_RPDO *pdo);
 
 /*! \brief  PDO WRITE DATA CALLBACK
 *
