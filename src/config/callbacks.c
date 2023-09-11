@@ -185,7 +185,7 @@ void COPdoUpdate(CO_RPDO *pdo)
 
     /* Optional: place here some code, which is called
      * right after the object dictionary update due to
-     * a asynchronous PDO.
+     * a synchronous or asynchronous PDO.
      */
 }
 
