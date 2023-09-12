@@ -12,6 +12,7 @@ and starting with version 4.1.0 this project adheres to [Semantic Versioning](ht
 - Add error checking in COTPdoMapWrite [ezrec](https://github.com/ezrec)
 - Fix RPDO dummy mapping [mrk-its](https://github.com/mrk-its)
 - Callback for sync and async PDO update [sandrogort](https://github.com/sandrogort)
+- Fix Integer16 access for 16bit DSPs
 
 ## [4.4.0] - 2022-08-21
 
