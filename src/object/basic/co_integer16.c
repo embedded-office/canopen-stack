@@ -24,7 +24,7 @@
 * PRIVATE DEFINES
 ******************************************************************************/
 
-#define COT_ENTRY_SIZE    (uint32_t)2
+#define COT_ENTRY_SIZE    (uint32_t)sizeof(uint16_t)
 
 /******************************************************************************
 * PRIVATE FUNCTIONS
