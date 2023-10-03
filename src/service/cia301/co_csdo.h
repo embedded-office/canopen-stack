@@ -133,6 +133,17 @@ extern "C" {
 * PUBLIC TYPES
 ******************************************************************************/
 
+/*! \brief Block Transfer Type
+*
+*    This structure holds the block mode, crc, and crc_value.
+*
+*/
+typedef struct {
+    bool blockMode;
+    bool crc;
+    uint16_t crc_value;
+} blockTransfer_t;
+
 /*! \brief SDO CLIENT STATE
  *
  *   This enumerations holds the possible SDO client transfer states.

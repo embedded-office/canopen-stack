@@ -22,12 +22,6 @@
 
 #if USE_CSDO
 
-typedef struct {
-    bool blockMode;
-    bool crc;
-    uint16_t crc_value;
-} blockTransfer_t;
-
 /******************************************************************************
 * PRIVATE FUNCTIONS
 ******************************************************************************/
