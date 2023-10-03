@@ -36,8 +36,8 @@ static CO_ERR COCSdoInitDownloadSegmented  (CO_CSDO *csdo);
 static CO_ERR COCSdoDownloadSegmented      (CO_CSDO *csdo);
 static CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo);
 
-static CO_ERR COCSdoInitUploadBlock        (CO_CSDO *csdo);
-static CO_ERR COCSdoUploadSubBlock         (CO_CSDO *csdo);
+// static CO_ERR COCSdoInitUploadBlock        (CO_CSDO *csdo);
+// static CO_ERR COCSdoUploadSubBlock         (CO_CSDO *csdo);
 static CO_ERR COCSdoInitDownloadBlock      (CO_CSDO *csdo);
 static CO_ERR COCSdoDownloadSubBlock_Request    (CO_CSDO *csdo);
 static CO_ERR COCSdoDownloadSubBlock       (CO_CSDO *csdo);
@@ -47,7 +47,7 @@ static void   COCSdoAbort                  (CO_CSDO *csdo, uint32_t err);
 static void   COCSdoTransferFinalize       (CO_CSDO *csdo);
 static void   COCSdoTimeout                (void *parg);
 
-CO_ERR COCSdoRequestDownloadFull(CO_CSDO *csdo,
+static CO_ERR COCSdoRequestDownloadFull(CO_CSDO *csdo,
                              uint32_t key,
                              uint8_t *buffer,
                              uint32_t size,
@@ -56,7 +56,7 @@ CO_ERR COCSdoRequestDownloadFull(CO_CSDO *csdo,
                              blockTransfer_t* block);
 
 // cbt TODO: Update UploadFull function to take blockTransfer_t instead of a block boolean
-CO_ERR COCSdoRequestUploadFull(CO_CSDO *csdo,
+static CO_ERR COCSdoRequestUploadFull(CO_CSDO *csdo,
                             uint32_t key,
                             uint8_t *buf,
                             uint32_t size,
@@ -463,9 +463,9 @@ static CO_ERR COCSdoFinishDownloadSegmented(CO_CSDO *csdo)
 * Block Upload Transfer Functions 
 * ****************************************************************************/
 // cbt TODO: Implement this function
-static CO_ERR COCSdoInitUploadBlock        (CO_CSDO *csdo);
+// static CO_ERR COCSdoInitUploadBlock        (CO_CSDO *csdo);
 // cbt TODO: Implement this function
-static CO_ERR COCSdoUploadSubBlock         (CO_CSDO *csdo);
+// static CO_ERR COCSdoUploadSubBlock         (CO_CSDO *csdo);
 
 /******************************************************************************
 * Block Download Transfer Functions 
@@ -522,7 +522,7 @@ static CO_ERR COCSdoDownloadSubBlock_Request( CO_CSDO *csdo ) {
     CO_ERR    result = CO_ERR_SDO_SILENT;
     uint32_t  ticks;
     uint32_t width;
-    int n;
+    uint32_t n;
     CO_IF_FRM frm;
     uint8_t cmd = 0;
     CO_CSDO_BLOCK_T* block = &csdo->Tfer.Block;
@@ -629,7 +629,7 @@ static CO_ERR COCSdoDownloadSubBlock       (CO_CSDO *csdo)
             cmd = SET_BITS( BLOCK_DOWNLOAD_CMD_CCS,                 
                             BLOCK_DOWNLOAD_CMD_SCS_CCS_BIT_OFFSET,  
                             BLOCK_DOWNLOAD_CMD_SCS_CCS_BIT_MASK);
-            cmd |= SET_BITS(BLOCK_DOWNLOAD_FRM_SUBBLOCK_REQUEST_SEGDATA_BYTE_SIZE - block->BytesInLastSeg + 1,   
+            cmd |= SET_BITS(BLOCK_DOWNLOAD_FRM_SUBBLOCK_REQUEST_SEGDATA_BYTE_SIZE - block->BytesInLastSeg,   
                             BLOCK_DOWNLOAD_CMD_END_N_BIT_OFFSET,    
                             BLOCK_DOWNLOAD_CMD_END_N_BIT_MASK);
             cmd |= SET_BITS(BLOCK_DOWNLOAD_CMD_SS_CS_END,           
