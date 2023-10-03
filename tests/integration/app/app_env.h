@@ -51,6 +51,8 @@ extern "C" {
                               (uint32_t)((f).Data[(p)+1]) << 8  | \
                               (uint32_t)((f).Data[(p)]))
 
+#define SET_SUBBYTE(v,p)    (uint8_t)(v << p)
+
 #define TS_SYNC_SEND()                      \
   do {                                      \
     SimCanSetFrm(0x080, 0,                  \
@@ -182,6 +184,21 @@ extern "C" {
              (uint8_t)(((uint32_t)d2)>>16));\
     SimCanRun();                            \
   } while(0)
+
+#define TS_SDO5_END_SEND(_s,_c)             \
+    do{                                     \
+        uint8_t s=(uint8_t)(_s);            \
+        uint8_t c=(uint8_t)(_c);            \
+        SimCanSetFrm(0x605, 8,              \
+            (uint8_t)(s),                   \
+            (uint8_t)(c),                   \
+            (uint8_t)(0),                   \
+            (uint8_t)(0),                   \
+            (uint8_t)(0),                   \
+            (uint8_t)(0),                   \
+            (uint8_t)(0));                  \
+        SimCanRun();                        \
+    } while(0);
 
 #define TS_HB_SEND(_n,_s)                   \
   do {                                      \
@@ -343,6 +360,7 @@ extern "C" {
                              TS_ASSERT((uint8_t)(s) == BYTE(f,3))
 
 #define CHK_DATA(f,d)        TS_ASSERT((uint32_t)(d) == LONG(f,4))
+#define CHK_SIZE(f,d)        CHK_DATA(f,d)
 
 #define CHK_ACKSEQ(f,s)      TS_ASSERT((s) == BYTE(f,1))
 
