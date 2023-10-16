@@ -45,6 +45,7 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 
 - Baudrate configuration
 - NodeId configuration
+- Fastscan slave service
 
 *Note: the term 'unlimited' means, that the implementation introduces no additional limit. There are technical limits, described in the specification (for example: up to 511 possible TPDOs)*
 

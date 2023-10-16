@@ -31,7 +31,7 @@ extern "C" {
 * PUBLIC DEFINES
 ******************************************************************************/
 
-#define CO_LSS_MAX_SID           21       /*!< number of LSS services        */
+#define CO_LSS_MAX_SID           22       /*!< number of LSS services        */
 #define CO_LSS_MAX_BAUD          10       /*!< number of standard baudrates  */
 
 #define CO_LSS_RX_ID           2021       /*!< LSS request identifier        */
@@ -62,6 +62,15 @@ extern "C" {
 #define CO_LSS_REM_REVISION_MAX  13
 #define CO_LSS_REM_SERIAL_MIN    14
 #define CO_LSS_REM_SERIAL_MAX    15
+
+#define CO_LSS_FASTSCAN_LSB      0
+#define CO_LSS_FASTSCAN_MSB      31
+#define CO_LSS_FASTSCAN_CONFIRM  128
+
+#define CO_LSS_FASTSCAN_VENDOR_ID 0
+#define CO_LSS_FASTSCAN_PRODUCT   1
+#define CO_LSS_FASTSCAN_REV       2
+#define CO_LSS_FASTSCAN_SERIAL    3
 
 /******************************************************************************
 * PUBLIC TYPES
@@ -139,6 +148,7 @@ int16_t COLssIdentifyRemoteSlave_RevMax(CO_LSS *lss, CO_IF_FRM *frm);
 int16_t COLssIdentifyRemoteSlave_SerMin(CO_LSS *lss, CO_IF_FRM *frm);
 int16_t COLssIdentifyRemoteSlave_SerMax(CO_LSS *lss, CO_IF_FRM *frm);
 int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm);
+int16_t COLssFastscan(CO_LSS *lss, CO_IF_FRM *frm);
 
 /******************************************************************************
 * CALLBACK FUNCTIONS

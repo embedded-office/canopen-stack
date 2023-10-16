@@ -46,7 +46,8 @@ static const CO_LSS_MAP COLssServices[CO_LSS_MAX_SID] = {
     {  73 , CO_LSS_WAIT | CO_LSS_CONF, COLssIdentifyRemoteSlave_RevMax },
     {  74 , CO_LSS_WAIT | CO_LSS_CONF, COLssIdentifyRemoteSlave_SerMin },
     {  75 , CO_LSS_WAIT | CO_LSS_CONF, COLssIdentifyRemoteSlave_SerMax },
-    {  76 , CO_LSS_WAIT | CO_LSS_CONF, COLssNonConfiguredRemoteSlave }
+    {  76 , CO_LSS_WAIT | CO_LSS_CONF, COLssNonConfiguredRemoteSlave },
+    {  81 , CO_LSS_WAIT              , COLssFastscan }
 };
 
 static const uint32_t CO_LssBaudTbl[CO_LSS_MAX_BAUD] = {
@@ -505,5 +506,70 @@ int16_t COLssNonConfiguredRemoteSlave(CO_LSS *lss, CO_IF_FRM *frm)
         result = 1;
     }
     return result;
+}
+
+int16_t COLssFastscan(CO_LSS *lss, CO_IF_FRM *frm)
+{
+    CO_NODE *node = lss->Node;
+    uint32_t idNumber;
+    uint32_t idCompared;
+    uint32_t mask;
+    uint8_t bitCheck;
+    uint8_t lssSub;
+    uint8_t lssNext;
+    CO_ERR err;
+
+    /* Only for non-configured nodes */
+    if ((node->NodeId != (uint8_t)0xff) || ((lss->Flags & CO_LSS_STORED) == 0))
+    {
+        goto no_response;
+    }
+
+    idNumber = CO_GET_LONG(frm, 1);
+    bitCheck = CO_GET_BYTE(frm, 5);
+    lssSub = CO_GET_BYTE(frm, 6);
+    lssNext = CO_GET_BYTE(frm, 7);
+
+    /* Check for validity */
+    if (bitCheck > CO_LSS_FASTSCAN_MSB && bitCheck != CO_LSS_FASTSCAN_CONFIRM)
+        goto no_response; /* Bitcheck is invalid  */
+    if (lssSub > CO_LSS_FASTSCAN_SERIAL || lssNext > CO_LSS_FASTSCAN_SERIAL)
+        goto no_response; /* lssNext and lssSub are invalid */
+
+    /* Send confirmation */
+    if (bitCheck == CO_LSS_FASTSCAN_CONFIRM)
+        goto response;
+
+    if (lssSub == CO_LSS_FASTSCAN_VENDOR_ID)
+        err = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 1), &idCompared);
+    else if (lssSub == CO_LSS_FASTSCAN_PRODUCT)
+        err = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 2), &idCompared);
+    else if (lssSub == CO_LSS_FASTSCAN_REV)
+        err = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 3), &idCompared);
+    else
+        err = CODictRdLong(&lss->Node->Dict, CO_DEV(0x1018, 4), &idCompared);
+
+    if (err != CO_ERR_NONE)
+        goto no_response;
+
+    mask = 0xFFFFFFFF << bitCheck;
+    if ((idCompared & mask) == (idNumber & mask))
+    {
+        if (bitCheck == 0 && lssNext < lssSub)
+        {
+            /* Matched completely, we enter configuration state */
+            lss->Mode = CO_LSS_CONF;
+        }
+        goto response;
+    }
+
+no_response:
+    return -1;
+response:
+    CO_SET_LONG(frm, 0L, 0);
+    CO_SET_LONG(frm, 0L, 4);
+    CO_SET_BYTE(frm, CO_LSS_RES_SLAVE, 0);
+    CO_SET_ID(frm, CO_LSS_TX_ID);
+    return 1;
 }
 #endif //USE_LSS
