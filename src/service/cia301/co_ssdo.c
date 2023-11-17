@@ -20,6 +20,8 @@
 
 #include "co_core.h"
 
+static uint32_t COSdoBlockSizeRequest(uint32_t SizeRemaining, uint32_t MaxSize);
+
 /******************************************************************************
 * PROTECTED API FUNCTIONS
 ******************************************************************************/
@@ -568,6 +570,7 @@ CO_ERR COSdoInitDownloadBlock(CO_SDO *srv)
     CO_ERR   result = CO_ERR_SDO_ABORT;
     uint32_t width  =  0;
     uint32_t size;
+    uint32_t SegmentCnt;
     uint8_t  cmd;
 
     cmd = CO_GET_BYTE(srv->Frm, 0);
@@ -576,8 +579,9 @@ CO_ERR COSdoInitDownloadBlock(CO_SDO *srv)
     }
     size = COSdoGetSize(srv, width, false);
     if (size > 0) {
+        SegmentCnt = COSdoBlockSizeRequest(size, CO_SDO_BUF_SEG);
         srv->Blk.State  = BLK_DOWNLOAD;
-        srv->Blk.SegNum = CO_SDO_BUF_SEG;
+        srv->Blk.SegNum = SegmentCnt;
         srv->Blk.SegCnt = 0;
         srv->Blk.SegOk  = 0;
         srv->Blk.Size   = size;
@@ -586,8 +590,8 @@ CO_ERR COSdoInitDownloadBlock(CO_SDO *srv)
         srv->Buf.Num    = 0;
 
         CO_SET_BYTE(srv->Frm, 0xA0, 0);
-        CO_SET_LONG(srv->Frm, (uint32_t)CO_SDO_BUF_SEG, 4);
-        
+        CO_SET_LONG(srv->Frm, SegmentCnt, 4);
+
         if (size <= 4) {
             /* no action for basic type entry */
             result = CO_ERR_NONE;
@@ -608,6 +612,7 @@ CO_ERR COSdoEndDownloadBlock(CO_SDO *srv)
 {
     CO_ERR   result = CO_ERR_SDO_ABORT;
     uint32_t len;
+    uint32_t SegmentCnt;
     uint8_t  cmd;
     uint8_t  n;
 
@@ -616,9 +621,19 @@ CO_ERR COSdoEndDownloadBlock(CO_SDO *srv)
         n      = (cmd & 0x1C) >> 2;
         len    = ((uint32_t)srv->Buf.Num - n);
         result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
+
+        if (srv->Obj->Type != 0) {
+            /* write at current offset for typed object entry */
+            result = COObjWrBufCont(srv->Obj, srv->Node, srv->Buf.Start, len);
+        } else if (len <= 4) {
+            /* write value for basic type entry */
+            result = COObjWrValue(srv->Obj, srv->Node, srv->Buf.Start, len);
+        }
+
         if (result != CO_ERR_NONE) {
             srv->Node->Error = CO_ERR_SDO_WRITE;
             COSdoAbort(srv, CO_SDO_ERR_TOS);
+            result = CO_ERR_SDO_ABORT;
         }
         CO_SET_BYTE(srv->Frm, 0xA1, 0);
         CO_SET_WORD(srv->Frm, 0, 1);
@@ -629,7 +644,6 @@ CO_ERR COSdoEndDownloadBlock(CO_SDO *srv)
         srv->Buf.Cur   = srv->Buf.Start;
         srv->Buf.Num   = 0;
         srv->Obj       = 0;
-        result         = CO_ERR_NONE;
     }
     return (result);
 }
@@ -639,6 +653,7 @@ CO_ERR COSdoDownloadBlock(CO_SDO *srv)
     CO_ERR   result = CO_ERR_SDO_SILENT;
     CO_ERR   err;
     uint32_t len;
+    uint32_t SegmentCnt;
     uint8_t  cmd;
     uint8_t  i;
 
@@ -667,9 +682,11 @@ CO_ERR COSdoDownloadBlock(CO_SDO *srv)
         if ((srv->Blk.SegCnt == CO_SDO_BUF_SEG) ||
              ((cmd & 0x80)   != 0             )) {
 
+            SegmentCnt = COSdoBlockSizeRequest(srv->Blk.Len, CO_SDO_BUF_SEG);
+            srv->Blk.SegNum = SegmentCnt;
             CO_SET_BYTE(srv->Frm, 0xA2, 0);
             CO_SET_BYTE(srv->Frm, srv->Blk.SegCnt, 1);
-            CO_SET_BYTE(srv->Frm, CO_SDO_BUF_SEG, 2);
+            CO_SET_BYTE(srv->Frm, SegmentCnt, 2);
             for (i = 3; i <= 7; i++) {
                 CO_SET_BYTE(srv->Frm, 0, i);
             }
@@ -690,16 +707,16 @@ CO_ERR COSdoDownloadBlock(CO_SDO *srv)
             }
         }
     } else {
-        if ((srv->Blk.SegCnt & 0x80) == 0) {
-            srv->Blk.SegCnt |= 0x80;
-        }
+        srv->Blk.SegCnt |= 0x80;
 
-        if (((cmd & 0x7F) == CO_SDO_BUF_SEG) ||
+        if (((cmd & 0x7F) == srv->Blk.SegNum) ||
             ((cmd & 0x80) != 0             )) {
 
+            SegmentCnt = COSdoBlockSizeRequest(srv->Blk.Len, CO_SDO_BUF_SEG);
+            srv->Blk.SegNum = SegmentCnt;
             CO_SET_BYTE(srv->Frm, 0xA2, 0);
             CO_SET_BYTE(srv->Frm, srv->Blk.SegCnt & 0x7F, 1);
-            CO_SET_BYTE(srv->Frm, CO_SDO_BUF_SEG, 2);
+            CO_SET_BYTE(srv->Frm, SegmentCnt, 2);
             CO_SET_BYTE(srv->Frm, 0, 3);
             CO_SET_LONG(srv->Frm, 0, 4);
 
@@ -765,7 +782,7 @@ CO_ERR COSdoUploadBlock(CO_SDO *srv)
     CO_ERR   result = CO_ERR_SDO_SILENT;
     CO_ERR   err;
     uint32_t size;
-    uint32_t num = 0;
+    uint32_t num;
     uint32_t txNum;
     uint32_t byteOk = 0;
     uint8_t *txBuf;
@@ -819,7 +836,7 @@ CO_ERR COSdoUploadBlock(CO_SDO *srv)
                 err = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Cur, srv->Blk.Size);
             } else {
                 err = COObjRdBufCont(srv->Obj, srv->Node, srv->Buf.Cur, num);
-            } 
+            }
             if (err != CO_ERR_NONE) {
                 srv->Node->Error = CO_ERR_SDO_READ;
             }
@@ -935,4 +952,23 @@ void COSdoAbortReq(CO_SDO *srv)
     srv->Seg.Num   =  0;
     srv->Seg.Size  =  0;
     srv->Seg.TBit  =  0;
+}
+
+static uint32_t COSdoBlockSizeRequest(uint32_t SizeRemaining, uint32_t MaxSize)
+{
+    uint32_t PartialBlockSize;
+
+    if (SizeRemaining >= (MaxSize * 7)) {
+        return MaxSize;
+    }
+
+    PartialBlockSize = SizeRemaining / 7;
+    if ((SizeRemaining % 7) != 0) {
+        PartialBlockSize++;
+    }
+    if (PartialBlockSize == 0) {
+        PartialBlockSize = MaxSize;
+    }
+
+    return PartialBlockSize;
 }
