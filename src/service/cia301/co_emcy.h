@@ -141,7 +141,7 @@ typedef struct CO_EMCY_T {
     struct CO_EMCY_TBL_T  *Root;                  /*!< root to EMCY table    */
     struct CO_EMCY_HIST_T  Hist;                  /*!< EMCY history          */
     uint8_t                Cnt[CO_EMCY_REG_NUM];  /*!< count register bits   */
-    uint8_t                Err[CO_EMCY_STORAGE];  /*!< error status storage  */
+    uint16_t               Err[CO_EMCY_STORAGE];  /*!< error status storage  */
 
 } CO_EMCY;
 
@@ -186,7 +186,7 @@ void COEmcyInit(CO_EMCY *emcy, struct CO_NODE_T *node, CO_EMCY_TBL *root);
 * \param usr
 *    manufacturer specific fields in EMCY history and/or EMCY message
 */
-void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
+void COEmcySet(CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr);
 
 /*! \brief CLEAR EMCY ERROR
 *
@@ -200,7 +200,7 @@ void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
 * \param err
 *    EMCY error identifier in User EMCY table
 */
-void COEmcyClr(CO_EMCY *emcy, uint8_t err);
+void COEmcyClr(CO_EMCY *emcy, uint16_t err);
 
 /*! \brief GET EMCY ERROR STATUS
 *
@@ -216,7 +216,7 @@ void COEmcyClr(CO_EMCY *emcy, uint8_t err);
 * \retval   =1    the error was detected before
 * \retval   <0    an error is detected inside of this function
 */
-int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err);
+int16_t COEmcyGet(CO_EMCY *emcy, uint16_t err);
 
 /*! \brief COUNT DETECTED EMCY ERRORS
 *

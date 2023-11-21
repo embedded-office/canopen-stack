@@ -169,7 +169,7 @@ static CO_ERR COTEmcyHistInit (struct CO_OBJ_T *obj, struct CO_NODE_T *node)
 * PROTECTED API FUNCTIONS
 ******************************************************************************/
 
-void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
+void COEmcyHistAdd(CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr)
 {
     const CO_OBJ_TYPE *uint32 = CO_TUNSIGNED32;
     const CO_OBJ_TYPE *uint8 = CO_TUNSIGNED8;
