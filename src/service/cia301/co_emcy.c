@@ -36,25 +36,25 @@ static void    COEmcySend  (CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr, uint8
 
 static int16_t COEmcySetErr(CO_EMCY *emcy, uint16_t err, uint8_t state)
 {
-    uint8_t result;
-    uint8_t byte;
-    uint8_t mask;
+    uint16_t byte_num;
+    uint8_t  result;
+    uint8_t  mask;
 
     if (err >= CO_EMCY_N) {
         err = CO_EMCY_N - 1;
     }
-    byte = err >> 3;
+    byte_num = err >> 3;
     mask = (uint8_t)(1u << (err & 0x7u));
-    if ((emcy->Err[byte] & mask) == 0) {
+    if ((emcy->Err[byte_num] & mask) == 0) {
         if (state != 0) {
-            emcy->Err[byte] |= mask;
+            emcy->Err[byte_num] |= mask;
             result           = 1;
         } else {
             result           = 0;
         }
     } else {
         if (state == 0) {
-            emcy->Err[byte] &= ~mask;
+            emcy->Err[byte_num] &= ~mask;
             result           = 1;
         } else {
             result           = 0;
@@ -65,16 +65,16 @@ static int16_t COEmcySetErr(CO_EMCY *emcy, uint16_t err, uint8_t state)
 
 static int16_t COEmcyGetErr(CO_EMCY *emcy, uint16_t err)
 {
-    uint8_t result;
-    uint8_t byte;
-    uint8_t mask;
+    uint16_t byte_num;
+    uint8_t  result;
+    uint8_t  mask;
 
     if (err >= CO_EMCY_N) {
         err = CO_EMCY_N - 1;
     }
-    byte = err >> 3;
+    byte_num = err >> 3;
     mask = (uint8_t)(1u << (err & 0x7u));
-    if ((emcy->Err[byte] & mask) == 0) {
+    if ((emcy->Err[byte_num] & mask) == 0) {
         result = 0;
     } else {
         result = 1;

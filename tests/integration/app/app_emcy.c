@@ -28,7 +28,7 @@
 /* allocate memory for the emergency code mapping table */
 static CO_EMCY_TBL EmcyCode[EMCY_CODE_MAX];
 /* allocate memory for the number of registered emergency codes */
-static uint8_t EmcyNum;
+static uint16_t EmcyNum;
 
 /******************************************************************************
 * PUBLIC FUNCTIONS
@@ -76,7 +76,7 @@ CO_EMCY_TBL *EmcyGetTable(void)
 *          If table is full, return the table size as indication.
 */
 /*---------------------------------------------------------------------------*/
-uint32_t EmcyAddCode(int16_t code, uint8_t reg)
+uint32_t EmcyAddCode(uint16_t code, uint8_t reg)
 {
     uint32_t n;
 

@@ -41,7 +41,7 @@
 *    will support.
 */
 #ifndef CO_EMCY_N
-#define CO_EMCY_N              32
+#define CO_EMCY_N              1024
 #endif
 
 /*! \brief DEFAULT RECEIVE PDO

@@ -126,8 +126,8 @@ TS_DEF_MAIN(TS_Emcy_IdTooLow)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Emcy_GetStatusNoError)
 {
-    int16_t     err;                               /* Local: status of EMCY error              */
-    CO_NODE        node;
+    int16_t err;                                      /* Local: status of EMCY error              */
+    CO_NODE node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_CreateEmcy();
@@ -146,8 +146,8 @@ TS_DEF_MAIN(TS_Emcy_GetStatusNoError)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Emcy_GetStatusError)
 {
-    int16_t     err;                               /* Local: status of EMCY error              */
-    CO_NODE        node;
+    int16_t err;                                      /* Local: status of EMCY error              */
+    CO_NODE node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_CreateEmcy();
@@ -169,8 +169,8 @@ TS_DEF_MAIN(TS_Emcy_GetStatusError)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Emcy_TotalNumNoError)
 {
-    int16_t     num;                               /* Local: total number of EMCY errors       */
-    CO_NODE        node;
+    int16_t num;                                      /* Local: total number of EMCY errors       */
+    CO_NODE node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_CreateEmcy();
@@ -190,8 +190,8 @@ TS_DEF_MAIN(TS_Emcy_TotalNumNoError)
 /*------------------------------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_Emcy_TotalNumError)
 {
-    int16_t     num;                               /* Local: total number of EMCY errors       */
-    CO_NODE        node;
+    int16_t num;                                      /* Local: total number of EMCY errors       */
+    CO_NODE node;
                                                       /*------------------------------------------*/
     TS_CreateMandatoryDir();
     TS_CreateEmcy();
@@ -203,6 +203,63 @@ TS_DEF_MAIN(TS_Emcy_TotalNumError)
 
     num = COEmcyCnt(&node.Emcy);                      /* get total number of EMCY errors          */
     TS_ASSERT(2 == num);                              /* check total number                       */
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*
+*          This test will check that the total ID range of detected EMCY errors is returned
+*          correctly.
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_Emcy_TotalErrorIdRange)
+{
+    CO_NODE     node;
+    CO_EMCY_USR usr;                                  /* Local: user data for EMCY message        */
+    CO_IF_FRM   frm;                                  /* Local: virtual CAN frame                 */
+    int16_t     num;                                  /* Local: total number of EMCY errors       */
+    uint16_t    test_num = 1000;
+    uint16_t    test_code_offset = 0x2000;
+    uint8_t     test_reg = 7;
+    uint8_t     reg;
+
+    usr.Emcy[0] = 0x11;
+    usr.Emcy[1] = 0x12;
+    usr.Emcy[2] = 0x13;
+    usr.Emcy[3] = 0x14;
+    usr.Emcy[4] = 0x15;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    TS_CreateEmcy();
+    for (num = 4; num < CO_EMCY_N; num++)
+    {
+        if (num == test_num)
+        {
+            reg = test_reg;
+        }
+        else
+        {
+            reg = num & 3;
+        }
+        (void)EmcyAddCode((test_code_offset + num), reg); /* init the whole table of EMCY errors  */
+    }
+    TS_CreateNode(&node,0);
+    COEmcySet(&node.Emcy, test_num, &usr);           /* register error #1000 with user info      */
+
+    num = COEmcyCnt(&node.Emcy);                      /* get total number of EMCY errors          */
+    TS_ASSERT(1 == num);                              /* check total number                       */
+    SimCanRun();
+
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_EMCY (frm);                                   /* check EMCY (Id and DLC)                  */
+    CHK_WORD (frm, 0, (test_num + test_code_offset)); /* check error code with test code offset   */
+    CHK_BYTE (frm, 2, ((1 << test_reg) | 1));         /* check error register                     */
+    CHK_BYTE (frm, 3, 0x11);                          /* check manufacturer specific info field   */
+    CHK_BYTE (frm, 4, 0x12);
+    CHK_BYTE (frm, 5, 0x13);
+    CHK_BYTE (frm, 6, 0x14);
+    CHK_BYTE (frm, 7, 0x15);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
@@ -224,6 +281,7 @@ SUITE_EMCY_API()
     TS_RUNNER(TS_Emcy_GetStatusError);
     TS_RUNNER(TS_Emcy_TotalNumNoError);
     TS_RUNNER(TS_Emcy_TotalNumError);
+    TS_RUNNER(TS_Emcy_TotalErrorIdRange);
 
 //    CanDiagnosticOff(0);
 

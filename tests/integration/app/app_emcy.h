@@ -79,7 +79,7 @@ CO_EMCY_TBL *EmcyGetTable(void);
 * \return  Index of new entry in table, or EMCY_CODE_MAX if table is full.
 */
 /*---------------------------------------------------------------------------*/
-uint32_t EmcyAddCode(int16_t code, uint8_t reg);
+uint32_t EmcyAddCode(uint16_t code, uint8_t reg);
 
 #ifdef __cplusplus               /* for compatibility with C++ environments  */
 }
