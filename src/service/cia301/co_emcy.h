@@ -141,7 +141,7 @@ typedef struct CO_EMCY_T {
     struct CO_EMCY_TBL_T  *Root;                  /*!< root to EMCY table    */
     struct CO_EMCY_HIST_T  Hist;                  /*!< EMCY history          */
     uint8_t                Cnt[CO_EMCY_REG_NUM];  /*!< count register bits   */
-    uint16_t               Err[CO_EMCY_STORAGE];  /*!< error status storage  */
+    uint8_t                Err[CO_EMCY_STORAGE];  /*!< error status storage  */
 
 } CO_EMCY;
 
