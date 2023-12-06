@@ -484,7 +484,7 @@ int16_t TS_DomainCheck(CO_OBJ_DOM *dom, uint8_t start, uint8_t missing)
         }
         size--;
         if (size <= missing) {
-            value = 0xFF;
+            break;
         } else {
             value++;
             value &= 0xFF;

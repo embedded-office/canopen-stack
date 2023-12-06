@@ -25,36 +25,36 @@
 * PRIVATE HELPER FUNCTIONS
 ******************************************************************************/
 
-static int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state);
-static int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err);
-static void    COEmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state);
-static void    COEmcySend  (CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state);
+static int16_t COEmcySetErr(CO_EMCY *emcy, uint16_t err, uint8_t state);
+static int16_t COEmcyGetErr(CO_EMCY *emcy, uint16_t err);
+static void    COEmcyUpdate(CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr, uint8_t state);
+static void    COEmcySend  (CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr, uint8_t state);
 
 /******************************************************************************
 * PRIVATE HELPER FUNCTION
 ******************************************************************************/
 
-static int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state)
+static int16_t COEmcySetErr(CO_EMCY *emcy, uint16_t err, uint8_t state)
 {
-    uint8_t result;
-    uint8_t byte;
-    uint8_t mask;
+    uint16_t byte_num;
+    uint8_t  result;
+    uint8_t  mask;
 
     if (err >= CO_EMCY_N) {
         err = CO_EMCY_N - 1;
     }
-    byte = err >> 3;
+    byte_num = err >> 3;
     mask = (uint8_t)(1u << (err & 0x7u));
-    if ((emcy->Err[byte] & mask) == 0) {
+    if ((emcy->Err[byte_num] & mask) == 0) {
         if (state != 0) {
-            emcy->Err[byte] |= mask;
+            emcy->Err[byte_num] |= mask;
             result           = 1;
         } else {
             result           = 0;
         }
     } else {
         if (state == 0) {
-            emcy->Err[byte] &= ~mask;
+            emcy->Err[byte_num] &= ~mask;
             result           = 1;
         } else {
             result           = 0;
@@ -63,18 +63,18 @@ static int16_t COEmcySetErr(CO_EMCY *emcy, uint8_t err, uint8_t state)
     return (result);
 }
 
-static int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err)
+static int16_t COEmcyGetErr(CO_EMCY *emcy, uint16_t err)
 {
-    uint8_t result;
-    uint8_t byte;
-    uint8_t mask;
+    uint16_t byte_num;
+    uint8_t  result;
+    uint8_t  mask;
 
     if (err >= CO_EMCY_N) {
         err = CO_EMCY_N - 1;
     }
-    byte = err >> 3;
+    byte_num = err >> 3;
     mask = (uint8_t)(1u << (err & 0x7u));
-    if ((emcy->Err[byte] & mask) == 0) {
+    if ((emcy->Err[byte_num] & mask) == 0) {
         result = 0;
     } else {
         result = 1;
@@ -82,7 +82,7 @@ static int16_t COEmcyGetErr(CO_EMCY *emcy, uint8_t err)
     return (result);
 }
 
-static void COEmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
+static void COEmcyUpdate(CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr, uint8_t state)
 {
     CO_DICT  *dir;
     uint8_t  regbit;
@@ -124,7 +124,7 @@ static void COEmcyUpdate(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t s
     (void)CODictWrByte(dir, CO_DEV(0x1001,0), reg);
 }
 
-static void COEmcySend(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr, uint8_t state)
+static void COEmcySend(CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr, uint8_t state)
 {
     CO_IF_FRM    frm;
     CO_NODE     *node;
@@ -226,7 +226,7 @@ void COEmcyInit(CO_EMCY *emcy, CO_NODE *node, CO_EMCY_TBL *root)
 * PUBLIC API FUNCTIONS
 ******************************************************************************/
 
-void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
+void COEmcySet(CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr)
 {
     int16_t change;
 
@@ -239,7 +239,7 @@ void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr)
     }
 }
 
-void COEmcyClr(CO_EMCY *emcy, uint8_t err)
+void COEmcyClr(CO_EMCY *emcy, uint16_t err)
 {
     int16_t change;
 
@@ -252,7 +252,7 @@ void COEmcyClr(CO_EMCY *emcy, uint8_t err)
     }
 }
 
-int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err)
+int16_t COEmcyGet(CO_EMCY *emcy, uint16_t err)
 {
     int16_t cur;
 
@@ -264,8 +264,8 @@ int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err)
 
 int16_t COEmcyCnt(CO_EMCY *emcy)
 {
-    int16_t result = -1;
-    uint8_t n;
+    int16_t   result = -1;
+    uint16_t  n;
 
     ASSERT_PTR_ERR(emcy, -1);
 
@@ -278,8 +278,8 @@ int16_t COEmcyCnt(CO_EMCY *emcy)
 
 void COEmcyReset(CO_EMCY *emcy, uint8_t silent)
 {
-    int16_t change;
-    uint8_t n;
+    int16_t   change;
+    uint16_t  n;
 
     ASSERT_PTR(emcy);
 

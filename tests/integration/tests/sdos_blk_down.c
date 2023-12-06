@@ -52,7 +52,7 @@ TS_DEF_MAIN(TS_BlkWr_Basic)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 1);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 1, 1, 0);                        /* transmit segment in (last) block         */
@@ -101,7 +101,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 6);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 6, 1, 0);                        /* transmit segments in (last) block        */
@@ -151,7 +151,7 @@ TS_DEF_MAIN(TS_BlkWr_43ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 7);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 7, 1, 0);                        /* transmit segments in (last) block        */
@@ -202,7 +202,7 @@ TS_DEF_MAIN(TS_BlkWr_41ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 6);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 6, 1, 0);                        /* transmit segments in (last) block        */
@@ -260,7 +260,7 @@ TS_DEF_MAIN(TS_BlkWr_994ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
     CHK_ACKSEQ  (frm, 127);                           /* check acknowledged sequence number       */
-    CHK_NEXTBLK (frm, CO_SDO_BUF_SEG);                /* check next block size                    */
+    CHK_NEXTBLK (frm, 15);                            /* check next block size                    */
 
     TS_SendBlk(0x79, 15, 1, 0);                       /* cont. transmit segments to (last) block  */
 
@@ -317,7 +317,7 @@ TS_DEF_MAIN(TS_BlkWr_995ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
     CHK_ACKSEQ  (frm, 127);                           /* check acknowledged sequence number       */
-    CHK_NEXTBLK (frm, CO_SDO_BUF_SEG);                /* check next block size                    */
+    CHK_NEXTBLK (frm, 16);                            /* check next block size                    */
 
     TS_SendBlk(0x79, 16, 1, 0);                       /* cont. transmit segments to (last) block  */
 
@@ -374,7 +374,7 @@ TS_DEF_MAIN(TS_BlkWr_993ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
     CHK_ACKSEQ  (frm, 127);                           /* check acknowledged sequence number       */
-    CHK_NEXTBLK (frm, CO_SDO_BUF_SEG);                /* check next block size                    */
+    CHK_NEXTBLK (frm, 15);                            /* check next block size                    */
 
     TS_SendBlk(0x79, 15, 1, 0);                       /* cont. transmit segments to (last) block  */
 
@@ -424,7 +424,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_NoLen)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 6);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 6, 1, 0);                        /* transmit segments in (last) block        */
@@ -476,7 +476,7 @@ TS_DEF_MAIN(TS_BlkWr_43ByteDomain_NoLen)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 7);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 7, 1, 0);                        /* transmit segments in (last) block        */
@@ -527,7 +527,7 @@ TS_DEF_MAIN(TS_BlkWr_41ByteDomain_NoLen)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 6);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 6, 1, 0);                        /* transmit segments in (last) block        */
@@ -586,7 +586,7 @@ TS_DEF_MAIN(TS_BlkWr_1000ByteDomain_NoLen)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
     CHK_ACKSEQ  (frm, 127);                           /* check acknowledged sequence number       */
-    CHK_NEXTBLK (frm, CO_SDO_BUF_SEG);                /* check next block size                    */
+    CHK_NEXTBLK (frm, 16);                            /* check next block size                    */
 
     TS_SendBlk(0x79, 16, 1, 0);                       /* cont. transmit segments to (last) block  */
 
@@ -637,7 +637,7 @@ TS_DEF_MAIN(TS_BlkWr_LostSeg)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 6);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 6, 1, 3);                        /* transmit segment 1 and 2; 3 is lost      */
@@ -645,7 +645,7 @@ TS_DEF_MAIN(TS_BlkWr_LostSeg)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
     CHK_ACKSEQ  (frm, 2);                             /* check acknowledged sequence number       */
-    CHK_NEXTBLK (frm, CO_SDO_BUF_SEG);                /* check next block size                    */
+    CHK_NEXTBLK (frm, 4);                             /* check next block size                    */
 
                                                       /*===== RE-SEND FAILED BLOCK DOWNLOAD ======*/
     TS_SendBlk(0x0E, 4, 1, 0);                        /* transmit segment 1 to 4                  */
@@ -702,7 +702,7 @@ TS_DEF_MAIN(TS_BlkWr_890ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA2);                          /* check SDO #0 response (Id and DLC)       */
     CHK_ACKSEQ  (frm, 127);                           /* check acknowledged sequence number       */
-    CHK_NEXTBLK (frm, CO_SDO_BUF_SEG);                /* check next block size                    */
+    CHK_NEXTBLK (frm, 1);                             /* check next block size                    */
 
                                                       /*===== END BLOCK DOWNLOAD =================*/
     TS_EBLK_SEND(0xC1, 0x00000000);
@@ -796,7 +796,7 @@ TS_DEF_MAIN(TS_BlkWr_46ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 7);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 7, 1, 0);                        /* transmit segments in (last) block        */
@@ -846,7 +846,7 @@ TS_DEF_MAIN(TS_BlkWr_44ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 7);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 7, 1, 0);                        /* transmit segments in (last) block        */
@@ -1105,7 +1105,7 @@ TS_DEF_MAIN(TS_BlkWr_TwoDomains)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub1);                     /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 6);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 6, 1, 0);                        /* transmit segments in (last) block        */
@@ -1136,7 +1136,7 @@ TS_DEF_MAIN(TS_BlkWr_TwoDomains)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub2);                     /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 7);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 7, 1, 0);                        /* transmit segments in (last) block        */
@@ -1190,7 +1190,7 @@ TS_DEF_MAIN(TS_BlkWr_455ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 65);                            /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00,  65, 1, 0);                      /* transmit segments in block               */
@@ -1231,6 +1231,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_35Byte)
     CO_NODE     node;
     CO_OBJ_DOM *dom;
     uint32_t    size = 42;
+    uint32_t    missing = size;
     uint16_t    idx  = 0x2100;
     uint8_t     sub  = 0;
                                                       /*------------------------------------------*/
@@ -1239,13 +1240,14 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_35Byte)
     TS_CreateNode(&node,0);
 
     size = 35;
+    missing -= size;                                  /* set the expected missing bytes data      */
                                                       /*===== INIT BLOCK DOWNLOAD ================*/
     TS_SDO_SEND (0xC2, idx, sub, size);
 
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 5);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 5, 1, 0);                        /* transmit segments in (last) block        */
@@ -1262,7 +1264,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_35Byte)
     CHK_SDO0    (frm, 0xA1);                          /* check SDO #0 response (Id and DLC)       */
     CHK_ZERO    (frm);                                /* check cleared data area                  */
 
-    CHK_DOM_PART(dom, 0, 7);                          /* check content of domain                  */
+    CHK_DOM_PART(dom, 0, missing);                    /* check content of domain                  */
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
@@ -1309,7 +1311,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte)
 *
 * \ingroup TS_CO
 *
-*         This testcase will check the block download of an array with size = 49 to the
+*         This testcase will check the block download of an array with size = 0 to the
 *         Domainbuffer with size = 42, without size indicated
 *         This testcase will check the Abort code " Data type doesn't match, length too high.  "
 *                                   Abort code 0x06070012
@@ -1334,7 +1336,7 @@ TS_DEF_MAIN(TS_BlkWr_42ByteDomain_49Byte_NoLen)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 6);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 7, 1, 0);                        /* transmit segments in (last) block        */
@@ -1382,7 +1384,7 @@ TS_DEF_MAIN(TS_BlkWr_ExpWrAfter43ByteDomain)
     CHK_CAN     (&frm);                               /* check for a CAN frame                    */
     CHK_SDO0    (frm, 0xA0);                          /* check SDO #0 response (Id and DLC)       */
     CHK_MLTPX   (frm, idx, sub);                      /* check multiplexer                        */
-    CHK_BLKSIZE (frm, CO_SDO_BUF_SEG);                /* check block size                         */
+    CHK_BLKSIZE (frm, 7);                             /* check block size                         */
 
                                                       /*===== BLOCK DOWNLOAD =====================*/
     TS_SendBlk(0x00, 7, 1, 0);                        /* transmit segments in (last) block        */

@@ -186,7 +186,7 @@ void COEmcyInit(CO_EMCY *emcy, struct CO_NODE_T *node, CO_EMCY_TBL *root);
 * \param usr
 *    manufacturer specific fields in EMCY history and/or EMCY message
 */
-void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
+void COEmcySet(CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr);
 
 /*! \brief CLEAR EMCY ERROR
 *
@@ -200,7 +200,7 @@ void COEmcySet(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
 * \param err
 *    EMCY error identifier in User EMCY table
 */
-void COEmcyClr(CO_EMCY *emcy, uint8_t err);
+void COEmcyClr(CO_EMCY *emcy, uint16_t err);
 
 /*! \brief GET EMCY ERROR STATUS
 *
@@ -216,7 +216,7 @@ void COEmcyClr(CO_EMCY *emcy, uint8_t err);
 * \retval   =1    the error was detected before
 * \retval   <0    an error is detected inside of this function
 */
-int16_t COEmcyGet(CO_EMCY *emcy, uint8_t err);
+int16_t COEmcyGet(CO_EMCY *emcy, uint16_t err);
 
 /*! \brief COUNT DETECTED EMCY ERRORS
 *

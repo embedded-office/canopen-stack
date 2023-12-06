@@ -92,7 +92,7 @@ void COEmcyHistInit(CO_EMCY *emcy);
 * \param usr
 *    manufacturer specific fields in EMCY message and/or EMCY message
 */
-void COEmcyHistAdd(CO_EMCY *emcy, uint8_t err, CO_EMCY_USR *usr);
+void COEmcyHistAdd(CO_EMCY *emcy, uint16_t err, CO_EMCY_USR *usr);
 
 /*! \brief RESET EMCY HISTORY
 *
