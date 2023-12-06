@@ -206,36 +206,41 @@ CO_ERR COSdoGetObject(CO_SDO *srv, uint16_t mode)
     CO_OBJ  *obj;
     uint32_t key;
 
-    key = CO_DEV(srv->Idx, srv->Sub);
-    obj = CODictFind(&srv->Node->Dict, key);
-    if (obj != 0) {
-        if (mode == CO_SDO_RD) {
-            if (CO_IS_READ(obj->Key) != 0) {
-                srv->Obj = obj;
-                result   = CO_ERR_NONE;
+    if (srv->Obj == 0) {
+        key = CO_DEV(srv->Idx, srv->Sub);
+        obj = CODictFind(&srv->Node->Dict, key);
+        if (obj != 0) {
+            if (mode == CO_SDO_RD) {
+                if (CO_IS_READ(obj->Key) != 0) {
+                    srv->Obj = obj;
+                    result   = CO_ERR_NONE;
+                } else {
+                    COSdoAbort(srv, CO_SDO_ERR_RD);
+                }
             } else {
-                COSdoAbort(srv, CO_SDO_ERR_RD);
+                if (CO_IS_WRITE(obj->Key) != 0) {
+                    srv->Obj = obj;
+                    result   = CO_ERR_NONE;
+                } else {
+                    COSdoAbort(srv, CO_SDO_ERR_WR);
+                }
             }
         } else {
-            if (CO_IS_WRITE(obj->Key) != 0) {
-                srv->Obj = obj;
-                result   = CO_ERR_NONE;
+            if (srv->Sub == 0) {
+                COSdoAbort(srv, CO_SDO_ERR_OBJ);
             } else {
-                COSdoAbort(srv, CO_SDO_ERR_WR);
+                key = CO_DEV(srv->Idx, 0);
+                obj = CODictFind(&srv->Node->Dict, key);
+                if (obj != 0) {
+                    COSdoAbort(srv, CO_SDO_ERR_SUB);
+                } else {
+                    COSdoAbort(srv, CO_SDO_ERR_OBJ);
+                }
             }
         }
     } else {
-        if (srv->Sub == 0) {
-            COSdoAbort(srv, CO_SDO_ERR_OBJ);
-        } else {
-            key = CO_DEV(srv->Idx, 0);
-            obj = CODictFind(&srv->Node->Dict, key);
-            if (obj != 0) {
-                COSdoAbort(srv, CO_SDO_ERR_SUB);
-            } else {
-                COSdoAbort(srv, CO_SDO_ERR_OBJ);
-            }
-        }
+        COSdoAbort(srv, CO_SDO_ERR_GENERAL);
+        COSdoAbortReq(srv);
     }
     return (result);
 }
