@@ -63,11 +63,13 @@ void COTPdoInit(CO_TPDO *pdo, CO_NODE *node)
         pdo[num].InTmr      = -1;
         pdo[num].Identifier = CO_TPDO_COBID_OFF;
         pdo[num].ObjNum     = 0;
+        if(pdo[num].NumTransl == -1)
+            pdo[num].NumTransl = num;
         for (on = 0; on < 8; on++) {
             pdo[num].Map[on]  = 0;
             pdo[num].Size[on] = 0;
         }
-        err = CODictRdByte(&node->Dict, CO_DEV(0x1800 + num,0),&tnum);
+        err = CODictRdByte(&node->Dict, CO_DEV(0x1800 + pdo[num].NumTransl,0),&tnum);
         if (err == CO_ERR_NONE) {
             COTPdoReset(pdo, num);
         } else {
@@ -106,19 +108,19 @@ void COTPdoReset(CO_TPDO *pdo, uint16_t num)
     wp->Flags = 0;
     
     /* pdo communication settings */
-    err = CODictRdByte(cod, CO_DEV(0x1800 + num, 2), &type);
+    err = CODictRdByte(cod, CO_DEV(0x1800 + pdo[num].NumTransl, 2), &type);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_TPDO_COM_OBJ;
         return;
     }
-    (void)CODictRdWord(cod, CO_DEV(0x1800 + num, 3), &inhibit);
+    (void)CODictRdWord(cod, CO_DEV(0x1800 + pdo[num].NumTransl, 3), &inhibit);
     pdo[num].Inhibit = COTmrGetTicks(tmr, inhibit, CO_TMR_UNIT_100US);
 
     if ((type == 254) || (type == 255)) {
-        (void)CODictRdWord(cod, CO_DEV(0x1800 + num, 5), &timer);
+        (void)CODictRdWord(cod, CO_DEV(0x1800 + pdo[num].NumTransl, 5), &timer);
     }
 
-    err = CODictRdLong(cod, CO_DEV(0x1800 + num, 1), &id);
+    err = CODictRdLong(cod, CO_DEV(0x1800 + pdo[num].NumTransl, 1), &id);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_TPDO_COM_OBJ;
         return;
@@ -173,7 +175,7 @@ CO_ERR COTPdoGetMap (CO_TPDO *pdo, uint16_t num)
     uint8_t   dlc;
 
     cod = &pdo[num].Node->Dict;
-    idx = 0x1A00 + num;
+    idx = 0x1A00 + pdo[num].NumTransl;
     err = CODictRdByte(cod, CO_DEV(idx, 0), &mapnum);
     if (err != CO_ERR_NONE) {
         return (CO_ERR_TPDO_MAP_OBJ);
@@ -234,6 +236,7 @@ void COTPdoClear(CO_TPDO *pdo, CO_NODE *node)
         pdo[num].InTmr      = -1;
         pdo[num].Identifier = CO_TPDO_COBID_OFF;
         pdo[num].ObjNum     = 0;
+        pdo[num].NumTransl  = -1;
         for (on = 0; on < 8; on++) {
             pdo[num].Map[on]  = 0;
             pdo[num].Size[on] = 0;
@@ -374,6 +377,18 @@ void COTPdoTrigPdo(CO_TPDO *pdo, uint16_t num)
     }
 }
 
+void COTPdoTranslatePdo(CO_TPDO *pdo, uint16_t num, uint16_t num_translate)
+{
+    if (num < CO_TPDO_N) {
+        if ((num_translate <= 511) && (pdo[num].NumTransl == (-1)))
+            pdo[num].NumTransl = num_translate;
+        else
+            pdo->Node->Error = CO_ERR_TPDO_TRANSLATE;
+    } else {
+        pdo->Node->Error = CO_ERR_TPDO_TRANSLATE;
+    }
+}
+
 void CORPdoClear(CO_RPDO *pdo, CO_NODE *node)
 {
     int16_t num;
@@ -385,6 +400,7 @@ void CORPdoClear(CO_RPDO *pdo, CO_NODE *node)
         pdo[num].Node       = node;
         pdo[num].Identifier = 0;
         pdo[num].ObjNum     = 0;
+        pdo[num].NumTransl  = -1;
     }
 }
 
@@ -401,7 +417,9 @@ void CORPdoInit(CO_RPDO *pdo, CO_NODE *node)
         pdo[num].Node       = node;
         pdo[num].Identifier = 0;
         pdo[num].ObjNum     = 0;
-        err = CODictRdByte(&node->Dict, CO_DEV(0x1400 + num, 0), &rnum);
+        if(pdo[num].NumTransl == (-1))
+            pdo[num].NumTransl = num;
+        err = CODictRdByte(&node->Dict, CO_DEV(0x1400 + pdo[num].NumTransl, 0), &rnum);
         if (err == CO_ERR_NONE) {
             CORPdoReset(pdo, num);
         } else {
@@ -434,12 +452,12 @@ CO_ERR CORPdoReset(CO_RPDO *pdo, uint16_t num)
     wp->Flag = 0;
     
     /* communication */
-    err = CODictRdByte(cod, CO_DEV(0x1400 + num, 2), &type);
+    err = CODictRdByte(cod, CO_DEV(0x1400 + pdo[num].NumTransl, 2), &type);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
         return (CO_ERR_RPDO_COM_OBJ);
     }
-    err = CODictRdLong(cod, CO_DEV(0x1400 + num, 1), &id);
+    err = CODictRdLong(cod, CO_DEV(0x1400 + pdo[num].NumTransl, 1), &id);
     if (err != CO_ERR_NONE) {
         pdo->Node->Error = CO_ERR_RPDO_COM_OBJ;
         return (CO_ERR_RPDO_COM_OBJ);
@@ -486,7 +504,7 @@ CO_ERR CORPdoGetMap(CO_RPDO *pdo, uint16_t num)
     uint8_t   size;
 
     cod = &pdo[num].Node->Dict;
-    idx = 0x1600 + num;
+    idx = 0x1600 + pdo[num].NumTransl;
     err = CODictRdByte(cod, CO_DEV(idx, 0), &mapnum);
     if (err != CO_ERR_NONE) {
         return (CO_ERR_RPDO_MAP_OBJ);
@@ -596,5 +614,17 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
         } else {  /* dummy byte */
             dlc += pdosz;
         }
+    }
+}
+
+void CORPdoTranslatePdo(CO_RPDO *pdo, uint16_t num, uint16_t num_translate)
+{
+    if (num < CO_RPDO_N) {
+        if ((num_translate <= 511) && (pdo[num].NumTransl == (-1)))
+            pdo[num].NumTransl = num_translate;
+        else
+            pdo->Node->Error = CO_ERR_RPDO_TRANSLATE;
+    } else {
+        pdo->Node->Error = CO_ERR_RPDO_TRANSLATE;
     }
 }
