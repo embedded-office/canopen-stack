@@ -573,6 +573,77 @@ TS_DEF_MAIN(TS_SegRd_Bad2ndToggleBit)
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TESTCASE DESCRIPTION
+*
+* \ingroup TS_CO
+*
+*         This testcase will check the segmented upload of an array with size = 42
+*           from the Domainbuffer with reentering an abandoned segmented SDO session
+*
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_SegRd_Session_Abort)
+{
+    CO_IF_FRM   frm;
+    uint8_t     tgl;
+    uint32_t    id;
+    CO_NODE     node;
+    CO_OBJ_DOM *dom;
+    CO_OBJ_DOM *dom2;
+    uint32_t    size = 42;
+    uint16_t    idx  = 0x2520;
+    uint8_t     sub  = 2;
+    uint16_t    idx2 = 0x2521;
+    uint8_t     sub2 = 3;
+    uint32_t    size2 = 3;
+    uint32_t    val2 = 0x121110;
+                                                      /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    dom = DomCreate(idx, sub, CO_OBJ_____RW, size);
+    DomFill(dom, 0);
+    TS_ODAdd(CO_KEY(idx2, sub2, CO_OBJ_____RW), CO_TUNSIGNED32, (CO_DATA)&val2);
+    TS_CreateNode(&node, 0);
+
+                                                      /*===== INIT SEGMENTED UPLOAD ==============*/
+    TS_SDO_SEND (0x40, idx, sub, size);
+
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_SDO0 (frm, 0x41);                             /* check SDO #0 response (Id and DLC)       */
+    CHK_MLTPX(frm, idx, sub);                         /* check multiplexer                        */
+    CHK_DATA (frm, size);                             /* check data area                          */
+
+                                                      /*===== SEGMENTED UPLOAD ===================*/
+    tgl = 0x00;                                       /* start with toggle bit 0                  */
+    for (id = 0; id < 21; id += 7) {
+        TS_SDO_SEND((0x60 | tgl), 0, 0, 0);
+
+        CHK_CAN  (&frm);                              /* check for a CAN frame                    */
+        CHK_SDO0 (frm, tgl);                          /* check SDO #0 response (Id and DLC)       */
+        CHK_SEG  (frm, id, 7);                        /* check segment data                       */
+                                                      /*------------------------------------------*/
+        tgl ^= 0x10;                                  /* prepare the toggle bit for next request  */
+    }
+
+                                                      /*===== ABORT SESSION ======================*/
+                                                      /* Upload not finished,try expedited upload */
+    TS_SDO_SEND (0x40, idx2, sub2, size2);
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_SDO0 (frm, 0x80);                             /* check SDO #0 response = error            */
+    CHK_MLTPX(frm, idx, sub);                         /* check multiplexer                        */
+    CHK_DATA (frm, CO_SDO_ERR_GENERAL);               /* check data area                          */
+
+                                                      /*===== EXPEDITED UPLOAD ===================*/
+    TS_SDO_SEND (0x40, idx2, sub2, size2);
+
+    CHK_CAN  (&frm);                                  /* check for a CAN frame                    */
+    CHK_SDO0 (frm, 0x43);                             /* check SDO #0 response (Id and DLC)       */
+    CHK_MLTPX(frm, idx2, sub2);                       /* check multiplexer                        */
+    CHK_DATA (frm, val2);                             /* check data area                          */
+
+    CHK_NO_ERR(&node);                                /* check error free stack execution         */
+}
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -594,6 +665,7 @@ SUITE_SEG_UP()
     TS_RUNNER(TS_SegRd_DomainNullPtr);
     TS_RUNNER(TS_SegRd_Bad1stToggleBit);
     TS_RUNNER(TS_SegRd_Bad2ndToggleBit);
+    TS_RUNNER(TS_SegRd_Session_Abort);
 
 //    CanDiagnosticOff(0);
 
