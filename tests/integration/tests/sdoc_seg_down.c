@@ -41,7 +41,7 @@ static TS_CALLBACK CSdoSegDownCb;
 * \brief    Use SDO client to write a 16 byte domain to SDO server
 *
 *           The SDO client #0 is used on testing node with Node-Id 1 to send
-*           a byte to the SDO server #0 on device with Node-Id 5.
+*           16 bytes to the SDO server #0 on device with Node-Id 5.
 */
 /*---------------------------------------------------------------------------*/
 TS_DEF_MAIN(TS_CSdoWr_Seg16ByteDomain)
@@ -133,7 +133,7 @@ TS_DEF_MAIN(TS_CSdoWr_Seg16ByteDomain)
 * \brief    Use SDO client to handle a timeout
 *
 *           The SDO client #0 is used on testing node with Node-Id 1 to try
-*           to send a byte to the SDO server #0 on device with Node-Id 5,
+*           to send 16 bytes to the SDO server #0 on device with Node-Id 5,
 *           but no response within timeout is sent.
 */
 /*---------------------------------------------------------------------------*/
@@ -188,7 +188,7 @@ TS_DEF_MAIN(TS_CSdoWr_SegTimeout)
 * \brief    Use SDO client to handle an abort response
 *
 *           The SDO client #0 is used on testing node with Node-Id 1 to try
-*           to send a byte to the SDO server #0 on device with Node-Id 5,
+*           to send 16 bytes to the SDO server #0 on device with Node-Id 5,
 *           but an abort response is sent.
 */
 /*---------------------------------------------------------------------------*/
@@ -238,7 +238,7 @@ TS_DEF_MAIN(TS_CSdoWr_SegAbout)
 * \brief    Use SDO client to handle toggle bit error
 *
 *           The SDO client #0 is used on testing node with Node-Id 1 to try
-*           to send a byte to the SDO server #0 on device with Node-Id 5,
+*           to send 16 bytes to the SDO server #0 on device with Node-Id 5,
 *           but an toggle bit error occurs.
 */
 /*---------------------------------------------------------------------------*/
@@ -322,6 +322,113 @@ static void CSdoSegDownCleanup(void)
     TS_CallbackDeInit();
 }
 
+
+/*---------------------------------------------------------------------------*/
+/*!
+* \brief    Use SDO client to write a 257 byte domain to SDO server
+*
+*           The SDO client #0 is used on testing node with Node-Id 1 to send
+*           an array to the SDO server #0 on device with Node-Id 5.
+*/
+/*---------------------------------------------------------------------------*/
+#define MAX_TEST_SIZE   257
+
+TS_DEF_MAIN(TS_CSdoWr_Seg257ByteDomain)
+{
+#if MAX_TEST_SIZE > 14
+
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    CO_CSDO  *csdo;
+    uint8_t   serverId = 5;
+    uint32_t  idx = 0x2000;
+    uint8_t   sub = 0x01;
+    uint32_t  timeout = 1000;
+    uint32_t  n;
+    uint32_t  m;
+    uint32_t  id;
+    uint32_t  size;
+    uint32_t  width;
+    uint8_t   c_bit;
+    uint8_t   val[MAX_TEST_SIZE];
+    CO_ERR    err;
+    uint8_t   tgl;
+
+    /* -- PREPARATION -- */
+    TS_CreateMandatoryDir();
+    TS_CreateCSdoCom(0, &serverId);
+    TS_CreateNode(&node, 0);
+    csdo = COCSdoFind(&node, 0);
+
+    for (n = 0u; n < MAX_TEST_SIZE; n++) {
+        val[n] = (uint8_t)(n + 1u);
+    }
+
+    size = MAX_TEST_SIZE;
+
+    /* -- TEST -- */
+    err = COCSdoRequestDownload(csdo,
+                                CO_DEV(idx, sub),
+                                &val[0], size,
+                                TS_AppCSdoCallback,
+                                timeout);
+    TS_ASSERT(err == CO_ERR_NONE);
+
+    /* -- CHECK SDO INIT REQUEST -- */
+    CHK_CAN  (&frm);
+    CHK_SDO5 (frm, 0x21);
+    CHK_MLTPX(frm, idx, sub);
+    CHK_DATA (frm, size);
+
+    /* -- SERVER INIT RESPONSE: OK -- */
+    TS_SDO5_SEND (0x60, idx, sub, 0x00000000);
+
+    tgl = 0x00;                                       /* start with toggle bit 0                  */
+    c_bit = 0x00;
+    n = 0u;
+
+    do {
+        if ((n + 7u) >= size) {
+            c_bit = 0x01;                             /* cbit is set in the last message          */
+        }
+
+        width = size - n;
+
+        if (width > 7u) {
+            width = 7u;
+        }
+
+        /* -- CHECK SDO DOWNLOAD REQUEST x -- */
+        CHK_CAN  (&frm);
+        CHK_SDO5 (frm, (tgl | c_bit | ((7 - width) << 1)));
+
+        m = 1u;
+        while ((m < 8u) && (n < size)) {
+            CHK_BYTE (frm, m, (uint8_t)(n + 1u));
+            m++;
+            n++;
+        }
+        while (m < 8u) {
+            CHK_BYTE (frm, m, 0u);
+            m++;
+            n++;
+        }
+
+        /* -- SERVER DOWNLOAD RESPONSE x: OK -- */
+        TS_SEG5_SEND ((0x20 | tgl), 0, 0);
+
+        tgl ^= 0x10;                                  /* prepare the toggle bit for next request  */
+    } while (n < size);
+
+    /* -- CHECK TRANSFER FINISHED -- */
+    CHK_CB_CSDO_FINISHED(&CSdoSegDownCb, 1);
+    CHK_CB_CSDO_CODE(&CSdoSegDownCb, 0);
+
+    CHK_NO_ERR(&node);
+
+#endif
+}
+
 /******************************************************************************
 * PUBLIC FUNCTIONS
 ******************************************************************************/
@@ -336,6 +443,8 @@ SUITE_CSDO_SEG_DOWN()
     TS_RUNNER(TS_CSdoWr_SegTimeout);
     TS_RUNNER(TS_CSdoWr_SegAbout);
     TS_RUNNER(TS_CSdoWr_SegBadToggle);
+
+    TS_RUNNER(TS_CSdoWr_Seg257ByteDomain);
 
     TS_End();
 }

@@ -282,8 +282,8 @@ static CO_ERR COCSdoUploadSegmented(CO_CSDO *csdo)
         if ((cmd & 0x01u) == 0x00u) {
             csdo->Tfer.TBit ^= 0x01u;
 
-            CO_SET_ID  (&frm, csdo->TxId       );
-            CO_SET_DLC (&frm, 8u               );
+            CO_SET_ID  (&frm, csdo->TxId);
+            CO_SET_DLC (&frm, 8u);
 
             if (csdo->Tfer.TBit == 0x01u){
                 CO_SET_BYTE(&frm, 0x70, 0u);
@@ -316,10 +316,10 @@ static CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo)
 {
     CO_ERR    result = CO_ERR_SDO_SILENT;
     uint32_t  ticks;
+    uint32_t  width;
     uint16_t  Idx;
     uint8_t   Sub;
     uint8_t   n;
-    uint8_t   width;
     uint8_t   c_bit = 1;
     uint8_t   cmd;
     CO_IF_FRM frm;
@@ -331,6 +331,7 @@ static CO_ERR COCSdoInitDownloadSegmented(CO_CSDO *csdo)
 
         CO_SET_ID  (&frm, csdo->TxId);
         CO_SET_DLC (&frm, 8u);
+        /* clean frm data */
         CO_SET_LONG(&frm, 0, 0u);
         CO_SET_LONG(&frm, 0, 4u);
 
@@ -368,9 +369,9 @@ static CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo)
 {
     CO_ERR    result = CO_ERR_SDO_SILENT;
     uint32_t  ticks;
+    uint32_t  width;
     uint8_t   cmd;
     uint8_t   n;
-    uint8_t   width;
     uint8_t   c_bit = 1;
     CO_IF_FRM frm;
 
@@ -378,10 +379,9 @@ static CO_ERR COCSdoDownloadSegmented(CO_CSDO *csdo)
     if (((cmd >> 4u) & 0x01u) == csdo->Tfer.TBit) {
         csdo->Tfer.TBit ^= 0x01u;
 
-        CO_SET_ID  (&frm, csdo->TxId       );
-        CO_SET_DLC (&frm, 8                );
-
-         /* clean frm data */
+        CO_SET_ID  (&frm, csdo->TxId);
+        CO_SET_DLC (&frm, 8u);
+        /* clean frm data */
         CO_SET_LONG(&frm, 0, 0u);
         CO_SET_LONG(&frm, 0, 4u);
 
