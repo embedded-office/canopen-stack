@@ -324,9 +324,6 @@ extern "C" {
 
 
 #define CHK_SDO0_ERR(i,s,e)  { CO_IF_FRM f;                                                 \
-                               CO_IF_FRM *pf = &f;                                          \
-                               CO_SET_LONG (pf, 0L, 0);                                     \
-                               CO_SET_LONG (pf, 0L, 4);                                     \
                                TS_ASSERT(1     == SimCanGetFrm((uint8_t*)(&f),sizeof(CO_IF_FRM)));\
                                TS_ASSERT(0x581 == (f).Identifier);                          \
                                TS_ASSERT(8     == (f).DLC);                                 \

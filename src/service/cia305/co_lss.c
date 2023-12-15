@@ -523,10 +523,8 @@ int16_t COLssFastScan(CO_LSS *lss, CO_IF_FRM *frm)
         return -1;
     }
 
-    /* Only for non-configured nodes (NodeID = 0, 128..255) */
-    if (((node->NodeId > (uint8_t)0x00) && ((node->NodeId < (uint8_t)0x80))) ||
-        ((lss->Flags & CO_LSS_STORED) == 0))
-    {
+    /* Only for non-configured nodes (NodeID != 255) */
+    if ((node->NodeId != (uint8_t)0xFF) || ((lss->Flags & CO_LSS_STORED) == 0)) {
         return -1;
     }
 

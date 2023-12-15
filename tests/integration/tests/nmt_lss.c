@@ -251,7 +251,7 @@ TS_DEF_MAIN(TS_Lss_SelIdent_Ok)
 }
 
 /*------------------------------------------------------------------------------------------------*/
-/*! \brief TC9
+/*! \brief TC8
 *
 *          This testcase will check:
 *          - LSS fast scan check an unconfigured slave node about vendor,
@@ -291,7 +291,6 @@ TS_DEF_MAIN(TS_Lss_FastScan_Ok)
                   CO_LSS_FASTSCAN_VENDOR_ID);
 
     CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_WAIT == node.Lss.Mode);
 
     /* Check product number */
     TS_LSS_SEND_M(81,
@@ -301,7 +300,6 @@ TS_DEF_MAIN(TS_Lss_FastScan_Ok)
                   CO_LSS_FASTSCAN_PRODUCT);
 
     CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_WAIT == node.Lss.Mode);
 
     /* Check revision number */
     TS_LSS_SEND_M(81,
@@ -311,7 +309,6 @@ TS_DEF_MAIN(TS_Lss_FastScan_Ok)
                   CO_LSS_FASTSCAN_REV);
 
     CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_WAIT == node.Lss.Mode);
 
     /* Check serial number */
     TS_LSS_SEND_M(81,
@@ -321,20 +318,19 @@ TS_DEF_MAIN(TS_Lss_FastScan_Ok)
                   CO_LSS_FASTSCAN_SERIAL);
 
     CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_WAIT == node.Lss.Mode);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
-/*! \brief TC10
+/*! \brief TC9
 *
 *          This testcase will check:
 *          - LSS fast scan check a configured slave node about vendor,
 *            product, revision and serial.
 */
 /*------------------------------------------------------------------------------------------------*/
-TS_DEF_MAIN(TS_Lss_FastScan_Unconfigured)
+TS_DEF_MAIN(TS_Lss_FastScan_Configured)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
@@ -400,7 +396,7 @@ TS_DEF_MAIN(TS_Lss_FastScan_Unconfigured)
 }
 
 /*------------------------------------------------------------------------------------------------*/
-/*! \brief TC11
+/*! \brief TC10
 *
 *          This testcase will check:
 *          - LSS fast scan check of wrong input parameter.
@@ -481,86 +477,19 @@ TS_DEF_MAIN(TS_Lss_FastScan_CheckParameter)
                   CO_LSS_FASTSCAN_VENDOR_ID);
 
     CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_CONF == node.Lss.Mode);
-
-    /* Reset Lss Mode */
-    node.Lss.Mode = CO_LSS_WAIT;
-
-
-    /* All parameter are correct, LssSub > LssNext */
-    TS_LSS_SEND_M(81,
-                  0x33000033,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_REV,
-                  CO_LSS_FASTSCAN_VENDOR_ID);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_CONF == node.Lss.Mode);
-
-    /* Reset Lss Mode */
-    node.Lss.Mode = CO_LSS_WAIT;
-
-
-    /* All parameter are correct, LssSub > LssNext */
-    TS_LSS_SEND_M(81,
-                  0x44000044,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_SERIAL,
-                  CO_LSS_FASTSCAN_VENDOR_ID);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_CONF == node.Lss.Mode);
-
-    /* Reset Lss Mode */
-    node.Lss.Mode = CO_LSS_WAIT;
-
-
-    /* All parameter are correct, LssSub > LssNext */
-    TS_LSS_SEND_M(81,
-                  0x33000033,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_REV,
-                  CO_LSS_FASTSCAN_PRODUCT);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_CONF == node.Lss.Mode);
-
-    /* Reset Lss Mode */
-    node.Lss.Mode = CO_LSS_WAIT;
-
-    TS_LSS_SEND_M(81,
-                  0x44000044,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_SERIAL,
-                  CO_LSS_FASTSCAN_PRODUCT);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_CONF == node.Lss.Mode);
-
-    /* Reset Lss Mode */
-    node.Lss.Mode = CO_LSS_WAIT;
-
-    TS_LSS_SEND_M(81,
-                  0x44000044,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_SERIAL,
-                  CO_LSS_FASTSCAN_REV);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_CONF == node.Lss.Mode);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
 
 /*------------------------------------------------------------------------------------------------*/
-/*! \brief TC10
+/*! \brief TC11
 *
 *          This testcase will check:
-*          - LSS fast scan check a configured slave node about vendor,
+*          - LSS fast scan check a unconfigured slave node about vendor,
 *            product, revision and serial.
 */
 /*------------------------------------------------------------------------------------------------*/
-TS_DEF_MAIN(TS_Lss_FastScan_ParameterNotFound)
+TS_DEF_MAIN(TS_Lss_FastScan_ObjectNotFound)
 {
     CO_IF_FRM frm;
     CO_NODE   node;
@@ -585,6 +514,72 @@ TS_DEF_MAIN(TS_Lss_FastScan_ParameterNotFound)
     // B6:    LssSub
     // B7:    LssNext
     */
+
+    /* Vendor ID not found */
+    TS_LSS_SEND_M(81,
+                  0x11000011,
+                  CO_LSS_FASTSCAN_LSB,
+                  CO_LSS_FASTSCAN_VENDOR_ID,
+                  CO_LSS_FASTSCAN_VENDOR_ID);
+
+    /* check for no CAN frame */
+    CHK_NOCAN(&frm);
+
+    /* Vendor ID not found */
+    TS_LSS_SEND_M(81,
+                  0x22000022,
+                  CO_LSS_FASTSCAN_LSB,
+                  CO_LSS_FASTSCAN_PRODUCT,
+                  CO_LSS_FASTSCAN_PRODUCT);
+
+    /* check for no CAN frame */
+    CHK_NOCAN(&frm);
+
+    /* Vendor ID not found */
+    TS_LSS_SEND_M(81,
+                  0x33000033,
+                  CO_LSS_FASTSCAN_LSB,
+                  CO_LSS_FASTSCAN_REV,
+                  CO_LSS_FASTSCAN_REV);
+
+    /* check for no CAN frame */
+    CHK_NOCAN(&frm);
+
+    /* Vendor ID not found */
+    TS_LSS_SEND_M(81,
+                  0x44000044,
+                  CO_LSS_FASTSCAN_LSB,
+                  CO_LSS_FASTSCAN_SERIAL,
+                  CO_LSS_FASTSCAN_SERIAL);
+
+    /* check for no CAN frame */
+    CHK_NOCAN(&frm);
+}
+
+/*------------------------------------------------------------------------------------------------*/
+/*! \brief TC10
+*
+*          This testcase will check:
+*          - LSS fast scan check if input parameter is found.
+*/
+/*------------------------------------------------------------------------------------------------*/
+TS_DEF_MAIN(TS_Lss_FastScan_ParameterNotFound)
+{
+    CO_IF_FRM frm;
+    CO_NODE   node;
+    uint32_t  vendor = 0x11000011;
+    uint32_t  product = 0x22000022;
+    uint32_t  revision = 0x33000033;
+    uint32_t  serial = 0x44000044;
+
+    /*------------------------------------------*/
+    TS_CreateMandatoryDir();
+    TS_ODAdd(CO_KEY(0x1018, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&vendor));
+    TS_ODAdd(CO_KEY(0x1018, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&product));
+    TS_ODAdd(CO_KEY(0x1018, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&revision));
+    TS_ODAdd(CO_KEY(0x1018, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&serial));
+    TS_CreateEmptyNode(&node, 0);
+    /*------------------------------------------*/
 
     /* Vendor ID not found */
     TS_LSS_SEND_M(81,
@@ -625,51 +620,6 @@ TS_DEF_MAIN(TS_Lss_FastScan_ParameterNotFound)
 
     /* check for no CAN frame */
     CHK_NOCAN(&frm);
-
-    TS_ODAdd(CO_KEY(0x1018, 1, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&vendor));
-    TS_ODAdd(CO_KEY(0x1018, 2, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&product));
-    TS_ODAdd(CO_KEY(0x1018, 3, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&revision));
-    TS_ODAdd(CO_KEY(0x1018, 4, CO_OBJ_____R_), CO_TUNSIGNED32, (CO_DATA)(&serial));
-
-    /* Check vendor ID */
-    TS_LSS_SEND_M(81,
-                  0x11000011,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_VENDOR_ID,
-                  CO_LSS_FASTSCAN_VENDOR_ID);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_WAIT == node.Lss.Mode);
-
-    /* Check product number */
-    TS_LSS_SEND_M(81,
-                  0x22000022,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_PRODUCT,
-                  CO_LSS_FASTSCAN_PRODUCT);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_WAIT == node.Lss.Mode);
-
-    /* Check revision number */
-    TS_LSS_SEND_M(81,
-                  0x33000033,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_REV,
-                  CO_LSS_FASTSCAN_REV);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_WAIT == node.Lss.Mode);
-
-    /* Check serial number */
-    TS_LSS_SEND_M(81,
-                  0x44000044,
-                  CO_LSS_FASTSCAN_LSB,
-                  CO_LSS_FASTSCAN_SERIAL,
-                  CO_LSS_FASTSCAN_SERIAL);
-
-    CHK_LSS_OK(CO_LSS_RES_SLAVE);
-    TS_ASSERT(CO_LSS_WAIT == node.Lss.Mode);
 
     CHK_NO_ERR(&node);                                /* check error free stack execution         */
 }
@@ -720,8 +670,9 @@ SUITE_NMT_LSS()
     TS_RUNNER(TS_Lss_SelIdent_WrongSerial);
     TS_RUNNER(TS_Lss_SelIdent_Ok);
     TS_RUNNER(TS_Lss_FastScan_Ok);
-    TS_RUNNER(TS_Lss_FastScan_Unconfigured);
+    TS_RUNNER(TS_Lss_FastScan_Configured);
     TS_RUNNER(TS_Lss_FastScan_CheckParameter);
+    TS_RUNNER(TS_Lss_FastScan_ObjectNotFound);
     TS_RUNNER(TS_Lss_FastScan_ParameterNotFound);
 
     //    CanDiagnosticOff(0);
