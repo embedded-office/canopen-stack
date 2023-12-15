@@ -39,7 +39,8 @@ The source code is compliant to the C99 standard and you must cross-compile the 
 - Unlimited number of SYNC consumers
 - Heartbeat producer
 - Unlimited number of Heartbeat consumers
-- Network Management consumer
+- Network Management consumeron
+- Fastscan slave service
 
 **CiA 305 - Layer Setting Services (LSS)**
 

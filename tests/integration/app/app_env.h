@@ -264,6 +264,25 @@ extern "C" {
     SimCanRun();                            \
   } while(0)
 
+#define TS_LSS_SEND_M(_c,_d,_e,_f,_g)       \
+  do {                                      \
+    uint8_t  c=(uint8_t)(_c);               \
+    uint32_t d=(uint32_t)(_d);              \
+    uint8_t  e=(uint8_t)(_e);               \
+    uint8_t  f=(uint8_t)(_f);               \
+    uint8_t  g=(uint8_t)(_g);               \
+    SimCanSetFrm(2021, 8,                   \
+      (uint8_t)(c),                         \
+      (uint8_t)(d),                         \
+      (uint8_t)(((uint32_t)d)>>8),          \
+      (uint8_t)(((uint32_t)d)>>16),         \
+      (uint8_t)(((uint32_t)d)>>24),         \
+      (uint8_t)(e),                         \
+      (uint8_t)(f),                         \
+      (uint8_t)(g));                        \
+    SimCanRun();                            \
+  } while(0)
+
 #define CHK_NO_ERR(n)        TS_ASSERT(CO_ERR_NONE == CONodeGetErr(n))
 
 #define CHK_ERR(n,e)         TS_ASSERT(e == CONodeGetErr(n))
@@ -305,6 +324,9 @@ extern "C" {
 
 
 #define CHK_SDO0_ERR(i,s,e)  { CO_IF_FRM f;                                                 \
+                               CO_IF_FRM *pf = &f;                                          \
+                               CO_SET_LONG (pf, 0L, 0);                                     \
+                               CO_SET_LONG (pf, 0L, 4);                                     \
                                TS_ASSERT(1     == SimCanGetFrm((uint8_t*)(&f),sizeof(CO_IF_FRM)));\
                                TS_ASSERT(0x581 == (f).Identifier);                          \
                                TS_ASSERT(8     == (f).DLC);                                 \
