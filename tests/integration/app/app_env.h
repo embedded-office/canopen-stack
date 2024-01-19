@@ -264,6 +264,25 @@ extern "C" {
     SimCanRun();                            \
   } while(0)
 
+#define TS_LSS_SEND_M(_c,_d,_e,_f,_g)       \
+  do {                                      \
+    uint8_t  c=(uint8_t)(_c);               \
+    uint32_t d=(uint32_t)(_d);              \
+    uint8_t  e=(uint8_t)(_e);               \
+    uint8_t  f=(uint8_t)(_f);               \
+    uint8_t  g=(uint8_t)(_g);               \
+    SimCanSetFrm(2021, 8,                   \
+      (uint8_t)(c),                         \
+      (uint8_t)(d),                         \
+      (uint8_t)(((uint32_t)d)>>8),          \
+      (uint8_t)(((uint32_t)d)>>16),         \
+      (uint8_t)(((uint32_t)d)>>24),         \
+      (uint8_t)(e),                         \
+      (uint8_t)(f),                         \
+      (uint8_t)(g));                        \
+    SimCanRun();                            \
+  } while(0)
+
 #define CHK_NO_ERR(n)        TS_ASSERT(CO_ERR_NONE == CONodeGetErr(n))
 
 #define CHK_ERR(n,e)         TS_ASSERT(e == CONodeGetErr(n))
