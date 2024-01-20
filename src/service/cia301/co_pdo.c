@@ -272,7 +272,7 @@ void COTPdoTx(CO_TPDO *pdo)
     CO_IF_FRM  frm;
     uint32_t   sz;
     uint8_t    pdosz;
-    uint32_t   data;
+    uint64_t   data;
     uint8_t    num;
 
     if ((pdo->Node->Nmt.Allowed & CO_PDO_ALLOWED) == 0) {
@@ -313,8 +313,8 @@ void COTPdoTx(CO_TPDO *pdo)
     frm.DLC        = 0;
     for (num = 0; num < pdo->ObjNum; num++) {
         pdosz = pdo->Size[num];
-        if (pdosz <= 4) {
-            /* supported mapping: 1 to 4 bytes */
+        if (pdosz <= 6) {
+            /* supported mapping: 1 to 6 bytes */
             sz = COObjGetSize(pdo->Map[num], pdo->Node, 0L);
             if (sz <= (uint32_t)(8 - frm.DLC)) {
                 if (pdosz == 3) {
@@ -334,6 +334,9 @@ void COTPdoTx(CO_TPDO *pdo)
                     } else {
                         CO_SET_LONG(&frm, data, frm.DLC);
                     }
+                } else if (sz == 6u) {
+                    CO_SET_WORD(&frm, data, frm.DLC);
+                    CO_SET_LONG(&frm, (data >> 16), (frm.DLC + 2));
                 }
                 frm.DLC += pdosz;
             }
@@ -577,6 +580,7 @@ CO_RPDO *CORPdoCheck(CO_RPDO *pdo, CO_IF_FRM *frm)
 void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
 {
     CO_OBJ  *obj;
+    uint64_t val64;
     uint32_t val32;
     uint16_t val16;
     uint8_t  val08;
@@ -589,8 +593,8 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
         obj   = pdo->Map[on];
         pdosz = pdo->Size[on];
         if (obj != 0) {
-            if (pdosz <= 4) {
-                /* supported mapping: 1 to 4 bytes */
+            if (pdosz <= 6) {
+                /* supported mapping: 1 to 6 bytes */
                 sz = (uint8_t)COObjGetSize(obj, pdo->Node, 0L);
                 if (sz == 1u) {
                     val08 = CO_GET_BYTE(frm, dlc);
@@ -607,6 +611,12 @@ void CORPdoWrite(CO_RPDO *pdo, CO_IF_FRM *frm)
                     }
                     dlc += pdosz;
                     COObjWrValue(obj, pdo->Node, (void *)&val32, sz);
+                } else if (sz == 6u) {
+                    val64 = CO_GET_LONG(frm, dlc);
+                    val64 |= (uint64_t)(CO_GET_WORD(frm, dlc + 4)) << 32;
+                    val64 &= 0x0000FFFFFFFFFFFF;
+                    dlc += pdosz;
+                    COObjWrValue(obj, pdo->Node, (void *)&val64, sz);
                 }
             } else {
                 CORpdoWriteData(frm, dlc, pdosz, obj);
